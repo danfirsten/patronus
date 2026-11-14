@@ -1,83 +1,219 @@
-# Patronus: core questions and answers
+# Patronus: core questions
 
-The single story: **Zambia and Lake Kariba.** Every number comes from `DESIGN.md` §8, §12, §13 or §14, or from `web/public/data/*.json`. The ⚠ marks show where our answer is still weak.
+This is the one story for the whole team: rehearse from it. Every number has its source in brackets. Nov 14, 2026. Built by the core-questions sub-thread and checked by MAIN.
+
+**The story in one breath:** In 2024 Lake Kariba ran almost dry and Zambia's lights went out. NASA satellites saw it coming. Patronus turns that NASA water data into a warning that tells a power utility how much time it has and what acting now buys it. A very strong El Niño is under way right now, and the 2027 warning is live.
+
+---
+
+## Pitch-ready: the 5 answers that matter most
+Say these out loud, word for word, until they fit the time.
+
+**1. Why it matters (the hook).**
+> "In 2024, Lake Kariba, the world's largest man-made reservoir, fell to 2.89% usable water. Zambia gets about 86% of its power from hydro. People went 8, then 12 hours a day without power. From space, Lusaka's lights dimmed by half. The IMF cut Zambia's growth forecast from 4.7% to 1.2%. And this keeps happening: Ecuador lost 1 to 1.5% of its GDP the same year, and Vietnam lost about $1.4 billion in 2023."
+
+[crises.json: ZRA via Pindula, Lusaka Times, IMF Nov 2024; nightlights.json; DESIGN §8]
+
+**2. Who it's for, and how they feel.**
+> "Our customer is the power planner at ZESCO, Zambia's power utility. Today they find out the lake is in trouble when it's already low. Then they buy emergency diesel at 26 cents a kilowatt-hour instead of imports contracted ahead at 17. With Patronus they know months ahead how much time they have, and what acting now buys them. Hospitals, factories and families get a planned schedule instead of a surprise."
+
+[ZESCO's Jul 2024 filing to the Energy Regulation Board, DESIGN §11.6]
+
+**3. What it does, in three steps.**
+> "One: we read NASA satellite data. That's how much water the basin holds (GRACE-FO), how high the lake is (radar altimetry), and how much rain fell (MERRA-2). Two: we test which trends are real, with standard statistics. Three: we play past El Niño years forward from today's lake level. That shows the chance the lake hits the danger zone, and what a release cut now would change."
+
+**4. How we know it works.**
+> "We ran it the hard way, using only data that existed at the time. For Kariba, our El Niño model raised the alarm in July 2023: five months before the official cut, and eight months before load-shedding. Then we applied the same method, unchanged, to 31 reservoirs on 4 continents. It flagged 14 of 17 past power crises before they began. In 6 of those the lake was already low, so we count 8 as true early warnings. We also show our misses, including Kariba in 2015 and 2019."
+
+[DESIGN §12, §14; docs/RESERVOIRS.md]
+
+**5. Why now, and the challenge answer.**
+> "A very strong El Niño is under way today, and the river authority has already cut Kariba's 2027 water allocation by more than a third. Our forecast says that in 4 of the 11 past El Niño years we replay, the lake ends 2027 in the danger zone. A 30% release cut from January brings that to 2 in 11, at a cost of about 1.4 terawatt-hours of power. And for the challenge: pick any NASA variable and any of 107 regions, and our Trend Detective page plots it. It gives the trend (Sen's slope) and whether it's significant (Mann-Kendall)."
+
+[DESIGN §8, §13; kariba_sim.json `examples`: mean generation 5.51 → 4.16 TWh; explorer/index.json]
+
+---
 
 ## WHO
-- **Primary customer (hypothesis):** Zambia's power planners: the Ministry of Energy and the national utility ZESCO. They decide when to contract imports, when to start load-shedding, and how much to ask the Zambezi River Authority (ZRA) to release. They already pay for being late. In 2024 ZESCO's replacement power cost 17–26 US cents/kWh, about $51M a month for 300 MW (ZESCO filing to the regulator, Jul 2024).
-- **Other users:** the Zambezi River Authority (sets the yearly water allocation), Zimbabwe's utility ZPC, and development lenders (World Bank, AfDB) who fund adaptation.
-- **Who benefits:** the people who lose power. In 2024 that meant hospitals, water pumping, factories and households. Load-shedding started at 8 hours a day on 11 Mar 2024 and was reported at up to 21 hours a day (news).
-- **Who pays (hypothesis):** it stays a free public warning, because a public warning is what makes ignoring it costly. It could be funded as climate adaptation, with paid detailed briefings for utilities. ⚠ We have not tested willingness to pay.
-- **Who we are:** a 3-person team (Dan, Sean, Arvin) at NASA Space Apps Seattle, with open data and open code.
+**Who is the customer?** ZESCO, Zambia's state power utility, and specifically its system planners.
+- They carry the cost of acting late. Emergency power costs 26¢/kWh, against 17¢ for imports contracted in advance. 300 MW of replacement power cost about $51M a month. [ZESCO filing to ERB, Jul 2024]
+- They write the load-shedding schedule that hospitals and households live with.
+- **Decision partner:** the Zambezi River Authority (ZRA), which sets how much water each country may release. The simulator speaks to that decision.
+- **Second customer:** Zimbabwe's utility ZPC, which shares the lake.
+
+**Who are the users?**
+- ZESCO planners and energy-ministry analysts use the Kariba page and the simulator.
+- Students and the science-literate public use the Trend Detective page. They are the challenge's suggested audience.
+- Journalists can check a dated, public forecast.
+
+**Who benefits?** Hospitals, clinics, factories and households in Zambia and Zimbabwe. In 2024 Zambia had 8 h/day of load-shedding from 11 Mar and 12 h/day from 20 May. [Lusaka Times; crises.json] News reported up to 21 h/day; say "reported".
+
+**Who pays, or would? (hypothesis)**
+- The public warning stays free.
+- A utility, or a development lender funding its energy resilience, would pay for a tailored version run on their own operating data.
+- Why that's plausible: one month of 300 MW emergency power costs about $51M.
+- **We have not talked to any customer yet.** Say so plainly if asked.
+
+**Who are we?** A team of 3 at the Seattle event (Dan, Sean, Arvin; add a role each).
+- In a weekend we built and tested the whole pipeline.
+- We found real faults in the data: rainfall breaks and drift.
+- We publish our misses.
 
 ## WHAT
-- **For a 12-year-old:** "Patronus uses satellites to see when a country's power lakes are running dry, months before the lights go out, and shows what acting early would save."
-- **What the user does:** opens the Kariba page and sees the chance the lake falls into the danger zone by the end of 2027 (36%, or 4 of 11 past El Niño years). Then, in the simulator, they test acting now.
-- **What the user gets:** a dated, public warning, and a clear trade-off. A 30% release cut from Jan 2027 lowers the danger odds from 4 in 11 to 2 in 11 El Niño years, at a cost of 1.5 TWh of hydropower.
-- **What it does not do:** it does not forecast El Niño itself, because NOAA does that. It does not predict exact blackout hours. It does not replace the utility's operating models. The monthly country-level model is experimental.
+**For a 12-year-old:** "It watches lakes behind dams from space, and warns a country months ahead when the lake might get too low to make electricity."
+
+**What the user does, and gets:**
+- On the Kariba page they see:
+  - today's level (31% usable on 9 Nov 2026, by satellite);
+  - the chance of the danger zone by end-2027;
+  - past alarms, with the misses.
+- In the simulator they cut releases and watch the danger shrink, against the power that costs.
+- On Trend Detective anyone picks a variable and a region, and gets the trend and its significance.
+
+**What it does not do:**
+- It does not forecast El Niño. It uses NOAA's and NASA GEOS's forecasts.
+- It is not an operating plan. The simulator is illustrative.
+- It does not predict blackout hours or exact dollars. The cost of waiting ranges from $8M to $144M depending on assumptions.
+- The short-range country forecasts are experimental.
+- It can't see reservoirs that the altimeters don't track: Ecuador's Mazar/Paute and Vietnam's Hoa Binh and Son La.
 
 ## WHEN
-- **Lead times:** 0–6 months from water already stored (strong skill). 6–18 months from El Niño plus reservoir history (the Kariba alarm in Jul 2023). Decades from the trend map.
-- **When in their year:** ZRA sets the next year's allocation in Oct–Dec, and the rainy season decides the lake from Nov to Apr. Patronus is most useful in Jul–Dec, before those decisions are locked in.
-- **Why now:** NOAA expects a strong to very strong El Niño through Jan–Mar 2027 (>79% chance). ZRA has already cut the 2027 allocation by 36%, and projects the lake at 9% at the end of 2027.
+| Lead time | What we use | Skill | What the customer can do |
+|---|---|---|---|
+| 0–6 months | Lake level now + past seasons | Beats climatology: Brier skill 0.38 at 3 months, 0.15 at 6 (31 lakes); Kariba model 0.84 at 1 month, 0.46 at 6 | Ration, protect hospitals in the load-shedding schedule, buy imports |
+| 6–18 months | El Niño outlook × the lake's El Niño fingerprint | Kariba alarm Jul 2023, 5 months before the cut. Record since 1995: 3 hits, 2 misses, 2 false alarms | Cut releases early, contract imports at 17¢ not 26¢ |
+| Decades | GRACE/GRACE-FO storage trend since 2002 | 392 GW of hydro in basins with significantly declining storage | Diversify, interconnect, change reservoir rules |
+
+**When in their year:**
+- Before the yearly allocation. ZRA set the 2024 allocation on 28 Dec 2023; our alarm came in July.
+- Then monthly through the Nov–Apr rains.
+- Don't say "every December": we have two ZRA dates, not a published calendar.
+
+**Why now:**
+- **El Niño:** ONI is +2.46. NOAA expects a strong to very strong El Niño through Jan–Mar 2027 (>79% chance). SARCOF expects below-normal Jan–Mar 2027 rain over Zambia and Zimbabwe.
+- **The 2027 allocation:** ZRA has cut it by 36% (36 → 23 BCM), and projects 9% usable storage at end-2027.
+- **Our forecast**, timestamped: a median of 31% in Dec 2027, P(below 10%) = 0.36 (4 of 11), and P(below 20%) = 0.45.
 
 ## WHERE
-- **First:** Lake Kariba (Zambia/Zimbabwe). Zambia got about 86% of its electricity from hydro in 2024.
-- **Already built out:** 31 reservoirs on 4 continents, covering 77 GW at the dams plus 22 GW downstream. The trend map covers 466 hydropower basins, and the El Niño exposure map covers 48 hydro-dependent countries.
-- **NASA data:** GRACE/GRACE-FO (water stored in each basin, with GFZ); G-REALM satellite lake levels (TOPEX, Jason and Sentinel-6, with partner agencies); MERRA-2 and GPCP (rain and soil); GEOS-S2S (seasonal outlook); Black Marble (night lights).
-- **Where judges see it:** https://patronus-blackout-watch.aui-svi.workers.dev
+**Where it applies:**
+- Kariba first.
+- 31 reservoirs on 4 continents (77 GW at the dams, plus 22 GW downstream).
+- The global layers cover 48 hydro-dependent countries.
+
+**NASA data:**
+- **GRACE/GRACE-FO** (with GFZ/DLR): basin water storage, 2002–2026.
+- **G-REALM** (NASA/USDA altimetry from TOPEX, Jason-1/2/3 and Sentinel-6): lake levels, Kariba from 1992.
+- **MERRA-2** (via NASA POWER): rain, soil and temperature.
+- **GPCP** (NASA GSFC/GEWEX): rain for the El Niño fingerprints.
+- **GEOS-S2S:** the Niño-3.4 outlook.
+- **Black Marble** (via NASA GIBS): night lights.
+- Not NASA: Ember (generation), NOAA ONI, WRI power plants.
+
+**Where judges see it:** https://patronus-blackout-watch.aui-svi.workers.dev. It is auto-deployed from `main` and listed in README.md.
+- ⚠ The Trend Detective page is on `main` but not yet in the navigation. Sean's nav agent holds `App.tsx`. It must be wired before the 3 PM freeze.
 
 ## WHY
-- **Stakes:**
-  - Zambia's 2024 growth forecast was cut from 4.7% to 1.2% (IMF, citing power shortfalls).
-  - Lusaka's night lights dimmed by about 52% at the 2024 peak (Black Marble).
-  - Ecuador lost 1–1.5% of GDP in 2024 (finance minister).
-  - Vietnam lost about $1.4B in 2023 (World Bank).
-- **Why existing warnings failed:** the warnings were technical, internal and easy to ignore. Ecuador's grid operator warned in Oct–Dec 2023, and the cuts still reached 14 hours a day by Oct 2024. Patronus makes the warning public, dated, and priced in options.
-- **What's different:** existing tools are either paid short-range inflow forecasts for operators (0–10 days) or drought maps that stop at "it's dry". We found nothing public that turns satellite water data into country-level shortfall odds plus a decision simulator plus a published track record.
-- **Why NASA should care:** satellite altimetry is the backbone. ZRA publishes no downloadable lake history, and G-REALM gives us 34 years of it. It shows NASA water missions guiding real energy decisions.
+**Stakes:**
+- **Kariba 2024:** the lake fell to 2.89% usable on 11 Dec 2024. Load-shedding ran 8 then 12 h/day. Lusaka's lights dimmed by 52%. The IMF cut growth from 4.7% to 1.2%.
+- **Ecuador 2024:** 1–1.5% of GDP lost, with 14 h/day cuts from 24 Oct 2024.
+- **Vietnam 2023:** about $1.4B, roughly 0.3% of GDP (World Bank, preliminary).
+
+**Why warnings failed:**
+- They came late, or nobody had to act on them.
+- Ecuador's grid operator asked for rationing on 24 Oct 2023 and warned in Dec 2023, yet cuts reached 14 h/day by Oct 2024.
+- At Kariba, the first official signal came 5 months after our alarm.
+- Patronus warns earlier, puts a price on waiting, and timestamps the warning in public.
+- **Ecuador is context only.** We can't score it, so never imply we'd have caught it.
+
+**What's different:**
+- HydroForecast is paid and mostly 0–10 days ahead.
+- Drought monitors don't connect drought to electricity, and operator models aren't public.
+- We found nothing public, free and global that does all of this.
+
+**Why NASA should care:**
+- It turns GRACE-FO, G-REALM and MERRA-2 into a country-level decision months ahead. ZRA publishes no downloadable lake history; NASA altimetry gives 34 years of it.
+- It uses partner-agency data (GFZ, Sentinel-6).
+- It documents data faults: MERRA-2 rain breaks, and GPCP drift after 2019 confirmed by Kariba's satellite lake level.
 
 ## HOW
-1. **Measure:** satellites track the water in each lake and basin (lake level since 1992, basin water storage since 2002).
-2. **Compare:** we check today's level against the same month in every past year, and against how the lake behaved in past El Niño years.
-3. **Warn and test:** we publish the odds of falling into the danger zone and let planners test release cuts. Every forecast is hashed and timestamped.
+**3 steps:**
+1. **Read** NASA satellite and model data monthly.
+2. **Test** which signals are real: drying trends (Mann-Kendall) and El Niño effects (permutation tests). Kariba rises about 2 m less from Oct to Jun in El Niño years (p ≈ 0.01).
+3. **Replay** past El Niño years from today's level, count how often the lake ends in danger, and show what a release cut changes.
 
-- **How we know it works:**
-  - In a strictly forward test, Kariba 2024 was flagged in Jul 2023: 5 months before the official cut and 8 months before load-shedding.
-  - Applied unchanged to 31 reservoirs, the method flagged 14 of 17 past crises before they began. 8 of those came before the lake had dropped below its warning level.
-  - Misses: Kariba 2015, Kariba 2019 and Tarbela 2025.
-- **How it answers the challenge:** pick a variable (water storage or lake level) and a region (any hydropower basin), plot it since 2002, then measure the trend (Sen's slope) and its significance (Mann-Kendall with FDR). The Trend Detective page lets anyone do this, with 107 regions and 9 variables.
-- **After the hackathon:** pilot with ZESCO and ZRA before the 2027 rainy season. Then add SWOT (high-resolution lake heights) and the operators' own gauges. Expand the reservoir watch.
+**How we know it works:** strictly forward backtests that beat climatology and persistence.
+- **Kariba "next" model:** alarm Jul 2023. Record: 3 hits, 2 misses, 2 false alarms.
+- **31 reservoirs:** 14 of 17 crises flagged (8 true early warnings, 6 already low). Missed Kariba 2015, Kariba 2019 and Tarbela 2025. Over all seasons: 219 hit episodes, 26 missed, 64 false-alarm runs.
+- **Country monthly model:** weak (Brier skill 0.03–0.07), caught 1 of 6 crises. Labelled experimental.
+- **Tested and dropped:** Brazil reservoir data and heatwave features.
+
+**How it answers the challenge:**
+- **Variable:** 9 to choose from.
+- **Region:** 107 (52 basins, 24 countries, 31 reservoirs).
+- **Time series:** monthly, seasonal cycle removed.
+- **Rate of change:** Sen's slope with a 95% confidence interval.
+- **Significance:** Mann-Kendall (Hamed-Rao), with FDR across basins on the map.
+- **Result:** 392 GW of hydro sits in significantly drying basins. Only 19 GW of that also had significantly less rain.
+- Three guided demos.
+
+**Adoption after the hackathon:**
+- A 2027 pilot next to ZRA's projection and ZESCO's planning, published monthly.
+- The forecast is already timestamped, so 2027 becomes a public test.
+- Then add the customer's own data.
+- No partner yet.
 
 ## FEEL
-- **Before:** "Every year we find out the lake is too low when it's already too low. Then we buy emergency diesel and cut power to hospitals and homes."
-- **After:** "I know how much time I have, and what acting now buys me. If we cut releases 30% from January, the chance of a blackout-level lake drops from 4 in 11 to 2 in 11."
+| | Before | After |
+|---|---|---|
+| ZESCO planner | "We'll know how bad it is when the lake is low. By then the cheap options are gone." | "I know how much time I have, and what acting now buys me." |
+| River authority | "If we cut releases now, we lose power we may not need to lose." | "A 30% cut from January takes the danger from 4 in 11 El Niño years to 2 in 11. I can see the trade." |
+| Hospital or factory | "The power goes off without warning." | "We have a schedule, and we planned around it." |
+| Student | "I hear 'climate trend' but can't check it." | "I picked a lake, ran the test, and saw whether the change is significant." |
+
+---
 
 ## Hard judge questions
-- **"Isn't this just El Niño forecasting?"** No. NOAA forecasts El Niño. We translate it into *this lake's* odds, using 34 years of satellite levels, and our model learned that Kariba rises about 2 m less in El Niño years.
-- **"Your country model is weak. Why trust any of it?"** We show it as experimental, on purpose. The part we claim, reservoir storage plus El Niño, beats both baselines in a strictly forward test and caught 14 of 17 crises.
-- **"14 of 17, but 6 were already low?"** Correct, and we say so. 8 were genuine early warnings. A "lake already low" rule alone gets 12, so our model adds two catches and earlier warning on six more.
-- **"Why would a ministry trust a hackathon tool?"** Every forecast is timestamped publicly, so its track record builds in the open. It uses public NASA data and open code. The 2027 forecast can be checked against reality.
-- **"Is it scalable?"** Yes, we've already scaled it: one method, unchanged, applied to 31 reservoirs on 4 continents, with no API keys and no logins.
-- **"What would you do with 6 more months?"** Pilot with ZESCO and ZRA, add SWOT and gauge data, and extend to sub-monthly detection of flash droughts (we missed Sichuan 2022).
+- **Isn't this just El Niño forecasting?**
+  No. We take NOAA's and NASA's forecasts. We test which places actually lose water under El Niño: only 9 grids hold up robustly (54 GW), and only 8 of our 31 lakes show a significant effect. Then we turn that into a lake level and a power decision.
+- **Your country model is weak. Why trust any of it?**
+  We say so, and we label it experimental. The claims rest on the reservoir models, which beat climatology and persistence on data they never saw.
+- **14 of 17, but 6 were already low?**
+  Right. A "lake already low" rule alone catches 12 of 17. Our model adds Ghana 2006 and Venezuela 2009, and warns earlier on six more. The real claim is 8 of 17 warned before the lake dropped below its warning level.
+- **Why would a ministry trust a hackathon tool?**
+  It shouldn't, blindly. Every forecast is hashed and timestamped before the outcome, the misses are on the page, and the code and data are open. 2027 is a live test.
+- **Is it scalable?**
+  Yes, within satellite coverage: 31 reservoirs already, with free data and no logins. NASA's SWOT mission would add many more lakes.
+- **What would you do with 6 more months?**
+  Add SWOT to reach Ecuador and Vietnam. Pilot with one utility on its real release data. Backtest with archived El Niño forecasts. Work on the Kariba 2015 and 2019 misses.
+- **Where does the 36% come from?**
+  4 of 11 replayed El Niño years end 2027 below 10%. It's a small sample, so say "about 1 in 3".
+- **Is the cost model real?**
+  The prices are real (ZESCO filing). The total is illustrative ($8M–$144M), so we lead with time and power, not dollars.
+- **Did you use AI?**
+  Yes, for research, critique and coding. The concept is the team's, and AI-written briefs are labelled.
 
-## Pitch-ready lines (say these aloud)
-1. "In 2024 El Niño drained Lake Kariba, and Zambia's lights went out for up to 21 hours a day."
-2. "NASA's satellites saw it coming. Our model flagged it in July 2023, five months before officials cut the water."
-3. "El Niño is back. Today there's a 1-in-3 chance Kariba falls into the danger zone by the end of 2027."
-4. "Patronus shows what acting now buys: a 30% release cut from January halves those odds."
-5. "We tested it on 31 reservoirs on 4 continents. It flagged 14 of 17 past crises, and we show the misses."
+---
 
-## Weak spots to fix before the pitch
-- ⚠ **Willingness to pay** is untested. Present it as a public good, with funding as a hypothesis.
-- ⚠ **No sourced Zambian hospital or water-pumping fact yet.** The "21 hours" figure is from news reports. Find one sourced human-impact fact for Zambia, or say "reported".
-- ⚠ **"Halves the odds"** is 4→2 of 11 analog years: small numbers. Say "4 in 11 to 2 in 11", not a percentage.
-- ⚠ **No contact with ZESCO or ZRA.** Say "pilot target", not "partner".
+## Flags: fix before the pitch
+1. **One customer:** ZESCO's planners. ZRA is the decision partner and ZPC the second customer.
+2. **Who pays** is a hypothesis. We have talked to no customer yet.
+3. **Energy cost:** say "about 1.4 TWh" (net, 5.51 → 4.16 TWh), not 1.5. Fixed in DESIGN §13.
+4. **Two different 36s:** say "cut by more than a third" for the allocation and "about 1 in 3" for the odds.
+5. **Trend Detective** must be in the site navigation before the 3 PM freeze.
+6. **Ecuador is a hook, not proof.**
+7. **Don't present the reservoir-watch Kariba 2024 catch as the July 2023 El Niño alarm.** They are different results.
+8. **Fill in team names and roles** on slide 7 and the project page.
+9. **No sourced hospital number.** Keep it qualitative.
+10. **Don't say "every December"** about ZRA's calendar.
+11. **Name the scoreboard behind every fraction:** "2 of 5" is the country model; "14 of 17" is the reservoir watch.
 
-## 7-slide map
-1. Title and one-liner (WHAT).
-2. Kariba 2024: 21 h/day cuts, Lusaka lights −52%, growth forecast 4.7→1.2% (WHY, FEEL-before).
-3. The warning existed: Jul 2023 alarm, 5 months early (HOW we know).
-4. How: NASA data → trend and significance → El Niño reservoir model (HOW, WHERE-data, the challenge answer).
-5. Now: 1 in 3 by end-2027, with the simulator (WHEN-now, FEEL-after).
-6. Proof and reach: 14 of 17 crises on 4 continents, misses shown, timestamped (validity, scale).
-7. Customer and next step: ZESCO, the Ministry and ZRA; pilot before the 2027 rains; live link (WHO, after the hackathon).
+## The 7 slides
+| # | Slide | On screen |
+|---|---|---|
+| 1 | Patronus: months to darkness | Title, one-line promise, team names |
+| 2 | The lights went out | Lusaka night lights before/after (−52%); lake at 2.89%; IMF 4.7% → 1.2%; one line for Ecuador and Vietnam |
+| 3 | The warning was in the data | Kariba lake level with our Jul 2023 alarm, ZRA's Dec 2023 cut, Mar 2024 load-shedding |
+| 4 | How it works: NASA data to a decision | GRACE-FO, G-REALM, MERRA-2 → Sen's slope + Mann-Kendall + FDR → El Niño replay; Trend Detective screenshot |
+| 5 | 2027: the window is open | El Niño +2.46; allocation cut by more than a third; 4 in 11 → 2 in 11 with a 30% cut, about 1.4 TWh; the "after" line |
+| 6 | Check us | 14 of 17 (8 true early), misses named; 54 GW El Niño-exposed; 392 GW drying; timestamped forecast |
+| 7 | Who it's for, and the ask | ZESCO planners → hospitals and families; the 2027 pilot; live link; team |
