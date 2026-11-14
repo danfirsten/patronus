@@ -6,8 +6,9 @@ NASA GEOS-S2S Nino-3.4 plume.
 
 Method (see `METHOD` below for the published wording):
   * ENSO year y = the event that peaks in Nov(y)-Jan(y+1). Phase from ONI NDJ(y): El Nino >= +0.5, La Nina <= -0.5.
-  * basin_precip: NASA POWER (MERRA-2) PRECTOTCORR at capacity-weighted points near each country's hydro plants
-    (WRI GPPD). Two candidate windows per country:
+  * basin_precip: GPCP v2.3 monthly rainfall (primary; NASA GSFC/GEWEX, via NOAA PSL, data/raw/gpcp/) and NASA
+    POWER MERRA-2 PRECTOTCORR (cross-check) at capacity-weighted points near each country's hydro plants (WRI GPPD).
+    Window totals are high-passed (divided by the centred 11-yr running median). Two candidate windows per country:
         A) 12-month water year Oct(y)-Sep(y+1);
         B) the country's climatologically wettest 6 consecutive months, assigned to the ENSO year whose
            peak it is closest to (window centred Jun-Dec -> year y, centred Jan-May -> year y+1).
@@ -39,7 +40,7 @@ import pandas as pd
 import requests
 
 from pipeline.basins import country_points, load_plants
-from pipeline.paths import CACHE, OUT, RAW, REFERENCE
+from pipeline.paths import CACHE, ISSUE_DATE, OUT, RAW, REFERENCE
 from pipeline.power import monthly_point
 
 RNG_SEED = 20261115
@@ -94,30 +95,36 @@ PROJECTIONS = {
 
 METHOD = (
     "ENSO fingerprint per grid. ENSO year y = event peaking Nov(y)-Jan(y+1); El Nino if ONI NDJ(y) >= +0.5, "
-    "La Nina if <= -0.5, otherwise neutral (NOAA ONI). basin_precip: NASA POWER (MERRA-2) PRECTOTCORR at "
-    "capacity-weighted points near each grid's hydro plants (WRI GPPD), water years 1981/82 onward. Two windows "
-    "are tested: the Oct-Sep water year and the climatologically wettest 6 months; effect = % difference of mean "
-    "precipitation in El Nino (La Nina) years vs neutral years; the window with the larger |effect| is kept per "
-    "phase and the 5,000-shuffle permutation test repeats that choice in every shuffle (corrects for "
-    "cherry-picking). hydro_generation: Ember monthly hydro TWh per water year, linearly detrended, same "
-    "composite (low confidence; primary only with >= 10 water years, >= 3 events per phase and >= 4 neutral years). "
-    "reservoir_level (Zambia, Zimbabwe): G-REALM Kariba level rise from Oct-Nov(y) to Jun-Jul(y+1). "
-    "Loser in a phase if effect <= -5% with permutation p < 0.1 on the primary variable. Two-sided p-values."
+    "La Nina if <= -0.5, otherwise neutral (NOAA ONI). basin_precip: GPCP v2.3 monthly rainfall (NASA GSFC / GEWEX "
+    "satellite-gauge merge, 2.5 deg, 1979 onward) at capacity-weighted points near each grid's hydro plants (WRI "
+    "GPPD); NASA POWER MERRA-2 rainfall is computed the same way as a cross-check. Each year's window total is "
+    "divided by its centred 11-year running median (removes drift and decadal swings). Two windows are tested: the "
+    "Oct-Sep water year and the climatologically wettest 6 months; effect = % difference of mean rainfall in El Nino "
+    "(La Nina) years vs neutral years; the window with the larger effect is kept per phase and the 5,000-shuffle "
+    "permutation test repeats that choice in every shuffle (corrects for cherry-picking). hydro_generation: Ember "
+    "monthly hydro TWh per water year, linearly detrended, same composite (low confidence; primary only with >= 10 "
+    "water years, >= 3 events per phase and >= 4 neutral years). reservoir_level (Zambia, Zimbabwe): G-REALM "
+    "Kariba level rise from Oct-Nov(y) to Jun-Jul(y+1), tested on the difference in metres. Loser in a phase if "
+    "effect <= -5% with permutation p < 0.1 on the primary variable. Two-sided p-values."
 )
 
 LIMITATIONS = [
-    "Few events: about 15 El Nino and 16 La Nina years since 1981 for rainfall, and only 2-5 per phase in the "
-    "Ember generation records (mostly 2015/2019 onward). p-values are permutation-based but effect sizes are noisy.",
+    "Few events: about 16 El Nino and 17 La Nina years since 1979 for rainfall, only about 13 neutral years as the "
+    "baseline, and only 2-5 events per phase in the Ember generation records (mostly 2015/2019 onward). Effect sizes "
+    "are noisy; with 48 grids and p<0.1, about 2-3 grids per phase would pass by chance (see BH q-values).",
     "Rainfall is a proxy for hydropower: reservoirs buffer one bad season (Ng et al. 2017 found production "
     "anomalies smaller than inflow anomalies), and snowmelt, glaciers and upstream catchments are not captured.",
-    "Rainfall is sampled at up to 8 grid points near the largest plants, not over the full upstream catchment "
-    "(e.g. Namibia's Ruacana is fed from Angola; Tajikistan's Vakhsh from high-mountain snow).",
-    "MERRA-2 is a reanalysis: rainfall is a model estimate constrained by observations, not a gauge record.",
+    "Rainfall is sampled near the largest plants (GPCP 2.5 deg cells), not over the full upstream catchment "
+    "(e.g. Namibia's Ruacana is fed from Angola; Tajikistan's Vakhsh from high-mountain snow). Small or steep "
+    "basins (Andes, Balkans, Himalaya) are poorly resolved at 2.5 deg.",
+    "GPCP and MERRA-2 disagree in places; MERRA-2 point rainfall shows discontinuities (e.g. Colombia 2007-08 and "
+    "2021, a doubling of Vietnam rainfall from the 1980s to the 2010s), which is why GPCP is primary.",
     "Non-stationarity: ENSO teleconnections vary between decades and between El Nino flavours (Eastern vs "
-    "Central Pacific); a historical fingerprint does not guarantee the response of the 2026/27 event.",
-    "Neutral-year baseline includes trends (climate change, land use); no detrending is applied to rainfall.",
+    "Central Pacific); a historical fingerprint does not guarantee the response of the 2026/27 event. The 11-year "
+    "running-median baseline removes slow trends but also part of genuine decadal variability.",
     "Power-plant locations come from WRI GPPD v1.3 (2021); newer plants are missing.",
     "Kariba level is managed (releases, allocation rules), so it mixes climate and operating decisions.",
+    "Strong-El-Nino effects rest on 5 events (1982, 1997, 2009, 2015, 2023) and are exploratory.",
 ]
 
 
@@ -223,6 +230,36 @@ def fetch_precip(points_by_unit: dict[str, list]) -> dict[str, pd.Series]:
 
 
 # --------------------------------------------------------------------------------------------- stats
+def gpcp_precip(points_by_unit: dict[str, list]) -> dict[str, pd.Series]:
+    """GPCP v2.3 monthly precipitation (mm/day, 2.5 deg; NASA GSFC/GEWEX, served by NOAA PSL), nearest cell per
+    point, capacity-weighted. Returns {} when the file is missing."""
+    import xarray as xr
+    f = RAW / "gpcp" / "precip.mon.mean.nc"
+    if not f.exists():
+        return {}
+    d = xr.open_dataset(f, decode_times=False, drop_variables=["time_bnds"])
+    t = pd.Timestamp("1800-01-01") + pd.to_timedelta(d["time"].values, "D")
+    pr = d["precip"]
+    out = {}
+    for unit, pts in points_by_unit.items():
+        acc = None
+        for x, y, w in pts:
+            v = pr.sel(lat=y, lon=x % 360, method="nearest").values.astype(float) * w
+            acc = v if acc is None else acc + v
+        if acc is not None:
+            ser = pd.Series(acc, index=pd.DatetimeIndex(t).normalize())
+            out[unit] = ser[(ser >= 0) & (ser < 1e3)].dropna()
+    return out
+
+
+def highpass(w: pd.Series, span: int = 11) -> pd.Series:
+    """Each year relative to the centred `span`-year running median (removes drift, decadal swings and
+    reanalysis discontinuities); values are ratios around 1."""
+    w = w.sort_index()
+    base = w.rolling(span, center=True, min_periods=span // 2 + 1).median()
+    return (w / base).dropna()
+
+
 def window_totals(s: pd.Series, start_month: int, length: int, year_offset: int) -> pd.Series:
     """Sum of monthly mean rate x days over a window starting in `start_month` of year (y + year_offset),
     indexed by ENSO year y. Only complete windows are kept."""
@@ -490,7 +527,7 @@ def parse_geos(raw: str) -> dict:
                 vals = [float(v) for v in vals]
             except ValueError:
                 continue
-            out["forecast"] = [{"season": s, "value": round(v, 2)} for s, v in zip(toks, vals)]
+            out["forecast"] = [{"season": s, "value": v} for s, v in zip(toks, vals)]
             break
     return out
 
@@ -571,9 +608,13 @@ def main() -> None:
     pts["CHN-SC"] = sichuan_points()
     pts["BRA-S"] = brazil_south_points()
     pts["URY"] = country_points("URY")
-    print(f"fetching NASA POWER for {sum(len(v) for v in pts.values())} points ...")
-    precip = fetch_precip({k: v for k, v in pts.items() if v})
-    print(f"  precip ready ({time.time() - t0:.0f}s)")
+    print(f"rainfall at {sum(len(v) for v in pts.values())} points (GPCP v2.3 + NASA POWER/MERRA-2) ...")
+    ok_pts = {k: v for k, v in pts.items() if v}
+    gpcp = gpcp_precip(ok_pts)
+    merra = fetch_precip(ok_pts)
+    if not gpcp:
+        notes.append("GPCP file missing (data/raw/gpcp/precip.mon.mean.nc); basin_precip falls back to MERRA-2.")
+    print(f"  rainfall ready ({time.time() - t0:.0f}s)")
 
     gen = ember_wy_generation()
     kar = kariba_fingerprint(ndj, rng)
@@ -582,28 +623,49 @@ def main() -> None:
     units.append(("CHN-SC", "Sichuan (China)", None, None, "Asia", True))
     validation_units = {"BRA-S": "Southern Brazil (plants south of 23 S)", "URY": "Uruguay"}
 
+    def precip_fp(s):
+        if s is None or len(s) < 120:
+            return None
+        st, off = wet_window(s)
+        wins = [("Oct-Sep water year", 10, 12, 0), (f"{window_label(st, 6, off)} wet season", st, 6, off)]
+        pr = composite([highpass(window_totals(s, w[1], w[2], w[3])) for w in wins], ndj, rng)
+        if not pr:
+            return None
+        yrs = pr["years"]
+        pr["record"] = f"WY {yrs[0]}/{str(yrs[0] + 1)[-2:]}-{yrs[-1]}/{str(yrs[-1] + 1)[-2:]}"
+        pr["windows"] = [w[0] for w in wins]
+        pr["wet_season"] = window_label(st, 6, off)
+        pr["el_nino_window"] = wins[pr["el_nino_window_index"]]
+        pr["la_nina_window"] = wins[pr["la_nina_window_index"]]
+        return pr
+
+    def pack(pr, dataset, iso):
+        return {
+            "dataset": dataset,
+            "el_nino_effect_pct": _r(pr["el_nino_effect_pct"]), "el_nino_p": _r(pr["el_nino_p"], 4),
+            "la_nina_effect_pct": _r(pr["la_nina_effect_pct"]), "la_nina_p": _r(pr["la_nina_p"], 4),
+            "n_el_nino": pr["n_el_nino"], "n_la_nina": pr["n_la_nina"], "n_neutral": pr["n_neutral"],
+            "record": pr["record"], "wet_season": pr["wet_season"],
+            "el_nino_window": pr["el_nino_window"][0], "la_nina_window": pr["la_nina_window"][0],
+            "effect_by_window_el_nino_pct": dict(zip(pr["windows"], [_r(x) for x in pr["el_nino_effect_by_window"]])),
+            "effect_by_window_la_nina_pct": dict(zip(pr["windows"], [_r(x) for x in pr["la_nina_effect_by_window"]])),
+            "strong_el_nino_effect_pct": _r(pr.get("strong_el_nino_effect_pct")),
+            "strong_el_nino_p": _r(pr.get("strong_el_nino_p"), 4),
+            "n_strong_el_nino": pr.get("n_strong_el_nino"),
+            "strong_el_nino_years": pr.get("strong_el_nino_years"),
+            "n_points": len(pts.get(iso, [])),
+            "confidence": "medium",
+        }
+
     rows, extra = [], {}
     for iso, name, gw, gw_src, cont, has_monthly in units + [(k, v, None, None, None, False) for k, v in validation_units.items()]:
-        s = precip.get(iso)
         row = {"iso3": iso, "name": name}
-        pr = None
-        if s is not None and len(s) > 120:
-            st, off = wet_window(s)
-            wA = window_totals(s, 10, 12, 0)
-            wB = window_totals(s, st, 6, off)
-            pr = composite([wA, wB], ndj, rng)
-            wins = [("Oct-Sep water year", 10, 12, 0), (f"{window_label(st, 6, off)} wet season", st, 6, off)]
-            if pr:
-                yrs = pr["years"]
-                pr["record"] = f"WY {yrs[0]}/{str(yrs[0] + 1)[-2:]}-{yrs[-1]}/{str(yrs[-1] + 1)[-2:]}"
-                pr["windows"] = [w[0] for w in wins]
-                pr["wet_season"] = window_label(st, 6, off)
-                pr["wet_season_offset"] = off
-                pr["wet_season_start"] = st
-                pr["el_nino_window"] = wins[pr["el_nino_window_index"]]
-                pr["la_nina_window"] = wins[pr["la_nina_window_index"]]
+        prg = precip_fp(gpcp.get(iso))
+        prm = precip_fp(merra.get(iso))
+        pr = prg if prg is not None else prm
+        pr_name = "GPCP v2.3 monthly (2.5 deg)" if prg is not None else "NASA POWER MERRA-2 PRECTOTCORR"
         if iso in validation_units:
-            extra[iso] = pr
+            extra[iso] = {"gpcp": prg, "merra2": prm}
             continue
         g = None
         if has_monthly and iso in gen:
@@ -612,21 +674,9 @@ def main() -> None:
         # choose primary variable
         variables = {}
         if pr:
-            variables["basin_precip"] = {
-                "el_nino_effect_pct": _r(pr["el_nino_effect_pct"]), "el_nino_p": _r(pr["el_nino_p"], 4),
-                "la_nina_effect_pct": _r(pr["la_nina_effect_pct"]), "la_nina_p": _r(pr["la_nina_p"], 4),
-                "n_el_nino": pr["n_el_nino"], "n_la_nina": pr["n_la_nina"], "n_neutral": pr["n_neutral"],
-                "record": pr["record"],
-                "el_nino_window": pr["el_nino_window"][0], "la_nina_window": pr["la_nina_window"][0],
-                "effect_by_window_el_nino_pct": dict(zip(pr["windows"], [_r(x) for x in pr["el_nino_effect_by_window"]])),
-                "effect_by_window_la_nina_pct": dict(zip(pr["windows"], [_r(x) for x in pr["la_nina_effect_by_window"]])),
-                "strong_el_nino_effect_pct": _r(pr.get("strong_el_nino_effect_pct")),
-                "strong_el_nino_p": _r(pr.get("strong_el_nino_p"), 4),
-                "n_strong_el_nino": pr.get("n_strong_el_nino"),
-                "strong_el_nino_years": pr.get("strong_el_nino_years"),
-                "n_points": len(pts.get(iso, [])),
-                "confidence": "medium",
-            }
+            variables["basin_precip"] = pack(pr, pr_name, iso)
+        if prm is not None and prg is not None:
+            variables["basin_precip_merra2"] = pack(prm, "NASA POWER MERRA-2 PRECTOTCORR (cross-check)", iso)
         if g and g.get("el_nino_effect_pct") is not None or (g and g.get("la_nina_effect_pct") is not None):
             long_rec = g["n_years"] >= 10 and g["n_el_nino"] >= 3 and g["n_la_nina"] >= 3 and g["n_neutral"] >= 4
             variables["hydro_generation"] = {
@@ -682,7 +732,7 @@ def main() -> None:
                 sn = f"Hydro basins' wettest 6 months: {wet}. Rainfall El Nino signal strongest in the {ew}" \
                      + (f"; La Nina signal in the {lw}." if lw != ew else "; same window for La Nina.")
                 if prim == "reservoir_level":
-                    sn = f"Kariba fills Dec-Jul from the {wet} rains; " + sn
+                    sn = f"Lake Kariba fills Dec-Jul from the {wet} rains. " + sn
                 if prim == "hydro_generation":
                     sn = "Primary: Ember generation (water years). " + sn
                 row["season_note"] = sn
@@ -702,36 +752,79 @@ def main() -> None:
             ewin = pr["el_nino_window"]
             row["impact_window_current_event"] = (
                 "Oct 2026-Sep 2027" if ewin[2] == 12 else window_label(ewin[1], 6, ewin[3], 2026))
+            end = pd.Timestamp(year=2026 + ewin[3], month=ewin[1], day=1) + pd.DateOffset(months=ewin[2] - 1)
+            row["impact_window_passed"] = bool(end < pd.Timestamp(ISSUE_DATE))
         rows.append(row)
 
     # ---- outlook and implications
     out_look = outlook(oni, notes)
     out_look["la_nina_after_strong_el_nino"] = la_nina_after_strong(ndj)
     status_short = (out_look.get("status") or "El Nino status unknown")
+    def fp(p):
+        return "p<0.01" if p < 0.01 else f"p={p:.2f}"
+
     for r in rows:
         if r.get("exposure") in ("el_nino_loser", "both"):
             v = r["variables"].get(r["variable"], {})
             bp = r["variables"].get("basin_precip") or {}
             if r["variable"] == "reservoir_level":
                 core = (f"in past El Nino years Lake Kariba rose {abs(v['el_nino_effect_m']):.1f} m less over the "
-                        f"rainy season than in neutral years ({r['el_nino_effect_pct']:+.0f}%, p={r['el_nino_p']:.2f})")
+                        f"rainy season than in neutral years ({r['el_nino_effect_pct']:+.0f}% of the usual rise, {fp(r['el_nino_p'])})")
             elif r["variable"] == "hydro_generation":
-                core = f"hydro output was {r['el_nino_effect_pct']:+.0f}% vs trend in past El Nino water years (p={r['el_nino_p']:.2f})"
+                core = f"hydro output was {r['el_nino_effect_pct']:+.0f}% vs trend in past El Nino water years ({fp(r['el_nino_p'])})"
             else:
                 core = (f"this grid's hydro basins historically get {abs(r['el_nino_effect_pct']):.0f}% less rain in the "
-                        f"{bp.get('el_nino_window', '')} of El Nino years (p={r['el_nino_p']:.2f}, n={r['n_el_nino']})")
+                        f"{bp.get('el_nino_window', '')} of El Nino years ({fp(r['el_nino_p'])}, n={r['n_el_nino']})")
             strong = bp.get("strong_el_nino_effect_pct")
-            st_txt = f"; {strong:+.0f}% in the {bp.get('n_strong_el_nino')} strong El Ninos" if strong is not None else ""
-            r["current_implication"] = (f"{status_short}: El Nino is forecast through early 2027; {core}{st_txt}. "
-                                        f"Window to watch: {r.get('impact_window_current_event')}.")
+            if strong is None:
+                st_txt = ""
+            elif r["variable"] == "basin_precip":
+                st_txt = f" ({strong:+.0f}% in the {bp.get('n_strong_el_nino')} strong El Ninos)"
+            else:
+                st_txt = f"; basin rainfall was {strong:+.0f}% in the {bp.get('n_strong_el_nino')} strong El Ninos"
+            if r.get("impact_window_passed"):
+                tail = (f"The most affected season ({r.get('impact_window_current_event')}) has largely passed, so "
+                        f"check it against observed storage; the impact shows up in the following dry season.")
+            else:
+                tail = f"Window to watch: {r.get('impact_window_current_event')}."
+            r["current_implication"] = f"{status_short}: El Nino is forecast through early 2027; {core}{st_txt}. {tail}"
         elif r.get("exposure") == "la_nina_loser":
             r["current_implication"] = ("Loses under La Nina, which is not forecast for the next 6 months; "
                                         "La Nina often follows strong El Ninos, so watch late 2027.")
         elif r.get("exposure") == "neutral":
             r["current_implication"] = "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+        # secondary evidence: a non-primary variable that would meet the loser rule
+        sec = []
+        for vn, v in (r.get("variables") or {}).items():
+            if vn == r.get("variable") or not v:
+                continue
+            for ph, lab_ in (("el_nino", "El Nino"), ("la_nina", "La Nina")):
+                e, p_ = v.get(f"{ph}_effect_pct"), v.get(f"{ph}_p")
+                if e is not None and p_ is not None and e <= LOSER_EFFECT and p_ < LOSER_P:
+                    sec.append(f"{vn} ({v.get('confidence', '')} confidence, {v.get('record', '')}) shows "
+                               f"{e:+.0f}% under {lab_} ({fp(p_)})")
+        if sec:
+            r["secondary_evidence"] = sec
+            if r.get("exposure") == "neutral":
+                r["current_implication"] += " Secondary evidence: " + "; ".join(sec) + "."
+
+    # ---- multiple testing: Benjamini-Hochberg q across the 48 countries, per phase (reported, not used for class)
+    nat = [r for r in rows if r["iso3"] != "CHN-SC"]
+    for ph in ("el_nino", "la_nina"):
+        idx = [i for i, r in enumerate(nat) if r.get(f"{ph}_p") is not None]
+        ps = np.array([nat[i][f"{ph}_p"] for i in idx])
+        order = np.argsort(ps)
+        q = np.empty_like(ps)
+        m = len(ps)
+        prev = 1.0
+        for rank in range(m, 0, -1):
+            j = order[rank - 1]
+            prev = min(prev, ps[j] * m / rank)
+            q[j] = prev
+        for i, qq in zip(idx, q):
+            nat[i][f"{ph}_q"] = _r(qq, 4)
 
     # ---- summary
-    nat = [r for r in rows if r["iso3"] != "CHN-SC"]
     enl = [r for r in nat if r.get("exposure") in ("el_nino_loser", "both")]
     lnl = [r for r in nat if r.get("exposure") in ("la_nina_loser", "both")]
     gw_en = sum(r["hydro_gw"] or 0 for r in enl)
@@ -747,6 +840,11 @@ def main() -> None:
         "el_nino_losers": [r["iso3"] for r in sorted(enl, key=lambda r: r["el_nino_effect_pct"])],
         "la_nina_losers": [r["iso3"] for r in sorted(lnl, key=lambda r: r["la_nina_effect_pct"])],
         "sichuan_exposure": sc.get("exposure"),
+        "expected_false_losers_per_phase": round(len(nat) * LOSER_P / 2, 1),
+        "field_significance_note": (f"If ENSO had no effect, about {len(nat) * LOSER_P / 2:.1f} of {len(nat)} grids would "
+                                    f"pass the loser test in each phase by chance (p<0.1, negative sign). We find "
+                                    f"{len(enl)} El Nino losers and {len(lnl)} La Nina losers. Per-country "
+                                    f"Benjamini-Hochberg q-values are in el_nino_q / la_nina_q."),
         "strong_el_nino_losers": [r["iso3"] for r in nat if r.get("strong_el_nino_loser")],
         "gw_strong_el_nino_losers": round(sum(r["hydro_gw"] or 0 for r in nat if r.get("strong_el_nino_loser")), 1),
         "strong_el_nino_note": "Exploratory: basin rainfall in the 5 strong El Ninos (1982, 1997, 2009, 2015, 2023) vs "
@@ -765,44 +863,53 @@ def main() -> None:
         items = []
         for iso in v["iso3"]:
             if iso in extra:
-                pr = extra[iso]
+                pr = extra[iso]["gpcp"] or extra[iso]["merra2"]
+                pm = extra[iso]["merra2"]
                 eff, p = (pr["el_nino_effect_pct"], pr["el_nino_p"]) if pr else (None, None)
                 bw = {k: _r(x) for k, x in zip(pr["windows"], pr["el_nino_effect_by_window"])} if pr else None
+                m_eff, m_p = (pm["el_nino_effect_pct"], pm["el_nino_p"]) if pm else (None, None)
                 nm = validation_units[iso]
             else:
                 bp = byiso[iso]["variables"].get("basin_precip")
+                bm = byiso[iso]["variables"].get("basin_precip_merra2") or {}
                 eff, p = (bp["el_nino_effect_pct"], bp["el_nino_p"]) if bp else (None, None)
                 bw = bp["effect_by_window_el_nino_pct"] if bp else None
+                m_eff, m_p = bm.get("el_nino_effect_pct"), bm.get("el_nino_p")
                 nm = byiso[iso]["name"]
             ok = None if eff is None else (np.sign(eff) == v["sign"])
             items.append({"iso3": iso, "name": nm, "el_nino_precip_effect_pct": _r(eff), "p": _r(p, 4),
                           "effect_by_window_pct": bw, "sign_matches": None if ok is None else bool(ok),
-                          "significant_p_lt_0_1": None if p is None else bool(p < 0.1)})
+                          "significant_p_lt_0_1": None if p is None else bool(p < 0.1),
+                          "merra2_effect_pct": _r(m_eff), "merra2_p": _r(m_p, 4)})
         n_ok = sum(1 for i in items if i["sign_matches"])
         val.append({"region": v["region"], "expected": v["expect"], "units": items,
                     "result": f"{n_ok}/{len(items)} with expected sign; "
-                              f"{sum(1 for i in items if i['sign_matches'] and i['significant_p_lt_0_1'])} also p<0.1"})
+                              f"{sum(1 for i in items if i['sign_matches'] and i['significant_p_lt_0_1'])} also p<0.1",
+                    "passed": ("yes" if all(i["sign_matches"] and i["significant_p_lt_0_1"] for i in items)
+                               else "sign only" if n_ok == len(items) else "no")})
     if extra.get("BRA-S") is not None or extra.get("URY") is not None:
         notes.append("Southern Brazil (GPPD plants south of 23 S) and Uruguay are computed for validation only; "
                      "they are not in the 48-country list.")
     notes.append("Sichuan rainfall points come from GPPD Chinese hydro plants in a bounding box around the province "
                  f"(lon {SICHUAN_BBOX[0]}-{SICHUAN_BBOX[1]}, lat {SICHUAN_BBOX[2]}-{SICHUAN_BBOX[3]}).")
+    notes.append("Source id 'gpcp' (GPCP v2.3 monthly precipitation, NASA GSFC/GEWEX, "
+                 "https://psl.noaa.gov/data/gridded/data.gpcp.html) needs an entry in meta.json.")
     notes.append("Ng, Turner & Galelli 2017 (ERL) is the 1,593-dam ENSO-hydropower study; 'more than one third' of "
                  "dams show significant anomalies in at least one phase.")
 
     res = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "sources": ["oni", "cpc_enso", "geos_s2s", "power", "gppd", "ember_monthly", "ember_yearly", "ember_china",
+        "sources": ["oni", "cpc_enso", "geos_s2s", "gpcp", "power", "gppd", "ember_monthly", "ember_yearly", "ember_china",
                     "grealm"],
         "method": METHOD,
         "summary": summary,
         "countries": sorted(rows, key=lambda r: (r["iso3"] == "CHN-SC", -(r["hydro_gw"] or 0))),
         "outlook": out_look,
         "projections": PROJECTIONS,
-        "enso_years": {"definition": f"ONI NDJ(y) >= {EN_T} El Nino, <= {LN_T} La Nina",
-                       "el_nino": [int(y) for y in ndj.index if y >= 1981 and ndj[y] >= EN_T],
-                       "la_nina": [int(y) for y in ndj.index if y >= 1981 and ndj[y] <= LN_T],
-                       "strong_el_nino": [int(y) for y in ndj.index if y >= 1981 and ndj[y] >= STRONG_T]},
+        "enso_years": {"definition": f"ONI NDJ(y) >= {EN_T} El Nino, <= {LN_T} La Nina (years from 1979)",
+                       "el_nino": [int(y) for y in ndj.index if y >= 1979 and ndj[y] >= EN_T],
+                       "la_nina": [int(y) for y in ndj.index if y >= 1979 and ndj[y] <= LN_T],
+                       "strong_el_nino": [int(y) for y in ndj.index if y >= 1979 and ndj[y] >= STRONG_T]},
         "kariba": {k: kar[k] for k in ("record", "n_el_nino", "n_la_nina", "n_neutral", "el_nino_years",
                                         "mean_rise_neutral_m", "mean_rise_el_nino_m", "mean_rise_la_nina_m",
                                         "mean_rise_other_m", "el_nino_vs_other_m", "el_nino_vs_other_p",

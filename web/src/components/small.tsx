@@ -50,7 +50,7 @@ export function ProbStrip({ months }: { months?: ForecastMonth[] }) {
  * "Months to darkness" gauge. `months` = months until the first forecast month
  * that crosses the alarm line; null = not within the forecast window.
  */
-export function Gauge({ months, max = 12, label, sub }: { months: number | null; max?: number; label: string; sub?: string }) {
+export function Gauge({ months, max = 12, label, sub, beyond }: { months: number | null; max?: number; label: string; sub?: string; beyond?: string }) {
   const W = 220, H = 130, cx = W / 2, cy = 112, r = 92;
   const v = months === null ? max : Math.max(0, Math.min(max, months));
   const angle = Math.PI * (1 - v / max); // 0 months = left (danger), max = right (calm)
@@ -69,7 +69,7 @@ export function Gauge({ months, max = 12, label, sub }: { months: number | null;
   return (
     <div className="gauge">
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 280 }} role="img"
-        aria-label={`${label}: ${months === null ? `more than ${max}` : months} months`}>
+        aria-label={`${label}: ${months === null ? beyond ?? `more than ${max}` : months} months`}>
         {seg.map((s) => (
           <path key={s.from} d={arc(Math.PI * (1 - s.from / max), Math.PI * (1 - s.to / max))} stroke={s.c} strokeWidth={14} fill="none" />
         ))}
@@ -78,7 +78,7 @@ export function Gauge({ months, max = 12, label, sub }: { months: number | null;
         <text x={cx - r} y={cy + 16} textAnchor="middle" className="tick">0</text>
         <text x={cx + r} y={cy + 16} textAnchor="middle" className="tick">{max}+</text>
       </svg>
-      <div className="gauge-value">{months === null ? `${max}+` : months}<span> months</span></div>
+      <div className="gauge-value">{months === null ? beyond ?? `${max}+` : months}<span> months</span></div>
       <div className="gauge-label">{label}</div>
       {sub && <div className="gauge-sub muted">{sub}</div>}
     </div>

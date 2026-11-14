@@ -31,7 +31,7 @@ import shapely
 import xarray as xr
 from shapely.geometry import Point
 
-from pipeline.basins import basin_sample_points, load_basins, load_plants
+from pipeline.basins import load_basins, load_plants
 from pipeline.paths import OUT, RAW
 from pipeline.power import monthly_point
 
@@ -127,9 +127,28 @@ def trend_test(anom: np.ndarray) -> dict | None:
         return None
     t = np.arange(len(anom), dtype=float)[ok]  # months since 2002-04
     x = anom[ok]
-    r = mk.hamed_rao_modification_test(x)
+    with np.errstate(invalid="ignore"):
+        r = mk.hamed_rao_modification_test(x)
+    test = "hamed_rao"
+    if not np.isfinite(r.p):  # Hamed-Rao corrected variance can go negative; fall back to Yue-Wang correction
+        r = mk.yue_wang_modification_test(x)
+        test = "yue_wang"
     b, a = sen_slope(t, x)
-    return {"p": float(r.p), "z": float(r.z), "tau": float(r.Tau), "slope_per_month": b, "intercept": a, "n": int(ok.sum())}
+    return {"p": float(r.p), "z": float(r.z), "tau": float(r.Tau), "slope_per_month": b, "intercept": a,
+            "n": int(ok.sum()), "test": test}
+
+
+def annual_p(anom: np.ndarray) -> float | None:
+    """Robustness check: Hamed-Rao MK on calendar-year means (years with >= 6 months of data)."""
+    yrs = np.array([m.year for m in MONTHS])
+    s = pd.Series(anom).groupby(yrs).agg(lambda v: v.mean() if v.notna().sum() >= 6 else np.nan).dropna()
+    if len(s) < 10:
+        return None
+    with np.errstate(invalid="ignore"):
+        r = mk.hamed_rao_modification_test(s.to_numpy())
+    if not np.isfinite(r.p):
+        r = mk.yue_wang_modification_test(s.to_numpy())
+    return float(r.p)
 
 
 def bh_fdr(p: list[float | None]) -> list[float | None]:
@@ -201,11 +220,16 @@ def r_(v, n=3):
     return round(v, n) if np.isfinite(v) else None
 
 
-def clean_plant_name(s: str) -> str:
-    for junk in [" Hydroelectric Power Station", " Hydroelectric Power Plant", " Hydropower Station", " Hydro Power Plant",
-                 " Hydroelectric Plant", " Power Station", " Power Plant", " Hydroelectric", " Dam"]:
+def clean_plant_name(s: str, country: str = "") -> str:
+    if country and s.endswith(" " + country):
+        s = s[: -len(country) - 1]
+    for junk in [" Pumped Storage", " Hydroelectric Power Station", " Hydroelectric Power Plant", " Hydropower Station",
+                 " Hydro Power Plant", " Hydroelectric Plant", " Power Station", " Power Plant", " Hydroelectric", " Dam",
+                 " GEN"]:
         s = s.replace(junk, "")
-    s = s.strip(" ,-")
+    s = s.replace("_", " ").strip(" ,-")
+    if s.isupper() and len(s) > 4:
+        s = s.title()
     return s if len(s) <= 40 else s[:38].rstrip() + "…"
 
 
@@ -222,6 +246,27 @@ def upstream_catchment(basin_id: str) -> tuple[list[str], object, float]:
         todo.extend(up.get(h, []))
     sub = g[g["HYBAS_ID"].astype("int64").isin(seen)]
     return [str(h) for h in seen], sub.geometry.union_all(), float(sub["SUB_AREA"].sum())
+
+
+KARIBA_LAKE_KM2 = 5580  # Lake Kariba surface area at full supply level (approximate, published figure)
+
+
+def kariba_lake_equivalent(basin_area_km2: float) -> dict | None:
+    """Sen slope of G-REALM Lake Kariba level over the GRACE period, expressed as water depth spread over the basin."""
+    f = RAW / "kariba_grealm_10day_levels.csv"
+    if not f.exists():
+        return None
+    df = pd.read_csv(f, parse_dates=["date"])
+    m = df.groupby(df["date"].dt.to_period("M"))["level_m_egm2008"].mean().reindex(MONTHS).to_numpy(dtype=float)
+    r = trend_test(deseasonalize(m))
+    if r is None:
+        return None
+    m_per_decade = r["slope_per_month"] * 120
+    return {"lake_level_slope_m_per_decade": r_(m_per_decade, 3), "lake_level_p": r_(r["p"], 5),
+            "lake_area_km2_assumed": KARIBA_LAKE_KM2,
+            "basin_equivalent_cm_per_decade": r_(m_per_decade * 100 * KARIBA_LAKE_KM2 / basin_area_km2, 3),
+            "source": "grealm",
+            "method": "Sen slope of deseasonalized monthly-mean G-REALM level, 2002-04..2026-08, times lake area / basin area"}
 
 
 def series_block(raw: np.ndarray, anom: np.ndarray) -> dict:
@@ -258,9 +303,11 @@ def main() -> None:
     print(f"[trends] TWS tests done ({time.time() - t0:.1f}s)")
 
     # --- precipitation per basin (all basins; POWER is cached)
+    geoms = dict(zip(basins["basin_id"], basins.geometry))
+
     def _pr(bid):
-        try:
-            return bid, precip_test(precip_series(basin_sample_points(bid, max_points=3)))
+        try:  # same sampling as pipeline.basins.basin_sample_points(bid, 3), without reloading the basin file per call
+            return bid, precip_test(precip_series(grid_points(geoms[bid], 3)))
         except Exception:  # noqa: BLE001
             return bid, None
     with ThreadPoolExecutor(max_workers=6) as ex:
@@ -276,7 +323,7 @@ def main() -> None:
     pr_q = dict(zip(ids, bh_fdr([pr_res[b]["p"] if pr_res[b] else None for b in ids])))
 
     # --- plants per basin
-    pl = plants.groupby(["basin_id", "name"], as_index=False)["capacity_mw"].sum()
+    pl = plants.groupby(["basin_id", "name", "country_name"], as_index=False)["capacity_mw"].sum()
     top_plants = {bid: g.sort_values("capacity_mw", ascending=False).head(2) for bid, g in pl.groupby("basin_id")}
 
     series_ids = set(ids[:N_SERIES])
@@ -304,9 +351,10 @@ def main() -> None:
         tp = top_plants.get(bid)
         major = [{"name": n, "mw": r_(mw, 1)} for n, mw in zip(tp["name"], tp["capacity_mw"])] if tp is not None else []
         main_ctry = [c for c, gw in ctry if gw >= 0.1 * r.hydro_gw][:3] or [c for c, _ in ctry[:1]]
-        label = clean_plant_name(major[0]["name"]) if major else bid
-        precip_decline = bool(p and pr_q[bid] is not None and pr_q[bid] < ALPHA and p["slope_per_month"] < 0)
-        gw_flag = None if (cls is None or p is None) else bool(cls == "drying" and not precip_decline)
+        label = clean_plant_name(tp["name"].iat[0], tp["country_name"].iat[0]) if major else bid
+        precip_decline = None if p is None or pr_q[bid] is None else bool(pr_q[bid] < ALPHA and p["slope_per_month"] < 0)
+        pa = annual_p(anom_series[bid])
+        gw_flag = None if (cls is None or precip_decline is None) else bool(cls == "drying" and not precip_decline)
         ii, _, nearest = cells[bid]
         rec = {
             "basin_id": bid,
@@ -324,11 +372,13 @@ def main() -> None:
             "tws_p": r_(t["p"], 5) if t else None,
             "tws_q": r_(q, 5),
             "tws_n_months": t["n"] if t else None,
+            "tws_p_annual": r_(pa, 5),
             "precip_slope_pct_per_decade": r_(p["slope_pct_per_decade"], 2) if p else None,
             "precip_p": r_(p["p"], 5) if p else None,
             "precip_q": r_(pr_q[bid], 5),
             "precip_mean_mm_day": r_(p["mean_mm_day"], 3) if p else None,
             "trend_class": cls,
+            "precip_decline_significant": precip_decline,
             "possible_groundwater_signal": gw_flag,
         }
         if bid in series_ids:
@@ -366,7 +416,33 @@ def main() -> None:
                                                     "sen_slope_cm_per_month": r_(ut["slope_per_month"], 5)} if ut else {}),
                 "note": "Single pre-specified test, so p is not FDR-adjusted.",
             },
+            "interpretation": None,
         }
+        up = kariba["upstream_catchment"]
+        lake = kariba_lake_equivalent(kb["area_km2"])
+        kariba["lake_level_trend"] = lake
+        if kb["trend_class"] == "drying" and not up["significant"]:
+            lake_txt = ""
+            if lake and lake["basin_equivalent_cm_per_decade"] is not None:
+                share = 100 * lake["basin_equivalent_cm_per_decade"] / kb["tws_slope_cm_per_decade"]
+                kariba["lake_share_of_basin_trend_pct"] = r_(share, 0)
+                lake_txt = (f" G-REALM shows the lake level itself falling {lake['lake_level_slope_m_per_decade']:+.2f} m/decade "
+                            f"(p={lake['lake_level_p']:.3f}); spread over the basin that is "
+                            f"{lake['basin_equivalent_cm_per_decade']:+.1f} cm/decade, "
+                            + ("enough on its own to explain the whole GRACE trend" if share >= 100 else
+                               f"about {share:.0f}% of the GRACE trend")
+                            + " (a rough comparison: GRACE smears the lake's mass beyond the basin edge).")
+            kariba["interpretation"] = (
+                f"The Kariba level-4 basin shows significant TWS drying ({kb['tws_slope_cm_per_decade']:+.1f} cm/decade, "
+                f"q={kb['tws_q']:.3f}) with no significant rainfall trend, while the whole catchment draining into Kariba "
+                f"(upper Zambezi, {up['area_km2']:,.0f} km2) shows none ({up['tws_slope_cm_per_decade']:+.1f} cm/decade, "
+                f"p={up['tws_p']:.2f}).{lake_txt} The decline is mostly the reservoir drawing down, not a long-term drying "
+                f"of the upper Zambezi: Kariba's risk comes from year-to-year (ENSO-driven) rainfall swings and release "
+                f"decisions, which is why Patronus forecasts it month by month.")
+        else:
+            kariba["interpretation"] = (
+                f"Kariba basin: {kb['trend_class']} ({kb['tws_slope_cm_per_decade']} cm/decade, q={kb['tws_q']}); "
+                f"upstream catchment: {up['tws_slope_cm_per_decade']} cm/decade, p={up['tws_p']}.")
     except Exception as e:  # noqa: BLE001
         notes.append(f"Kariba upstream catchment could not be computed: {e}")
 
@@ -381,6 +457,7 @@ def main() -> None:
     drying = sorted([b for b in out_basins if b["trend_class"] == "drying"], key=lambda b: -b["hydro_gw"])
     gw_dry_gwsig = sum(b["hydro_gw"] for b in drying if b["possible_groundwater_signal"])
     gw_dry_robust = sum(b["hydro_gw"] for b in drying if b["possible_groundwater_signal"] is False)
+    gw_dry_annual = sum(b["hydro_gw"] for b in drying if b["tws_p_annual"] is not None and b["tws_p_annual"] < ALPHA)
     summary = {
         "n_basins": len(out_basins), "n_tested": len(tested), "n_drying": n_dry, "n_wetting": n_wet,
         "n_no_significant_trend": sum(b["trend_class"] == "no_significant_trend" for b in out_basins),
@@ -389,6 +466,8 @@ def main() -> None:
         "gw_drying_pct": r_(100 * gw_dry / gw_total, 1), "gw_wetting_pct": r_(100 * gw_wet / gw_total, 1),
         "gw_drying_with_precip_decline": r_(gw_dry_robust, 1),
         "gw_drying_possible_groundwater_signal": r_(gw_dry_gwsig, 1),
+        "gw_drying_also_significant_annual": r_(gw_dry_annual, 1),
+        "n_drying_also_significant_annual": sum(1 for b in drying if b["tws_p_annual"] is not None and b["tws_p_annual"] < ALPHA),
         "n_precip_drying": sum(1 for b in out_basins if b["precip_q"] is not None and b["precip_q"] < ALPHA
                                and b["precip_slope_pct_per_decade"] < 0),
         "n_precip_wetting": sum(1 for b in out_basins if b["precip_q"] is not None and b["precip_q"] < ALPHA
@@ -396,15 +475,19 @@ def main() -> None:
         "headline": (f"{gw_dry:.0f} GW of hydropower ({100 * gw_dry / gw_total:.0f}% of the {gw_total:.0f} GW mapped) sits in "
                      f"{n_dry} basins with a significant drying trend in GRACE water storage since 2002; "
                      f"{gw_wet:.0f} GW sits in {n_wet} significantly wetting basins."),
+        "headline_caveat": (f"Only {gw_dry_robust:.0f} GW of the drying total is in basins where rainfall also declined "
+                            f"significantly; elsewhere the storage loss may be groundwater pumping (e.g. north India), "
+                            f"glacier and snow loss (Alps, Norway) or reservoir drawdown rather than less rain."),
         "top_drying": [{k: b[k] for k in ("basin_id", "name", "countries", "hydro_gw", "major_plants",
                                           "tws_slope_cm_per_decade", "tws_q", "precip_slope_pct_per_decade",
-                                          "precip_q", "possible_groundwater_signal", "low_resolution")}
+                                          "precip_q", "precip_decline_significant", "possible_groundwater_signal",
+                                          "tws_p_annual", "low_resolution")}
                        for b in drying[:10]],
     }
 
     doc = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "sources": ["gravis", "power", "gppd", "hydrobasins"],
+        "sources": ["gravis", "power", "gppd", "hydrobasins", "grealm"],
         "method": ("Mann-Kendall (Hamed-Rao autocorrelation correction) + Sen slope on deseasonalized monthly GRACE/GRACE-FO "
                    "TWS (GFZ GravIS, 1-degree), 2002-04..2026-08; Benjamini-Hochberg FDR q<0.05 across basins. Basin value = "
                    "cos(latitude)-weighted mean of grid cells whose centres lie in the basin (nearest land cell if none). "
@@ -418,7 +501,10 @@ def main() -> None:
             "low_resolution": f"no GRACE cell centre inside the basin (nearest cell used) or basin area < {SMALL_BASIN_KM2:,} km2; "
                               "GRACE effective resolution is ~300 km, so the value mostly reflects the surrounding region",
             "possible_groundwater_signal": "TWS drying but precipitation shows no significant decline (precip q >= 0.05 or "
-                                           "slope >= 0); the storage loss may come from groundwater pumping, not rainfall",
+                                           "slope >= 0); the storage loss may come from groundwater pumping, glacier/snow "
+                                           "loss or reservoir drawdown rather than less rain. Broad by design: rainfall "
+                                           "trends rarely reach significance, so most drying basins carry it",
+            "tws_p_annual": "robustness check: Hamed-Rao Mann-Kendall p on calendar-year means (years with >= 6 months)",
             "series.tws_anom_cm": "deseasonalized TWS anomaly (what the trend test uses); series.tws_cm keeps the seasonal cycle "
                                   "(GravIS anomaly vs. its own reference); trend line = sen_intercept_cm + sen_slope_cm_per_month * "
                                   "months since 2002-04",
@@ -457,6 +543,10 @@ def main() -> None:
         geom = shapely.set_precision(geom, 0.001)
         if geom.is_empty:
             geom = shapely.set_precision(r.geometry.simplify(0.01, preserve_topology=True), 0.001)
+        if not geom.is_valid:
+            fixed = shapely.make_valid(geom)
+            polys = [g for g in getattr(fixed, "geoms", [fixed]) if g.geom_type in ("Polygon", "MultiPolygon")]
+            geom = shapely.set_precision(shapely.union_all(polys), 0.001) if polys else geom
         gj = json.loads(shapely.to_geojson(geom))
         b = cls[r.basin_id]
         feats.append({"type": "Feature", "geometry": gj, "properties": {
