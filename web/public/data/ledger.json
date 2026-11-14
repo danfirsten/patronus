@@ -1,12 +1,270 @@
 {
- "generated_at": "2026-11-14T20:05:27Z",
+ "generated_at": "2026-11-14T20:41:50Z",
  "sources": [],
  "method": "SHA-256 of each published data file. New or changed hashes are listed in a manifest (web/public/ledger/manifest-<UTC>.txt, sha256sum format) that is stamped with OpenTimestamps, which anchors it in the Bitcoin blockchain via public calendar servers. Unchanged files keep their original entry; replaced entries move to history. See docs/VERIFY.md.",
  "fallback_proof": "The public git commit that adds each file and manifest.",
- "notes": [
-  "Not yet present when the ledger ran (not hashed): countries.json, basins.geojson, trends.json, watchlist.json, generation_backtest.json, kariba.json, scoreboard.json."
- ],
+ "notes": [],
  "entries": [
+  {
+   "file": "basins.geojson",
+   "path": "web/public/data/basins.geojson",
+   "sha256": "6e2596b73cecc42dec81a2c928cf881cf361548c5b88431f113db5669bce83b4",
+   "bytes": 2846325,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/basins.geojson"
+  },
+  {
+   "file": "countries.json",
+   "path": "web/public/data/countries.json",
+   "sha256": "6eed6ae9811b79462ea54c665ffff9fb58efc61cacf759c5876ac5072c4586ef",
+   "bytes": 18320,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/countries.json"
+  },
+  {
+   "file": "country/AUT.json",
+   "path": "web/public/data/country/AUT.json",
+   "sha256": "ae45080755dc1e5f596ae045d60cdc798b34f9ddb80ba527cf654e9be4b74074",
+   "bytes": 229673,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/AUT.json"
+  },
+  {
+   "file": "country/BIH.json",
+   "path": "web/public/data/country/BIH.json",
+   "sha256": "e13b8d2cbe879b95a526bb6c1f2ccd1572c735f7ed1b2b9342af9d2bae92cc63",
+   "bytes": 136780,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/BIH.json"
+  },
+  {
+   "file": "country/BRA.json",
+   "path": "web/public/data/country/BRA.json",
+   "sha256": "be86693c78b5f74f1a63f51393220ec99a862429a206fdf3152296dfbd60dee7",
+   "bytes": 157090,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/BRA.json"
+  },
+  {
+   "file": "country/CAN.json",
+   "path": "web/public/data/country/CAN.json",
+   "sha256": "af4aff914d453206b56ae6223bc7bff25584eb95077841895d678070611839dc",
+   "bytes": 336377,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/CAN.json"
+  },
+  {
+   "file": "country/CHE.json",
+   "path": "web/public/data/country/CHE.json",
+   "sha256": "b190a1dba00b483bae50b803f21291fe5a1b4701aec76ad46e84c7934c0d70b5",
+   "bytes": 219864,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/CHE.json"
+  },
+  {
+   "file": "country/CHN-SC.json",
+   "path": "web/public/data/country/CHN-SC.json",
+   "sha256": "34b085da41beea9c7d4e723843de51a9a5336b67d43fb3c6792e058f29f3c1e1",
+   "bytes": 203563,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/CHN-SC.json"
+  },
+  {
+   "file": "country/COL.json",
+   "path": "web/public/data/country/COL.json",
+   "sha256": "99d61fd2fee857909b3b4edbff1a3753205bf506be2432b559634b923bd3f4fe",
+   "bytes": 203792,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/COL.json"
+  },
+  {
+   "file": "country/CRI.json",
+   "path": "web/public/data/country/CRI.json",
+   "sha256": "c30577275b24cc2a1f005839a680e4a03e8627a58f3df236690bdf5ddd68bf2f",
+   "bytes": 138023,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/CRI.json"
+  },
+  {
+   "file": "country/ECU.json",
+   "path": "web/public/data/country/ECU.json",
+   "sha256": "3a2aa80d91bbf1e60b5e360c381e75f9b1b376ce1af25250ff7bcb66d2f76dfc",
+   "bytes": 134256,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/ECU.json"
+  },
+  {
+   "file": "country/GEO.json",
+   "path": "web/public/data/country/GEO.json",
+   "sha256": "57a20bc60ee54fe2283e960b331442bf32cbdf86d34728cf5db5db863413b717",
+   "bytes": 338422,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/GEO.json"
+  },
+  {
+   "file": "country/HRV.json",
+   "path": "web/public/data/country/HRV.json",
+   "sha256": "be5f307c6555bb3ecb1d0e5c75b70681bd5ea37319a58ee2406ea761d804dea3",
+   "bytes": 140844,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/HRV.json"
+  },
+  {
+   "file": "country/ISL.json",
+   "path": "web/public/data/country/ISL.json",
+   "sha256": "f1d74e2c646cc0e7d98b93a7d09a9d7834ae19f39fef0bde7d4e549b6ac27eb5",
+   "bytes": 558750,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/ISL.json"
+  },
+  {
+   "file": "country/KGZ.json",
+   "path": "web/public/data/country/KGZ.json",
+   "sha256": "a9723fd8a191a56a3e47301acac0dac0851e051470a40dacf64439d1fcfb55c3",
+   "bytes": 125659,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/KGZ.json"
+  },
+  {
+   "file": "country/LKA.json",
+   "path": "web/public/data/country/LKA.json",
+   "sha256": "00bdbebb4f6393086286f4e279024961e8845f3efa0061ea7cb25c1fbdc3e7ef",
+   "bytes": 209770,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/LKA.json"
+  },
+  {
+   "file": "country/LVA.json",
+   "path": "web/public/data/country/LVA.json",
+   "sha256": "a22d2624844c49b4166e23b36ee5a5d59e66d4c6dc726e7c4e91806070e3f8cb",
+   "bytes": 228368,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/LVA.json"
+  },
+  {
+   "file": "country/MNE.json",
+   "path": "web/public/data/country/MNE.json",
+   "sha256": "b4dfa42897e94691c8278c2750a1d096327fc94cfda47de6a3ffb3e9a42ee7b6",
+   "bytes": 227479,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/MNE.json"
+  },
+  {
+   "file": "country/NGA.json",
+   "path": "web/public/data/country/NGA.json",
+   "sha256": "c6d927c674a2fe4429ca6f6fc355df021d789bc3333a4760dd21ea25b91d074f",
+   "bytes": 134453,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/NGA.json"
+  },
+  {
+   "file": "country/NOR.json",
+   "path": "web/public/data/country/NOR.json",
+   "sha256": "3c602eb2c0ae56af80c8662c94d99c835d6dd5300c8ad3deca34fc0cb612c799",
+   "bytes": 228409,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/NOR.json"
+  },
+  {
+   "file": "country/NZL.json",
+   "path": "web/public/data/country/NZL.json",
+   "sha256": "4ed3339bd8fc444cc60e09818cce6105c0598f33973c156c2553497683de2cbe",
+   "bytes": 337415,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/NZL.json"
+  },
+  {
+   "file": "country/PER.json",
+   "path": "web/public/data/country/PER.json",
+   "sha256": "2fde3eb15d99b3bb61019d4b2fd412501f69cbf7f6f7445a22a14570ab545c00",
+   "bytes": 136346,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/PER.json"
+  },
+  {
+   "file": "country/SLV.json",
+   "path": "web/public/data/country/SLV.json",
+   "sha256": "58a72ae6725ce6c68cd91d5925a272f7bf289a516b61ad3b4e6356e98f512368",
+   "bytes": 52845,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/SLV.json"
+  },
+  {
+   "file": "country/SWE.json",
+   "path": "web/public/data/country/SWE.json",
+   "sha256": "cbdc120e50aab8d02314bdab68b8cd8df482bd7da1ec0194f040e955c75287ee",
+   "bytes": 229083,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/SWE.json"
+  },
+  {
+   "file": "country/TJK.json",
+   "path": "web/public/data/country/TJK.json",
+   "sha256": "aa0ce93c909b006c331737063202e54bfa4a951f2ff4d34d812032c41ee1ad21",
+   "bytes": 130954,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/TJK.json"
+  },
+  {
+   "file": "country/VNM.json",
+   "path": "web/public/data/country/VNM.json",
+   "sha256": "11bfcfebeb9d836d293a070b6d89eda6a27fb4871da91dfb3ee30a2fa22da645",
+   "bytes": 136844,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/country/VNM.json"
+  },
   {
    "file": "crises.json",
    "path": "web/public/data/crises.json",
@@ -20,32 +278,82 @@
   {
    "file": "enso.json",
    "path": "web/public/data/enso.json",
-   "sha256": "4f54b48335e9501d237d431d39cb615f1fcfaea7eef73f5d41401abc46a2a827",
-   "bytes": 99571,
-   "logged_at": "2026-11-14T20:05:27Z",
-   "manifest": "ledger/manifest-20261114T200527Z.txt",
-   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "sha256": "188185f5aaa284abbc77d5daf6cd880ecea7d2c081a815e38e6d3896440b2c1e",
+   "bytes": 159224,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
    "verify": "sha256sum web/public/data/enso.json"
+  },
+  {
+   "file": "generation_backtest.json",
+   "path": "web/public/data/generation_backtest.json",
+   "sha256": "3d05b99d9aa6ef92447c251c8d7cc4a57d2373de9ef72d1b0c4b10ff79f77faf",
+   "bytes": 55815,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/generation_backtest.json"
+  },
+  {
+   "file": "kariba.json",
+   "path": "web/public/data/kariba.json",
+   "sha256": "78644591b1da23ba8cf032de7cdfdb815eddf73ecd25c9c4584663f46701854e",
+   "bytes": 383746,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/kariba.json"
   },
   {
    "file": "meta.json",
    "path": "web/public/data/meta.json",
-   "sha256": "b6debba3243c74c87a0e98426dce8087728f52487baaf3699ad7e6c6275408a9",
-   "bytes": 9685,
-   "logged_at": "2026-11-14T20:05:27Z",
-   "manifest": "ledger/manifest-20261114T200527Z.txt",
-   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "sha256": "d3a090f277d72b3e5d126b3c67bd313bcb2b462433d4d9534543c1fa6c155d29",
+   "bytes": 10186,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
    "verify": "sha256sum web/public/data/meta.json"
   },
   {
    "file": "nightlights.json",
    "path": "web/public/data/nightlights.json",
-   "sha256": "f0698343865ba503bf28c9fcf7549fe3bda67d84d7ad18a698008bb711a1d85f",
-   "bytes": 16485,
-   "logged_at": "2026-11-14T20:05:27Z",
-   "manifest": "ledger/manifest-20261114T200527Z.txt",
-   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "sha256": "b9cc0fbd32b198ed8ea9fc19e8ad3be565c7bbc1259270950c800d0533d2ce17",
+   "bytes": 16496,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
    "verify": "sha256sum web/public/data/nightlights.json"
+  },
+  {
+   "file": "scoreboard.json",
+   "path": "web/public/data/scoreboard.json",
+   "sha256": "81390536fe3dc3672225d554178a06027c72a63e0f2d4757059141a1960a1f9d",
+   "bytes": 6654,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/scoreboard.json"
+  },
+  {
+   "file": "trends.json",
+   "path": "web/public/data/trends.json",
+   "sha256": "c0c8bb16426e54abd8095b7c3e06b8c73283cd5a0af539fea0053574016db646",
+   "bytes": 675601,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/trends.json"
+  },
+  {
+   "file": "watchlist.json",
+   "path": "web/public/data/watchlist.json",
+   "sha256": "f1e03b431bff686f367e19223c760e85aa32e770463ba07179621df3edd35524",
+   "bytes": 63956,
+   "logged_at": "2026-11-14T20:41:50Z",
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "verify": "sha256sum web/public/data/watchlist.json"
   }
  ],
  "manifests": [
@@ -80,6 +388,22 @@
     "https://ots.btc.catallaxy.com"
    ],
    "ots_verify": "ots verify web/public/ledger/manifest-20261114T200527Z.txt.ots"
+  },
+  {
+   "manifest": "ledger/manifest-20261114T204150Z.txt",
+   "sha256": "e0f243c99a2f0331cf16874cfdafa47aad7a189732f8b3fe73e69155a2d1ef30",
+   "created_at": "2026-11-14T20:41:50Z",
+   "n_files": 34,
+   "ots": "ledger/manifest-20261114T204150Z.txt.ots",
+   "ots_status": "pending",
+   "verify": "sha256sum -c web/public/ledger/manifest-20261114T204150Z.txt",
+   "ots_calendars": [
+    "https://a.pool.opentimestamps.org",
+    "https://b.pool.opentimestamps.org",
+    "https://a.pool.eternitywall.com",
+    "https://ots.btc.catallaxy.com"
+   ],
+   "ots_verify": "ots verify web/public/ledger/manifest-20261114T204150Z.txt.ots"
   }
  ],
  "history": [
@@ -104,6 +428,39 @@
    "ots": "ledger/manifest-20261114T200430Z.txt.ots",
    "verify": "sha256sum web/public/data/nightlights.json",
    "superseded_at": "2026-11-14T20:05:27Z"
+  },
+  {
+   "file": "enso.json",
+   "path": "web/public/data/enso.json",
+   "sha256": "4f54b48335e9501d237d431d39cb615f1fcfaea7eef73f5d41401abc46a2a827",
+   "bytes": 99571,
+   "logged_at": "2026-11-14T20:05:27Z",
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "verify": "sha256sum web/public/data/enso.json",
+   "superseded_at": "2026-11-14T20:41:50Z"
+  },
+  {
+   "file": "meta.json",
+   "path": "web/public/data/meta.json",
+   "sha256": "b6debba3243c74c87a0e98426dce8087728f52487baaf3699ad7e6c6275408a9",
+   "bytes": 9685,
+   "logged_at": "2026-11-14T20:05:27Z",
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "verify": "sha256sum web/public/data/meta.json",
+   "superseded_at": "2026-11-14T20:41:50Z"
+  },
+  {
+   "file": "nightlights.json",
+   "path": "web/public/data/nightlights.json",
+   "sha256": "f0698343865ba503bf28c9fcf7549fe3bda67d84d7ad18a698008bb711a1d85f",
+   "bytes": 16485,
+   "logged_at": "2026-11-14T20:05:27Z",
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "verify": "sha256sum web/public/data/nightlights.json",
+   "superseded_at": "2026-11-14T20:41:50Z"
   }
  ]
 }
