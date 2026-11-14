@@ -342,11 +342,11 @@ write('crises.json', {
 write('scoreboard.json', {
   ...base(['ember_monthly', 'grealm', 'gravis', 'power', 'oni']),
   rows: [
-    { id: 'brazil-2021', name: 'Brazil 2021', countries: ['BRA'], enso: 'La Nina', official_warning: '2021-05-27', onset: '2021-05-28', patronus_alarm: '2021-02', lead_months: 3, lead_vs_official_months: 3, caught_by: 'next', notes: 'Sample row.' },
-    { id: 'sichuan-2022', name: 'Sichuan 2022', countries: ['CHN-SC'], enso: 'La Nina', official_warning: null, onset: '2022-08-14', patronus_alarm: '2022-07', lead_months: 1, lead_vs_official_months: null, caught_by: 'now', notes: 'Sample row. Heatwave, not ENSO.' },
-    { id: 'vietnam-2023', name: 'Northern Vietnam 2023', countries: ['VNM'], enso: 'El Nino', official_warning: '2023-05-10', onset: '2023-05-25', patronus_alarm: '2023-02', lead_months: 3, lead_vs_official_months: 3, caught_by: 'both', notes: 'Sample row.' },
-    { id: 'ecuador-2023-24', name: 'Ecuador 2023–24', countries: ['ECU'], enso: 'El Nino', official_warning: '2023-10-24', onset: '2023-10-27', patronus_alarm: null, lead_months: null, lead_vs_official_months: null, caught_by: 'missed', notes: 'Sample row, shown as a miss so the layout for misses is visible.' },
-    { id: 'kariba-2024', name: 'Lake Kariba 2024', countries: ['ZMB', 'ZWE'], enso: 'El Nino', official_warning: '2023-12-28', onset: '2024-03-11', patronus_alarm: '2023-08', lead_months: 7, lead_vs_official_months: 4, caught_by: 'both', notes: 'Sample row.' },
+    { id: 'brazil-2021', name: 'Brazil 2021', countries: ['BRA'], enso: 'La Nina', official_warning: '2021-05-27', onset: '2021-05-28', now_alarm: null, next_alarm: '2021-02', lead_months: 3, lead_vs_official_months: 3, caught_by: 'next', notes: 'Sample row.' },
+    { id: 'sichuan-2022', name: 'Sichuan 2022', countries: ['CHN-SC'], enso: 'La Nina', official_warning: null, onset: '2022-08-14', now_alarm: '2022-07', next_alarm: null, lead_months: 1, lead_vs_official_months: null, caught_by: 'now', notes: 'Sample row. Heatwave, not ENSO.' },
+    { id: 'vietnam-2023', name: 'Northern Vietnam 2023', countries: ['VNM'], enso: 'El Nino', official_warning: '2023-05-10', onset: '2023-05-25', now_alarm: '2023-02', next_alarm: '2023-01', lead_months: 4, lead_vs_official_months: 4, caught_by: 'both', notes: 'Sample row.' },
+    { id: 'ecuador-2023-24', name: 'Ecuador 2023–24', countries: ['ECU'], enso: 'El Nino', official_warning: '2023-10-24', onset: '2023-10-27', now_alarm: null, next_alarm: null, lead_months: null, lead_vs_official_months: null, caught_by: 'missed', notes: 'Sample row, shown as a miss so the layout for misses is visible.' },
+    { id: 'kariba-2024', name: 'Lake Kariba 2024', countries: ['ZMB', 'ZWE'], enso: 'El Nino', official_warning: '2023-12-28', onset: '2024-03-11', now_alarm: '2024-03', next_alarm: '2023-08', lead_months: 7, lead_vs_official_months: 4, caught_by: 'both', notes: 'Sample row.' },
   ],
   false_alarms: { per_country_5yr: 1.0, definition: 'Sample: alarm months with no shortfall in the next 6 months, per country per 5 years' },
 });

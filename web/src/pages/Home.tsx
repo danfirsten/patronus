@@ -5,7 +5,7 @@ import { Figure, Reveal, RiskPill, Stat, Loading, ExposureTag } from '../compone
 import { ProbStrip } from '../components/small';
 import { WorldMap } from '../components/WorldMap';
 import { TimeChart, LegendItem } from '../components/TimeChart';
-import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, periodOf, dateOf, costText } from '../lib/format';
+import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, periodOf, dateOf, costText, monthsBetween } from '../lib/format';
 import { RISK_ORDER, countryHref } from '../lib/risk';
 
 export default function Home() {
@@ -29,8 +29,8 @@ export default function Home() {
       warning: dateOf(c?.official_warning) ?? r?.official_warning ?? null,
       onset: dateOf(c?.onset) ?? r?.onset ?? null,
       cost: c?.costs?.[0] ?? c?.cost_text,
-      alarm: r?.patronus_alarm,
-      lead: r?.lead_months,
+      alarm: earliestAlarm(r),
+      lead: isNum(r?.lead_months) ? r!.lead_months : (() => { const a = earliestAlarm(r); const n = monthsBetween(a, dateOf(c?.onset) ?? r?.onset); return isNum(n) && n > 0 ? n : null; })(),
       caught: r?.caught_by,
       hasScore: !!r,
     }));
@@ -43,6 +43,10 @@ export default function Home() {
   const warn = kariba.data?.thresholds?.warning_usable_pct ?? 20;
   const dang = kariba.data?.thresholds?.danger_usable_pct ?? 10;
   const ts = trends.data?.summary;
+  const kc24: any = kariba.data?.backtest?.crisis_2024;
+  const kfc: any[] = kariba.data?.forecast?.months ?? [];
+  const kDec: any = (kariba.data as any)?.zra_projection?.patronus_dec_2027 ?? kfc[kfc.length - 1];
+  const kScore: any = (kariba.data as any)?.backtest?.next_model?.score?.warning?.el_nino_seasons?.ensemble;
   const es = enso.data?.summary;
 
   return (
@@ -115,6 +119,7 @@ export default function Home() {
           <Reveal>
             <p className="step-num">2 · It's getting worse</p>
             <h2>{ts?.headline ?? 'Many hydropower basins are drying.'}</h2>
+            {(ts as any)?.headline_caveat && <p className="small muted" style={{ maxWidth: '80ch' }}>{(ts as any).headline_caveat}</p>}
             <div className="stat-row">
               <Stat value={`${fmtNum(ts?.gw_drying)} GW`} label={`in basins with a significant drying trend (of ${fmtNum(ts?.gw_total)} GW mapped)`} tone="drying" />
               <Stat value={`${fmtNum(ts?.gw_wetting)} GW`} label="in significantly wetting basins" tone="wetting" />
@@ -128,7 +133,8 @@ export default function Home() {
             >
               {trends.loading || basins.loading ? <Loading what="map" /> : <WorldMap mode="trend" trends={trends.data} basinsGeo={basins.data} enso={enso.data} compact />}
             </Figure>
-            {enso.data?.projections?.text && <p className="lede">{enso.data.projections.text}</p>}
+            {es?.headline && <p className="lede">{es.headline}</p>}
+            {enso.data?.projections?.text && <p className="small muted" style={{ maxWidth: '80ch' }}>{enso.data.projections.text}</p>}
             <p><a href="#/map">Explore the trend and El Niño exposure maps →</a></p>
           </Reveal>
         </div>
@@ -168,6 +174,23 @@ export default function Home() {
           <Reveal>
             <p className="step-num">4 · Zoom in: Lake Kariba</p>
             <h2>The world's largest man-made reservoir powers Zambia and Zimbabwe. El Niño drained it in 2024. A very strong El Niño is back for 2027.</h2>
+            {kc24?.first_warning_p_gt_0_5 && (
+              <p className="lede">
+                In a fair backtest, Patronus' El Niño model flagged Kariba's 2024 crisis in <b>{fmtMonth(kc24.first_warning_p_gt_0_5)}</b>
+                {isNum(kc24.lead_months_vs_zra) && kc24.lead_months_vs_zra > 0 ? <>, <b>{numWord(kc24.lead_months_vs_zra)} months before the official water cut</b></> : ''}.
+              </p>
+            )}
+            {isNum(kDec?.p_below_danger) && (
+              <p className="lede">
+                Today's forecast: about a <b>{oneIn(kDec.p_below_danger)} chance</b> Kariba falls into the danger zone (below {dang}%) by end-2027.
+              </p>
+            )}
+            {kScore && (
+              <p className="small muted">
+                Not a crystal ball: since 1995, in El Niño seasons this model had {kScore.hit} hits, {kScore.miss} misses and {kScore.false_alarm} false alarms.
+                Its first 2024 alarm came from low storage before El Niño was declared. The machine-learning model alone fired only in {fmtMonth(kc24?.now_model?.first_warning_p_gt_0_5)}.
+              </p>
+            )}
             <Figure
               title="Lake Kariba usable storage, with Patronus' forecast to Dec 2027"
               sub={`Below ${warn}% is a warning; below ${dang}% the allocation cannot be met.`}
@@ -219,4 +242,20 @@ export default function Home() {
       </section>
     </div>
   );
+}
+
+const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+function numWord(n: number) { return WORDS[n] ?? String(n); }
+/** 0.36 -> '1-in-3'; falls back to a percentage when no simple fraction fits. */
+function oneIn(p: number) {
+  if (p <= 0) return '0%';
+  const n = Math.round(1 / p);
+  return Math.abs(1 / n - p) <= 0.05 ? `1-in-${n}` : `${Math.round(p * 100)}%`;
+}
+
+function earliestAlarm(r: any): string | null {
+  if (!r) return null;
+  const pick = (v: any) => (typeof v === 'string' ? v : v && typeof v === 'object' ? v.month ?? v.alarm_month ?? null : null);
+  const all = [pick(r.next_alarm), pick(r.now_alarm), pick(r.patronus_alarm)].filter(Boolean) as string[];
+  return all.length ? all.sort()[0] : null;
 }

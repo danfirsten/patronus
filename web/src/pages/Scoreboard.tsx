@@ -2,16 +2,40 @@ import { scaleBand, scaleLinear } from 'd3-scale';
 import { line } from 'd3-shape';
 import { useData } from '../data/load';
 import type { Crises, GenBacktest, ScoreRow, Scoreboard } from '../data/types';
-import { Figure, Loading, Stat, Empty, useWidth } from '../components/common';
+import { Figure, Loading, Stat, Empty, useWidth, SourceNote } from '../components/common';
 import { LegendItem } from '../components/TimeChart';
 import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, monthsBetween, costText } from '../lib/format';
 
 const CAUGHT: Record<string, string> = {
-  now: 'Water layer (0–6 months)',
-  next: 'El Niño layer (6–18 months)',
-  both: 'Both layers',
+  now: '"Now" model (0–6 months)',
+  next: '"Next" El Niño model (6–18 months)',
+  both: 'Both models',
   missed: 'Missed',
 };
+
+/** now_alarm / next_alarm may be a month string or an object like {month, lead_months}. */
+function alarmMonth(v: unknown): string | null {
+  if (typeof v === 'string') return v;
+  if (v && typeof v === 'object') {
+    const o = v as any;
+    return o.month ?? o.alarm_month ?? o.first_alarm ?? o.date ?? null;
+  }
+  return null;
+}
+function alarmLead(v: unknown, onset?: string | null): number | null {
+  if (v && typeof v === 'object' && isNum((v as any).lead_months)) return (v as any).lead_months;
+  const m = alarmMonth(v);
+  const n = monthsBetween(m, onset);
+  return n;
+}
+function AlarmCell({ v, onset }: { v: unknown; onset?: string | null }) {
+  const m = alarmMonth(v);
+  if (!m) return <span className="miss">None</span>;
+  const l = alarmLead(v, onset);
+  return <>{fmtMonth(m)}{isNum(l) && <span className="muted"> · {l > 0 ? `${l} mo before` : l === 0 ? 'same month' : `${-l} mo after`}</span>}</>;
+}
+const nowOf = (r: any) => r.now_alarm !== undefined ? r.now_alarm : r.patronus_alarm;
+const nextOf = (r: any) => r.next_alarm;
 
 export default function ScoreboardPage() {
   const s = useData<Scoreboard>('scoreboard.json');
@@ -19,8 +43,13 @@ export default function ScoreboardPage() {
   const gb = useData<GenBacktest>('generation_backtest.json');
   const rows = s.data?.rows ?? [];
   const crisisById = new Map((cr.data?.crises ?? []).map((c) => [c.id, c]));
-  const caught = rows.filter((r) => r.caught_by && r.caught_by !== 'missed' && r.patronus_alarm).length;
-  const leads = rows.map((r) => r.lead_months).filter(isNum);
+  const caught = rows.filter((r) => r.caught_by ? r.caught_by !== 'missed' : !!(alarmMonth(nowOf(r)) || alarmMonth(nextOf(r)))).length;
+  const leads = rows.map((r) => {
+    const ls = [alarmLead(nowOf(r), r.onset), alarmLead(nextOf(r), r.onset)].filter(isNum) as number[];
+    return isNum(r.lead_months) ? r.lead_months : ls.length ? Math.max(...ls) : null;
+  }).filter(isNum).filter((l) => l > 0);
+  const hasNext = rows.some((r: any) => r.next_alarm !== undefined);
+  const leadsGen: any[] = (gb.data as any)?.crisis_leads ?? [];
   const fa = s.data?.false_alarms;
 
   return (
@@ -31,12 +60,15 @@ export default function ScoreboardPage() {
         We re-ran the pipeline on five past crises as if we were living through them, using only data that had been published by each date.
         We report misses and false alarms next to hits. The five crises are illustrations; the main test runs on thousands of country-months.
       </p>
+      <p className="caveat">
+        <b>Short-range monthly country forecasts from power data have little skill beyond 1 month.</b> The early warning comes from reservoir storage and the El Niño signal (Kariba).
+      </p>
 
       {s.loading ? <Loading /> : (
         <>
           <div className="stat-row">
             <Stat value={`${caught} of ${rows.length}`} label="crises with an alarm before onset" tone="accent" />
-            <Stat value={leads.length ? `${Math.min(...leads)}–${Math.max(...leads)}` : '—'} label="months of warning before onset (range)" />
+            <Stat value={leads.length ? (Math.min(...leads) === Math.max(...leads) ? String(leads[0]) : `${Math.min(...leads)}–${Math.max(...leads)}`) : '—'} label="months of warning before onset, where caught" />
             <Stat value={fmtNum(fa?.per_country_5yr, 1)} label="false alarms per country per 5 years" tone="drying" />
           </div>
           {fa?.definition && <p className="muted small">False alarm: {fa.definition}</p>}
@@ -53,7 +85,7 @@ export default function ScoreboardPage() {
           <div className="table-wrap">
             <table className="data-table score-table">
               <thead>
-                <tr><th>Crisis</th><th>ENSO</th><th>First official warning</th><th>Crisis began</th><th>Patronus alarm</th><th>Lead (months)</th><th>vs official</th><th>Caught by</th><th>Notes</th></tr>
+                <tr><th>Crisis</th><th>ENSO</th><th>First official warning</th><th>Crisis began</th><th>"Now" model alarm</th>{hasNext && <th>"Next" El Niño model alarm</th>}<th>Caught by</th><th>Notes</th></tr>
               </thead>
               <tbody>
                 {rows.map((r) => {
@@ -64,9 +96,8 @@ export default function ScoreboardPage() {
                       <td data-label="ENSO">{r.enso ?? '—'}</td>
                       <td data-label="Official warning">{r.official_warning ? fmtDate(r.official_warning) : <span className="muted">None found</span>}</td>
                       <td data-label="Began">{fmtDate(r.onset)}</td>
-                      <td data-label="Patronus alarm">{r.patronus_alarm ? fmtMonth(r.patronus_alarm) : <span className="miss">None</span>}</td>
-                      <td data-label="Lead" className="num">{isNum(r.lead_months) ? r.lead_months : '—'}</td>
-                      <td data-label="vs official" className="num">{isNum(r.lead_vs_official_months) ? (r.lead_vs_official_months > 0 ? `+${r.lead_vs_official_months}` : r.lead_vs_official_months) : '—'}</td>
+                      <td data-label='"Now" model alarm'><AlarmCell v={nowOf(r)} onset={r.onset} /></td>
+                      {hasNext && <td data-label='"Next" model alarm'>{(r as any).next_alarm === null || (r as any).next_alarm === undefined ? <span className="muted">Not run</span> : <AlarmCell v={(r as any).next_alarm} onset={r.onset} />}</td>}
                       <td data-label="Caught by"><span className={`caught caught-${r.caught_by}`}>{CAUGHT[r.caught_by ?? ''] ?? r.caught_by ?? '—'}</span></td>
                       <td data-label="Notes" className="cell-notes">
                         {r.notes ?? c?.summary}
@@ -91,9 +122,38 @@ export default function ScoreboardPage() {
             </table>
           </div>
           <p className="muted small">
-            "Water layer" is the 0–6 month forecast from stored and arriving water. "El Niño layer" is the 6–18 month warning from the grid's El Niño fingerprint and the official outlook.
-            Sichuan 2022 was a heatwave, not an El Niño event, so only the water layer can catch it.
+            "Now" is the 0–6 month forecast from stored and arriving water. "Next" is the 6–18 month warning from the El Niño signal (for Kariba, the El Niño water-balance ensemble).
+            Sichuan 2022 was a heatwave, not an El Niño event, so only the "now" layer could catch it.
           </p>
+
+          {leadsGen.length > 0 && (
+            <div className="panel">
+              <h3>The monthly country model on the same crises</h3>
+              <p className="muted">
+                The pooled country model (power data plus NASA water data) caught {leadsGen.filter((c) => c.caught).length} of {leadsGen.length} crises
+                at its false-alarm limit{(gb.data as any)?.alarm?.threshold ? ` (alarm when the 6-month chance is at least ${fmtProb((gb.data as any).alarm.threshold)})` : ''}.
+              </p>
+              <div className="table-wrap">
+                <table className="data-table compact">
+                  <thead><tr><th>Crisis</th><th>Onset</th><th>Alarm</th><th>Lead</th><th>Highest 6-month chance before onset</th></tr></thead>
+                  <tbody>
+                    {leadsGen.map((c, i) => {
+                      const ps = (c.p_series ?? []).map((p: any) => p.p_any_shortfall_6m).filter(isNum);
+                      return (
+                        <tr key={i}>
+                          <td>{c.name}</td><td>{fmtDate(c.onset)}</td>
+                          <td>{c.alarm_month ? fmtMonth(c.alarm_month) : <span className="miss">{c.status === 'missed' ? 'Missed' : c.status ?? 'None'}</span>}</td>
+                          <td className="num">{isNum(c.lead_months) ? `${c.lead_months} mo` : '—'}</td>
+                          <td className="num">{ps.length ? fmtProb(Math.max(...ps)) : '—'}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <SourceNote files={['generation_backtest.json']}>Patronus generation backtest; Ember monthly generation, GRACE/GRACE-FO, GPCP, NASA POWER, NOAA ONI.</SourceNote>
+            </div>
+          )}
         </>
       )}
 
@@ -108,14 +168,16 @@ function LeadChart({ rows }: { rows: ScoreRow[] }) {
   const rowH = 46;
   const m = { top: 24, right: 16, bottom: 28, left: Math.min(170, width * 0.32) };
   const iw = width - m.left - m.right;
-  const offs = rows.flatMap((r) => [monthsBetween(r.onset, r.patronus_alarm), monthsBetween(r.onset, r.official_warning)]).filter(isNum);
+  const offs = rows.flatMap((r) => [monthsBetween(r.onset, alarmMonth(nowOf(r))), monthsBetween(r.onset, alarmMonth(nextOf(r))), monthsBetween(r.onset, r.official_warning)]).filter(isNum);
   const lo = Math.min(-12, ...offs.map((o) => o - 1));
-  const x = scaleLinear().domain([lo, 2]).range([0, iw]);
+  const hi = Math.max(2, ...offs.map((o) => o + 1));
+  const x = scaleLinear().domain([lo, hi]).range([0, iw]);
   const h = m.top + m.bottom + rows.length * rowH;
   return (
     <div className="chart" ref={ref}>
       <div className="legend">
-        <LegendItem kind="dot" color="var(--series-2)" label="Patronus alarm" />
+        <LegendItem kind="dot" color="var(--series-4)" label='"Now" model alarm' />
+        <LegendItem kind="dot" color="var(--series-2)" label='"Next" El Niño model alarm' />
         <LegendItem kind="dot" color="var(--text-muted)" label="First official warning" />
         <LegendItem kind="box" color="var(--risk-danger)" label="Crisis begins (month 0)" />
       </div>
@@ -128,17 +190,21 @@ function LeadChart({ rows }: { rows: ScoreRow[] }) {
             </g>
           ))}
           {rows.map((r, i) => {
-            const a = monthsBetween(r.onset, r.patronus_alarm);
+            const a = monthsBetween(r.onset, alarmMonth(nowOf(r)));
+            const nx = monthsBetween(r.onset, alarmMonth(nextOf(r)));
             const o = monthsBetween(r.onset, r.official_warning);
+            const first = [a, nx].filter(isNum) as number[];
+            const earliest = first.length ? Math.min(...first) : null;
             const y = i * rowH + rowH / 2;
             return (
               <g key={r.id}>
                 <text x={-10} y={y} dy="0.32em" textAnchor="end" className="row-label">{r.name}</text>
                 <rect x={x(0) - 3} y={y - 12} width={6} height={24} fill="var(--risk-danger)" rx={2} />
-                {isNum(a) && <line x1={x(a)} x2={x(0)} y1={y} y2={y} stroke="var(--series-2)" strokeWidth={2} strokeOpacity={0.5} />}
+                {isNum(earliest) && <line x1={x(earliest)} x2={x(0)} y1={y} y2={y} stroke="var(--series-2)" strokeWidth={2} strokeOpacity={0.4} />}
                 {isNum(o) && <circle cx={x(o)} cy={y} r={6} fill="var(--text-muted)" />}
-                {isNum(a) ? <circle cx={x(a)} cy={y} r={7} fill="var(--series-2)" stroke="var(--bg)" strokeWidth={1.5} />
-                  : <text x={x(0) + 10} y={y} dy="0.32em" className="miss-label">no alarm</text>}
+                {isNum(a) && <circle cx={x(a)} cy={y + 5} r={6} fill="var(--series-4)" stroke="var(--bg)" strokeWidth={1.5} />}
+                {isNum(nx) && <circle cx={x(nx)} cy={y - 5} r={7} fill="var(--series-2)" stroke="var(--bg)" strokeWidth={1.5} />}
+                {!isNum(earliest) && <text x={x(0) + 10} y={y} dy="0.32em" className="miss-label">no alarm</text>}
               </g>
             );
           })}
@@ -153,7 +219,8 @@ function BacktestBlock({ g }: { g: GenBacktest }) {
   const bh = g.by_horizon ?? [];
   return (
     <>
-      <p className="lede">
+      <SkillSummary g={g} />
+      <p className="small muted">
         {g.design}. {fmtNum(g.n_countries)} countries, {fmtNum(g.n_country_months)} country-months.
         Shortfalls happen in {fmtProb(g.base_rate_shortfall)} of months.
       </p>
@@ -211,7 +278,7 @@ function BacktestBlock({ g }: { g: GenBacktest }) {
   );
 }
 
-const SRC_LABEL: Record<string, string> = { gravis: 'GRACE', power: 'NASA POWER', power_precip: 'NASA POWER rain', power_soil: 'NASA POWER soil wetness', power_temp: 'NASA POWER temperature', oni: 'ENSO index', grealm: 'G-REALM', persistence: 'recent generation' };
+const SRC_LABEL: Record<string, string> = { gpcp_precip: 'GPCP rain', ember_persistence: 'recent generation', grid_history: 'grid history', gravis: 'GRACE', power: 'NASA POWER', power_precip: 'NASA POWER rain', power_soil: 'NASA POWER soil wetness', power_temp: 'NASA POWER temperature', oni: 'ENSO index', grealm: 'G-REALM', persistence: 'recent generation' };
 const labelSource = (s: string) => SRC_LABEL[s] ?? s;
 
 function SkillBars({ rows }: { rows: GenBacktest['by_horizon'] & {} }) {
@@ -326,6 +393,29 @@ function HBars({ items, fmt, color }: { items: { label: string; value: number | 
           ))}
         </g>
       </svg>
+    </div>
+  );
+}
+
+function SkillSummary({ g }: { g: GenBacktest }) {
+  const bh = g.by_horizon ?? [];
+  const bss = bh.flatMap((r) => [r.bss_vs_climatology, r.bss_vs_persistence, r.bss_vs_enso_only]).filter(isNum);
+  const beats = bh.filter((r) => {
+    const ci = (r as any).auc_pr_minus_climatology_ci90;
+    return Array.isArray(ci) ? ci[0] > 0 : isNum(r.auc_pr) && isNum(r.auc_pr_climatology) && r.auc_pr > r.auc_pr_climatology;
+  }).map((r) => r.horizon);
+  const abl = (g.ablations ?? []) as any[];
+  const sig = abl.filter((a) => Array.isArray(a.delta_ci90) && a.delta_ci90[1] < 0);
+  const grace = abl.find((a) => a.removed === 'gravis');
+  return (
+    <div className="caveat" style={{ marginBottom: 16 }}>
+      <p><b>The monthly country forecast has modest skill.</b></p>
+      <ul className="plain">
+        {bss.length > 0 && <li>Brier skill is small{Math.min(...bss) > 0 ? ' but positive' : ''} against climatology, persistence and ENSO-only at every horizon ({fmtNum(Math.min(...bss), 2)} to {fmtNum(Math.max(...bss), 2)}; 1 would be perfect).</li>}
+        <li>Its ranking of risky months (AUC-PR) clearly beats climatology {beats.length ? `only at ${beats.join(', ')} month${beats.length > 1 ? 's' : ''} ahead` : 'at no horizon'}.</li>
+        {abl.length > 0 && <li>{sig.length === 0 ? 'No single NASA dataset adds significant ranking skill at the country-month level' : `Inputs that add significant skill: ${sig.map((a) => labelSource(a.removed)).join(', ')}`}{grace && isNum(grace.delta_vs_full) && grace.delta_vs_full > 0 ? '; removing GRACE slightly helps' : ''}.</li>}
+      </ul>
+      <p className="small muted">That is why Patronus leads with reservoir storage and the El Niño signal, where the backtest shows real lead time.</p>
     </div>
   );
 }

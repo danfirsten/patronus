@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:24:54+00:00",
+ "generated_at": "2026-11-14T20:31:27+00:00",
  "sources": [
   "ember_monthly",
   "ember_yearly",
@@ -1633,10 +1633,11 @@
   "precip_3m_anom_pct": -14.8,
   "precip_6m_anom_pct": -10.3,
   "precip_12m_anom_pct": -4.5,
-  "soil_root_anom_sd": -0.05,
-  "soil_top_anom_sd": -1.45,
-  "t2m_3m_anom_sd": 0.52,
-  "power_month": "2026-10",
+  "soil_root_anom_sd": 0.58,
+  "soil_top_anom_sd": 0.29,
+  "t2m_3m_anom_sd": -0.12,
+  "power_month": "2026-09",
+  "precip_month": "2026-10",
   "oni": 2.46,
   "oni_season": "ASO 2026",
   "persist_anom_pct": 5.6,
@@ -15312,71 +15313,71 @@
   "issue_month": "2026-11",
   "first_month": "2026-12",
   "last_observed_month": "2026-09",
-  "p_any_shortfall_6m": 0.313,
+  "p_any_shortfall_6m": 0.27,
   "months": [
    {
     "month": "2026-12",
     "horizon": 1,
-    "p_shortfall": 0.072,
-    "p_severe": 0.012,
-    "anomaly_p10_pct": -8.7,
-    "anomaly_p50_pct": 3.1,
-    "anomaly_p90_pct": 12.3,
+    "p_shortfall": 0.056,
+    "p_severe": 0.004,
+    "anomaly_p10_pct": -5.8,
+    "anomaly_p50_pct": 4.0,
+    "anomaly_p90_pct": 11.1,
     "normal_twh": 2.032,
     "risk_level": "low"
    },
    {
     "month": "2027-01",
     "horizon": 2,
-    "p_shortfall": 0.076,
-    "p_severe": 0.013,
-    "anomaly_p10_pct": -11.3,
-    "anomaly_p50_pct": 1.7,
-    "anomaly_p90_pct": 8.5,
+    "p_shortfall": 0.067,
+    "p_severe": 0.01,
+    "anomaly_p10_pct": -8.5,
+    "anomaly_p50_pct": 3.4,
+    "anomaly_p90_pct": 9.9,
     "normal_twh": 1.968,
     "risk_level": "low"
    },
    {
     "month": "2027-02",
     "horizon": 3,
-    "p_shortfall": 0.127,
+    "p_shortfall": 0.113,
     "p_severe": 0.014,
-    "anomaly_p10_pct": -13.7,
-    "anomaly_p50_pct": 1.9,
-    "anomaly_p90_pct": 10.2,
+    "anomaly_p10_pct": -10.5,
+    "anomaly_p50_pct": 2.4,
+    "anomaly_p90_pct": 11.0,
     "normal_twh": 1.814,
     "risk_level": "low"
    },
    {
     "month": "2027-03",
     "horizon": 4,
-    "p_shortfall": 0.107,
+    "p_shortfall": 0.104,
     "p_severe": 0.012,
-    "anomaly_p10_pct": -6.1,
-    "anomaly_p50_pct": 3.7,
-    "anomaly_p90_pct": 12.2,
+    "anomaly_p10_pct": -6.3,
+    "anomaly_p50_pct": 3.9,
+    "anomaly_p90_pct": 12.1,
     "normal_twh": 1.815,
     "risk_level": "low"
    },
    {
     "month": "2027-04",
     "horizon": 5,
-    "p_shortfall": 0.139,
-    "p_severe": 0.032,
-    "anomaly_p10_pct": -7.6,
-    "anomaly_p50_pct": 2.1,
-    "anomaly_p90_pct": 9.9,
+    "p_shortfall": 0.142,
+    "p_severe": 0.006,
+    "anomaly_p10_pct": -7.8,
+    "anomaly_p50_pct": 1.7,
+    "anomaly_p90_pct": 10.8,
     "normal_twh": 1.726,
     "risk_level": "low"
    },
    {
     "month": "2027-05",
     "horizon": 6,
-    "p_shortfall": 0.182,
+    "p_shortfall": 0.173,
     "p_severe": 0.009,
-    "anomaly_p10_pct": -10.6,
-    "anomaly_p50_pct": -1.5,
-    "anomaly_p90_pct": 9.4,
+    "anomaly_p10_pct": -9.9,
+    "anomaly_p50_pct": -0.1,
+    "anomaly_p90_pct": 11.0,
     "normal_twh": 2.083,
     "risk_level": "low"
    }
@@ -15386,36 +15387,36 @@
   {
    "month": "2015-11",
    "iso3": "ISL",
-   "similarity": 0.732,
+   "similarity": 0.704,
    "shortfall_next_6m": false,
    "n_features_compared": 11
   },
   {
    "month": "2015-12",
    "iso3": "ISL",
-   "similarity": 0.71,
+   "similarity": 0.685,
    "shortfall_next_6m": false,
    "n_features_compared": 11
   },
   {
+   "month": "2015-10",
+   "iso3": "ISL",
+   "similarity": 0.685,
+   "shortfall_next_6m": false,
+   "n_features_compared": 12
+  },
+  {
    "month": "2016-01",
    "iso3": "ISL",
-   "similarity": 0.663,
+   "similarity": 0.667,
    "shortfall_next_6m": false,
    "n_features_compared": 10
   },
   {
-   "month": "2023-12",
-   "iso3": "VNM",
-   "similarity": 0.659,
+   "month": "2023-11",
+   "iso3": "NOR",
+   "similarity": 0.644,
    "shortfall_next_6m": true,
-   "n_features_compared": 12
-  },
-  {
-   "month": "2015-10",
-   "iso3": "ISL",
-   "similarity": 0.655,
-   "shortfall_next_6m": false,
    "n_features_compared": 12
   }
  ],
@@ -15426,12 +15427,25 @@
   "blended_usd_per_kwh": 0.28,
   "expected_cost_next_6m_musd": {
    "p10": 0.0,
-   "p50": 1.6,
-   "p90": 36.8
+   "p50": 0.1,
+   "p90": 29.7
   },
   "method": "Estimate only. For each forecast month: P(shortfall) x deficit x blended cost. Deficit = max(0, -anomaly quantile) x normal hydro generation (median of that calendar month's observed output, at the latest capacity). Blended cost assumes 90% of the deficit is replaced at 20 c/kWh and 10% goes unserved at a value of lost load of $1.00/kWh. p10/p50/p90 use the P90/P50/P10 anomaly quantiles. Ignores imports, reservoir re-optimisation and demand response; large exporters (Norway, Canada, Sweden) mostly lose export revenue, not supply."
  },
  "notes": [
   "Ember data ends 2026-09; forecast months start 2026-12."
- ]
+ ],
+ "seasonal_forecast": {
+  "definition": "P(mean capacity-factor anomaly over the 3-month window <= -15%)",
+  "issued": "2026-11-15",
+  "windows": {
+   "next_season": {
+    "months": "2026-12..2027-02",
+    "p_shortfall": 0.081,
+    "anomaly_p10_pct": -7.2,
+    "anomaly_p50_pct": 2.7,
+    "anomaly_p90_pct": 10.0
+   }
+  }
+ }
 }

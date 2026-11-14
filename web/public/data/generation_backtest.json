@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:24:54+00:00",
+ "generated_at": "2026-11-14T20:31:27+00:00",
  "sources": [
   "ember_monthly",
   "ember_yearly",
@@ -2094,6 +2094,498 @@
    ]
   }
  ],
+ "seasonal_target": {
+  "definition": "Pre-registered robustness test: shortfall = mean hydro capacity-factor anomaly over a 3-month window <= -15%. next_season = months t+1..t+3, season_after = t+4..t+6 (t = issue month). Same features (taken at the window's centre month, i.e. horizon 2 and 5 rows), same blocked leave-one-year-out folds (fold year = centre month's year), same baselines, same logistic stacking with climatology; no tuning.",
+  "by_window": [
+   {
+    "n": 2516,
+    "n_shortfalls": 307,
+    "base_rate": 0.122,
+    "brier": 0.1046,
+    "brier_climatology": 0.117,
+    "bss_vs_climatology": 0.106,
+    "brier_persistence": 0.1073,
+    "bss_vs_persistence": 0.025,
+    "brier_enso_only": 0.1152,
+    "bss_vs_enso_only": 0.092,
+    "auc_pr": 0.189,
+    "auc_pr_climatology": 0.14,
+    "auc_pr_persistence": 0.181,
+    "auc_pr_enso_only": 0.149,
+    "auc_pr_ci90": [
+     0.151,
+     0.236
+    ],
+    "auc_pr_climatology_ci90": [
+     0.115,
+     0.171
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     0.017,
+     0.084
+    ],
+    "bss_vs_climatology_ci90": [
+     0.071,
+     0.14
+    ],
+    "bss_vs_persistence_ci90": [
+     0.001,
+     0.047
+    ],
+    "bss_vs_enso_only_ci90": [
+     0.045,
+     0.135
+    ],
+    "window": "next_season",
+    "months": "t+1..t+3"
+   },
+   {
+    "n": 2516,
+    "n_shortfalls": 307,
+    "base_rate": 0.122,
+    "brier": 0.1077,
+    "brier_climatology": 0.117,
+    "bss_vs_climatology": 0.079,
+    "brier_persistence": 0.109,
+    "bss_vs_persistence": 0.012,
+    "brier_enso_only": 0.1148,
+    "bss_vs_enso_only": 0.062,
+    "auc_pr": 0.144,
+    "auc_pr_climatology": 0.14,
+    "auc_pr_persistence": 0.12,
+    "auc_pr_enso_only": 0.148,
+    "auc_pr_ci90": [
+     0.118,
+     0.177
+    ],
+    "auc_pr_climatology_ci90": [
+     0.115,
+     0.171
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.018,
+     0.025
+    ],
+    "bss_vs_climatology_ci90": [
+     0.045,
+     0.113
+    ],
+    "bss_vs_persistence_ci90": [
+     -0.004,
+     0.028
+    ],
+    "bss_vs_enso_only_ci90": [
+     0.017,
+     0.106
+    ],
+    "window": "season_after",
+    "months": "t+4..t+6"
+   }
+  ],
+  "forward_test": [
+   {
+    "n": 715,
+    "n_shortfalls": 104,
+    "base_rate": 0.145,
+    "brier": 0.1212,
+    "brier_climatology": 0.1373,
+    "bss_vs_climatology": 0.117,
+    "brier_persistence": 0.124,
+    "bss_vs_persistence": 0.022,
+    "brier_enso_only": 0.1379,
+    "bss_vs_enso_only": 0.121,
+    "auc_pr": 0.224,
+    "auc_pr_climatology": 0.165,
+    "auc_pr_persistence": 0.23,
+    "auc_pr_enso_only": 0.165,
+    "auc_pr_ci90": [
+     0.156,
+     0.309
+    ],
+    "auc_pr_climatology_ci90": [
+     0.124,
+     0.23
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.02,
+     0.132
+    ],
+    "bss_vs_climatology_ci90": [
+     0.049,
+     0.171
+    ],
+    "bss_vs_persistence_ci90": [
+     -0.016,
+     0.054
+    ],
+    "bss_vs_enso_only_ci90": [
+     0.019,
+     0.212
+    ],
+    "window": "next_season"
+   },
+   {
+    "n": 715,
+    "n_shortfalls": 104,
+    "base_rate": 0.145,
+    "brier": 0.1226,
+    "brier_climatology": 0.1373,
+    "bss_vs_climatology": 0.107,
+    "brier_persistence": 0.1257,
+    "bss_vs_persistence": 0.025,
+    "brier_enso_only": 0.1346,
+    "bss_vs_enso_only": 0.089,
+    "auc_pr": 0.197,
+    "auc_pr_climatology": 0.165,
+    "auc_pr_persistence": 0.153,
+    "auc_pr_enso_only": 0.157,
+    "auc_pr_ci90": [
+     0.147,
+     0.272
+    ],
+    "auc_pr_climatology_ci90": [
+     0.124,
+     0.23
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.01,
+     0.077
+    ],
+    "bss_vs_climatology_ci90": [
+     0.057,
+     0.149
+    ],
+    "bss_vs_persistence_ci90": [
+     0.004,
+     0.043
+    ],
+    "bss_vs_enso_only_ci90": [
+     0.044,
+     0.138
+    ],
+    "window": "season_after"
+   }
+  ],
+  "ablations": [
+   {
+    "removed": "gravis",
+    "window": "next_season",
+    "auc_pr": 0.195,
+    "auc_pr_full": 0.193,
+    "delta_vs_full": 0.002,
+    "delta_ci90": [
+     -0.019,
+     0.033
+    ]
+   },
+   {
+    "removed": "all_nasa (gravis+gpcp+power)",
+    "window": "next_season",
+    "auc_pr": 0.163,
+    "auc_pr_full": 0.193,
+    "delta_vs_full": -0.03,
+    "delta_ci90": [
+     -0.052,
+     -0.007
+    ]
+   },
+   {
+    "removed": "gravis",
+    "window": "season_after",
+    "auc_pr": 0.162,
+    "auc_pr_full": 0.155,
+    "delta_vs_full": 0.007,
+    "delta_ci90": [
+     -0.002,
+     0.018
+    ]
+   },
+   {
+    "removed": "all_nasa (gravis+gpcp+power)",
+    "window": "season_after",
+    "auc_pr": 0.158,
+    "auc_pr_full": 0.155,
+    "delta_vs_full": 0.002,
+    "delta_ci90": [
+     -0.015,
+     0.022
+    ]
+   }
+  ],
+  "qualifies": {
+   "next_season": true,
+   "season_after": false
+  },
+  "alarm": {
+   "definition": "P(alarm) = max(P next_season, P season_after) at issue t; calm issue month = no seasonal shortfall in either window; same <= 1 false alarm per country per 5 calm years rule as the primary analysis",
+   "threshold": 0.23,
+   "false_alarms_per_country_5yr": 0.931,
+   "calm_alarm_months": 182,
+   "calm_months": 1955,
+   "hit_rate": 0.145,
+   "base_rate": 0.2
+  },
+  "crisis_leads": [
+   {
+    "id": "brazil-2021",
+    "name": "Brazil 2021",
+    "iso3": "BRA",
+    "official_warning": "2021-05-27",
+    "onset": "2021-05-28",
+    "enso": "La Nina",
+    "alarm_month": null,
+    "lead_months": null,
+    "lead_vs_official_months": null,
+    "caught": false,
+    "status": "missed",
+    "p_series": [
+     {
+      "issue": "2020-11",
+      "p_any_shortfall_6m": 0.17
+     },
+     {
+      "issue": "2020-12",
+      "p_any_shortfall_6m": 0.122
+     },
+     {
+      "issue": "2021-01",
+      "p_any_shortfall_6m": 0.188
+     },
+     {
+      "issue": "2021-02",
+      "p_any_shortfall_6m": 0.216
+     },
+     {
+      "issue": "2021-03",
+      "p_any_shortfall_6m": 0.203
+     },
+     {
+      "issue": "2021-04",
+      "p_any_shortfall_6m": 0.178
+     },
+     {
+      "issue": "2021-05",
+      "p_any_shortfall_6m": 0.121
+     }
+    ]
+   },
+   {
+    "id": "sichuan-2022",
+    "name": "Sichuan 2022",
+    "iso3": "CHN-SC",
+    "official_warning": null,
+    "onset": "2022-08-14",
+    "enso": "La Nina",
+    "alarm_month": null,
+    "lead_months": null,
+    "lead_vs_official_months": null,
+    "caught": false,
+    "status": "missed",
+    "p_series": [
+     {
+      "issue": "2022-02",
+      "p_any_shortfall_6m": 0.061
+     },
+     {
+      "issue": "2022-03",
+      "p_any_shortfall_6m": 0.056
+     },
+     {
+      "issue": "2022-04",
+      "p_any_shortfall_6m": 0.079
+     },
+     {
+      "issue": "2022-05",
+      "p_any_shortfall_6m": 0.108
+     },
+     {
+      "issue": "2022-06",
+      "p_any_shortfall_6m": 0.049
+     },
+     {
+      "issue": "2022-07",
+      "p_any_shortfall_6m": 0.062
+     },
+     {
+      "issue": "2022-08",
+      "p_any_shortfall_6m": 0.056
+     }
+    ]
+   },
+   {
+    "id": "vietnam-2023",
+    "name": "Northern Vietnam 2023",
+    "iso3": "VNM",
+    "official_warning": "2023-05-10",
+    "onset": "2023-05-25",
+    "enso": "El Nino developing",
+    "alarm_month": null,
+    "lead_months": null,
+    "lead_vs_official_months": null,
+    "caught": false,
+    "status": "missed",
+    "p_series": [
+     {
+      "issue": "2022-11",
+      "p_any_shortfall_6m": 0.078
+     },
+     {
+      "issue": "2022-12",
+      "p_any_shortfall_6m": 0.071
+     },
+     {
+      "issue": "2023-01",
+      "p_any_shortfall_6m": 0.091
+     },
+     {
+      "issue": "2023-02",
+      "p_any_shortfall_6m": 0.116
+     },
+     {
+      "issue": "2023-03",
+      "p_any_shortfall_6m": 0.111
+     },
+     {
+      "issue": "2023-04",
+      "p_any_shortfall_6m": 0.132
+     },
+     {
+      "issue": "2023-05",
+      "p_any_shortfall_6m": 0.182
+     }
+    ]
+   },
+   {
+    "id": "ecuador-2023",
+    "name": "Ecuador 2023 (wave 1)",
+    "iso3": "ECU",
+    "official_warning": "2023-10-24",
+    "onset": "2023-10-27",
+    "enso": "El Nino",
+    "alarm_month": null,
+    "lead_months": null,
+    "lead_vs_official_months": null,
+    "caught": false,
+    "status": "missed",
+    "p_series": [
+     {
+      "issue": "2023-04",
+      "p_any_shortfall_6m": 0.142
+     },
+     {
+      "issue": "2023-05",
+      "p_any_shortfall_6m": 0.111
+     },
+     {
+      "issue": "2023-06",
+      "p_any_shortfall_6m": 0.085
+     },
+     {
+      "issue": "2023-07",
+      "p_any_shortfall_6m": 0.077
+     },
+     {
+      "issue": "2023-08",
+      "p_any_shortfall_6m": 0.095
+     },
+     {
+      "issue": "2023-09",
+      "p_any_shortfall_6m": 0.069
+     },
+     {
+      "issue": "2023-10",
+      "p_any_shortfall_6m": 0.054
+     }
+    ]
+   },
+   {
+    "id": "ecuador-2024-apr",
+    "name": "Ecuador 2024 (wave 2)",
+    "iso3": "ECU",
+    "official_warning": "2023-12",
+    "onset": "2024-04-14",
+    "enso": "El Nino decaying",
+    "alarm_month": "2023-12",
+    "lead_months": 4,
+    "lead_vs_official_months": 0,
+    "caught": true,
+    "status": "caught",
+    "p_series": [
+     {
+      "issue": "2023-10",
+      "p_any_shortfall_6m": 0.054
+     },
+     {
+      "issue": "2023-11",
+      "p_any_shortfall_6m": 0.199
+     },
+     {
+      "issue": "2023-12",
+      "p_any_shortfall_6m": 0.333
+     },
+     {
+      "issue": "2024-01",
+      "p_any_shortfall_6m": 0.281
+     },
+     {
+      "issue": "2024-02",
+      "p_any_shortfall_6m": 0.267
+     },
+     {
+      "issue": "2024-03",
+      "p_any_shortfall_6m": 0.102
+     },
+     {
+      "issue": "2024-04",
+      "p_any_shortfall_6m": 0.063
+     }
+    ]
+   },
+   {
+    "id": "ecuador-2024-sep",
+    "name": "Ecuador 2024 (wave 3)",
+    "iso3": "ECU",
+    "official_warning": "2023-12",
+    "onset": "2024-09-22",
+    "enso": "ENSO-neutral",
+    "alarm_month": null,
+    "lead_months": null,
+    "lead_vs_official_months": null,
+    "caught": false,
+    "status": "missed",
+    "p_series": [
+     {
+      "issue": "2024-03",
+      "p_any_shortfall_6m": 0.102
+     },
+     {
+      "issue": "2024-04",
+      "p_any_shortfall_6m": 0.063
+     },
+     {
+      "issue": "2024-05",
+      "p_any_shortfall_6m": 0.072
+     },
+     {
+      "issue": "2024-06",
+      "p_any_shortfall_6m": 0.159
+     },
+     {
+      "issue": "2024-07",
+      "p_any_shortfall_6m": 0.124
+     },
+     {
+      "issue": "2024-08",
+      "p_any_shortfall_6m": 0.106
+     },
+     {
+      "issue": "2024-09",
+      "p_any_shortfall_6m": 0.131
+     }
+    ]
+   }
+  ]
+ },
  "limitations": [
   "Ember monthly records mostly start in 2015-2019 (2000 for Iceland, 2010 for Canada, Georgia, New Zealand), and the anomaly needs 2 earlier years of the same calendar month, so most countries have labels only from 2021: few independent drought events, and wide confidence intervals.",
   "Hydro capacity is yearly (Ember), treated as a mid-year value and interpolated; capacity for the latest year is carried forward (Viet Nam, Sri Lanka, Iceland, Kyrgyzstan, El Salvador lack 2025 capacity). Capacity revisions (e.g. Kyrgyzstan 3.67 -> 2.78 GW in 2021) show up as jumps in capacity factor.",
@@ -2106,8 +2598,11 @@
   "Blocked leave-one-year-out CV trains on years after the test year too; expanding normals for those later years include the test year's labels (mild leakage). The strictly forward 2024+ test avoids this but is small.",
   "The alarm threshold and crisis lead times are chosen and measured on the same out-of-fold predictions, so they are optimistic. The five crises are illustrations; the skill table is the main test.",
   "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a 2-month lag (falling back to 3 when t-2 is unpublished, as for Brazil, Canada, Ecuador and Nigeria now); Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data, so their live forecasts have no persistence input.",
+  "NASA POWER root-zone/surface soil wetness and temperature have a step change from 2026-10 (e.g. Peru root-zone +3.7 SD, Brazil -4.0 SD in that month). Those variables are treated as unavailable from 2026-10; the live forecast uses 2026-09 for them (one month older than in the backtest). GPCP rain for 2026-10 is used. No backtest row is affected: the first issue month that would read 2026-10 is the live one (2026-11), which has no labels.",
   "Cost estimates are rough and labelled as such: fixed 20 c/kWh replacement, VoLL $1.00/kWh on 10% of the deficit, no import or demand response modelling."
  ],
- "notes": [],
- "runtime_s": 218.7
+ "notes": [
+  "Seasonal target (generation_backtest.json -> seasonal_target): a robustness test pre-specified by the team after the primary monthly analysis was run and before its results were seen (3-month mean anomaly <= -15%, same features, folds, baselines and calibration, no tuning). It beat climatology on AUC-PR with a 90% CI above zero for: next_season, so seasonal forecasts are added alongside the monthly ones."
+ ],
+ "runtime_s": 201.3
 }

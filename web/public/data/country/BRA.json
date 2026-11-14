@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:24:54+00:00",
+ "generated_at": "2026-11-14T20:31:27+00:00",
  "sources": [
   "ember_monthly",
   "ember_yearly",
@@ -857,18 +857,19 @@
   "precip_3m_anom_pct": 12.8,
   "precip_6m_anom_pct": -0.2,
   "precip_12m_anom_pct": -14.1,
-  "soil_root_anom_sd": -3.99,
-  "soil_top_anom_sd": -3.62,
-  "t2m_3m_anom_sd": 0.96,
-  "power_month": "2026-10",
+  "soil_root_anom_sd": -0.07,
+  "soil_top_anom_sd": 0.14,
+  "t2m_3m_anom_sd": 1.45,
+  "power_month": "2026-09",
+  "precip_month": "2026-10",
   "oni": 2.46,
   "oni_season": "ASO 2026",
   "persist_anom_pct": 5.5,
   "persist_month": "2026-08"
  },
  "drivers": [
-  "Root-zone soil drier than normal (-4.0 SD)",
   "Basin water storage (GRACE-FO, 2026-08) 1.5 SD above normal",
+  "Unusually hot over the basins (+1.5 SD, 3-month mean)",
   "12-month rainfall 14% below normal",
   "El Nino conditions (ONI +2.5)"
  ],
@@ -7059,71 +7060,71 @@
   "issue_month": "2026-11",
   "first_month": "2026-12",
   "last_observed_month": "2026-08",
-  "p_any_shortfall_6m": 0.292,
+  "p_any_shortfall_6m": 0.259,
   "months": [
    {
     "month": "2026-12",
     "horizon": 1,
-    "p_shortfall": 0.076,
-    "p_severe": 0.063,
-    "anomaly_p10_pct": -24.0,
-    "anomaly_p50_pct": 4.2,
-    "anomaly_p90_pct": 28.7,
+    "p_shortfall": 0.059,
+    "p_severe": 0.059,
+    "anomaly_p10_pct": -14.9,
+    "anomaly_p50_pct": 4.6,
+    "anomaly_p90_pct": 29.6,
     "normal_twh": 35.662,
     "risk_level": "low"
    },
    {
     "month": "2027-01",
     "horizon": 2,
-    "p_shortfall": 0.084,
-    "p_severe": 0.07,
-    "anomaly_p10_pct": -25.5,
+    "p_shortfall": 0.068,
+    "p_severe": 0.061,
+    "anomaly_p10_pct": -17.2,
     "anomaly_p50_pct": 4.2,
-    "anomaly_p90_pct": 14.9,
+    "anomaly_p90_pct": 13.9,
     "normal_twh": 39.438,
     "risk_level": "low"
    },
    {
     "month": "2027-02",
     "horizon": 3,
-    "p_shortfall": 0.125,
-    "p_severe": 0.107,
-    "anomaly_p10_pct": -24.9,
-    "anomaly_p50_pct": 4.2,
-    "anomaly_p90_pct": 25.9,
+    "p_shortfall": 0.108,
+    "p_severe": 0.075,
+    "anomaly_p10_pct": -15.2,
+    "anomaly_p50_pct": 5.0,
+    "anomaly_p90_pct": 26.7,
     "normal_twh": 38.385,
     "risk_level": "low"
    },
    {
     "month": "2027-03",
     "horizon": 4,
-    "p_shortfall": 0.122,
+    "p_shortfall": 0.116,
     "p_severe": 0.097,
-    "anomaly_p10_pct": -16.8,
-    "anomaly_p50_pct": 2.2,
-    "anomaly_p90_pct": 19.6,
+    "anomaly_p10_pct": -16.5,
+    "anomaly_p50_pct": 4.7,
+    "anomaly_p90_pct": 22.9,
     "normal_twh": 42.082,
     "risk_level": "low"
    },
    {
     "month": "2027-04",
     "horizon": 5,
-    "p_shortfall": 0.112,
+    "p_shortfall": 0.103,
     "p_severe": 0.077,
-    "anomaly_p10_pct": -16.5,
-    "anomaly_p50_pct": 2.3,
-    "anomaly_p90_pct": 19.2,
+    "anomaly_p10_pct": -15.8,
+    "anomaly_p50_pct": 5.3,
+    "anomaly_p90_pct": 21.3,
     "normal_twh": 37.518,
     "risk_level": "low"
    },
    {
     "month": "2027-05",
     "horizon": 6,
-    "p_shortfall": 0.104,
-    "p_severe": 0.057,
-    "anomaly_p10_pct": -14.0,
-    "anomaly_p50_pct": 5.2,
-    "anomaly_p90_pct": 27.3,
+    "p_shortfall": 0.095,
+    "p_severe": 0.051,
+    "anomaly_p10_pct": -12.9,
+    "anomaly_p50_pct": 7.8,
+    "anomaly_p90_pct": 26.9,
     "normal_twh": 34.592,
     "risk_level": "low"
    }
@@ -7133,36 +7134,36 @@
   {
    "month": "2023-11",
    "iso3": "CHN-SC",
-   "similarity": 0.509,
+   "similarity": 0.631,
    "shortfall_next_6m": false,
    "n_features_compared": 11
   },
   {
-   "month": "2023-11",
-   "iso3": "AUT",
-   "similarity": 0.491,
+   "month": "2024-01",
+   "iso3": "CHN-SC",
+   "similarity": 0.622,
    "shortfall_next_6m": false,
-   "n_features_compared": 11
-  },
-  {
-   "month": "2023-12",
-   "iso3": "CAN",
-   "similarity": 0.486,
-   "shortfall_next_6m": true,
-   "n_features_compared": 11
-  },
-  {
-   "month": "2023-11",
-   "iso3": "CAN",
-   "similarity": 0.479,
-   "shortfall_next_6m": true,
    "n_features_compared": 11
   },
   {
    "month": "2023-12",
    "iso3": "CHN-SC",
-   "similarity": 0.477,
+   "similarity": 0.614,
    "shortfall_next_6m": false,
+   "n_features_compared": 11
+  },
+  {
+   "month": "2023-11",
+   "iso3": "VNM",
+   "similarity": 0.603,
+   "shortfall_next_6m": true,
+   "n_features_compared": 11
+  },
+  {
+   "month": "2024-01",
+   "iso3": "VNM",
+   "similarity": 0.601,
+   "shortfall_next_6m": true,
    "n_features_compared": 11
   }
  ],
@@ -7174,11 +7175,24 @@
   "expected_cost_next_6m_musd": {
    "p10": 0.0,
    "p50": 0.0,
-   "p90": 1329.9
+   "p90": 908.6
   },
   "method": "Estimate only. For each forecast month: P(shortfall) x deficit x blended cost. Deficit = max(0, -anomaly quantile) x normal hydro generation (median of that calendar month's observed output, at the latest capacity). Blended cost assumes 90% of the deficit is replaced at 20 c/kWh and 10% goes unserved at a value of lost load of $1.00/kWh. p10/p50/p90 use the P90/P50/P10 anomaly quantiles. Ignores imports, reservoir re-optimisation and demand response; large exporters (Norway, Canada, Sweden) mostly lose export revenue, not supply."
  },
  "notes": [
   "Ember data ends 2026-08; forecast months start 2026-12."
- ]
+ ],
+ "seasonal_forecast": {
+  "definition": "P(mean capacity-factor anomaly over the 3-month window <= -15%)",
+  "issued": "2026-11-15",
+  "windows": {
+   "next_season": {
+    "months": "2026-12..2027-02",
+    "p_shortfall": 0.07,
+    "anomaly_p10_pct": -8.3,
+    "anomaly_p50_pct": 2.9,
+    "anomaly_p90_pct": 20.3
+   }
+  }
+ }
 }

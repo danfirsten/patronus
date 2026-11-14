@@ -96,6 +96,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
         {isNum(meta?.hydro_share_pct) && <>Hydropower is about {fmtNum(meta?.hydro_share_pct)}% of its electricity. </>}
         Current risk: <RiskPill level={wrow?.risk_level ?? level} />
       </p>
+      <p><span className="experimental">Experimental: modest skill, <a href="#/scoreboard">see Scoreboard</a></span></p>
 
       <div className="grid-2">
         <div className="panel">
@@ -235,6 +236,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
               <p className="h-big">{fmtPct(ec.el_nino_effect_pct, 0, true)}</p>
               <p>Typical change under El Niño{isNum(ec.el_nino_p) ? ` (p = ${fmtNum(ec.el_nino_p, 2)})` : ''}. Under La Niña: {fmtPct(ec.la_nina_effect_pct, 0, true)}.</p>
               <p><ExposureTag exposure={ec.exposure} /></p>
+              {(ec as any).current_implication && <p className="small">{(ec as any).current_implication}</p>}
               {enso.data?.outlook?.status && <p className="muted small">Outlook: {enso.data.outlook.status}{enso.data.outlook.oni_latest ? `, ONI ${fmtNum(enso.data.outlook.oni_latest.value, 2)} (${enso.data.outlook.oni_latest.season})` : ''}.</p>}
             </>
           ) : <Empty>No El Niño fingerprint for this country yet.</Empty>}
@@ -260,7 +262,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
 
       {brief && (
         <div className="panel brief">
-          <p className="ai-label">AI-written brief, checked against the data files</p>
+          <p className="ai-label">AI-written brief, checked against the data</p>
           <MiniMarkdown text={brief} />
         </div>
       )}

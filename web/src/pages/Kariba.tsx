@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useData, loadText } from '../data/load';
-import type { Kariba, Nightlights, NightFrame, SkillRow } from '../data/types';
+import type { Kariba, KaribaForecastMonth, Nightlights, NightFrame, SkillRow } from '../data/types';
 import { Figure, Loading, Stat, Empty, SourceNote, MiniMarkdown } from '../components/common';
 import { Gauge } from '../components/small';
 import { TimeChart, LegendItem } from '../components/TimeChart';
@@ -8,36 +8,68 @@ import { fmtDate, fmtMonth, fmtMusd, fmtNum, fmtProb, isNum, monthsBetween, peri
 
 const LOWEST_2024 = { date: '2024-12-11', usable_pct: 2.89, level_m: 475.91 }; // DESIGN.md 11.7 (ZRA)
 
+const OUTCOME_LABEL: Record<string, string> = { hit: 'Hit', miss: 'Miss', false_alarm: 'False alarm', correct_quiet: 'Correctly quiet' };
+const SENS_LABEL: Record<string, string> = {
+  'voll_0.5': 'Value of lost load $0.50/kWh',
+  'voll_1.5': 'Value of lost load $1.50/kWh',
+  'energy_0.19_twh_per_bcm': 'Energy per BCM: 0.19 TWh',
+  'energy_0.25_twh_per_bcm': 'Energy per BCM: 0.25 TWh',
+  hist_release_23_bcm: 'Past releases assumed 23 BCM/yr',
+  hist_release_36_bcm: 'Past releases assumed 36 BCM/yr',
+  no_terminal_credit: 'No credit for water left at end-2027',
+  strong_el_nino_only: 'Strong El Niño years only',
+};
+
 export default function KaribaPage() {
   const k = useData<Kariba>('kariba.json');
   const nl = useData<Nightlights>('nightlights.json');
+  const trends = useData<any>('trends.json');
   const [brief, setBrief] = useState<string | null>(null);
   useEffect(() => { loadText('briefs/kariba.md').then(setBrief); }, []);
 
   if (k.loading) return <div className="wrap page"><Loading what="Kariba data" /></div>;
-  const d = k.data;
+  const d = k.data as any as Kariba & Record<string, any>;
   if (!d) return <div className="wrap page"><Empty>Kariba data is not available.</Empty></div>;
 
   const warn = d.thresholds?.warning_usable_pct ?? 20;
   const dang = d.thresholds?.danger_usable_pct ?? 10;
   const hist = d.history ?? [];
-  const fc = d.forecast?.months ?? [];
-  const c24 = d.backtest?.crisis_2024;
-  const zra = d.zra_projection;
-  const issued = d.forecast?.issued;
-  const firstDanger = fc.find((m) => isNum(m.p_below_danger) && (m.p_below_danger as number) >= 0.4);
+  const F: any = d.forecast ?? {};
+  const fc: KaribaForecastMonth[] = F.months ?? [];
+  const nowM: KaribaForecastMonth[] = F.now_model?.months ?? [];
+  const nextM: KaribaForecastMonth[] = F.next_model?.months ?? [];
+  const c24: any = d.backtest?.crisis_2024 ?? {};
+  const c24Now: any = c24.now_model ?? null;
+  const c24Series: any[] = c24.next_model?.series ?? c24.series ?? [];
+  const zra: any = d.zra_projection ?? {};
+  const issued = F.issued;
+  // Months to darkness (Kariba): first month with at least a 1-in-3 chance of falling below the danger line.
+  const DARK_P = 1 / 3;
+  const firstDanger = fc.find((m) => isNum(m.p_below_danger) && (m.p_below_danger as number) >= DARK_P);
   const mtd = firstDanger ? Math.max(0, monthsBetween(issued?.slice(0, 7), firstDanger.month) ?? 0) : null;
+  const last = fc[fc.length - 1];
   const histPeriod = periodOf([hist[0]?.date, hist[hist.length - 1]?.date]);
   const recent = hist.filter((h) => h.date >= '2025-06');
   const crisisWin = hist.filter((h) => h.date >= '2023-01' && h.date <= '2025-03');
-  const cw = d.cost_of_waiting as any;
-  const c24Series: { issue: string; p_warning?: number | null; p_danger?: number | null }[] = Array.isArray((c24 as any)?.series) ? (c24 as any).series : [];
   const lead = (n: number | null | undefined) => !isNum(n) ? '—' : n > 0 ? `${n} month${n === 1 ? '' : 's'} before` : n === 0 ? 'the same month as' : `${-n} month${n === -1 ? '' : 's'} after`;
-  const curve: any[] = cw?.curve ?? [];
-  const hasMean = curve.some((c) => isNum(c.expected_cost_musd_mean));
-  const policies: any[] = Array.isArray(cw?.policies) ? cw.policies : [];
-  const POLICY: Record<string, string> = { wait_warning: 'Wait until the lake drops below 20%', no_action: 'Take no action' };
   const pct = (v: number) => `${Math.round(v)}%`;
+  const nm: any = (d.backtest as any)?.next_model ?? null;
+  const elnScore = nm?.score?.warning?.el_nino_seasons?.ensemble;
+  const interp: string | undefined = trends.data?.kariba_basin?.interpretation;
+
+  // cost of waiting
+  const cw: any = d.cost_of_waiting ?? {};
+  const curve: any[] = cw.curve ?? [];
+  const hasMean = curve.some((c) => isNum(c.expected_cost_musd_mean));
+  const val = (c: any) => (hasMean ? c?.expected_cost_musd_mean : c?.expected_cost_musd_p50);
+  const policies: any[] = Array.isArray(cw.policies) ? cw.policies : [];
+  const POLICY: Record<string, string> = { wait_warning: 'Wait until the lake drops below 20%', no_action: 'Take no action' };
+  const sens: Record<string, any> = cw.sensitivity_mean_musd ?? {};
+  const pol = (name: string) => policies.find((p) => p.policy === name)?.expected_cost_musd_mean;
+  const central = { act_2026_12: val(curve.find((c) => c.action_month === '2026-12')), act_2027_04: val(curve.find((c) => c.action_month === '2027-04')), wait_warning: pol('wait_warning'), no_action: pol('no_action') };
+  const actDec = [central.act_2026_12, ...Object.values(sens).map((v: any) => v?.act_2026_12)].filter(isNum);
+  const relDec = Object.entries(sens).filter(([k]) => k.startsWith('hist_release')).map(([, v]: any) => v?.act_2026_12).filter(isNum);
+  const relRange = relDec.length ? [Math.min(...relDec, ...(isNum(central.act_2026_12) ? [central.act_2026_12] : [])), Math.max(...relDec)] : null;
 
   return (
     <div className="wrap page">
@@ -51,26 +83,27 @@ export default function KaribaPage() {
 
       <div className="stat-row">
         <Stat value={`${fmtNum(d.latest?.usable_pct, 1)}%`} label={`usable storage, ${fmtDate(d.latest?.date)} (satellite)`} tone="accent" />
-        {d.latest?.zra_gauge && <Stat value={`${fmtNum(d.latest.zra_gauge.usable_pct, 1)}%`} label={`ZRA gauge, ${fmtDate(d.latest.zra_gauge.date)}`} />}
         <Stat value={`−${zra?.cut_pct ?? 36}%`} label={`2027 allocation cut to ${fmtNum(zra?.allocation_2027_bcm)} BCM (ZRA)`} tone="drying" />
-        <Stat value={`${fmtNum(zra?.end_2027_usable_pct)}%`} label="ZRA's own projection for end-2027 if the full allocation is used" tone="drying" />
+        <Stat value={fmtProb(last?.p_below_danger)} label={`chance of falling below ${dang}% (danger) by ${fmtMonth(last?.month)}`} tone="drying" />
+        <Stat value={`${fmtNum(last?.usable_p50, 0)}%`} label={`Patronus median for ${fmtMonth(last?.month)}, vs ZRA's own ${fmtNum(zra?.end_2027_usable_pct)}%`} />
       </div>
 
       <div className="grid-2">
         <div className="panel">
           <Gauge months={mtd} max={12} label="Months to darkness" beyond={fc.length ? `${fc.length}+` : 'n/a'}
             sub={mtd === null
-              ? `No forecast month reaches a 40% chance of falling below ${dang}% usable.`
-              : `Months from ${fmtMonth(issued)} until the first month with at least a 40% chance of falling below ${dang}% usable storage (${fmtMonth(firstDanger?.month)}), when the allocation can no longer be met.`} />
-          <SourceNote files={['kariba.json']}>Patronus Kariba forecast issued {fmtDate(issued)}.</SourceNote>
+              ? `No forecast month reaches a 1-in-3 chance of falling below ${dang}% usable.`
+              : `Months from ${fmtMonth(issued)} until the first month with at least a 1-in-3 chance of falling below ${dang}% usable storage (${fmtMonth(firstDanger?.month)}: ${fmtProb(firstDanger?.p_below_danger)}). Below ${dang}%, the allocation can no longer be met.`} />
+          <SourceNote files={['kariba.json']}>Patronus blended Kariba forecast issued {fmtDate(issued)}.</SourceNote>
         </div>
         <div className="panel">
-          <h3>Why Kariba</h3>
-          <ul className="plain">
-            <li>NASA measures it: G-REALM satellite altimetry since 1992, about every 10 days.</li>
-            <li>It spans about 34 years and roughly 10 El Niño events.</li>
-            <li>Operating range {fmtNum(d.thresholds?.min_operating_m, 2)} m to {fmtNum(d.thresholds?.max_operating_m, 2)} m. Below {warn}% usable is a warning. Below {dang}%, generation is curtailed.</li>
-          </ul>
+          <h3>Two models, one forecast</h3>
+          <dl className="kv stack">
+            <div><dt>Now · 0–6 months</dt><dd>{F.now_model?.name ?? 'Machine-learning model'}. Skilful for the next few months from stored water, rain and soil, but it learned from few strong El Niños and cannot see one coming.</dd></div>
+            <div><dt>Next · 6–18 months</dt><dd>{F.next_model?.name ?? 'El Niño-conditioned water-balance ensemble'}. It replays inflows from past years in the same El Niño phase ({(F.next_model?.analog_years ?? []).length || '—'} years) against the announced releases.</dd></div>
+          </dl>
+          {F.blend_rule && <p className="small"><b>How they are blended:</b> {F.blend_rule}</p>}
+          {F.skill_caveat && <p className="small muted">{F.skill_caveat}</p>}
         </div>
       </div>
 
@@ -91,70 +124,106 @@ export default function KaribaPage() {
           ]}
         />
       </Figure>
+      {interp && (
+        <div className="callout">
+          <h3>Is the Kariba basin drying?</h3>
+          <p className="small">{interp}</p>
+          <SourceNote files={['trends.json']}>GRACE/GRACE-FO (GFZ GravIS), G-REALM, GPCP and MERRA-2 rainfall, 2002–2026.</SourceNote>
+        </div>
+      )}
 
       <h2 className="section-title">The 2024 crisis, and when Patronus would have warned</h2>
+      <p className="headline">
+        In a fair backtest, Patronus' El Niño model first gave a better-than-even chance of the lake falling below {warn}% in <b>{fmtMonth(c24.first_warning_p_gt_0_5)}</b>:{' '}
+        <b>{lead(c24.lead_months_vs_zra)}</b> ZRA's water cut and <b>{lead(c24.lead_months_vs_load_shedding)}</b> load-shedding began.
+      </p>
       <Figure
-        title="2023–2025: the lake falls, the officials act, the alarm fires"
-        sub="Vertical lines mark the Patronus alarms (strictly forward backtest) and the official decisions."
-        source={<>G-REALM lake levels (NASA/USDA), Jan 2023 – Mar 2025; ZRA and news for official dates. Backtest: {d.backtest?.design ?? '—'}</>}
+        title="2023–2025: the lake falls, the officials act, the alarms fire"
+        sub="Solid line: usable storage. Dashed line: what the El Niño model said at the time (chance of falling below 20% during Apr–Dec 2024). Vertical lines: first alarms of each model and the official decisions."
+        source={<>G-REALM lake levels (NASA/USDA), Jan 2023 – Mar 2025; ZRA and news for official dates. Backtest issued monthly with only the data then available.</>}
         files={['kariba.json']}
       >
         <TimeChart
           ariaLabel="Lake Kariba 2023 to 2025 with alarm and decision dates"
-          height={300}
+          height={320}
           xDomain={['2023-01-01', '2025-03-01']}
           y={{ domain: [0, 40], fmt: pct, label: 'Usable storage (%)' }}
           y2={c24Series.length ? { domain: [0, 1], fmt: (v) => fmtProb(v), label: 'Alarm probability (dashed)' } : undefined}
-          legend={<><LegendItem color="var(--series-1)" label="Usable storage" />{c24Series.length > 0 && <><LegendItem kind="dash" color="var(--series-2)" label={`Chance of < ${warn}% (forecast at the time)`} /><LegendItem kind="dash" color="var(--series-3)" label={`Chance of < ${dang}%`} /></>}</>}
+          legend={<><LegendItem color="var(--series-1)" label="Usable storage" />{c24Series.length > 0 && <><LegendItem kind="dash" color="var(--series-2)" label={`El Niño model: chance of < ${warn}%`} /><LegendItem kind="dash" color="var(--series-3)" label={`El Niño model: chance of < ${dang}%`} /></>}</>}
           layers={[
             { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}%` },
             { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}%` },
             { kind: 'line', data: crisisWin.map((h) => ({ x: h.date, y: h.usable_pct })), color: 'var(--series-1)', label: 'Usable storage', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
-            ...(c24?.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24.first_warning_p_gt_0_5, color: 'var(--series-2)', label: 'Patronus: warning', row: 0 }] : []),
-            ...(c24?.first_danger_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24.first_danger_p_gt_0_5, color: 'var(--series-3)', label: 'Patronus: danger', row: 1 }] : []),
-            { kind: 'vline', x: c24?.zra_allocation_cut ?? '2023-12-28', color: 'var(--text-muted)', label: 'ZRA cuts allocation', row: 2 },
-            { kind: 'vline', x: c24?.load_shedding_start ?? '2024-03-11', color: 'var(--threshold-danger)', label: 'Load-shedding starts', row: 3 },
+            ...(c24.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24.first_warning_p_gt_0_5, color: 'var(--series-2)', label: 'El Niño model: warning', row: 0 }] : []),
+            ...(c24.zra_allocation_cut ? [{ kind: 'vline' as const, x: c24.zra_allocation_cut, color: 'var(--text-muted)', label: 'ZRA cuts allocation', row: 1 }] : []),
+            ...(c24Now?.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24Now.first_warning_p_gt_0_5, color: 'var(--series-4)', label: 'ML model: warning', row: 2 }] : []),
+            { kind: 'vline', x: c24.load_shedding_start ?? '2024-03-11', color: 'var(--threshold-danger)', label: 'Load-shedding starts', row: 3 },
             { kind: 'points', data: [{ x: LOWEST_2024.date, y: LOWEST_2024.usable_pct, label: '2.89% (11 Dec 2024)' }], color: 'var(--threshold-danger)', r: 5 },
             ...(c24Series.length ? [
-              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_warning })), color: 'var(--series-2)', dash: '4 3', width: 1.5, label: `Patronus: chance of < ${warn}%`, fmt: fmtProb },
-              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_danger })), color: 'var(--series-3)', dash: '4 3', width: 1.5, label: `Patronus: chance of < ${dang}%`, fmt: fmtProb },
+              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_warning })), color: 'var(--series-2)', dash: '4 3', width: 1.8, label: `El Niño model: chance of < ${warn}%`, fmt: fmtProb, curve: false },
+              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_danger })), color: 'var(--series-3)', dash: '4 3', width: 1.5, label: `El Niño model: chance of < ${dang}%`, fmt: fmtProb, curve: false },
             ] : []),
           ]}
         />
       </Figure>
       <ol className="timeline">
-        <li className="tl-p"><span className="tl-date">{fmtMonth(c24?.first_warning_p_gt_0_5)}</span><span>Patronus: chance of falling below {warn}% passes 50%.</span></li>
-        <li className="tl-p"><span className="tl-date">{fmtMonth(c24?.first_danger_p_gt_0_5)}</span><span>Patronus: chance of falling below {dang}% passes 50%.</span></li>
-        <li><span className="tl-date">{fmtDate(c24?.zra_allocation_cut ?? '2023-12-28')}</span><span>ZRA cuts the 2024 allocation to 16 BCM.</span></li>
-        <li><span className="tl-date">{fmtDate(c24?.load_shedding_start ?? '2024-03-11')}</span><span>Zambia starts 8 hours a day of load-shedding; 12 hours from 20 May.</span></li>
+        {c24.first_warning_p_gt_0_5 && <li className="tl-p"><span className="tl-date">{fmtMonth(c24.first_warning_p_gt_0_5)}</span><span>El Niño model: chance of falling below {warn}% passes 50%. This first alarm came from low storage while the El Niño index was still neutral.</span></li>}
+        {c24.first_danger_p_gt_0_5 && <li className="tl-p"><span className="tl-date">{fmtMonth(c24.first_danger_p_gt_0_5)}</span><span>El Niño model: chance of falling below {dang}% passes 50%. From now on it uses El Niño analog years.</span></li>}
+        <li><span className="tl-date">{fmtDate(c24.zra_allocation_cut ?? '2023-12-28')}</span><span>ZRA cuts the 2024 allocation to 16 BCM.</span></li>
+        {c24Now?.first_warning_p_gt_0_5 && <li className="tl-ml"><span className="tl-date">{fmtMonth(c24Now.first_warning_p_gt_0_5)}</span><span>ML ("now") model: chance of falling below {warn}% passes 50%, only {lead(c24Now.lead_months_vs_load_shedding)} load-shedding.</span></li>}
+        <li><span className="tl-date">{fmtDate(c24.load_shedding_start ?? '2024-03-11')}</span><span>Zambia starts 8 hours a day of load-shedding; 12 hours from 20 May.</span></li>
         <li><span className="tl-date">~14 Sep 2024</span><span>Kariba North power station stops.</span></li>
         <li><span className="tl-date">11 Dec 2024</span><span>Lake at 475.91 m: 2.89% usable, the lowest point.</span></li>
       </ol>
-      <p className="headline">
-        Patronus' first warning (chance above 50%) came <b>{lead(c24?.lead_months_vs_load_shedding)}</b> load-shedding began,
-        and <b>{lead(c24?.lead_months_vs_zra)}</b> the ZRA allocation cut.
-      </p>
-      {(c24 as any)?.definition && <p className="muted small">How the alarm is defined: {(c24 as any).definition}</p>}
+      {c24Now && (
+        <p className="small"><b>The honest part:</b> the machine-learning model missed the early signal. Issued in Oct–Dec 2023, its median expected the lake to recover; it fired only in {fmtMonth(c24Now.first_warning_p_gt_0_5)}. The early warning came from the El Niño water-balance model.</p>
+      )}
+      {c24.definition && <p className="muted small">How the alarm is defined: {c24.definition}</p>}
+
+      {nm?.score && (
+        <div className="panel">
+          <h3>Not cherry-picked: every season since 1995</h3>
+          <p className="muted">
+            The El Niño model was re-run each Oct, Nov and Dec from 1995 to 2025, using only what was known then. An alarm is any of the three with a chance above 50%.
+            The event is the lake falling below {warn}% at any time in Apr–Dec of the next year.
+          </p>
+          {elnScore && (
+            <p className="headline">In El Niño seasons: {elnScore.hit} hits, {elnScore.miss} misses and {elnScore.false_alarm} false alarms ({elnScore.correct_quiet} correctly quiet).</p>
+          )}
+          <ScoreTable score={nm.score} warn={warn} dang={dang} />
+          <SeasonStrip seasons={nm.seasons ?? []} />
+          <SourceNote files={['kariba.json']}>Patronus Kariba backtest, seasons 1996–2026; G-REALM levels, NOAA ONI.</SourceNote>
+        </div>
+      )}
 
       <h2 className="section-title">2027: the forecast</h2>
       <Figure
-        title={`Forecast usable storage, ${fmtMonth(fc[0]?.month)} – ${fmtMonth(fc[fc.length - 1]?.month)}, against ZRA's projection`}
-        sub="Shaded fan: 80% of outcomes (P10–P90). Line: median. Diamond: ZRA's projection for end-2027 if the full allocation is used."
-        source={<>Patronus forecast issued {fmtDate(issued)} (G-REALM, GRACE/GRACE-FO, NASA POWER, NOAA ONI); ZRA projection{zra?.source_url ? <> (<a href={zra.source_url} target="_blank" rel="noreferrer">source</a>)</> : ''}.</>}
+        title={`Forecast usable storage, ${fmtMonth(fc[0]?.month)} – ${fmtMonth(last?.month)}, against ZRA's projection`}
+        sub="Shaded fan: 80% of outcomes (P10–P90) of the blended forecast. Thick line: blended median. Thin lines: each model's median. Dot: ZRA's projection for end-2027 if the full allocation is used."
+        source={<>Patronus forecast issued {fmtDate(issued)} (G-REALM, GRACE/GRACE-FO, GPCP, NASA POWER, NOAA ONI, GEOS-S2S outlook); ZRA projection{zra?.source_url ? <> (<a href={zra.source_url} target="_blank" rel="noreferrer">source</a>)</> : ''}.</>}
         files={['kariba.json']}
       >
         <TimeChart
           ariaLabel="Kariba forecast fan chart with ZRA projection"
           height={300}
-          y={{ domain: [0, 60], fmt: pct, label: 'Usable storage (%)' }}
-          legend={<><LegendItem color="var(--series-1)" label="Observed" /><LegendItem color="var(--series-2)" label="Median forecast" /><LegendItem kind="box" color="var(--series-band-2)" label="P10–P90" /><LegendItem kind="dot" color="var(--series-3)" label="ZRA projection" /></>}
+          y={{ domain: [0, 80], fmt: pct, label: 'Usable storage (%)' }}
+          legend={<>
+            <LegendItem color="var(--series-1)" label="Observed" />
+            <LegendItem color="var(--series-2)" label="Blended median" />
+            <LegendItem kind="box" color="var(--series-band-2)" label="P10–P90" />
+            {nowM.length > 0 && <LegendItem kind="dash" color="var(--series-4)" label="ML (now) model median" />}
+            {nextM.length > 0 && <LegendItem kind="dash" color="var(--drying-mild)" label="El Niño (next) model median" />}
+            <LegendItem kind="dot" color="var(--series-3)" label="ZRA projection" />
+          </>}
           layers={[
             { kind: 'band', data: fc.map((m) => ({ x: m.month, lo: m.usable_p10, hi: m.usable_p90 })), color: 'var(--series-band-2)', label: 'P10–P90', fmt: pct },
             { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}% warning` },
             { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}% danger` },
             { kind: 'line', data: recent.map((h) => ({ x: h.date, y: h.usable_pct })), color: 'var(--series-1)', label: 'Observed', fmt: (v) => `${fmtNum(v, 1)}%` },
-            { kind: 'line', data: fc.map((m) => ({ x: m.month, y: m.usable_p50 })), color: 'var(--series-2)', label: 'Median', fmt: pct },
-            ...(isNum(zra?.end_2027_usable_pct) ? [{ kind: 'points' as const, data: [{ x: '2027-12', y: zra!.end_2027_usable_pct, label: `ZRA ${zra!.end_2027_usable_pct}%` }], color: 'var(--series-3)', r: 6, label: 'ZRA projection', fmt: pct }] : []),
+            ...(nowM.length ? [{ kind: 'line' as const, data: nowM.map((m) => ({ x: m.month, y: m.usable_p50 })), color: 'var(--series-4)', dash: '3 3', width: 1.3, label: 'ML model median', fmt: pct }] : []),
+            ...(nextM.length ? [{ kind: 'line' as const, data: nextM.map((m) => ({ x: m.month, y: m.usable_p50 })), color: 'var(--drying-mild)', dash: '3 3', width: 1.3, label: 'El Niño model median', fmt: pct }] : []),
+            { kind: 'line', data: fc.map((m) => ({ x: m.month, y: m.usable_p50 })), color: 'var(--series-2)', width: 2.5, label: 'Blended median', fmt: pct },
+            ...(isNum(zra?.end_2027_usable_pct) ? [{ kind: 'points' as const, data: [{ x: '2027-12', y: zra.end_2027_usable_pct, label: `ZRA ${zra.end_2027_usable_pct}%` }], color: 'var(--series-3)', r: 6, label: 'ZRA projection', fmt: pct }] : []),
           ]}
         />
         <div className="prob-table-wrap">
@@ -163,34 +232,56 @@ export default function KaribaPage() {
             <tbody>
               <tr><th>Below {warn}%</th>{fc.map((m) => <td key={m.month} className="num">{fmtProb(m.p_below_warning)}</td>)}</tr>
               <tr><th>Below {dang}%</th>{fc.map((m) => <td key={m.month} className="num">{fmtProb(m.p_below_danger)}</td>)}</tr>
+              {fc.some((m: any) => isNum(m.weight_next_model)) && <tr><th>El Niño model weight</th>{fc.map((m: any) => <td key={m.month} className="num muted">{fmtProb(m.weight_next_model)}</td>)}</tr>}
             </tbody>
           </table>
         </div>
+        {zra?.comparison && <p className="small" style={{ marginTop: 12 }}>{zra.comparison}</p>}
       </Figure>
 
       <Figure
-        title="The cost of waiting"
-        sub="Expected cost of the shortfall depending on the month conservation and import contracts start. Later action means emergency power at higher prices and more unserved energy."
+        title="The cost of waiting (illustrative)"
+        sub="Expected cost of the shortfall depending on the month conservation and import contracts start, under central assumptions. Treat it as a range, not a figure: it moves a lot with the assumptions below."
         source={<>Patronus water balance and cost model; {String(cw?.assumptions?.source ?? 'ZESCO ERB filing Jul 2024; VoLL literature')}. Action months {periodOf([curve[0]?.action_month, curve[curve.length - 1]?.action_month])}.{cw?.headline_note ? ` ${cw.headline_note}` : ''}</>}
         files={['kariba.json']}
       >
-        {cw?.headline && <p className="headline">{cw.headline}</p>}
+        {relRange ? (
+          <p className="headline">Acting in December would cost an expected {fmtMusd(relRange[0])} to {fmtMusd(relRange[1])}, depending mostly on how much water past years are assumed to have released. Waiting costs more in every run we tried{Object.values(sens).some((v: any) => isNum(v?.act_2026_12) && isNum(v?.wait_warning) && v.act_2026_12 > v.wait_warning) ? ' except one (see table)' : ''}.</p>
+        ) : cw?.headline && <p className="headline">{cw.headline}</p>}
+        {relRange && cw?.headline && <p className="small muted">Central case: {cw.headline}</p>}
         <TimeChart
           ariaLabel="Expected cost by month action starts"
           height={240}
-          y={{ fmt: (v) => fmtMusd(v), label: 'Expected cost (US$ millions)' }}
+          y={{ fmt: (v) => fmtMusd(v), label: 'Expected cost, central assumptions (US$)' }}
           legend={<>
-            <LegendItem color="var(--drying-strong)" label={hasMean ? 'Expected cost (mean across scenarios)' : 'Median expected cost'} />
+            <LegendItem color="var(--drying-strong)" label={hasMean ? 'Act in this month (mean across El Niño scenarios)' : 'Median expected cost'} />
             {!hasMean && <LegendItem kind="box" color="var(--shortfall-shade)" label="P10–P90" />}
             {policies.map((p, i) => <LegendItem key={i} kind="dash" color={i === 0 ? 'var(--risk-warning)' : 'var(--text-muted)'} label={`${POLICY[p.policy] ?? p.policy}: ${fmtMusd(p.expected_cost_musd_mean ?? p.expected_cost_musd_p50)}`} />)}
           </>}
           layers={[
             ...(!hasMean ? [{ kind: 'band' as const, data: curve.map((c) => ({ x: c.action_month, lo: c.expected_cost_musd_p10, hi: c.expected_cost_musd_p90 })), color: 'var(--shortfall-shade)', label: 'P10–P90', fmt: fmtMusd }] : []),
             ...policies.map((p, i) => ({ kind: 'hline' as const, y: p.expected_cost_musd_mean ?? p.expected_cost_musd_p50 ?? 0, color: i === 0 ? 'var(--risk-warning)' : 'var(--text-muted)', label: POLICY[p.policy] ?? p.policy })),
-            { kind: 'line', data: curve.map((c) => ({ x: c.action_month, y: hasMean ? c.expected_cost_musd_mean : c.expected_cost_musd_p50 })), color: 'var(--drying-strong)', label: hasMean ? 'Expected cost' : 'Median', fmt: fmtMusd },
-            { kind: 'points', data: curve.map((c) => ({ x: c.action_month, y: hasMean ? c.expected_cost_musd_mean : c.expected_cost_musd_p50 })), color: 'var(--drying-strong)', r: 3 },
+            { kind: 'line', data: curve.map((c) => ({ x: c.action_month, y: val(c) })), color: 'var(--drying-strong)', label: 'Act in this month', fmt: fmtMusd },
+            { kind: 'points', data: curve.map((c) => ({ x: c.action_month, y: val(c) })), color: 'var(--drying-strong)', r: 3 },
           ]}
         />
+        {Object.keys(sens).length > 0 && (
+          <div className="table-wrap">
+            <table className="data-table compact">
+              <thead><tr><th>Assumption changed</th><th>Act in Dec 2026</th><th>Act in Apr 2027</th><th>Wait until below {warn}%</th><th>No action</th></tr></thead>
+              <tbody>
+                <tr className="row-strong"><td>Central assumptions</td><td className="num">{fmtMusd(central.act_2026_12)}</td><td className="num">{fmtMusd(central.act_2027_04)}</td><td className="num">{fmtMusd(central.wait_warning)}</td><td className="num">{fmtMusd(central.no_action)}</td></tr>
+                {Object.entries(sens).map(([key, v]: any) => (
+                  <tr key={key}>
+                    <td>{SENS_LABEL[key] ?? key.replace(/_/g, ' ')}{Array.isArray(v?.years) ? ` (${v.years.join(', ')})` : ''}</td>
+                    <td className="num">{fmtMusd(v?.act_2026_12)}</td><td className="num">{fmtMusd(v?.act_2027_04)}</td><td className="num">{fmtMusd(v?.wait_warning)}</td><td className="num">{fmtMusd(v?.no_action)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {actDec.length > 1 && <p className="small muted">Across all runs, acting in December ranges from {fmtMusd(Math.min(...actDec))} to {fmtMusd(Math.max(...actDec))}. Costs are expected values over historical El Niño inflow years, relative to the no-action storage path.</p>}
         <dl className="kv inline">
           <div><dt>Contracted imports</dt><dd>${fmtNum(Number(cw?.assumptions?.replacement_contracted_usd_per_kwh), 2)}/kWh</dd></div>
           <div><dt>Emergency power</dt><dd>${fmtNum(Number(cw?.assumptions?.replacement_emergency_usd_per_kwh), 2)}/kWh</dd></div>
@@ -242,12 +333,61 @@ export default function KaribaPage() {
         </div>
       )}
 
-      {brief && (
-        <div className="panel brief">
-          <p className="ai-label">AI-written brief, checked against the data files</p>
-          <MiniMarkdown text={brief} />
-        </div>
-      )}
+      {brief && <BriefPanel text={brief} />}
+    </div>
+  );
+}
+
+function ScoreTable({ score, warn, dang }: { score: any; warn: number; dang: number }) {
+  const rows: [string, string][] = [['el_nino_seasons', 'El Niño seasons'], ['other_seasons', 'Other seasons'], ['all', 'All seasons']];
+  const cell = (o: any) => (o ? `${o.hit} / ${o.miss} / ${o.false_alarm} / ${o.correct_quiet}` : '—');
+  return (
+    <div className="table-wrap">
+      <table className="data-table compact">
+        <thead><tr><th>Seasons</th><th>El Niño model, below {warn}%</th><th>ML model (2006 on), below {warn}%</th><th>El Niño model, below {dang}%</th></tr></thead>
+        <tbody>
+          {rows.map(([k, label]) => (
+            <tr key={k}><td>{label}</td><td className="num">{cell(score?.warning?.[k]?.ensemble)}</td><td className="num">{cell(score?.warning?.[k]?.ml_2006_onward)}</td><td className="num">{cell(score?.danger?.[k]?.ensemble)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="small muted">Each cell: hits / misses / false alarms / correctly quiet.</p>
+    </div>
+  );
+}
+
+function SeasonStrip({ seasons }: { seasons: any[] }) {
+  const s = seasons.filter((x) => x && x.season);
+  if (!s.length) return null;
+  return (
+    <>
+      <div className="season-strip" role="list" aria-label="El Niño model outcome by season, 20% warning line">
+        {s.map((x) => {
+          const o = x.warning_ensemble_outcome ?? 'none';
+          return (
+            <span key={x.season} role="listitem" className={`season season-${o}`} title={`${x.season}: ${OUTCOME_LABEL[o] ?? o}${x.el_nino ? ' (El Niño season)' : ''}${isNum(x.obs_min_apr_dec_pct) ? `; lowest Apr–Dec ${fmtNum(x.obs_min_apr_dec_pct, 0)}%` : ''}`}>
+              <span className="season-y">{String(x.season).slice(2)}</span>
+              {x.el_nino && <span className="season-e" aria-label="El Niño">EN</span>}
+            </span>
+          );
+        })}
+      </div>
+      <div className="legend">
+        <LegendItem kind="box" color="var(--outcome-hit)" label="Hit" />
+        <LegendItem kind="box" color="var(--outcome-miss)" label="Miss" />
+        <LegendItem kind="box" color="var(--outcome-false)" label="False alarm" />
+        <LegendItem kind="box" color="var(--outcome-quiet)" label="Correctly quiet" />
+        <span className="legend-item">EN = El Niño season</span>
+      </div>
+    </>
+  );
+}
+
+function BriefPanel({ text }: { text: string }) {
+  return (
+    <div className="panel brief">
+      <p className="ai-label">AI-written brief, checked against the data</p>
+      <MiniMarkdown text={text} />
     </div>
   );
 }
@@ -260,7 +400,7 @@ function SkillTable({ rows, noGrace }: { rows: SkillRow[]; noGrace: any[] }) {
   const ngAuc = (x: any) => x?.auc_pr_warning_no_grace ?? x?.auc_pr;
   return (
     <div className="panel">
-      <h3>How good is the Kariba model? Backtest by lead time</h3>
+      <h3>How good is the ML ("now") model? Backtest by lead time</h3>
       <p className="muted">Target: usable storage below the 20% warning line. Brier skill above 0 means better than the baseline. Without GRACE: the same model with NASA's water-storage data removed.</p>
       <div className="table-wrap">
         <table className="data-table compact">

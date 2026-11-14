@@ -10,6 +10,10 @@ type Key = 'name' | 'tier' | 'risk' | 'p' | 'exposure';
 
 export default function WatchlistPage() {
   const w = useData<Watchlist>('watchlist.json');
+  const k = useData<any>('kariba.json');
+  const kfc: any[] = k.data?.forecast?.months ?? [];
+  const kLast = kfc[kfc.length - 1];
+  const kMaxW = Math.max(-1, ...kfc.map((m) => m.p_below_warning ?? -1));
   const [sort, setSort] = useState<{ key: Key; dir: 1 | -1 }>({ key: 'risk', dir: -1 });
 
   const rows = useMemo(() => {
@@ -46,6 +50,23 @@ export default function WatchlistPage() {
         Each row gives the chance that hydro output falls 15% or more below normal for the time of year.
         Issued {fmtDate(w.data?.issued)}. The first forecast month is {fmtMonth(first)}.
       </p>
+
+      <p><span className="experimental">Experimental: modest skill, <a href="#/scoreboard">see Scoreboard</a></span></p>
+      <p className="small muted" style={{ maxWidth: '80ch' }}>
+        Monthly country forecasts from power data have little skill beyond 1 month in our backtest. Treat these as a watchlist, not a verdict.
+        The strongest early warning is for reservoirs with an El Niño signal, such as <a href="#/kariba">Lake Kariba</a>.
+      </p>
+
+      {kLast && (
+        <a className="reservoir-watch" href="#/kariba">
+          <span className="eyebrow">Reservoir watch · strongest signal</span>
+          <span className="rw-title">Lake Kariba (Zambia, Zimbabwe)</span>
+          <span>
+            Chance of falling below 20% usable by {fmtMonth(kLast.month)}: <b>{fmtProb(kMaxW >= 0 ? kMaxW : kLast.p_below_warning)}</b>.
+            Below 10% (danger): <b>{fmtProb(kLast.p_below_danger)}</b>. Blended El Niño and machine-learning forecast. <u>Open the Kariba case</u>
+          </span>
+        </a>
+      )}
 
       <div className="key-grid">
         <div>

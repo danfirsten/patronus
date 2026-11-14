@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FeatureCollection } from 'geojson';
 import { useData } from '../data/load';
-import type { Enso, Trends } from '../data/types';
+import type { Enso, Meta, Trends } from '../data/types';
 import { Figure, Loading, Stat } from '../components/common';
 import { WorldMap, type MapMode } from '../components/WorldMap';
 import { LegendItem } from '../components/TimeChart';
@@ -12,6 +12,11 @@ export default function MapPage() {
   const trends = useData<Trends>('trends.json');
   const basins = useData<FeatureCollection>('basins.geojson');
   const enso = useData<Enso>('enso.json');
+  const meta = useData<Meta>('meta.json');
+  const srcName = (ids?: string[]) => {
+    const list: any[] = Array.isArray(meta.data?.sources) ? meta.data!.sources : [];
+    return (ids ?? []).map((id) => list.find((x) => x.id === id)?.name ?? id).join('; ');
+  };
   const ts = trends.data?.summary;
   const es = enso.data?.summary;
   const period = trends.data?.period ? periodOf([trends.data.period.from, trends.data.period.to]) : '2002–2026';
@@ -38,10 +43,11 @@ export default function MapPage() {
             <Stat value={`${fmtNum(ts?.gw_total)} GW`} label={`mapped across ${fmtNum(ts?.n_basins)} basins`} />
           </div>
           {ts?.headline && <p className="headline">{ts.headline}</p>}
+          {(ts as any)?.headline_caveat && <p className="caveat"><b>Caveat:</b> {(ts as any).headline_caveat}</p>}
           <Figure
             title="Hydropower basins by trend in total water storage"
             sub="Basins that contain hydro plants. Colour shows a statistically significant trend after correcting for testing many basins at once."
-            source={<>GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS), {period}; NASA POWER rainfall; WRI Global Power Plant Database; HydroBASINS level 4.</>}
+            source={<>{trends.data?.sources?.length ? srcName(trends.data.sources) : 'GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS); WRI Global Power Plant Database; HydroBASINS level 4'}. Period {period}.</>}
             files={['trends.json', 'basins.geojson']}
           >
             <div className="legend">
@@ -68,7 +74,7 @@ export default function MapPage() {
           <Figure
             title="How each hydro-dependent grid responds to El Niño and La Niña"
             sub="A grid counts as a loser in a phase when output or storage is 5% or more below normal with permutation p < 0.1."
-            source={<>Ember generation, G-REALM lake levels, NASA POWER basin rainfall; ENSO phases from NOAA ONI. Records vary by country (shown in the tooltip).</>}
+            source={<>{enso.data?.sources?.length ? srcName(enso.data.sources) : 'Ember generation, G-REALM lake levels, basin rainfall, NOAA ONI'}. Records vary by country (shown in the tooltip).</>}
             files={['enso.json']}
           >
             <div className="legend">

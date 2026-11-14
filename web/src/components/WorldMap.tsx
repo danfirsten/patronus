@@ -198,6 +198,7 @@ function CountryTip({ t }: { t: Extract<Tip, { kind: 'country' }> }) {
             <dt>La Niña</dt><dd>{fmtPct(e.la_nina_effect_pct, 0, true)} {isNum(e.la_nina_p) && <span className="muted">(p = {fmtNum(e.la_nina_p, 2)}, n = {e.n_la_nina ?? '—'})</span>}</dd>
             <dt>Measured on</dt><dd>{(e.variable ?? '').replace(/_/g, ' ')}, {e.record}</dd>
           </dl>
+          {(e as any).current_implication && (e.exposure === 'el_nino_loser' || e.exposure === 'both') && <div className="tip-now">{(e as any).current_implication}</div>}
           {e.season_note && <div className="tip-foot">{e.season_note}</div>}
           {link && <a className="tip-link" href={link}>Open country page →</a>}
         </>

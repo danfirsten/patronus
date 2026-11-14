@@ -292,7 +292,7 @@ All numbers come from `web/public/data/*.json` and were produced by `pipeline/`.
 **Country monthly model (23 grids + Sichuan, Ember 2015/2019–2026)**
 - **Weak.** Brier skill is 0.03–0.07, small but positive against all baselines. AUC-PR beats climatology only at 1 month. No single NASA input adds significant ranking skill, and GRACE slightly hurts at the country-month level.
 - It caught 1 of 6 crises (Vietnam 2023, 6 months ahead) and missed Brazil 2021, Sichuan 2022 and all three Ecuador waves.
-- **Label:** "experimental" in the app. A pre-registered seasonal-target robustness test is in `generation_backtest.json` → `seasonal_target`.
+- **Label:** "experimental" in the app. A seasonal-target robustness test (specified after the primary analysis) is in `generation_backtest.json` → `seasonal_target`.
 
 **Night lights:** Zambia's cities dimmed 23% (Jun 2024) and 36% (Sep–Oct 2024) against Feb 2023; Lusaka dimmed 52%. Ecuador shows no detectable dip because city cores saturate the scale and the satellite passes over at about 01:30.
 

@@ -296,3 +296,23 @@ ul.plain li { margin-bottom: 0.5em; }
 .limits-group { margin: 6px 0; }
 .limits-group summary { font-size: var(--fs-sm); }
 .limits-group ul { margin-top: 8px; }
+.kv.stack > div { display: block; }
+.kv.stack dd { text-align: left; font-weight: 400; margin-top: 2px; }
+.kv.stack dt { font-weight: 600; color: var(--text); }
+.timeline li.tl-ml::before { background: var(--series-4); }
+.row-strong td { font-weight: 700; }
+.season-strip { display: flex; flex-wrap: wrap; gap: 3px; margin: 12px 0 6px; }
+.season { position: relative; width: 34px; height: 34px; border-radius: var(--radius-sm); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text); }
+.season-hit { background: var(--outcome-hit); }
+.season-miss { background: var(--outcome-miss); }
+.season-false_alarm { background: var(--outcome-false); color: var(--risk-text-dark); }
+.season-correct_quiet, .season-none { background: var(--outcome-quiet); }
+.season-e { font-size: 8px; font-weight: 700; letter-spacing: 0.04em; }
+.experimental { display: inline-block; font-size: var(--fs-xs); font-weight: 700; color: var(--risk-text-dark); background: var(--risk-watch); border-radius: var(--radius-sm); padding: 2px 8px; margin: 4px 0; }
+.experimental a { color: inherit; }
+.caveat { border-left: 3px solid var(--risk-watch); padding: 6px 12px; background: var(--bg-elev); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: var(--fs-sm); max-width: 80ch; }
+.tip-now { font-size: var(--fs-xs); margin-top: 6px; padding: 6px 8px; border-left: 2px solid var(--enso-el-nino); background: var(--bg-elev); }
+.reservoir-watch { display: grid; gap: 4px; text-decoration: none; color: var(--text); background: var(--bg-elev); border: 1px solid var(--border); border-left: 4px solid var(--risk-danger); border-radius: var(--radius-lg); padding: 14px 16px; margin: 16px 0; }
+.reservoir-watch .eyebrow { margin: 0; }
+.reservoir-watch:hover { border-color: var(--accent); }
+.rw-title { font-weight: 700; font-size: var(--fs-lg); }

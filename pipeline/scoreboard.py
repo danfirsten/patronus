@@ -133,6 +133,8 @@ def main() -> None:
         "notes": [
             "lead_months = months from the first Patronus alarm (either model) to crisis onset.",
             "lead_vs_official_months is positive when Patronus fired before the first official warning.",
+            "Robustness test (3-month seasonal target, specified after the primary analysis): it caught Ecuador's April 2024 "
+            "wave 4 months ahead (same month as the official warning) and missed the rest, including Vietnam 2023.",
             "The country model's alarm threshold was chosen on the same out-of-fold predictions used to measure "
             "leads, so its catches are optimistic.",
         ],
