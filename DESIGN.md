@@ -321,3 +321,48 @@ All numbers come from `web/public/data/*.json` and were produced by `pipeline/`.
 - **Heatwave features** (NASA POWER daily Tmax, heatwave days, cooling degree days), from Sean's `fd/heatwave` back-test, add no pooled skill: ×1.006 at 1 month, ×0.98–0.99 at 3–6. They do not catch Sichuan 2022 either, because the heat and the generation drop fall in the same 4–6 weeks. Not adopted. A flash heat-drought needs sub-monthly data and heat *forecasts*.
 - **GPCP rainfall** drifts dry after 2019. It was detected independently by three agents, with Kariba's satellite lake level as the tie-breaker. Rain trends use 2002–2019, and the ENSO results are checked on 1981–2019.
 - **For the pitch:** "we tested ideas that sounded good and dropped the ones that failed a pre-set test" is a Validity strength.
+
+## 13. Pitch guidance from a mentor (Nov 14, Seattle) and what we do with it
+**What the mentor said:** Impact, Creativity, Validity and Relevance look strong, and the data pipeline is the easy part. The score is decided by **presentation**. The judges are industry people who will think about viability. The mentor's specific advice:
+1. **Pick one country and one metric**, and tell that story well. Don't tour the world.
+2. **Name the customer.** Is it a country, a municipality or a person? Use one customer, as a hypothesis.
+3. **Show how someone feels after using it.** The value is that people can plan for outages, and that hospitals and people who need care stay powered.
+4. **Name the NASA data out loud**, and say how it answers the challenge: what is changing, where, by how much, and whether it is significant.
+5. **Timing:** 7 slides maximum. Rehearse to time, and finish the deck. The mentor offered a practice run (Sat afternoon / Sun early morning).
+
+**Our response**
+- **The one story is Zambia and Lake Kariba.** Ecuador ($ cost) and Vietnam ($1.4B) get one line, as proof that this keeps happening.
+- **Customer (hypothesis):** the people who decide how much water to release from Kariba and how to plan power for 2027. That means Zambia's and Zimbabwe's energy ministries and utilities (ZESCO, ZPC) and the Zambezi River Authority. Beneficiaries: hospitals, factories and households that lost up to 21 hours of power a day in 2024 (news reports).
+- **The feeling:** *"I know how much time I have, and what acting now buys me."* The product turns dread into a decision window. The Kariba page and the pitch should say it in one line, from the simulator: **a 30% release cut from Jan 2027 lowers the chance of the danger zone from 4 in 11 to 2 in 11 El Niño years, at a cost of 1.5 TWh.**
+- **The NASA data to name:** GRACE/GRACE-FO (water stored in the basin), G-REALM satellite altimetry (TOPEX/Jason/Sentinel-6, with partner agencies), MERRA-2 and GPCP (rain and soil), GEOS-S2S (seasonal outlook) and Black Marble (night lights).
+- **The challenge answer, said explicitly:** "We pick the variable (water storage, lake level) and the region (each hydropower basin), plot it since 2002, and measure the trend (Sen's slope) and its significance (Mann-Kendall with FDR). The Trend Detective page lets anyone do the same."
+
+**7-slide skeleton:**
+1. **Title:** "Patronus: months to darkness".
+2. **Problem, through one human-scale fact:** Lusaka's lights dimmed by 52% (Black Marble), and Zambia's growth forecast went from 4.7% to 1.2%.
+3. **The warning existed:** our model flagged Kariba in Jul 2023, 5 months before the official cut.
+4. **How:** NASA data → trend and significance → El Niño reservoir model (name the missions).
+5. **Now:** a 36% chance Kariba falls below 10% by end-2027. The decision window, shown with the simulator.
+6. **Proof and honesty:** the scoreboard with its misses, the timestamped forecast, and the global reach (54 GW El Niño exposure; the reservoir watch).
+7. **Customer and ask:** who uses it, what changes for them, and the live link.
+
+## 14. Global reservoir watch (Nov 14, late): the method generalizes
+Source: `web/public/data/reservoirs.json` and `docs/RESERVOIRS.md`.
+- **Coverage:** 31 G-REALM satellite-altimetry reservoirs on 4 continents. 77 GW at the dams, plus 22 GW downstream in cascades they control. Examples: Kariba, Cahora Bassa, Volta/Akosombo, Kainji, Guri, Itaipu, Sobradinho, Tarbela, Three Gorges, Toktogul.
+- **Method:** the Kariba method, fixed before any crisis was scored. Each lake's level is compared with the same calendar month in earlier years only. Warning is below the 20th percentile and danger below the 10th. El Niño or La Niña analog years are used only where that lake shows significant ENSO sensitivity, re-tested each year on past data only.
+- **Skill** (pooled, strictly forward, 2000–2026, about 6,500 forecasts per horizon):
+
+  | Horizon | Brier skill vs climatology | AUC-PR | Climatology AUC-PR |
+  |---|---|---|---|
+  | 3 months | 0.38 | 0.73 | 0.27 |
+  | 6 months | 0.15 | 0.58 | 0.27 |
+  | 12 months | −0.02 | | |
+
+  Skill is positive out to 10 months. 25 of 31 lakes beat climatology at 3 months, 17 at 6 months.
+- **Crises:** **14 of 17 documented hydro crises flagged before onset.** Brazil 2001 (x2), Ghana 2006, Venezuela 2009-10, Nigeria 2012, Brazil 2014, Brazil 2015, Malawi 2015, Ghana 2016, Venezuela 2016, Brazil 2021, Itaipu 2021, Pakistan 2022, Kariba 2024. Missed: Kariba 2015, Kariba 2019 (P = 0.50, just short of the alarm threshold), Tarbela 2025.
+  - **8 of the 14** alarms came while the lake was still above its warning level, meaning a genuine forecast.
+  - **6 of the 14** fired when the lake was already low.
+  - A plain "lake is already low" rule catches 12 of 17. Our forecast adds Ghana 2006 and Venezuela 2009 and warns earlier in six more.
+  - Leads are capped at 12 months by the scoring window. Over all seasons there are 219 hit episodes, 26 missed and 64 false-alarm runs.
+- **Honest wording:** "Applied unchanged to 31 reservoirs, the method flagged 14 of 17 past hydro crises on 4 continents before they began. In 8 of them the alarm came before the lake had dropped below its warning level." Do not present the reservoir-watch Kariba 2024 catch as the same result as the Jul 2023 El Niño alarm: by percentile, Kariba was already low from 2022.
+- **Live (issued 2026-11-15):** already below warning are Cahora Bassa (12th percentile), Kainji, La Vueltosa and Srisailam. Next most at risk: Toktogul (0.69), Three Gorges (0.67, only 3 analogs), São Simão (0.57) and Xiaowan (0.50). Kariba is 0.45 under El Niño analogs.
