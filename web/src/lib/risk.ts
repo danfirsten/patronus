@@ -12,7 +12,7 @@ export function riskOf(p: number | null | undefined): RiskLevel | null {
 export const RISK_ORDER: Record<string, number> = { low: 0, watch: 1, warning: 2, danger: 3 };
 export const riskVar = (r: string | null | undefined) => (r && r in RISK_ORDER ? `var(--risk-${r})` : 'var(--bg-elev-2)');
 export const riskTextVar = (r: string | null | undefined) =>
-  r === 'danger' || r === 'low' ? 'var(--risk-text-light)' : 'var(--risk-text-dark)';
+  r === 'danger' ? 'var(--risk-text-light)' : 'var(--risk-text-dark)';
 export const RISK_LABEL: Record<string, string> = { low: 'Low', watch: 'Watch', warning: 'Warning', danger: 'Danger' };
 
 export const EXPOSURE_LABEL: Record<string, string> = {

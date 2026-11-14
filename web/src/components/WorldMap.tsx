@@ -119,7 +119,7 @@ export function WorldMap({ mode, trends, basinsGeo, enso, compact = false }: {
                   d={path(f as any) ?? ''}
                   fill={basinColor(b, strongCut)}
                   fillOpacity={b ? 0.92 : 0.4}
-                  stroke="var(--bg)"
+                  stroke="var(--bg-elev)"
                   strokeWidth={0.4}
                   className="map-shape"
                   onPointerMove={b ? (e) => setHover({ kind: 'basin', basin: b, ...pos(e) }) : undefined}
@@ -173,7 +173,7 @@ function BasinTip({ b, period }: { b: Basin; period?: { from: string; to: string
       </dl>
       {b.series?.tws_anom_cm?.length ? (
         <>
-          <Sparkline values={b.series.tws_anom_cm} color={b.trend_class === 'drying' ? 'var(--drying-mild)' : 'var(--wetting-mild)'} />
+          <Sparkline values={b.series.tws_anom_cm} color={b.trend_class === 'drying' ? 'var(--drying-strong)' : 'var(--wetting-strong)'} />
           <div className="tip-foot">Water storage anomaly (cm), {periodOf([b.series.months[0], b.series.months[b.series.months.length - 1]])}. GRACE/GRACE-FO.</div>
         </>
       ) : (

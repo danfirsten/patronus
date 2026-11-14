@@ -3,6 +3,7 @@ import { useData, loadText } from '../data/load';
 import type { Kariba, KaribaForecastMonth, Nightlights, NightFrame, SkillRow } from '../data/types';
 import { Figure, Loading, Stat, Empty, SourceNote, MiniMarkdown } from '../components/common';
 import { Gauge } from '../components/small';
+import { useWaterline } from '../lib/motion';
 import { TimeChart, LegendItem } from '../components/TimeChart';
 import { fmtDate, fmtMonth, fmtMusd, fmtNum, fmtProb, isNum, monthsBetween, periodOf } from '../lib/format';
 
@@ -26,6 +27,8 @@ export default function KaribaPage() {
   const trends = useData<any>('trends.json');
   const [brief, setBrief] = useState<string | null>(null);
   useEffect(() => { loadText('briefs/kariba.md').then(setBrief); }, []);
+  // The logo's waterline drops to Kariba's live usable storage while this page is open.
+  useWaterline((k.data as any)?.latest?.usable_pct);
 
   if (k.loading) return <div className="wrap page"><Loading what="Kariba data" /></div>;
   const d = k.data as any as Kariba & Record<string, any>;
