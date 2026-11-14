@@ -475,6 +475,11 @@ def main():
             "median_lead_months": int(np.median(leads)) if leads else None,
             "episodes": {"hit": ep_hit, "missed": ep_miss, "false_alarm_runs": ep_fa},
             "pooled_skill": {"h3": p3, "h6": p6, "h12": p12},
+            "lakes_beating_climatology": {f"h{h}": sum(1 for l in lakes_out for b in l["backtest"]["by_horizon"]
+                                                      if b["horizon"] == h and (b["bss_vs_climatology"] or 0) > 0) for h in (1, 3, 6, 12)},
+            "lakes_beating_persistence": {f"h{h}": sum(1 for l in lakes_out for b in l["backtest"]["by_horizon"]
+                                                      if b["horizon"] == h and (b["bss_vs_persistence"] or 0) > 0) for h in (1, 3, 6, 12)},
+            "lakes_scored": {f"h{h}": sum(1 for l in lakes_out for b in l["backtest"]["by_horizon"] if b["horizon"] == h) for h in (1, 3, 6, 12)},
             "most_at_risk": [{"id": l["id"], "name": l["name"], "max_p_warning": l["forecast"]["max_p_warning"],
                               "max_p_danger": l["forecast"]["max_p_danger"], "risk_level": l["forecast"]["risk_level"],
                               "current_percentile": l["latest"]["percentile_same_month"], "analogs": l["forecast"]["analogs"]}
@@ -494,6 +499,8 @@ def main():
             "The ENSO outlook in backtests is the ONI known at issue (persistence), not an archived ENSO forecast; issues before an event develops (boreal spring) see the wrong phase.",
             "Several lakes have multi-year gaps (2002-2008 for lakes off the TOPEX/Jason track); no forecasts are made across gaps.",
             "Crisis dates come from news and official statements; several give only the month. Multi-reservoir crises are scored on one pre-chosen main reservoir.",
+            "Some lakes trend (sedimentation, new upstream dams, changed operating rules), so 'below the 20th percentile of earlier years' happens more than 20% of the time (pooled base rate about 0.27) and can persist for years, e.g. Kainji and La Vueltosa today. Several such lakes have negative skill at 6+ months on their own; the pooled skill is positive.",
+            "Kariba's percentile target is a softer bar than its 20%-usable-storage target in kariba.json: by percentile Kariba was already in its warning zone from Jan 2022, so the 2024 'catch' here is a state signal, not the El Nino forecast that kariba.json credits with a Jul 2023 alarm.",
             "Lake Victoria and Lake Malawi levels drive run-of-river plants; Itaipu and Three Gorges levels are rule-driven and say little about drought.",
         ],
         "notes": notes,

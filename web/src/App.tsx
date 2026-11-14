@@ -11,6 +11,7 @@ import CountryPage from './pages/Country';
 import KaribaPage from './pages/Kariba';
 import ScoreboardPage from './pages/Scoreboard';
 import ProofPage from './pages/Proof';
+import Explore from './pages/Explore';
 
 const NAV = [
   ['', 'Story'],
@@ -19,6 +20,7 @@ const NAV = [
   ['kariba', 'Kariba'],
   ['scoreboard', 'Scoreboard'],
   ['proof', 'Proof'],
+  ['explore', 'Trend Detective'],
 ] as const;
 
 function PageShell({ children }: { children: ReactNode }) {
@@ -57,6 +59,7 @@ export default function App() {
     case 'kariba': body = <KaribaPage />; break;
     case 'scoreboard': body = <ScoreboardPage />; break;
     case 'proof': body = <ProofPage />; break;
+    case 'explore': body = <Explore />; break;
     default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the story</a></p></div>;
   }
   const active = page === 'country' ? 'watchlist' : page ?? '';

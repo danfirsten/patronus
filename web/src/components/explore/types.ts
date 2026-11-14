@@ -69,14 +69,14 @@ export const TYPE_LABEL: Record<RegionType, string> = {
 
 /** Words for the direction of change, per variable: [falling, rising]. */
 export const DIRECTION: Record<string, [string, string]> = {
-  tws: ['drying (losing stored water)', 'wetting (gaining stored water)'],
-  rain: ['drying (less rain)', 'wetter (more rain)'],
-  rain_m2: ['drying (less rain)', 'wetter (more rain)'],
-  soil_root: ['drying (drier soil)', 'wetting (wetter soil)'],
-  soil_top: ['drying (drier soil)', 'wetting (wetter soil)'],
+  tws: ['drying', 'wetting'],
+  rain: ['drying', 'wetting'],
+  rain_m2: ['drying', 'wetting'],
+  soil_root: ['drying', 'wetting'],
+  soil_top: ['drying', 'wetting'],
   t2m: ['cooling', 'warming'],
-  lake: ['falling (lake level)', 'rising (lake level)'],
-  hydro: ['falling (hydro output)', 'rising (hydro output)'],
+  lake: ['falling', 'rising'],
+  hydro: ['falling', 'rising'],
   oni: ['La Niña-ward', 'El Niño-ward'],
 };
 
