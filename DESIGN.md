@@ -1,7 +1,7 @@
 # Patronus — "Months to Darkness"
 
 NASA Space Apps 2026 · Challenge: **Be An Earth System Trend Detective!** (Advanced)
-Status: **v2, ready to build** (Nov 14, 2026). Submissions close **Sun Nov 15, 11:59 PM local time**.
+Status: **v3, build decisions settled** (Nov 14, 2026). Submissions close **Sun Nov 15, 11:59 PM local time**.
 Team pages: `site/patronus-brief.html` (concept, v1), `site/team-vote.html` (vote on direction).
 
 > Branding: "Patronus" is used only as a word. No Harry Potter or NASA logos. Use distinct repo/URL names (e.g. `patronus-blackout-watch`); Patronus AI is an unrelated company.
@@ -106,7 +106,7 @@ Backbone: Google Earth Engine, with `earthaccess` as a fallback.
 - **Kariba:** the 2027 power allocation was cut 36% (36 → 23 BCM). Usable storage was 36.7% on 14 Oct 2026. ZRA projects 9% at the end of 2027 if the full allocation is used.
 - **ENSO:** NOAA (Oct 2026) puts the odds above 83% of a strong-to-very-strong El Niño through Jan–Mar 2027. SARCOF expects below-normal rain over most of central and southern SADC, Zambia and Zimbabwe included, in Jan–Mar 2027.
 - **Projections:** extreme El Niños roughly double, from about once every 20 years to about once a decade (Cai et al. 2014), and keep rising after warming stabilizes (Wang et al. 2020).
-- **Still to verify:** the Brazil 2021 link to La Niña; the Brazil and Sichuan figures from the original brief.
+- **Corrections (Nov 14):** Brazil 2021 had no rationing, and its "50%" was the tariff surcharge, not bills. Ecuador's late-2024 drought was ENSO-neutral. Zambia's "21 h/day" is news-only. See section 11.7 for the checked versions.
 
 ## 9. Landscape (we checked whether this exists)
 - **HydroForecast (Upstream Tech):** paid inflow forecasts for operators, mostly 0–10 days ahead.
@@ -128,10 +128,143 @@ We found nothing public, free and global that links satellite water data and ENS
 | Sun 3 PM | **Feature freeze.** Video, project page, slides. |
 | Sun by 6 PM | Submission uploaded; buffer until 11:59 PM |
 
-## 11. Open questions
-See the latest list in the conversation; record each decision here as it is made.
+## 11. Build decisions (settled Nov 14)
+Team: 3 people. Build from scratch, borrowing Future Detector's habits (held-out testing, bootstrap confidence intervals, look-alike cases, hashed ledger, a Proof page with a "what it can't do" list). Static demo: precomputed JSON plus a front end. English only. No personal API keys, no Jev, no GPU.
+
+### 11.1 What we predict, and why that's the useful thing
+A decision-maker needs three answers: **will there be a shortfall big enough to act on, when, and how big?** So every forecast gives:
+1. **P(shortfall)** for each month ahead;
+2. **the size of the deficit** as quantiles (P10, P50, P90), which feeds the cost model;
+3. **the cost of waiting** (section 11.6).
+
+Two kinds of target:
+
+| Target | Used for | Definition |
+|---|---|---|
+| **Reservoir storage** (satellite lake level, G-REALM) | Kariba and other major hydro reservoirs | Level converted to % usable storage. Kariba operates between 475.50 m and 488.50 m (ZRA). **Warning** = usable storage < 20%. **Danger** = < 10%: the allocation can't be met and generation is curtailed. In Dec 2024 it fell to 2.89%. |
+| **Hydro generation** (Ember monthly) | 23 hydro-dependent countries + Sichuan province | Monthly hydro capacity factor (generation ÷ installed capacity) compared with that calendar month's normal, using only past data. Capacity factor rather than raw generation, so new dams don't look like wet years. **Shortfall** = 15% or more below normal. **Severe** = 30% or more below normal. |
+
+The reservoir target is the backbone, for two reasons:
+- **NASA measures it.** G-REALM is NASA/USDA satellite altimetry.
+- **It's long.** Kariba has 1992–2026 data roughly every 10 days, about 34 years and roughly 10 El Niño events. Ember monthly data mostly starts in 2019.
+
+The 15% and 30% thresholds are starting points. Check them against the crises during the build: Vietnam May 2023 and Ecuador Oct 2023 / Sep 2024 must register as shortfalls.
+
+### 11.2 Unit of analysis
+- **Decisions and labels:** a country's grid (Ember) or a reservoir (Kariba is shared by Zambia and Zimbabwe).
+- **Features:** water conditions over the river basins that feed the hydro plants. Take each plant from the WRI Global Power Plant Database, assign it to a HydroBASINS level-4 basin, and capacity-weight the basin values up to the country.
+  - GRACE is about 300 km resolution, so use only basins large enough. Flag small ones as low-confidence (e.g. Ecuador's Andean basins).
+
+### 11.3 Backtest
+- Issue one forecast each month. Each forecast uses only data that would have been out by then:
+  - GRACE (GFZ GravIS): about 3 months behind;
+  - NASA POWER monthly: about 2 months behind (the daily series is only 3 days behind);
+  - ONI: about 1 month behind;
+  - Ember: about 2 months behind.
+- **Horizons:** 1–6 months from the model; 7–18 months from the ENSO layer.
+- **Generation model:** one model pooled across countries, using standardized anomalies.
+  - Skill measured by **blocked leave-one-year-out** cross-validation, with a 12-month gap, because the records are short.
+  - Also a strictly forward test for 2024–2026.
+- **Kariba model:** strictly forward, rolling from 2003 when GRACE starts. A version without GRACE back to 1993 gives the GRACE ablation.
+- **Baselines:**
+  - **climatology:** the usual rate of shortfalls for that month;
+  - **persistence:** the latest observed anomaly;
+  - **ENSO-only:** the ONI by itself.
+- **Metrics:**
+  - Brier skill score, AUC-PR and reliability (are the probabilities calibrated?);
+  - **months of warning before each crisis, at a fixed false-alarm rate** (at most 1 false alarm per country per 5 years);
+  - **"Patronus alarm vs. first official warning"** for each crisis.
+
+### 11.4 Which countries
+"Hydro-dependent" means hydro is at least 30% of generation and at least 1 TWh in the latest Ember year. That gives **48 countries** (table: `data/reference/hydro_dependent_countries_ember.csv`), in three confidence tiers:
+1. **Monthly forecast:** 23 countries with Ember monthly data, plus Sichuan. Includes Brazil, Vietnam, Ecuador, Colombia, Norway, Peru, Tajikistan, Kyrgyzstan, Georgia, Sri Lanka, Costa Rica, Canada, New Zealand and others.
+2. **Reservoir forecast:** major hydro reservoirs with G-REALM levels. Kariba (Zambia/Zimbabwe) for certain. Check Cahora Bassa (Mozambique), Volta/Akosombo (Ghana), Guri (Venezuela) and others first thing.
+3. **Trend + ENSO exposure only:** the remaining countries with yearly data only, e.g. Ethiopia, Laos, Nepal, DR Congo, Uganda, Paraguay.
+
+### 11.5 Data stack (all verified, none needs a login)
+- **Ember** monthly, yearly and China-province CSVs (`files.ember-energy.org/public-downloads/...`).
+- **GFZ GravIS GRACE/GRACE-FO** water storage grid, 2002-04 to 2026-08.
+- **NASA POWER (MERRA-2):** precipitation, root-zone and surface soil wetness, temperature. Monthly from 1981, daily to 3 days ago. These are **NASA model** variables, which the challenge explicitly allows. They stand in for GPM and SMAP, which need an Earthdata login.
+- **G-REALM** satellite lake levels (NASA/USDA; TOPEX, Jason, Sentinel-6).
+- **NASA GEOS-S2S** seasonal forecasts (NCCS datashare) and the GEOS Niño-3.4 forecast.
+- **NOAA ONI.**
+- **WRI Global Power Plant Database** (v1.3, 2021; newer plants such as Coca Codo Sinclair are missing).
+- **HydroBASINS.**
+- **NASA GIBS** Black Marble images (display images only).
+- **Brazil ONS** reservoir data.
+- **Optional upgrade** with a free NASA Earthdata account: GPM IMERG, SMAP L4, quantitative Black Marble, SWOT. Not required.
+- **Note:** the CSR mascons and some other sites fail TLS in our cloud container but work on a laptop.
+
+### 11.6 Cost model
+- **Shortfall cost** = replaced energy × replacement cost + unserved energy × value of lost load (VoLL).
+- **Replacement cost:**
+  - Zambia: from ZESCO's July 2024 filing to the Energy Regulation Board. Eskom imports 17¢/kWh, Mozambique/Karpowership 22¢, inland diesel 26¢, blended 23.2¢. That came to $51M/month for 300 MW.
+  - Other countries: 20¢/kWh by default, shown as an editable assumption.
+  - Ecuador's power barges cost 8.5–10¢/kWh **before fuel**, so the all-in cost is higher.
+- **VoLL:**
+  - Central $1.00/kWh, range $0.50–1.50/kWh, from the peer-reviewed literature for developing countries.
+  - Cross-check: Vietnam 2023 implies $1.56/kWh ($1.4B over 900 GWh unserved). Ecuador's chamber of commerce estimated $12M per hour of national blackout.
+- **Cost of waiting (Kariba):** a simple water balance (inflow scenarios − releases − evaporation).
+  - Inflow scenarios come from historical years in the same ENSO phase.
+  - Compare starting conservation and import contracts in month m with waiting until the danger threshold is reached.
+  - Waiting means paying emergency prices (26¢ diesel instead of 17¢ contracted imports) and leaving more energy unserved.
+  - Output: expected cost against the month action starts.
+- **Calibration check:** compare model costs with Ecuador (~1–1.5% of GDP), Vietnam ($1.4B) and Zambia (the IMF's growth forecast for 2024 cut from 4.7% to 1.2%). Show ranges, never single numbers.
+
+### 11.7 Crisis scoreboard events
+Onset is the first official cut, rationing or emergency-tariff action. Warning is the first documented official warning.
+
+| Crisis | First official warning | Onset | ENSO phase | Notes |
+|---|---|---|---|---|
+| Brazil 2021 | 27–28 May 2021: national weather system's water-emergency alert | 28 May 2021: red-2 tariff flag. "Water scarcity" flag from 1 Sep 2021. **No rationing.** | **La Niña** (confirmed) | Southeast storage bottomed at 16.5% on 6 Oct 2021. The flag surcharge was +49.6%; **average bills rose about 6.8%** (not "50%+") |
+| Sichuan 2022 | No dated official warning found | Cuts announced 14 Aug; industrial power cut 15–25 Aug 2022 | La Niña year; attributed to a record heatwave and drought | Hydro about 82% of supply; hydro output more than halved; Toyota and CATL plants shut. No official cost estimate |
+| N. Vietnam 2023 | 10 May 2023: EVN told the ministry of a "high risk of serious shortage" | Late May 2023: rolling cuts | El Niño developing | 5.4 GW peak deficit; about 900 GWh unserved; $1.4B (World Bank, preliminary) |
+| Ecuador 2023–24 | 24 Oct 2023: CENACE letter; Dec 2023: 2024–25 warning | 27 Oct 2023 (wave 1); ~14 Apr 2024 (wave 2); ~22 Sep 2024 (wave 3); 14 h/day from 24 Oct 2024 | Wave 1: El Niño. **Wave 3: ENSO-neutral, so not an El Niño event** | 1–1.5% of GDP (finance minister) |
+| Kariba 2024 | 28 Dec 2023: ZRA cut the 2024 allocation to 16 BCM | 11 Mar 2024: Zambia 8 h/day load-shedding; 12 h from 20 May; Kariba North stopped ~14 Sep 2024 | El Niño 2023/24 | Lake at 475.91 m (2.89% usable) on 11 Dec 2024. "Up to 21 h/day" is news-only. IMF cut 2024 growth 4.7% → 1.2% |
+
+Expected result: the ENSO layer should catch Brazil 2021, Vietnam 2023, Ecuador wave 1 and Kariba 2024. Sichuan 2022 and Ecuador's late-2024 wave need the 0–6 month water layer. Report it exactly as it turns out.
+
+### 11.8 Live forecast (must be logged before submission)
+- **Kariba:** for each month Dec 2026–Dec 2027, P(usable storage < 20%) and P(< 10%), with quantiles. Compare with ZRA's own projection of 9% live storage at the end of 2027.
+- **Watchlist:** P(shortfall) for the next 6 months for every tier-1 country.
+- **Proof:** hash each forecast file (SHA-256), commit it to the public repo, and stamp it with OpenTimestamps (no key needed). If that fails, the git commit time is the fallback proof.
+
+### 11.9 Technology: in, stretch, out
+- **In:**
+  - LightGBM (probabilities + quantiles), calibrated with isotonic regression or conformal prediction;
+  - look-alike past states (nearest neighbors, no GPU);
+  - Mann-Kendall + Sen + FDR trend tests on the GravIS grid;
+  - ENSO fingerprints using composites and permutation tests, built from 1981+ POWER rainfall, 1992+ G-REALM levels and Ember generation;
+  - Kariba water balance and cost-of-waiting curve;
+  - hashed ledger and Proof page;
+  - night-lights replay from GIBS images;
+  - AI-written briefs generated ahead of time, labelled as AI-written and checked against the data.
+- **Stretch:**
+  - more G-REALM reservoirs;
+  - GEOS-S2S rainfall forecasts as a live feature (shown only, not backtested, unless hindcasts turn up);
+  - an MCP server over the JSON files;
+  - a 3D Kariba drawdown.
+- **Out:** Jev (no access; mention as future work), JEPA (no GPU), reservoir segmentation and SWOT (Earthdata; heavy).
+
+### 11.10 Submission and presentation
+The official site returned errors during research, so these rules are **unconfirmed. Check them on the live pages.**
+- **Demo:** a video of **30 seconds or less**, or **up to 7 slides**, hosted publicly. The demo can't be uploaded to the Space Apps site, and every link must open without a login.
+- **Language:** English.
+- **Window:** submit from the team page's Project tab between Sat 9 AM and **Sun Nov 15, 11:59 PM local time**.
+- **Data:** list every NASA and non-NASA dataset with links. Share the code.
+- **AI use:**
+  - **Disclose it.** AI-generated images and video need a visible watermark.
+  - No NASA logos or branding.
+  - A search snippet says AI tools **"should not be used to come up with your idea for how to solve the challenge."** Check this wording on the live guide, and describe our AI use accurately: the team's original concept, with AI used for research, critique and coding.
+- **Team:** at most 6 people.
+- **Judging:** scored 1–5 on Impact, Creativity, Validity, Relevance and Presentation.
+  - Local events nominate projects to global judging. Global nominees are announced Dec 3.
+  - Global judging appears to use the project page plus the demo, not a live pitch.
+- **Live pitch:** the format is set by the local event lead, so ask the organizers.
+- **Award categories to aim for:** Best Use of Data, Best Use of Science, Global Impact (Galactic Impact), Best Storytelling.
 
 ## Changelog
 - v0 — Captured the initial brief.
 - v1 — Global story with Kariba as the close-up; trend layer; scoreboard and watchlist; cost layer; validation rules; technology options including Jev.
+- v3 — Build decisions (section 11): targets and thresholds, unit of analysis, backtest, 48 countries in 3 tiers, verified no-login data stack, cost model with sourced inputs, crisis scoreboard dates, live forecast and ledger, tech in/stretch/out, submission rules (unconfirmed). Reference data in `data/reference/`.
 - v2 — Problem statement with verified costs; audience changed to finance ministries, regulators and lenders; watchdog positioning after the landscape check; three time horizons with ENSO fingerprints (no in-house ENSO forecaster); shared-exposure feature from HarvestShield; Future Detector engine as recommended base; corrected Ecuador timeline.

@@ -1,0 +1,49 @@
+Area,ISO 3 code,latest_year,hydro_TWh,hydro_share_pct,hydro_capacity_GW,Continent,total_TWh,monthly_first,monthly_last,monthly_n,has_monthly
+Brazil,BRA,2025,397.896,52.103,110.27,South America,763.673,2018-01-01,2026-08-01,104.0,True
+Canada,CAN,2025,348.474,52.785,84.13,North America,660.182,2010-01-01,2026-08-01,200.0,True
+Norway,NOR,2025,144.777,90.005,34.65,Europe,160.855,2015-01-01,2026-10-01,142.0,True
+Viet Nam,VNM,2025,101.826,30.946,,Asia,329.044,2019-01-01,2026-09-01,93.0,True
+Venezuela,VEN,2024,73.0,91.102,16.91,South America,80.13,,,,False
+Sweden,SWE,2025,68.197,40.058,16.31,Europe,170.246,2015-01-01,2026-10-01,142.0,True
+Colombia,COL,2025,62.495,69.113,13.22,South America,90.424,2016-01-01,2026-09-01,129.0,True
+Paraguay,PRY,2025,45.11,99.471,8.82,South America,45.35,,,,False
+Lao PDR,LAO,2024,40.0,76.467,10.19,Asia,52.31,,,,False
+Austria,AUT,2025,38.012,51.901,15.75,Europe,73.239,2015-01-01,2026-10-01,142.0,True
+Switzerland,CHE,2025,33.981,52.26,16.05,Europe,65.023,2015-01-01,2026-05-01,137.0,True
+Peru,PER,2025,33.87,55.978,5.77,South America,60.505,2019-01-01,2026-09-01,93.0,True
+Ethiopia,ETH,2025,32.19,96.464,9.21,Africa,33.37,,,,False
+Ecuador,ECU,2025,28.515,77.956,5.39,South America,36.578,2019-01-01,2026-08-01,92.0,True
+New Zealand,NZL,2025,23.768,54.032,5.5,Oceania,43.988,2010-01-01,2026-09-01,201.0,True
+Tajikistan,TJK,2025,22.674,94.388,5.84,Asia,24.022,2019-01-01,2026-06-01,90.0,True
+North Korea,PRK,2024,17.0,62.731,4.97,Asia,27.1,,,,False
+Zambia,ZMB,2024,17.0,86.207,3.17,Africa,19.72,,,,False
+Mozambique,MOZ,2024,16.3,82.365,2.19,Africa,19.79,,,,False
+Congo (DRC),COD,2024,13.4,84.171,3.25,Africa,15.92,,,,False
+Nigeria,NGA,2025,13.395,31.502,2.9,Africa,42.522,2019-01-01,2026-08-01,92.0,True
+Iceland,ISL,2025,13.013,71.243,,Europe,18.266,2000-01-01,2026-09-01,321.0,True
+Kyrgyzstan,KGZ,2025,12.01,93.47,,Asia,12.849,2019-01-01,2026-03-01,87.0,True
+Sudan,SDN,2024,11.5,77.861,1.48,Africa,14.77,,,,False
+Bhutan,BTN,2024,11.0,100.0,2.45,Asia,11.0,,,,False
+Nepal,NPL,2024,11.0,98.832,3.29,Asia,11.13,,,,False
+Angola,AGO,2024,11.0,70.558,3.73,Africa,15.59,,,,False
+Georgia,GEO,2025,10.642,78.815,3.52,Asia,13.502,2010-01-01,2026-09-01,201.0,True
+Myanmar,MMR,2024,10.0,46.062,3.27,Asia,21.71,,,,False
+Costa Rica,CRI,2025,9.689,74.902,2.34,North America,12.936,2019-01-01,2026-10-01,94.0,True
+Ghana,GHA,2024,8.6,35.435,1.58,Africa,24.27,,,,False
+Albania,ALB,2024,8.0,95.923,2.56,Europe,8.34,,,,False
+Sri Lanka,LKA,2025,7.713,41.54,,Asia,18.568,2015-01-01,2025-12-01,132.0,True
+Panama,PAN,2024,7.13,53.09,1.85,North America,13.43,,,,False
+Guatemala,GTM,2024,6.3,39.899,1.58,North America,15.79,,,,False
+Croatia,HRV,2025,5.785,39.289,2.19,Europe,14.724,2018-12-01,2026-10-01,95.0,True
+Zimbabwe,ZWE,2024,5.7,55.556,1.08,Africa,10.26,,,,False
+Bosnia Herzegovina,BIH,2025,5.288,36.381,1.88,Europe,14.535,2019-01-01,2026-09-01,93.0,True
+Cameroon,CMR,2024,5.23,72.039,1.41,Africa,7.26,,,,False
+Uganda,UGA,2024,5.0,86.059,1.71,Africa,5.81,,,,False
+Honduras,HND,2024,3.8,30.449,0.91,North America,12.48,,,,False
+Guinea,GIN,2024,3.0,74.442,0.81,Africa,4.03,,,,False
+Latvia,LVA,2025,2.961,47.549,1.59,Europe,6.227,2015-01-01,2026-10-01,142.0,True
+Tanzania (the United Republic of),TZA,2024,2.8,31.674,1.39,Africa,8.84,,,,False
+El Salvador,SLV,2025,2.106,32.054,,North America,6.57,2022-01-01,2025-12-01,48.0,True
+Malawi,MWI,2024,1.69,92.35,0.39,Africa,1.83,,,,False
+Montenegro,MNE,2025,1.438,59.179,0.7,Europe,2.43,2015-01-01,2026-09-01,141.0,True
+Namibia,NAM,2024,1.0,60.976,0.35,Africa,1.64,,,,False
