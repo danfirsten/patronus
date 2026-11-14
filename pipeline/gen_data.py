@@ -252,12 +252,21 @@ def gpcp_series(points: list[tuple[float, float, float]]) -> pd.Series:
     return pd.Series(acc, index=per).groupby(level=0).mean()
 
 
-def _precip_anoms(p_mmday: pd.Series, idx: pd.PeriodIndex, prefix: str) -> pd.DataFrame:
+def _precip_anoms(p_mmday: pd.Series, idx: pd.PeriodIndex, prefix: str, trailing: int | None = None) -> pd.DataFrame:
+    """k-month rain as % of normal. Normal = fixed 1981-2010 calendar-month mean, or (trailing=N) the mean of the
+    same calendar month over the previous N years (causal, >= N/2 years), which absorbs step changes in the record."""
     p_mmday = p_mmday.reindex(idx)
-    base = p_mmday[(idx.year >= CLIM_BASE[0]) & (idx.year <= CLIM_BASE[1])]
-    clim = base.groupby(base.index.month).mean()
+    if trailing:
+        cm = pd.Series(np.nan, index=idx)
+        for m in range(1, 13):
+            g = p_mmday[idx.month == m]
+            cm[g.index] = g.shift(1).rolling(trailing, min_periods=trailing // 2).mean().values
+        pc = cm * idx.days_in_month
+    else:
+        base = p_mmday[(idx.year >= CLIM_BASE[0]) & (idx.year <= CLIM_BASE[1])]
+        clim = base.groupby(base.index.month).mean()
+        pc = pd.Series(clim.reindex(idx.month).values * idx.days_in_month, index=idx)
     p = p_mmday * idx.days_in_month
-    pc = pd.Series(clim.reindex(idx.month).values * idx.days_in_month, index=idx)
     out = pd.DataFrame(index=idx)
     for k in (1, 3, 6, 12):
         out[f"{prefix}{k}m_anom_pct"] = (p.rolling(k, min_periods=k).sum() / pc.rolling(k, min_periods=k).sum() - 1.0) * 100.0
@@ -285,7 +294,7 @@ def driver_table(iso3: str, oni: pd.Series) -> pd.DataFrame:
     gp = gpcp_series(pts)
     idx = pd.period_range("1981-01", max(pw.index.max(), gp.index.max()), freq="M")
     pw = pw.reindex(idx)
-    d = _precip_anoms(gp, idx, "precip_")                       # GPCP v2.3 (primary rain input)
+    d = _precip_anoms(gp, idx, "precip_", trailing=10)          # GPCP v2.3 (primary rain input), trailing 10-yr normal
     d = d.join(_precip_anoms(pw["PRECTOTCORR"], idx, "merra_precip_"))  # POWER/MERRA-2 rain (comparison only)
     # POWER soil wetness/T2M show a step change from 2026-10 (MERRA-2 stream change); treat >= 2026-10 as unavailable
     pw.loc[pw.index >= POWER_LAND_CUTOFF, ["GWETROOT", "GWETTOP", "T2M"]] = np.nan
