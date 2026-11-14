@@ -63,7 +63,7 @@ SOURCES = [
         "id": "gpcp", "name": "GPCP v2.3 monthly precipitation (satellite + gauge)", "provider": "NASA GSFC / GEWEX; distributed by NOAA PSL", "nasa": True,
         "url": "https://psl.noaa.gov/data/gridded/data.gpcp.html",
         "coverage": "1979-01..2026-10, 2.5 degree grid (months after 2021-11 are interim)", "license": "Public domain (US Government work)",
-        "use": "Main rainfall record for the ENSO fingerprints and basin rainfall trends; chosen because it has no artificial breaks.",
+        "use": "Main rainfall record for the ENSO fingerprints and basin rainfall trends. It drifts dry after 2019 in many regions, so rain trends use 2002-2019 and the ENSO result is checked on 1981-2019.",
     },
     {
         "id": "cpc_enso", "name": "CPC ENSO diagnostic discussion (official ENSO outlook)", "provider": "NOAA Climate Prediction Center / IRI", "nasa": False,
