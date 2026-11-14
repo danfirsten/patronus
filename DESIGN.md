@@ -263,6 +263,13 @@ The official site returned errors during research, so these rules are **unconfir
 - **Live pitch:** the format is set by the local event lead, so ask the organizers.
 - **Award categories to aim for:** Best Use of Data, Best Use of Science, Global Impact (Galactic Impact), Best Storytelling.
 
+**Rule corrections (audit session, read through a proxy; recheck on the live pages):**
+- The guide calls AI tools "Super Intelligence (SI)".
+- The 7-slide limit includes the title slide. Going over the limit makes the project ineligible for global judging.
+- SI-generated images and video need a visible watermark. SI-generated code and data need an acknowledgement in the text and the metadata.
+- Data from partner agencies is "highly encouraged". GRACE-FO (with GFZ) and G-REALM (Sentinel-6) qualify; name the partners.
+- Deadline: click "Submit for Judging" by 11:59 PM local time on Sun 15 Nov.
+
 ## Changelog
 - v0 — Captured the initial brief.
 - v1 — Global story with Kariba as the close-up; trend layer; scoreboard and watchlist; cost layer; validation rules; technology options including Jev.
