@@ -120,25 +120,34 @@ export function Reveal({ children, className = '' }: { children: ReactNode; clas
   return <div ref={ref} className={`reveal ${shown ? 'shown' : ''} ${className}`}>{children}</div>;
 }
 
-/** Very small Markdown renderer for AI briefs: headings, bullets, paragraphs, bold. */
+/** Small Markdown renderer for AI briefs: headings, bullet lists, paragraphs, **bold**, *italic*, [links](url). */
 export function MiniMarkdown({ text }: { text: string }) {
-  const blocks = text.replace(/\r/g, '').split(/\n{2,}/);
-  const inline = (s: string) =>
-    s.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-      part.startsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : <span key={i}>{part}</span>);
-  return (
-    <div className="md">
-      {blocks.map((b, i) => {
-        const t = b.trim();
-        if (!t) return null;
-        const h = /^(#{1,4})\s+(.*)$/.exec(t);
-        if (h && !t.includes('\n')) return <h4 key={i}>{inline(h[2])}</h4>;
-        const lines = t.split('\n');
-        if (lines.every((l) => /^\s*[-*]\s+/.test(l))) {
-          return <ul key={i}>{lines.map((l, j) => <li key={j}>{inline(l.replace(/^\s*[-*]\s+/, ''))}</li>)}</ul>;
-        }
-        return <p key={i}>{inline(t.replace(/^#+\s+/, ''))}</p>;
-      })}
-    </div>
-  );
+  const inline = (str: string) =>
+    str.split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|\[[^\]]+\]\([^)\s]+\))/g).map((part, i) => {
+      if (/^\*\*[^*]+\*\*$/.test(part)) return <strong key={i}>{part.slice(2, -2)}</strong>;
+      if (/^\*[^*].*\*$/.test(part)) return <em key={i}>{part.slice(1, -1)}</em>;
+      const l = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part);
+      if (l && /^https?:\/\//.test(l[2])) return <a key={i} href={l[2]} target="_blank" rel="noreferrer">{l[1]}</a>;
+      return <span key={i}>{part}</span>;
+    });
+  const out: ReactNode[] = [];
+  let para: string[] = [];
+  let list: string[] = [];
+  const flush = () => {
+    if (para.length) out.push(<p key={out.length}>{inline(para.join(' '))}</p>);
+    if (list.length) out.push(<ul key={out.length}>{list.map((x, j) => <li key={j}>{inline(x)}</li>)}</ul>);
+    para = []; list = [];
+  };
+  for (const raw of text.replace(/\r/g, '').split('\n')) {
+    const line = raw.trim();
+    if (!line) { flush(); continue; }
+    const h = /^(#{1,6})\s+(.*)$/.exec(line);
+    if (h) { flush(); out.push(h[1].length <= 1 ? <h3 key={out.length}>{inline(h[2])}</h3> : <h4 key={out.length}>{inline(h[2])}</h4>); continue; }
+    const b = /^[-*]\s+(.*)$/.exec(line);
+    if (b) { if (para.length) { const p = para; para = []; out.push(<p key={out.length}>{inline(p.join(' '))}</p>); } list.push(b[1]); continue; }
+    if (list.length) flush();
+    para.push(line);
+  }
+  flush();
+  return <div className="md">{out}</div>;
 }

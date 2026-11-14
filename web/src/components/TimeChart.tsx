@@ -64,7 +64,12 @@ export function TimeChart({
 
   const ys = (a?: Axis) => (a === 'right' ? yr : yl);
   const px = (s: string) => { const d = toDate(s); return d ? x(d) : NaN; };
-  const xTicks = x.ticks(Math.max(2, Math.floor(iw / 90)));
+  const span0 = +x.domain()[1] - +x.domain()[0];
+  const short = span0 <= 3 * 365 * DAY;
+  // Short spans: month-start ticks only, one label per month, thinned to fit.
+  const rawTicks = x.ticks(Math.max(2, Math.floor(iw / 90))).filter((t) => !short || t.getUTCDate() === 1);
+  const seen = new Set<string>();
+  const xTicks = rawTicks.filter((t) => { const k = t.toISOString().slice(0, 7); if (seen.has(k)) return false; seen.add(k); return true; });
   const span = +x.domain()[1] - +x.domain()[0];
   const tickFmt = (d: Date) => (span > 3 * 365 * DAY ? String(d.getUTCFullYear()) : fmtMonth(d.toISOString().slice(0, 7)));
 

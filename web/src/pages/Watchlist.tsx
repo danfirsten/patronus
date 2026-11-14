@@ -125,7 +125,7 @@ export default function WatchlistPage() {
         </div>
       )}
       <SourceNote files={['watchlist.json']}>
-        Patronus forecast from Ember monthly hydro generation, GRACE/GRACE-FO water storage, NASA POWER rain and soil wetness and NOAA ONI;
+        Patronus forecast from Ember monthly hydro generation, GRACE/GRACE-FO water storage, GPCP rain, NASA POWER soil wetness and NOAA ONI;
         Kariba rows from G-REALM lake levels. Forecast months {fmtMonth(first)} onward, issued {fmtDate(w.data?.issued)}.
       </SourceNote>
     </div>

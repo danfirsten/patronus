@@ -127,7 +127,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
       <Figure
         title="Chance of a hydro shortfall, month by month"
         sub="Top: chance that hydro output falls 15% or more below normal. Bottom: likely range of output vs normal."
-        source={<>Patronus forecast issued {fmtDate(issued)}, months {periodOf([fc[0]?.month, fc[fc.length - 1]?.month])}. Inputs: Ember, GRACE/GRACE-FO, NASA POWER, NOAA ONI.</>}
+        source={<>Patronus forecast issued {fmtDate(issued)}, months {periodOf([fc[0]?.month, fc[fc.length - 1]?.month])}. Inputs: Ember, GRACE/GRACE-FO, GPCP, NASA POWER, NOAA ONI.</>}
         files={[file]}
       >
         {fc.length === 0 ? <Empty>No forecast months in this file.</Empty> : (
@@ -201,7 +201,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
             })}
           </dl>
           {(() => { const dr = (d as any).drivers ?? wrow?.drivers; return Array.isArray(dr) && dr.length ? <ul className="drivers">{dr.map((x: string, i: number) => <li key={i}>{x}</li>)}</ul> : null; })()}
-          <SourceNote files={[file, 'watchlist.json']}>GRACE/GRACE-FO, NASA POWER, NOAA ONI; latest available month at issue.</SourceNote>
+          <SourceNote files={[file, 'watchlist.json']}>GRACE/GRACE-FO, GPCP, NASA POWER, NOAA ONI; latest available month at issue.</SourceNote>
         </div>
         <div className="panel">
           <h3>Look-alike past situations</h3>

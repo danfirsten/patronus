@@ -50,7 +50,10 @@ export default function ScoreboardPage() {
   }).filter(isNum).filter((l) => l > 0);
   const hasNext = rows.some((r: any) => r.next_alarm !== undefined);
   const leadsGen: any[] = (gb.data as any)?.crisis_leads ?? [];
-  const fa = s.data?.false_alarms;
+  const fa: any = s.data?.false_alarms;
+  const faRate = fa?.per_country_5yr ?? fa?.country_model?.false_alarms_per_country_5yr;
+  const faDef = fa?.definition ?? fa?.country_model?.threshold_rule;
+  const sSum: any = (s.data as any)?.summary;
 
   return (
     <div className="wrap page">
@@ -69,14 +72,16 @@ export default function ScoreboardPage() {
           <div className="stat-row">
             <Stat value={`${caught} of ${rows.length}`} label="crises with an alarm before onset" tone="accent" />
             <Stat value={leads.length ? (Math.min(...leads) === Math.max(...leads) ? String(leads[0]) : `${Math.min(...leads)}–${Math.max(...leads)}`) : '—'} label="months of warning before onset, where caught" />
-            <Stat value={fmtNum(fa?.per_country_5yr, 1)} label="false alarms per country per 5 years" tone="drying" />
+            <Stat value={fmtNum(faRate, 1)} label="false alarms per country per 5 calm years (country model)" tone="drying" />
           </div>
-          {fa?.definition && <p className="muted small">False alarm: {fa.definition}</p>}
+          {sSum?.headline && <p className="headline">{sSum.headline}</p>}
+          {faDef && <details className="more"><summary>How false alarms are counted</summary><div className="muted small">{faDef}</div></details>}
+          {(s.data?.notes ?? []).length > 0 && <ul className="plain small muted" style={{ marginTop: 8 }}>{(s.data?.notes ?? []).map((n, i) => <li key={i}>{n}</li>)}</ul>}
 
           <Figure
             title="Alarm vs official warning vs crisis onset"
             sub="Each row is aligned on the month the crisis began. Further left = earlier."
-            source={<>Patronus backtests (Ember, G-REALM, GRACE/GRACE-FO, NASA POWER, NOAA ONI); official dates from announcements and news, 2021–2024.</>}
+            source={<>Patronus backtests (Ember, G-REALM, GRACE/GRACE-FO, GPCP, NASA POWER, NOAA ONI); official dates from announcements and news, 2021–2024.</>}
             files={['scoreboard.json']}
           >
             <LeadChart rows={rows} />
@@ -97,7 +102,7 @@ export default function ScoreboardPage() {
                       <td data-label="Official warning">{r.official_warning ? fmtDate(r.official_warning) : <span className="muted">None found</span>}</td>
                       <td data-label="Began">{fmtDate(r.onset)}</td>
                       <td data-label='"Now" model alarm'><AlarmCell v={nowOf(r)} onset={r.onset} /></td>
-                      {hasNext && <td data-label='"Next" model alarm'>{(r as any).next_alarm === null || (r as any).next_alarm === undefined ? <span className="muted">Not run</span> : <AlarmCell v={(r as any).next_alarm} onset={r.onset} />}</td>}
+                      {hasNext && <td data-label='"Next" model alarm'>{(r as any).next_alarm === null || (r as any).next_alarm === undefined ? <span className="muted">No reservoir model</span> : <AlarmCell v={(r as any).next_alarm} onset={r.onset} />}</td>}
                       <td data-label="Caught by"><span className={`caught caught-${r.caught_by}`}>{CAUGHT[r.caught_by ?? ''] ?? r.caught_by ?? '—'}</span></td>
                       <td data-label="Notes" className="cell-notes">
                         {r.notes ?? c?.summary}
