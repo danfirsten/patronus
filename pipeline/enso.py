@@ -13,7 +13,7 @@ Method (see `METHOD` below for the published wording):
         B) the country's climatologically wettest 6 consecutive months, assigned to the ENSO year whose
            peak it is closest to (window centred Jun-Dec -> year y, centred Jan-May -> year y+1).
     Effect = % difference of mean precipitation in El Nino (La Nina) years vs neutral years.
-    The window with the larger |effect| is chosen separately per phase, and the permutation test (5,000
+    The window with the larger |effect| is chosen separately per phase, and the permutation test (10,000
     shuffles of the phase labels) repeats that choice inside every shuffle (max-statistic), so the p-value is
     corrected for picking the better window.
   * hydro_generation (Ember monthly, tier 1): water-year hydro TWh, linearly detrended (capacity growth),
@@ -44,7 +44,7 @@ from pipeline.paths import CACHE, ISSUE_DATE, OUT, RAW, REFERENCE
 from pipeline.power import monthly_point
 
 RNG_SEED = 20261115
-N_PERM = 5000
+N_PERM = 10000
 EN_T, LN_T = 0.5, -0.5
 STRONG_T = 1.5
 LOSER_EFFECT, LOSER_P = -5.0, 0.1
@@ -100,7 +100,7 @@ METHOD = (
     "GPPD); NASA POWER MERRA-2 rainfall is computed the same way as a cross-check. Each year's window total is "
     "divided by its centred 11-year running median (removes drift and decadal swings). Two windows are tested: the "
     "Oct-Sep water year and the climatologically wettest 6 months; effect = % difference of mean rainfall in El Nino "
-    "(La Nina) years vs neutral years; the window with the larger effect is kept per phase and the 5,000-shuffle "
+    "(La Nina) years vs neutral years; the window with the larger effect is kept per phase and the 10,000-shuffle "
     "permutation test repeats that choice in every shuffle (corrects for cherry-picking). hydro_generation: Ember "
     "monthly hydro TWh per water year, linearly detrended, same composite (low confidence; primary only with >= 10 "
     "water years, >= 3 events per phase and >= 4 neutral years). reservoir_level (Zambia, Zimbabwe): G-REALM "
@@ -387,6 +387,7 @@ def generation_fingerprint(monthly: pd.Series, ndj: pd.Series, rng) -> dict:
         if all(i in monthly.index for i in idx):
             wy[y] = float(monthly.loc[idx].sum())
     s = pd.Series(wy, dtype=float)
+    s = s[s.index.isin(ndj.index)]  # only the ENSO years in scope (robustness runs pass a truncated ndj)
     if len(s) < 5:
         return {"n_years": int(len(s))}
     x = np.array(s.index, dtype=float)
@@ -434,6 +435,7 @@ def kariba_fingerprint(ndj: pd.Series, rng) -> dict:
         if len(a) >= 1 and len(b) >= 1:
             rise[y] = float(b.mean() - a.mean())
     s = pd.Series(rise)
+    s = s[s.index.isin(ndj.index)]
     years = [y for y in s.index if y in ndj.index]
     lab = np.array([{"el_nino": 1, "la_nina": 2, "neutral": 0}[phase_of(ndj[y])] for y in years])
     v = s.loc[years].values
@@ -589,6 +591,11 @@ def _r(x, n=1):
     return round(float(x), n)
 
 
+def byiso_robust(rows, iso) -> bool:
+    r = next(x for x in rows if x["iso3"] == iso)
+    return r.get("robust") is not False
+
+
 def classify(en, en_p, ln, ln_p) -> str:
     a = en is not None and en_p is not None and en <= LOSER_EFFECT and en_p < LOSER_P
     b = ln is not None and ln_p is not None and ln <= LOSER_EFFECT and ln_p < LOSER_P
@@ -617,18 +624,27 @@ def main() -> None:
     print(f"  rainfall ready ({time.time() - t0:.0f}s)")
 
     gen = ember_wy_generation()
-    kar = kariba_fingerprint(ndj, rng)
+    kar = kariba_fingerprint(ndj, np.random.default_rng(RNG_SEED))
+    # robustness: water years 1981-2019 only (GPCP drift/break suspected after 2019-2020)
+    ROB_Y0, ROB_Y1 = 1981, 2019
+    ndj_t = ndj[(ndj.index >= ROB_Y0) & (ndj.index <= ROB_Y1)]
+    kar_t = kariba_fingerprint(ndj_t, np.random.default_rng(RNG_SEED))
 
     units = [(r.iso3, r.name, r.gw, r.gw_source, r.continent, bool(r.has_monthly)) for r in countries.itertuples()]
     units.append(("CHN-SC", "Sichuan (China)", None, None, "Asia", True))
     validation_units = {"BRA-S": "Southern Brazil (plants south of 23 S)", "URY": "Uruguay"}
 
-    def precip_fp(s):
+    def precip_fp(s, ndj_=None):
+        ndj_ = ndj if ndj_ is None else ndj_
         if s is None or len(s) < 120:
             return None
         st, off = wet_window(s)
         wins = [("Oct-Sep water year", 10, 12, 0), (f"{window_label(st, 6, off)} wet season", st, 6, off)]
-        pr = composite([highpass(window_totals(s, w[1], w[2], w[3])) for w in wins], ndj, rng)
+
+        def tot(w):
+            t_ = window_totals(s, w[1], w[2], w[3])
+            return highpass(t_[t_.index.isin(ndj_.index)])  # out-of-scope years never enter the baseline
+        pr = composite([tot(w) for w in wins], ndj_, np.random.default_rng(RNG_SEED))
         if not pr:
             return None
         yrs = pr["years"]
@@ -669,7 +685,7 @@ def main() -> None:
             continue
         g = None
         if has_monthly and iso in gen:
-            g = generation_fingerprint(gen[iso], ndj, rng)
+            g = generation_fingerprint(gen[iso], ndj, np.random.default_rng(RNG_SEED))
 
         # choose primary variable
         variables = {}
@@ -747,6 +763,32 @@ def main() -> None:
         row["gw_source"] = gw_src
         row["continent"] = cont
         row["variables"] = variables
+        # ---- robustness rerun of the primary variable on WY 1981/82-2019/20
+        rob = {"variable": prim}
+        rv = None
+        if prim == "reservoir_level":
+            rv = kar_t
+        elif prim == "hydro_generation":
+            gt = generation_fingerprint(gen[iso], ndj_t, np.random.default_rng(RNG_SEED))
+            if gt.get("el_nino_effect_pct") is not None and gt.get("n_neutral", 0) >= 2:
+                rv = gt
+            else:
+                rob["note"] = "Ember record too short before 2020; primary class kept."
+        elif prim == "basin_precip":
+            src = gpcp.get(iso) if prg is not None else merra.get(iso)
+            rv = precip_fp(src, ndj_t)
+        if rv:
+            rob.update({"el_nino_effect_pct": _r(rv.get("el_nino_effect_pct")), "el_nino_p": _r(rv.get("el_nino_p"), 4),
+                        "la_nina_effect_pct": _r(rv.get("la_nina_effect_pct")), "la_nina_p": _r(rv.get("la_nina_p"), 4),
+                        "n_el_nino": rv.get("n_el_nino"), "n_la_nina": rv.get("n_la_nina"), "n_neutral": rv.get("n_neutral")})
+            rob["exposure"] = classify(rob["el_nino_effect_pct"], rob["el_nino_p"], rob["la_nina_effect_pct"], rob["la_nina_p"])
+        else:
+            rob.update({"el_nino_effect_pct": None, "el_nino_p": None, "la_nina_effect_pct": None, "la_nina_p": None,
+                        "exposure": None})
+        rob["class_changed"] = bool(rob["exposure"] is not None and row.get("exposure") is not None
+                                    and rob["exposure"] != row["exposure"])
+        row["robust"] = (None if rob["exposure"] is None or row.get("exposure") is None else not rob["class_changed"])
+        row["_rob"] = rob
         # 6-18 month impact window for the current event (ENSO year 2026)
         if pr:
             ewin = pr["el_nino_window"]
@@ -856,6 +898,50 @@ def main() -> None:
                      f"to come about twice as often."),
     }
 
+    # ---- robustness block (1981-2019)
+    rob_rows = []
+    for r in rows:
+        rb = r.pop("_rob")
+        rob_rows.append({"iso3": r["iso3"], "name": r["name"], "exposure_full": r.get("exposure"),
+                         "el_nino_effect_pct_full": r.get("el_nino_effect_pct"), "el_nino_p_full": r.get("el_nino_p"),
+                         "la_nina_effect_pct_full": r.get("la_nina_effect_pct"), "la_nina_p_full": r.get("la_nina_p"),
+                         **{k: v for k, v in rb.items()}})
+    rnat = [x for x in rob_rows if x["iso3"] != "CHN-SC"]
+    gw_of = {r["iso3"]: (r["hydro_gw"] or 0) for r in rows}
+    t_en = [x["iso3"] for x in rnat if x["exposure"] in ("el_nino_loser", "both")]
+    t_ln = [x["iso3"] for x in rnat if x["exposure"] in ("la_nina_loser", "both")]
+    changed = [x for x in rob_rows if x["class_changed"]]
+    robustness = {
+        "description": ("Primary variable recomputed on water years 1981/82-2019/20 only (ENSO years 1981-2019), "
+                        "excluding 2020 onward because a GPCP drift/break after 2019-2020 is suspected over the Zambezi "
+                        "(2020/21 and 2021/22 read dry although Kariba rose ~3.2 m in 2020/21). Rainfall baselines "
+                        "(11-yr running median) are rebuilt from in-scope years only. Primary classes are kept; countries "
+                        "whose class changes are marked robust=false."),
+        "period": {"from_enso_year": ROB_Y0, "to_enso_year": ROB_Y1},
+        "summary_full": {"gw_el_nino_losers": summary["gw_el_nino_losers"], "n_el_nino_losers": summary["n_el_nino_losers"],
+                         "gw_la_nina_losers": summary["gw_la_nina_losers"], "n_la_nina_losers": summary["n_la_nina_losers"],
+                         "el_nino_losers": summary["el_nino_losers"], "la_nina_losers": summary["la_nina_losers"]},
+        "summary_1981_2019": {"gw_el_nino_losers": round(sum(gw_of[i] for i in t_en), 1), "n_el_nino_losers": len(t_en),
+                              "gw_la_nina_losers": round(sum(gw_of[i] for i in t_ln), 1), "n_la_nina_losers": len(t_ln),
+                              "el_nino_losers": t_en, "la_nina_losers": t_ln},
+        "n_class_changed": len(changed),
+        "class_changed": [f"{x['iso3']}: {x['exposure_full']} -> {x['exposure']}" for x in changed],
+        "countries": rob_rows,
+    }
+    summary["robust_el_nino_losers"] = [i for i in summary["el_nino_losers"] if byiso_robust(rows, i)]
+    summary["robust_la_nina_losers"] = [i for i in summary["la_nina_losers"] if byiso_robust(rows, i)]
+    summary["gw_robust_el_nino_losers"] = round(sum(gw_of[i] for i in summary["robust_el_nino_losers"]), 1)
+    summary["n_robust_el_nino_losers"] = len(summary["robust_el_nino_losers"])
+    summary["headline_robust"] = (
+        f"{summary['gw_robust_el_nino_losers']:.0f} GW of hydropower sits in {summary['n_robust_el_nino_losers']} grids "
+        "that lose output under El Nino in both the full record and the 1981-2019 check, and extreme El Ninos are "
+        "projected to come about twice as often.")
+    if changed:
+        LIMITATIONS.append("Sensitivity to the record period: rerunning on water years 1981/82-2019/20 (dropping years "
+                           "with a suspected GPCP break) changes the class of " + ", ".join(
+                               f"{x['iso3']} ({x['exposure_full']} -> {x['exposure']})" for x in changed)
+                           + "; these are marked robust=false and kept at their full-record class.")
+
     # ---- validation
     byiso = {r["iso3"]: r for r in rows}
     val = []
@@ -920,6 +1006,7 @@ def main() -> None:
                                   "strong regionally and partly cancel globally; reservoirs dampen them.",
                     "both_phases": "Both phases matter: El Nino 2023/24 drained Lake Kariba; Brazil's 2021 "
                                    "hydro crisis happened under La Nina."},
+        "robustness_1981_2019": robustness,
         "limitations": LIMITATIONS,
         "notes": notes,
         "runtime_s": None,

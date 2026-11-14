@@ -4,6 +4,7 @@ import { useData } from '../data/load';
 import type { Enso, Meta, Trends } from '../data/types';
 import { Figure, Loading, Stat } from '../components/common';
 import { WorldMap, type MapMode } from '../components/WorldMap';
+import { TrendSplitBlock, trendSplit } from '../components/TrendSplit';
 import { LegendItem } from '../components/TimeChart';
 import { fmtNum, periodOf } from '../lib/format';
 
@@ -37,17 +38,13 @@ export default function MapPage() {
 
       {mode === 'trend' ? (
         <>
-          <div className="stat-row">
-            <Stat value={`${fmtNum(ts?.gw_drying)} GW`} label={`hydropower in significantly drying basins (${fmtNum(ts?.n_drying)} basins)`} tone="drying" />
-            <Stat value={`${fmtNum(ts?.gw_wetting)} GW`} label={`in significantly wetting basins (${fmtNum(ts?.n_wetting)} basins)`} tone="wetting" />
-            <Stat value={`${fmtNum(ts?.gw_total)} GW`} label={`mapped across ${fmtNum(ts?.n_basins)} basins`} />
-          </div>
-          {ts?.headline && <p className="headline">{ts.headline}</p>}
-          {(ts as any)?.headline_caveat && <p className="caveat"><b>Caveat:</b> {(ts as any).headline_caveat}</p>}
+          <TrendSplitBlock trends={trends.data} />
+          {(ts as any)?.headline_caveat && <p className="caveat"><b>Why the split matters:</b> {(ts as any).headline_caveat}</p>}
+          {trendSplit(trends.data).headline !== ts?.headline && ts?.headline && <p className="small muted">{ts.headline}</p>}
           <Figure
             title="Hydropower basins by trend in total water storage"
             sub="Basins that contain hydro plants. Colour shows a statistically significant trend after correcting for testing many basins at once."
-            source={<>{trends.data?.sources?.length ? srcName(trends.data.sources) : 'GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS); WRI Global Power Plant Database; HydroBASINS level 4'}. Period {period}.</>}
+            source={<>{trends.data?.sources?.length ? srcName(trends.data.sources) : 'GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS); WRI Global Power Plant Database; HydroBASINS level 4'}. Water storage {period}; rain trend {trendSplit(trends.data).rainPeriod ?? period}.</>}
             files={['trends.json', 'basins.geojson']}
           >
             <div className="legend">

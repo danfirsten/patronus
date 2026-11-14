@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:10:42+00:00",
+ "generated_at": "2026-11-14T21:02:38+00:00",
  "sources": [
   "oni",
   "cpc_enso",
@@ -12,12 +12,12 @@
   "ember_china",
   "grealm"
  ],
- "method": "ENSO fingerprint per grid. ENSO year y = event peaking Nov(y)-Jan(y+1); El Nino if ONI NDJ(y) >= +0.5, La Nina if <= -0.5, otherwise neutral (NOAA ONI). basin_precip: GPCP v2.3 monthly rainfall (NASA GSFC / GEWEX satellite-gauge merge, 2.5 deg, 1979 onward) at capacity-weighted points near each grid's hydro plants (WRI GPPD); NASA POWER MERRA-2 rainfall is computed the same way as a cross-check. Each year's window total is divided by its centred 11-year running median (removes drift and decadal swings). Two windows are tested: the Oct-Sep water year and the climatologically wettest 6 months; effect = % difference of mean rainfall in El Nino (La Nina) years vs neutral years; the window with the larger effect is kept per phase and the 5,000-shuffle permutation test repeats that choice in every shuffle (corrects for cherry-picking). hydro_generation: Ember monthly hydro TWh per water year, linearly detrended, same composite (low confidence; primary only with >= 10 water years, >= 3 events per phase and >= 4 neutral years). reservoir_level (Zambia, Zimbabwe): G-REALM Kariba level rise from Oct-Nov(y) to Jun-Jul(y+1), tested on the difference in metres. Loser in a phase if effect <= -5% with permutation p < 0.1 on the primary variable. Two-sided p-values.",
+ "method": "ENSO fingerprint per grid. ENSO year y = event peaking Nov(y)-Jan(y+1); El Nino if ONI NDJ(y) >= +0.5, La Nina if <= -0.5, otherwise neutral (NOAA ONI). basin_precip: GPCP v2.3 monthly rainfall (NASA GSFC / GEWEX satellite-gauge merge, 2.5 deg, 1979 onward) at capacity-weighted points near each grid's hydro plants (WRI GPPD); NASA POWER MERRA-2 rainfall is computed the same way as a cross-check. Each year's window total is divided by its centred 11-year running median (removes drift and decadal swings). Two windows are tested: the Oct-Sep water year and the climatologically wettest 6 months; effect = % difference of mean rainfall in El Nino (La Nina) years vs neutral years; the window with the larger effect is kept per phase and the 10,000-shuffle permutation test repeats that choice in every shuffle (corrects for cherry-picking). hydro_generation: Ember monthly hydro TWh per water year, linearly detrended, same composite (low confidence; primary only with >= 10 water years, >= 3 events per phase and >= 4 neutral years). reservoir_level (Zambia, Zimbabwe): G-REALM Kariba level rise from Oct-Nov(y) to Jun-Jul(y+1), tested on the difference in metres. Loser in a phase if effect <= -5% with permutation p < 0.1 on the primary variable. Two-sided p-values.",
  "summary": {
-  "gw_el_nino_losers": 56.4,
-  "gw_la_nina_losers": 6.7,
-  "n_el_nino_losers": 11,
-  "n_la_nina_losers": 2,
+  "gw_el_nino_losers": 58.0,
+  "gw_la_nina_losers": 5.8,
+  "n_el_nino_losers": 12,
+  "n_la_nina_losers": 1,
   "n_both": 0,
   "n_neutral": 35,
   "n_countries": 48,
@@ -33,15 +33,15 @@
    "VNM",
    "BTN",
    "PER",
+   "GTM",
    "MMR"
   ],
   "la_nina_losers": [
-   "TJK",
-   "GIN"
+   "TJK"
   ],
   "sichuan_exposure": "neutral",
   "expected_false_losers_per_phase": 2.4,
-  "field_significance_note": "If ENSO had no effect, about 2.4 of 48 grids would pass the loser test in each phase by chance (p<0.1, negative sign). We find 11 El Nino losers and 2 La Nina losers. Per-country Benjamini-Hochberg q-values are in el_nino_q / la_nina_q.",
+  "field_significance_note": "If ENSO had no effect, about 2.4 of 48 grids would pass the loser test in each phase by chance (p<0.1, negative sign). We find 12 El Nino losers and 1 La Nina losers. Per-country Benjamini-Hochberg q-values are in el_nino_q / la_nina_q.",
   "strong_el_nino_losers": [
    "VNM",
    "LAO",
@@ -53,13 +53,31 @@
    "BTN",
    "NPL",
    "PAN",
+   "GTM",
    "SLV",
    "MWI"
   ],
-  "gw_strong_el_nino_losers": 77.6,
+  "gw_strong_el_nino_losers": 79.2,
   "strong_el_nino_note": "Exploratory: basin rainfall in the 5 strong El Ninos (1982, 1997, 2009, 2015, 2023) vs neutral years, on the El Nino window; not used for the exposure class.",
   "scope_note": "Totals cover the 48 hydro-dependent countries; Sichuan is reported separately (part of China). GW is installed hydro capacity from Ember (latest year; GPPD where Ember has none).",
-  "headline": "56 GW of hydropower sits in 11 grids that lose output under El Nino (7 GW in 2 grids lose under La Nina), and extreme El Ninos are projected to come about twice as often."
+  "headline": "58 GW of hydropower sits in 12 grids that lose output under El Nino (6 GW in 1 grids lose under La Nina), and extreme El Ninos are projected to come about twice as often.",
+  "robust_el_nino_losers": [
+   "ZMB",
+   "ZWE",
+   "HND",
+   "LAO",
+   "NPL",
+   "VNM",
+   "BTN",
+   "PER",
+   "MMR"
+  ],
+  "robust_la_nina_losers": [
+   "TJK"
+  ],
+  "gw_robust_el_nino_losers": 53.8,
+  "n_robust_el_nino_losers": 9,
+  "headline_robust": "54 GW of hydropower sits in 9 grids that lose output under El Nino in both the full record and the 1981-2019 check, and extreme El Ninos are projected to come about twice as often."
  },
  "countries": [
   {
@@ -67,9 +85,9 @@
    "name": "Brazil",
    "variable": "basin_precip",
    "el_nino_effect_pct": -3.0,
-   "el_nino_p": 0.4117,
+   "el_nino_p": 0.4029,
    "la_nina_effect_pct": 5.1,
-   "la_nina_p": 0.1106,
+   "la_nina_p": 0.1113,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -84,9 +102,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -3.0,
-     "el_nino_p": 0.4117,
+     "el_nino_p": 0.4029,
      "la_nina_effect_pct": 5.1,
-     "la_nina_p": 0.1106,
+     "la_nina_p": 0.1113,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -103,7 +121,7 @@
       "Dec-May wet season": 5.1
      },
      "strong_el_nino_effect_pct": -2.9,
-     "strong_el_nino_p": 0.4443,
+     "strong_el_nino_p": 0.4498,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -118,9 +136,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -4.2,
-     "el_nino_p": 0.2971,
+     "el_nino_p": 0.3015,
      "la_nina_effect_pct": 5.3,
-     "la_nina_p": 0.1776,
+     "la_nina_p": 0.1799,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -137,7 +155,7 @@
       "Dec-May wet season": 5.3
      },
      "strong_el_nino_effect_pct": -4.7,
-     "strong_el_nino_p": 0.2873,
+     "strong_el_nino_p": 0.286,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -151,20 +169,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.5753,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.5688,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "CAN",
    "name": "Canada",
    "variable": "hydro_generation",
    "el_nino_effect_pct": -0.7,
-   "el_nino_p": 0.7678,
+   "el_nino_p": 0.7714,
    "la_nina_effect_pct": 0.8,
-   "la_nina_p": 0.7141,
+   "la_nina_p": 0.7132,
    "n_el_nino": 5,
    "n_la_nina": 6,
    "record": "WY 2010/11-2024/25",
@@ -179,9 +198,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 2.1,
-     "el_nino_p": 0.6197,
+     "el_nino_p": 0.625,
      "la_nina_effect_pct": 4.0,
-     "la_nina_p": 0.1922,
+     "la_nina_p": 0.1995,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -198,7 +217,7 @@
       "Jun-Nov wet season": 4.0
      },
      "strong_el_nino_effect_pct": 0.7,
-     "strong_el_nino_p": 0.876,
+     "strong_el_nino_p": 0.8728,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -213,9 +232,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -1.0,
-     "el_nino_p": 0.9222,
+     "el_nino_p": 0.9231,
      "la_nina_effect_pct": 4.6,
-     "la_nina_p": 0.2088,
+     "la_nina_p": 0.2077,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -232,7 +251,7 @@
       "Jun-Nov wet season": 4.6
      },
      "strong_el_nino_effect_pct": -5.5,
-     "strong_el_nino_p": 0.1376,
+     "strong_el_nino_p": 0.1438,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -246,9 +265,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": -0.7,
-     "el_nino_p": 0.7678,
+     "el_nino_p": 0.7714,
      "la_nina_effect_pct": 0.8,
-     "la_nina_p": 0.7141,
+     "la_nina_p": 0.7132,
      "n_el_nino": 5,
      "n_la_nina": 6,
      "n_neutral": 4,
@@ -272,20 +291,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Jun 2026-Nov 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.8989,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9031,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "NOR",
    "name": "Norway",
    "variable": "basin_precip",
    "el_nino_effect_pct": 7.6,
-   "el_nino_p": 0.2991,
+   "el_nino_p": 0.2874,
    "la_nina_effect_pct": 7.9,
-   "la_nina_p": 0.2603,
+   "la_nina_p": 0.2612,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -300,9 +320,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 7.6,
-     "el_nino_p": 0.2991,
+     "el_nino_p": 0.2874,
      "la_nina_effect_pct": 7.9,
-     "la_nina_p": 0.2603,
+     "la_nina_p": 0.2612,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -319,7 +339,7 @@
       "Sep-Feb wet season": 7.9
      },
      "strong_el_nino_effect_pct": 2.9,
-     "strong_el_nino_p": 0.7652,
+     "strong_el_nino_p": 0.7489,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -334,9 +354,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 12.4,
-     "el_nino_p": 0.1164,
+     "el_nino_p": 0.1221,
      "la_nina_effect_pct": 11.1,
-     "la_nina_p": 0.148,
+     "la_nina_p": 0.1496,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -353,7 +373,7 @@
       "Sep-Feb wet season": 11.1
      },
      "strong_el_nino_effect_pct": 9.2,
-     "strong_el_nino_p": 0.4155,
+     "strong_el_nino_p": 0.4046,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -367,9 +387,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": -4.9,
-     "el_nino_p": 0.076,
+     "el_nino_p": 0.0836,
      "la_nina_effect_pct": -5.0,
-     "la_nina_p": 0.061,
+     "la_nina_p": 0.0615,
      "n_el_nino": 4,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -391,23 +411,24 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Sep 2026-Feb 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer. Secondary evidence: hydro_generation (low confidence, WY 2015/16-2025/26) shows -5% under La Nina (p=0.06).",
    "secondary_evidence": [
     "hydro_generation (low confidence, WY 2015/16-2025/26) shows -5% under La Nina (p=0.06)"
    ],
-   "el_nino_q": 0.4351,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.418,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "VNM",
    "name": "Viet Nam",
    "variable": "basin_precip",
    "el_nino_effect_pct": -9.4,
-   "el_nino_p": 0.007,
+   "el_nino_p": 0.006,
    "la_nina_effect_pct": 4.9,
-   "la_nina_p": 0.225,
+   "la_nina_p": 0.2171,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -422,9 +443,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -9.4,
-     "el_nino_p": 0.007,
+     "el_nino_p": 0.006,
      "la_nina_effect_pct": 4.9,
-     "la_nina_p": 0.225,
+     "la_nina_p": 0.2171,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -438,10 +459,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 4.9,
-      "May-Oct wet season": -0.6
+      "May-Oct wet season": -0.7
      },
      "strong_el_nino_effect_pct": -10.5,
-     "strong_el_nino_p": 0.0336,
+     "strong_el_nino_p": 0.0345,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -456,9 +477,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -11.7,
-     "el_nino_p": 0.0278,
+     "el_nino_p": 0.0228,
      "la_nina_effect_pct": 2.4,
-     "la_nina_p": 0.8492,
+     "la_nina_p": 0.8496,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -475,7 +496,7 @@
       "May-Oct wet season": -0.6
      },
      "strong_el_nino_effect_pct": -10.8,
-     "strong_el_nino_p": 0.0948,
+     "strong_el_nino_p": 0.0872,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -489,23 +510,24 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 9% less rain in the Oct-Sep water year of El Nino years (p<0.01, n=16) (-10% in the 5 strong El Ninos). Window to watch: Oct 2026-Sep 2027.",
    "secondary_evidence": [
-    "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -12% under El Nino (p=0.03)"
+    "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -12% under El Nino (p=0.02)"
    ],
-   "el_nino_q": 0.084,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.072,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "VEN",
    "name": "Venezuela",
    "variable": "basin_precip",
    "el_nino_effect_pct": -5.5,
-   "el_nino_p": 0.2893,
-   "la_nina_effect_pct": 6.7,
-   "la_nina_p": 0.1756,
+   "el_nino_p": 0.2783,
+   "la_nina_effect_pct": 6.1,
+   "la_nina_p": 0.2184,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -520,9 +542,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -5.5,
-     "el_nino_p": 0.2893,
-     "la_nina_effect_pct": 6.7,
-     "la_nina_p": 0.1756,
+     "el_nino_p": 0.2783,
+     "la_nina_effect_pct": 6.1,
+     "la_nina_p": 0.2184,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -532,14 +554,14 @@
      "la_nina_window": "May-Oct wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": -5.5,
-      "May-Oct wet season": -3.1
+      "May-Oct wet season": -3.0
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 0.5,
-      "May-Oct wet season": 6.7
+      "May-Oct wet season": 6.1
      },
      "strong_el_nino_effect_pct": -3.5,
-     "strong_el_nino_p": 0.4801,
+     "strong_el_nino_p": 0.4717,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -554,9 +576,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -11.4,
-     "el_nino_p": 0.2781,
+     "el_nino_p": 0.2868,
      "la_nina_effect_pct": 13.6,
-     "la_nina_p": 0.2012,
+     "la_nina_p": 0.1978,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -573,7 +595,7 @@
       "May-Oct wet season": 5.9
      },
      "strong_el_nino_effect_pct": -23.6,
-     "strong_el_nino_p": 0.0344,
+     "strong_el_nino_p": 0.0315,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -586,20 +608,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.434,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.4174,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "SWE",
    "name": "Sweden",
    "variable": "basin_precip",
    "el_nino_effect_pct": -9.3,
-   "el_nino_p": 0.1174,
+   "el_nino_p": 0.1093,
    "la_nina_effect_pct": 3.3,
-   "la_nina_p": 0.7385,
+   "la_nina_p": 0.7482,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -614,9 +637,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -9.3,
-     "el_nino_p": 0.1174,
+     "el_nino_p": 0.1093,
      "la_nina_effect_pct": 3.3,
-     "la_nina_p": 0.7385,
+     "la_nina_p": 0.7482,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -633,7 +656,7 @@
       "Jun-Nov wet season": -0.3
      },
      "strong_el_nino_effect_pct": -10.8,
-     "strong_el_nino_p": 0.1914,
+     "strong_el_nino_p": 0.1838,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -648,9 +671,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 9.1,
-     "el_nino_p": 0.1004,
+     "el_nino_p": 0.1077,
      "la_nina_effect_pct": 8.4,
-     "la_nina_p": 0.1374,
+     "la_nina_p": 0.1405,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -667,7 +690,7 @@
       "May-Oct wet season": 2.4
      },
      "strong_el_nino_effect_pct": 9.0,
-     "strong_el_nino_p": 0.0992,
+     "strong_el_nino_p": 0.0979,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -681,9 +704,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 6.5,
-     "el_nino_p": 0.231,
+     "el_nino_p": 0.2352,
      "la_nina_effect_pct": 6.6,
-     "la_nina_p": 0.2028,
+     "la_nina_p": 0.1923,
      "n_el_nino": 4,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -705,20 +728,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Jun 2026-Nov 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.2915,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "CHE",
    "name": "Switzerland",
    "variable": "basin_precip",
    "el_nino_effect_pct": -1.8,
-   "el_nino_p": 0.9278,
+   "el_nino_p": 0.9258,
    "la_nina_effect_pct": -3.6,
-   "la_nina_p": 0.7235,
+   "la_nina_p": 0.7147,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -733,9 +757,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -1.8,
-     "el_nino_p": 0.9278,
+     "el_nino_p": 0.9258,
      "la_nina_effect_pct": -3.6,
-     "la_nina_p": 0.7235,
+     "la_nina_p": 0.7147,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -751,8 +775,8 @@
       "Oct-Sep water year": -3.6,
       "May-Oct wet season": 3.0
      },
-     "strong_el_nino_effect_pct": -6.4,
-     "strong_el_nino_p": 0.4611,
+     "strong_el_nino_effect_pct": -6.7,
+     "strong_el_nino_p": 0.4364,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -767,9 +791,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 2.7,
-     "el_nino_p": 0.8538,
+     "el_nino_p": 0.8464,
      "la_nina_effect_pct": -3.1,
-     "la_nina_p": 0.7986,
+     "la_nina_p": 0.8009,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -786,7 +810,7 @@
       "May-Oct wet season": 1.8
      },
      "strong_el_nino_effect_pct": 6.0,
-     "strong_el_nino_p": 0.4069,
+     "strong_el_nino_p": 0.4021,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -800,9 +824,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 10.8,
-     "el_nino_p": 0.1424,
+     "el_nino_p": 0.1443,
      "la_nina_effect_pct": 1.1,
-     "la_nina_p": 0.8888,
+     "la_nina_p": 0.8893,
      "n_el_nino": 4,
      "n_la_nina": 4,
      "n_neutral": 2,
@@ -823,20 +847,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.9681,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9661,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "AUT",
    "name": "Austria",
    "variable": "basin_precip",
    "el_nino_effect_pct": -6.0,
-   "el_nino_p": 0.2631,
-   "la_nina_effect_pct": -3.2,
-   "la_nina_p": 0.6897,
+   "el_nino_p": 0.2755,
+   "la_nina_effect_pct": -3.4,
+   "la_nina_p": 0.6541,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -851,9 +876,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -6.0,
-     "el_nino_p": 0.2631,
-     "la_nina_effect_pct": -3.2,
-     "la_nina_p": 0.6897,
+     "el_nino_p": 0.2755,
+     "la_nina_effect_pct": -3.4,
+     "la_nina_p": 0.6541,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -867,10 +892,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -2.9,
-      "May-Oct wet season": -3.2
+      "May-Oct wet season": -3.4
      },
-     "strong_el_nino_effect_pct": -12.7,
-     "strong_el_nino_p": 0.042,
+     "strong_el_nino_effect_pct": -13.0,
+     "strong_el_nino_p": 0.036,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -885,9 +910,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -6.2,
-     "el_nino_p": 0.1482,
+     "el_nino_p": 0.1525,
      "la_nina_effect_pct": -1.3,
-     "la_nina_p": 0.9156,
+     "la_nina_p": 0.9163,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -904,7 +929,7 @@
       "May-Oct wet season": -1.3
      },
      "strong_el_nino_effect_pct": -7.8,
-     "strong_el_nino_p": 0.1174,
+     "strong_el_nino_p": 0.1223,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -918,9 +943,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 6.3,
-     "el_nino_p": 0.4245,
+     "el_nino_p": 0.4308,
      "la_nina_effect_pct": -2.5,
-     "la_nina_p": 0.7283,
+     "la_nina_p": 0.7226,
      "n_el_nino": 4,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -942,20 +967,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.4174,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "COL",
    "name": "Colombia",
    "variable": "basin_precip",
    "el_nino_effect_pct": -4.4,
-   "el_nino_p": 0.2448,
-   "la_nina_effect_pct": 9.7,
-   "la_nina_p": 0.002,
+   "el_nino_p": 0.2485,
+   "la_nina_effect_pct": 9.6,
+   "la_nina_p": 0.0024,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -970,9 +996,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -4.4,
-     "el_nino_p": 0.2448,
-     "la_nina_effect_pct": 9.7,
-     "la_nina_p": 0.002,
+     "el_nino_p": 0.2485,
+     "la_nina_effect_pct": 9.6,
+     "la_nina_p": 0.0024,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -982,14 +1008,14 @@
      "la_nina_window": "Apr-Sep wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": -4.4,
-      "Apr-Sep wet season": -2.0
+      "Apr-Sep wet season": -1.9
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 3.7,
-      "Apr-Sep wet season": 9.7
+      "Apr-Sep wet season": 9.6
      },
      "strong_el_nino_effect_pct": -4.9,
-     "strong_el_nino_p": 0.2168,
+     "strong_el_nino_p": 0.2084,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1004,9 +1030,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -7.4,
-     "el_nino_p": 0.5551,
+     "el_nino_p": 0.5492,
      "la_nina_effect_pct": -2.9,
-     "la_nina_p": 0.9038,
+     "la_nina_p": 0.9075,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1023,7 +1049,7 @@
       "May-Oct wet season": 1.9
      },
      "strong_el_nino_effect_pct": -16.1,
-     "strong_el_nino_p": 0.172,
+     "strong_el_nino_p": 0.1658,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1037,9 +1063,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": -11.3,
-     "el_nino_p": 0.0526,
+     "el_nino_p": 0.0497,
      "la_nina_effect_pct": 0.8,
-     "la_nina_p": 0.9324,
+     "la_nina_p": 0.929,
      "n_el_nino": 3,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -1060,14 +1086,15 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer. Secondary evidence: hydro_generation (low confidence, WY 2016/17-2025/26) shows -11% under El Nino (p=0.05).",
    "secondary_evidence": [
     "hydro_generation (low confidence, WY 2016/17-2025/26) shows -11% under El Nino (p=0.05)"
    ],
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.096
+   "el_nino_q": 0.4154,
+   "la_nina_q": 0.1152
   },
   {
    "iso3": "LAO",
@@ -1075,14 +1102,14 @@
    "variable": "basin_precip",
    "el_nino_effect_pct": -12.1,
    "el_nino_p": 0.0002,
-   "la_nina_effect_pct": 0.6,
-   "la_nina_p": 0.9796,
+   "la_nina_effect_pct": 0.5,
+   "la_nina_p": 0.9858,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
    "exposure": "el_nino_loser",
    "confidence": "medium",
-   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
    "strong_el_nino_loser": true,
    "hydro_gw": 10.19,
    "gw_source": "ember_yearly_latest_year",
@@ -1092,25 +1119,25 @@
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -12.1,
      "el_nino_p": 0.0002,
-     "la_nina_effect_pct": 0.6,
-     "la_nina_p": 0.9796,
+     "la_nina_effect_pct": 0.5,
+     "la_nina_p": 0.9858,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
      "record": "WY 1979/80-2025/26",
      "wet_season": "May-Oct",
      "el_nino_window": "Oct-Sep water year",
-     "la_nina_window": "May-Oct wet season",
+     "la_nina_window": "Oct-Sep water year",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": -12.1,
-      "May-Oct wet season": -3.1
+      "May-Oct wet season": -3.3
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 0.5,
-      "May-Oct wet season": 0.6
+      "May-Oct wet season": 0.1
      },
      "strong_el_nino_effect_pct": -12.0,
-     "strong_el_nino_p": 0.0118,
+     "strong_el_nino_p": 0.014,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1125,9 +1152,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -12.8,
-     "el_nino_p": 0.1466,
+     "el_nino_p": 0.1423,
      "la_nina_effect_pct": 4.6,
-     "la_nina_p": 0.767,
+     "la_nina_p": 0.7748,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1144,7 +1171,7 @@
       "May-Oct wet season": 2.6
      },
      "strong_el_nino_effect_pct": -29.0,
-     "strong_el_nino_p": 0.0056,
+     "strong_el_nino_p": 0.005,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1157,20 +1184,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 12% less rain in the Oct-Sep water year of El Nino years (p<0.01, n=16) (-12% in the 5 strong El Ninos). Window to watch: Oct 2026-Sep 2027.",
    "el_nino_q": 0.0096,
-   "la_nina_q": 0.9958
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "ETH",
    "name": "Ethiopia",
    "variable": "basin_precip",
-   "el_nino_effect_pct": -5.9,
-   "el_nino_p": 0.224,
+   "el_nino_effect_pct": -6.0,
+   "el_nino_p": 0.2087,
    "la_nina_effect_pct": -2.1,
-   "la_nina_p": 0.8284,
+   "la_nina_p": 0.8393,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -1184,10 +1212,10 @@
    "variables": {
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
-     "el_nino_effect_pct": -5.9,
-     "el_nino_p": 0.224,
+     "el_nino_effect_pct": -6.0,
+     "el_nino_p": 0.2087,
      "la_nina_effect_pct": -2.1,
-     "la_nina_p": 0.8284,
+     "la_nina_p": 0.8393,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1197,14 +1225,14 @@
      "la_nina_window": "Oct-Sep water year",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 5.6,
-      "Apr-Sep wet season": -5.9
+      "Apr-Sep wet season": -6.0
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -2.1,
-      "Apr-Sep wet season": -1.2
+      "Apr-Sep wet season": -1.4
      },
-     "strong_el_nino_effect_pct": -12.2,
-     "strong_el_nino_p": 0.0136,
+     "strong_el_nino_effect_pct": -12.9,
+     "strong_el_nino_p": 0.0101,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1219,7 +1247,7 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 12.2,
-     "el_nino_p": 0.1766,
+     "el_nino_p": 0.1812,
      "la_nina_effect_pct": -0.7,
      "la_nina_p": 0.9932,
      "n_el_nino": 15,
@@ -1238,7 +1266,7 @@
       "Apr-Sep wet season": -0.7
      },
      "strong_el_nino_effect_pct": 23.0,
-     "strong_el_nino_p": 0.0186,
+     "strong_el_nino_p": 0.0179,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1251,20 +1279,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Apr 2026-Sep 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.4007,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "PRY",
    "name": "Paraguay",
    "variable": "basin_precip",
    "el_nino_effect_pct": 21.7,
-   "el_nino_p": 0.0038,
+   "el_nino_p": 0.0029,
    "la_nina_effect_pct": -8.1,
-   "la_nina_p": 0.3597,
+   "la_nina_p": 0.3621,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -1279,9 +1308,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 21.7,
-     "el_nino_p": 0.0038,
+     "el_nino_p": 0.0029,
      "la_nina_effect_pct": -8.1,
-     "la_nina_p": 0.3597,
+     "la_nina_p": 0.3621,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1298,7 +1327,7 @@
       "Sep-Feb wet season": -2.3
      },
      "strong_el_nino_effect_pct": 47.2,
-     "strong_el_nino_p": 0.0002,
+     "strong_el_nino_p": 0.0001,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1313,9 +1342,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 16.6,
-     "el_nino_p": 0.0908,
+     "el_nino_p": 0.0896,
      "la_nina_effect_pct": -11.8,
-     "la_nina_p": 0.2162,
+     "la_nina_p": 0.2202,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1332,7 +1361,7 @@
       "Sep-Feb wet season": -3.9
      },
      "strong_el_nino_effect_pct": 41.7,
-     "strong_el_nino_p": 0.0004,
+     "strong_el_nino_p": 0.0003,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1345,20 +1374,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Sep 2026-Feb 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.084,
-   "la_nina_q": 0.7257
+   "el_nino_q": 0.064,
+   "la_nina_q": 0.7465
   },
   {
    "iso3": "TJK",
    "name": "Tajikistan",
    "variable": "basin_precip",
    "el_nino_effect_pct": 9.5,
-   "el_nino_p": 0.2553,
+   "el_nino_p": 0.2515,
    "la_nina_effect_pct": -15.1,
-   "la_nina_p": 0.0434,
+   "la_nina_p": 0.0422,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -1373,9 +1403,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 9.5,
-     "el_nino_p": 0.2553,
+     "el_nino_p": 0.2515,
      "la_nina_effect_pct": -15.1,
-     "la_nina_p": 0.0434,
+     "la_nina_p": 0.0422,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1392,7 +1422,7 @@
       "Dec-May wet season": -12.6
      },
      "strong_el_nino_effect_pct": 6.0,
-     "strong_el_nino_p": 0.5691,
+     "strong_el_nino_p": 0.5696,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1407,9 +1437,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 11.4,
-     "el_nino_p": 0.3485,
+     "el_nino_p": 0.3479,
      "la_nina_effect_pct": -21.4,
-     "la_nina_p": 0.0408,
+     "la_nina_p": 0.0449,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1426,7 +1456,7 @@
       "Dec-May wet season": -18.7
      },
      "strong_el_nino_effect_pct": -3.3,
-     "strong_el_nino_p": 0.8302,
+     "strong_el_nino_p": 0.8231,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1440,23 +1470,24 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Dec 2026-May 2027",
    "impact_window_passed": false,
    "current_implication": "Loses under La Nina, which is not forecast for the next 6 months; La Nina often follows strong El Ninos, so watch late 2027.",
    "secondary_evidence": [
     "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -21% under La Nina (p=0.04)"
    ],
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.5472
+   "el_nino_q": 0.4154,
+   "la_nina_q": 0.6432
   },
   {
    "iso3": "PER",
    "name": "Peru",
    "variable": "basin_precip",
    "el_nino_effect_pct": -7.1,
-   "el_nino_p": 0.0366,
+   "el_nino_p": 0.0345,
    "la_nina_effect_pct": 1.2,
-   "la_nina_p": 0.8414,
+   "la_nina_p": 0.8425,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -1471,9 +1502,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -7.1,
-     "el_nino_p": 0.0366,
+     "el_nino_p": 0.0345,
      "la_nina_effect_pct": 1.2,
-     "la_nina_p": 0.8414,
+     "la_nina_p": 0.8425,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1490,7 +1521,7 @@
       "Nov-Apr wet season": 1.2
      },
      "strong_el_nino_effect_pct": -12.4,
-     "strong_el_nino_p": 0.0028,
+     "strong_el_nino_p": 0.0023,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1505,9 +1536,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -11.8,
-     "el_nino_p": 0.212,
+     "el_nino_p": 0.2015,
      "la_nina_effect_pct": 8.1,
-     "la_nina_p": 0.4177,
+     "la_nina_p": 0.4132,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1524,7 +1555,7 @@
       "Oct-Mar wet season": 8.1
      },
      "strong_el_nino_effect_pct": -17.6,
-     "strong_el_nino_p": 0.1188,
+     "strong_el_nino_p": 0.1261,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1538,20 +1569,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
-   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 7% less rain in the Oct-Sep water year of El Nino years (p=0.04, n=16) (-12% in the 5 strong El Ninos). Window to watch: Oct 2026-Sep 2027.",
-   "el_nino_q": 0.251,
-   "la_nina_q": 0.9958
+   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 7% less rain in the Oct-Sep water year of El Nino years (p=0.03, n=16) (-12% in the 5 strong El Ninos). Window to watch: Oct 2026-Sep 2027.",
+   "el_nino_q": 0.2459,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "NZL",
    "name": "New Zealand",
    "variable": "hydro_generation",
    "el_nino_effect_pct": 1.3,
-   "el_nino_p": 0.7145,
+   "el_nino_p": 0.7111,
    "la_nina_effect_pct": 3.5,
-   "la_nina_p": 0.2621,
+   "la_nina_p": 0.2555,
    "n_el_nino": 5,
    "n_la_nina": 7,
    "record": "WY 2010/11-2025/26",
@@ -1566,9 +1598,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 1.7,
-     "el_nino_p": 0.858,
+     "el_nino_p": 0.8597,
      "la_nina_effect_pct": 9.3,
-     "la_nina_p": 0.0126,
+     "la_nina_p": 0.0116,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1585,7 +1617,7 @@
       "Jul-Dec wet season": 9.3
      },
      "strong_el_nino_effect_pct": -2.4,
-     "strong_el_nino_p": 0.6587,
+     "strong_el_nino_p": 0.6591,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1600,9 +1632,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 2.2,
-     "el_nino_p": 0.8232,
+     "el_nino_p": 0.8187,
      "la_nina_effect_pct": -3.5,
-     "la_nina_p": 0.5713,
+     "la_nina_p": 0.5913,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1619,7 +1651,7 @@
       "Sep-Feb wet season": 2.3
      },
      "strong_el_nino_effect_pct": 3.3,
-     "strong_el_nino_p": 0.6015,
+     "strong_el_nino_p": 0.6259,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1633,9 +1665,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 1.3,
-     "el_nino_p": 0.7145,
+     "el_nino_p": 0.7111,
      "la_nina_effect_pct": 3.5,
-     "la_nina_p": 0.2621,
+     "la_nina_p": 0.2555,
      "n_el_nino": 5,
      "n_la_nina": 7,
      "n_neutral": 4,
@@ -1660,20 +1692,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Jul 2026-Dec 2026",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.8723,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.8584,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "ECU",
    "name": "Ecuador",
    "variable": "basin_precip",
    "el_nino_effect_pct": 0.3,
-   "el_nino_p": 0.99,
+   "el_nino_p": 0.9888,
    "la_nina_effect_pct": 0.5,
-   "la_nina_p": 0.9732,
+   "la_nina_p": 0.9725,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -1688,9 +1721,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 0.3,
-     "el_nino_p": 0.99,
+     "el_nino_p": 0.9888,
      "la_nina_effect_pct": 0.5,
-     "la_nina_p": 0.9732,
+     "la_nina_p": 0.9725,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1707,7 +1740,7 @@
       "Jan-Jun wet season": -0.4
      },
      "strong_el_nino_effect_pct": 6.6,
-     "strong_el_nino_p": 0.1592,
+     "strong_el_nino_p": 0.1634,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1722,9 +1755,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -12.4,
-     "el_nino_p": 0.1138,
+     "el_nino_p": 0.1213,
      "la_nina_effect_pct": 3.1,
-     "la_nina_p": 0.786,
+     "la_nina_p": 0.7828,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1741,7 +1774,7 @@
       "Dec-May wet season": 3.1
      },
      "strong_el_nino_effect_pct": -3.1,
-     "strong_el_nino_p": 0.7714,
+     "strong_el_nino_p": 0.7696,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1755,26 +1788,27 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.99,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9888,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "PRK",
    "name": "North Korea",
    "variable": "basin_precip",
    "el_nino_effect_pct": -8.6,
-   "el_nino_p": 0.249,
-   "la_nina_effect_pct": 2.9,
-   "la_nina_p": 0.8586,
+   "el_nino_p": 0.2596,
+   "la_nina_effect_pct": -2.6,
+   "la_nina_p": 0.8887,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
    "exposure": "neutral",
    "confidence": "medium",
-   "season_note": "Hydro basins' wettest 6 months: Apr-Sep. Rainfall El Nino signal strongest in the Apr-Sep wet season; same window for La Nina.",
+   "season_note": "Hydro basins' wettest 6 months: Apr-Sep. Rainfall El Nino signal strongest in the Apr-Sep wet season; La Nina signal in the Oct-Sep water year.",
    "strong_el_nino_loser": false,
    "hydro_gw": 4.97,
    "gw_source": "ember_yearly_latest_year",
@@ -1783,26 +1817,26 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -8.6,
-     "el_nino_p": 0.249,
-     "la_nina_effect_pct": 2.9,
-     "la_nina_p": 0.8586,
+     "el_nino_p": 0.2596,
+     "la_nina_effect_pct": -2.6,
+     "la_nina_p": 0.8887,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
      "record": "WY 1979/80-2025/26",
      "wet_season": "Apr-Sep",
      "el_nino_window": "Apr-Sep wet season",
-     "la_nina_window": "Apr-Sep wet season",
+     "la_nina_window": "Oct-Sep water year",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 6.8,
       "Apr-Sep wet season": -8.6
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -2.6,
-      "Apr-Sep wet season": 2.9
+      "Apr-Sep wet season": 2.4
      },
-     "strong_el_nino_effect_pct": -13.3,
-     "strong_el_nino_p": 0.117,
+     "strong_el_nino_effect_pct": -13.4,
+     "strong_el_nino_p": 0.1034,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1817,9 +1851,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -11.6,
-     "el_nino_p": 0.125,
-     "la_nina_effect_pct": -1.1,
-     "la_nina_p": 0.9784,
+     "el_nino_p": 0.1185,
+     "la_nina_effect_pct": -1.7,
+     "la_nina_p": 0.9533,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1833,10 +1867,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -1.1,
-      "Apr-Sep wet season": -1.1
+      "Apr-Sep wet season": -1.7
      },
-     "strong_el_nino_effect_pct": -13.5,
-     "strong_el_nino_p": 0.118,
+     "strong_el_nino_effect_pct": -14.0,
+     "strong_el_nino_p": 0.1006,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1849,20 +1883,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Apr 2026-Sep 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.4154,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "AGO",
    "name": "Angola",
    "variable": "basin_precip",
    "el_nino_effect_pct": 7.7,
-   "el_nino_p": 0.0624,
+   "el_nino_p": 0.0652,
    "la_nina_effect_pct": 5.1,
-   "la_nina_p": 0.2474,
+   "la_nina_p": 0.2297,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -1877,9 +1912,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 7.7,
-     "el_nino_p": 0.0624,
+     "el_nino_p": 0.0652,
      "la_nina_effect_pct": 5.1,
-     "la_nina_p": 0.2474,
+     "la_nina_p": 0.2297,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1896,7 +1931,7 @@
       "Nov-Apr wet season": 3.4
      },
      "strong_el_nino_effect_pct": 10.4,
-     "strong_el_nino_p": 0.0788,
+     "strong_el_nino_p": 0.0722,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1911,9 +1946,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 1.2,
-     "el_nino_p": 0.9714,
+     "el_nino_p": 0.9662,
      "la_nina_effect_pct": 3.6,
-     "la_nina_p": 0.7718,
+     "la_nina_p": 0.7758,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -1930,7 +1965,7 @@
       "Nov-Apr wet season": 1.6
      },
      "strong_el_nino_effect_pct": 4.6,
-     "strong_el_nino_p": 0.7043,
+     "strong_el_nino_p": 0.7055,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -1943,20 +1978,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Nov 2026-Apr 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.2503,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "GEO",
    "name": "Georgia",
    "variable": "hydro_generation",
    "el_nino_effect_pct": -0.5,
-   "el_nino_p": 0.9074,
+   "el_nino_p": 0.9068,
    "la_nina_effect_pct": 2.6,
-   "la_nina_p": 0.5295,
+   "la_nina_p": 0.5253,
    "n_el_nino": 5,
    "n_la_nina": 7,
    "record": "WY 2010/11-2025/26",
@@ -1971,9 +2007,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -1.7,
-     "el_nino_p": 0.894,
-     "la_nina_effect_pct": 3.8,
-     "la_nina_p": 0.6071,
+     "el_nino_p": 0.8992,
+     "la_nina_effect_pct": 4.1,
+     "la_nina_p": 0.5585,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -1987,10 +2023,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -1.4,
-      "Mar-Aug wet season": 3.8
+      "Mar-Aug wet season": 4.1
      },
      "strong_el_nino_effect_pct": 1.5,
-     "strong_el_nino_p": 0.783,
+     "strong_el_nino_p": 0.7766,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2005,9 +2041,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 4.4,
-     "el_nino_p": 0.8074,
+     "el_nino_p": 0.801,
      "la_nina_effect_pct": 3.8,
-     "la_nina_p": 0.838,
+     "la_nina_p": 0.8285,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2024,7 +2060,7 @@
       "Sep-Feb wet season": 3.8
      },
      "strong_el_nino_effect_pct": 3.2,
-     "strong_el_nino_p": 0.7471,
+     "strong_el_nino_p": 0.7554,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2038,9 +2074,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": -0.5,
-     "el_nino_p": 0.9074,
+     "el_nino_p": 0.9068,
      "la_nina_effect_pct": 2.6,
-     "la_nina_p": 0.5295,
+     "la_nina_p": 0.5253,
      "n_el_nino": 5,
      "n_la_nina": 7,
      "n_neutral": 4,
@@ -2065,20 +2101,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.9681,
-   "la_nina_q": 0.8764
+   "el_nino_q": 0.9661,
+   "la_nina_q": 0.8695
   },
   {
    "iso3": "KGZ",
    "name": "Kyrgyzstan",
    "variable": "basin_precip",
    "el_nino_effect_pct": 11.2,
-   "el_nino_p": 0.1626,
+   "el_nino_p": 0.1664,
    "la_nina_effect_pct": -7.4,
-   "la_nina_p": 0.3931,
+   "la_nina_p": 0.3841,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2093,9 +2130,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 11.2,
-     "el_nino_p": 0.1626,
+     "el_nino_p": 0.1664,
      "la_nina_effect_pct": -7.4,
-     "la_nina_p": 0.3931,
+     "la_nina_p": 0.3841,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2112,7 +2149,7 @@
       "Feb-Jul wet season": -7.4
      },
      "strong_el_nino_effect_pct": 14.6,
-     "strong_el_nino_p": 0.1738,
+     "strong_el_nino_p": 0.1726,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2127,9 +2164,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 15.2,
-     "el_nino_p": 0.223,
+     "el_nino_p": 0.2169,
      "la_nina_effect_pct": -5.9,
-     "la_nina_p": 0.7219,
+     "la_nina_p": 0.7284,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2146,7 +2183,7 @@
       "Nov-Apr wet season": -5.9
      },
      "strong_el_nino_effect_pct": 32.4,
-     "strong_el_nino_p": 0.0194,
+     "strong_el_nino_p": 0.0219,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2160,20 +2197,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Feb 2027-Jul 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.3252,
-   "la_nina_q": 0.7257
+   "el_nino_q": 0.3328,
+   "la_nina_q": 0.7465
   },
   {
    "iso3": "NPL",
    "name": "Nepal",
    "variable": "basin_precip",
    "el_nino_effect_pct": -11.0,
-   "el_nino_p": 0.0062,
+   "el_nino_p": 0.004,
    "la_nina_effect_pct": 4.5,
-   "la_nina_p": 0.3889,
+   "la_nina_p": 0.3872,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2188,9 +2226,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -11.0,
-     "el_nino_p": 0.0062,
+     "el_nino_p": 0.004,
      "la_nina_effect_pct": 4.5,
-     "la_nina_p": 0.3889,
+     "la_nina_p": 0.3872,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2206,8 +2244,8 @@
       "Oct-Sep water year": 2.0,
       "May-Oct wet season": 4.5
      },
-     "strong_el_nino_effect_pct": -15.5,
-     "strong_el_nino_p": 0.0076,
+     "strong_el_nino_effect_pct": -14.9,
+     "strong_el_nino_p": 0.0104,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2222,9 +2260,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -13.5,
-     "el_nino_p": 0.1214,
+     "el_nino_p": 0.1159,
      "la_nina_effect_pct": 3.3,
-     "la_nina_p": 0.8858,
+     "la_nina_p": 0.8872,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2241,7 +2279,7 @@
       "May-Oct wet season": 1.6
      },
      "strong_el_nino_effect_pct": -16.1,
-     "strong_el_nino_p": 0.1196,
+     "strong_el_nino_p": 0.118,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2254,20 +2292,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
-   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 11% less rain in the May-Oct wet season of El Nino years (p<0.01, n=16) (-16% in the 5 strong El Ninos). The most affected season (May 2026-Oct 2026) has largely passed, so check it against observed storage; the impact shows up in the following dry season.",
-   "el_nino_q": 0.084,
-   "la_nina_q": 0.7257
+   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 11% less rain in the May-Oct wet season of El Nino years (p<0.01, n=16) (-15% in the 5 strong El Ninos). The most affected season (May 2026-Oct 2026) has largely passed, so check it against observed storage; the impact shows up in the following dry season.",
+   "el_nino_q": 0.064,
+   "la_nina_q": 0.7465
   },
   {
    "iso3": "MMR",
    "name": "Myanmar",
    "variable": "basin_precip",
    "el_nino_effect_pct": -6.5,
-   "el_nino_p": 0.0798,
-   "la_nina_effect_pct": -1.5,
-   "la_nina_p": 0.857,
+   "el_nino_p": 0.0883,
+   "la_nina_effect_pct": -2.0,
+   "la_nina_p": 0.7673,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2282,9 +2321,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -6.5,
-     "el_nino_p": 0.0798,
-     "la_nina_effect_pct": -1.5,
-     "la_nina_p": 0.857,
+     "el_nino_p": 0.0883,
+     "la_nina_effect_pct": -2.0,
+     "la_nina_p": 0.7673,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2294,14 +2333,14 @@
      "la_nina_window": "May-Oct wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": -6.5,
-      "May-Oct wet season": -5.6
+      "May-Oct wet season": -5.9
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -0.5,
-      "May-Oct wet season": -1.5
+      "May-Oct wet season": -2.0
      },
      "strong_el_nino_effect_pct": -4.8,
-     "strong_el_nino_p": 0.3171,
+     "strong_el_nino_p": 0.3154,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2316,9 +2355,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -11.3,
-     "el_nino_p": 0.2026,
+     "el_nino_p": 0.2057,
      "la_nina_effect_pct": -5.7,
-     "la_nina_p": 0.6527,
+     "la_nina_p": 0.647,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2335,7 +2374,7 @@
       "May-Oct wet season": -1.6
      },
      "strong_el_nino_effect_pct": -9.4,
-     "strong_el_nino_p": 0.2781,
+     "strong_el_nino_p": 0.3022,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2348,20 +2387,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
-   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 6% less rain in the Oct-Sep water year of El Nino years (p=0.08, n=16) (-5% in the 5 strong El Ninos). Window to watch: Oct 2026-Sep 2027.",
-   "el_nino_q": 0.2554,
-   "la_nina_q": 0.9958
+   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 6% less rain in the Oct-Sep water year of El Nino years (p=0.09, n=16) (-5% in the 5 strong El Ninos). Window to watch: Oct 2026-Sep 2027.",
+   "el_nino_q": 0.2826,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "COD",
    "name": "Congo (DRC)",
    "variable": "basin_precip",
    "el_nino_effect_pct": 6.0,
-   "el_nino_p": 0.116,
+   "el_nino_p": 0.1087,
    "la_nina_effect_pct": 5.8,
-   "la_nina_p": 0.1148,
+   "la_nina_p": 0.1111,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2376,9 +2416,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 6.0,
-     "el_nino_p": 0.116,
+     "el_nino_p": 0.1087,
      "la_nina_effect_pct": 5.8,
-     "la_nina_p": 0.1148,
+     "la_nina_p": 0.1111,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2395,7 +2435,7 @@
       "Nov-Apr wet season": 4.4
      },
      "strong_el_nino_effect_pct": 5.4,
-     "strong_el_nino_p": 0.2633,
+     "strong_el_nino_p": 0.2719,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2410,9 +2450,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 2.1,
-     "el_nino_p": 0.8924,
+     "el_nino_p": 0.8886,
      "la_nina_effect_pct": 5.1,
-     "la_nina_p": 0.6003,
+     "la_nina_p": 0.5983,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2429,7 +2469,7 @@
       "Nov-Apr wet season": 1.1
      },
      "strong_el_nino_effect_pct": -3.5,
-     "strong_el_nino_p": 0.7622,
+     "strong_el_nino_p": 0.7529,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2442,20 +2482,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.2915,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "ZMB",
    "name": "Zambia",
    "variable": "reservoir_level",
    "el_nino_effect_pct": -86.7,
-   "el_nino_p": 0.036,
+   "el_nino_p": 0.0371,
    "la_nina_effect_pct": 5.2,
-   "la_nina_p": 0.9064,
+   "la_nina_p": 0.9034,
    "n_el_nino": 11,
    "n_la_nina": 14,
    "record": "WY 1992/93-2025/26",
@@ -2470,9 +2511,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -15.2,
-     "el_nino_p": 0.0326,
+     "el_nino_p": 0.0289,
      "la_nina_effect_pct": 1.1,
-     "la_nina_p": 0.9186,
+     "la_nina_p": 0.9251,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2489,7 +2530,7 @@
       "Nov-Apr wet season": 0.2
      },
      "strong_el_nino_effect_pct": -15.9,
-     "strong_el_nino_p": 0.1144,
+     "strong_el_nino_p": 0.1168,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2504,9 +2545,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -18.5,
-     "el_nino_p": 0.063,
+     "el_nino_p": 0.06,
      "la_nina_effect_pct": 5.8,
-     "la_nina_p": 0.5905,
+     "la_nina_p": 0.6022,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2523,7 +2564,7 @@
       "Nov-Apr wet season": 2.3
      },
      "strong_el_nino_effect_pct": -8.0,
-     "strong_el_nino_p": 0.5563,
+     "strong_el_nino_p": 0.5598,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2537,9 +2578,9 @@
     },
     "reservoir_level": {
      "el_nino_effect_pct": -86.7,
-     "el_nino_p": 0.036,
+     "el_nino_p": 0.0371,
      "la_nina_effect_pct": 5.2,
-     "la_nina_p": 0.9064,
+     "la_nina_p": 0.9034,
      "n_el_nino": 11,
      "n_la_nina": 14,
      "n_neutral": 9,
@@ -2551,6 +2592,7 @@
      "note": "Lake Kariba (G-REALM) level rise from Oct-Nov(y) to Jun-Jul(y+1); effect = % difference in that rise vs neutral years."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Nov 2026-Apr 2027",
    "impact_window_passed": false,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; in past El Nino years Lake Kariba rose 2.2 m less over the rainy season than in neutral years (-87% of the usual rise, p=0.04); basin rainfall was -16% in the 5 strong El Ninos. Window to watch: Nov 2026-Apr 2027.",
@@ -2558,17 +2600,17 @@
     "basin_precip (medium confidence, WY 1979/80-2025/26) shows -15% under El Nino (p=0.03)",
     "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -18% under El Nino (p=0.06)"
    ],
-   "el_nino_q": 0.251,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.2459,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "NGA",
    "name": "Nigeria",
    "variable": "basin_precip",
    "el_nino_effect_pct": 4.2,
-   "el_nino_p": 0.4479,
+   "el_nino_p": 0.4282,
    "la_nina_effect_pct": 3.9,
-   "la_nina_p": 0.4739,
+   "la_nina_p": 0.4629,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2583,9 +2625,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 4.2,
-     "el_nino_p": 0.4479,
+     "el_nino_p": 0.4282,
      "la_nina_effect_pct": 3.9,
-     "la_nina_p": 0.4739,
+     "la_nina_p": 0.4629,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2599,10 +2641,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 3.9,
-      "May-Oct wet season": 1.7
+      "May-Oct wet season": 1.9
      },
-     "strong_el_nino_effect_pct": -1.3,
-     "strong_el_nino_p": 0.813,
+     "strong_el_nino_effect_pct": -1.2,
+     "strong_el_nino_p": 0.8187,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2617,9 +2659,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 9.8,
-     "el_nino_p": 0.2272,
+     "el_nino_p": 0.2315,
      "la_nina_effect_pct": 7.6,
-     "la_nina_p": 0.3959,
+     "la_nina_p": 0.3928,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2636,7 +2678,7 @@
       "May-Oct wet season": 5.6
      },
      "strong_el_nino_effect_pct": 8.6,
-     "strong_el_nino_p": 0.3117,
+     "strong_el_nino_p": 0.3122,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2650,20 +2692,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.5899,
-   "la_nina_q": 0.8124
+   "el_nino_q": 0.5709,
+   "la_nina_q": 0.7935
   },
   {
    "iso3": "ALB",
    "name": "Albania",
    "variable": "basin_precip",
    "el_nino_effect_pct": 2.3,
-   "el_nino_p": 0.8664,
+   "el_nino_p": 0.8645,
    "la_nina_effect_pct": 0.4,
-   "la_nina_p": 0.9958,
+   "la_nina_p": 0.9963,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2678,9 +2721,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 2.3,
-     "el_nino_p": 0.8664,
+     "el_nino_p": 0.8645,
      "la_nina_effect_pct": 0.4,
-     "la_nina_p": 0.9958,
+     "la_nina_p": 0.9963,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2697,7 +2740,7 @@
       "Oct-Mar wet season": 0.4
      },
      "strong_el_nino_effect_pct": 8.0,
-     "strong_el_nino_p": 0.192,
+     "strong_el_nino_p": 0.1867,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2712,9 +2755,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 1.5,
-     "el_nino_p": 0.9636,
+     "el_nino_p": 0.9634,
      "la_nina_effect_pct": 4.6,
-     "la_nina_p": 0.7041,
+     "la_nina_p": 0.7164,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2731,7 +2774,7 @@
       "Oct-Mar wet season": 4.6
      },
      "strong_el_nino_effect_pct": 9.7,
-     "strong_el_nino_p": 0.2669,
+     "strong_el_nino_p": 0.2621,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2744,20 +2787,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.9681,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9661,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "BTN",
    "name": "Bhutan",
    "variable": "basin_precip",
    "el_nino_effect_pct": -8.5,
-   "el_nino_p": 0.0474,
+   "el_nino_p": 0.0461,
    "la_nina_effect_pct": 5.4,
-   "la_nina_p": 0.3171,
+   "la_nina_p": 0.3173,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2772,9 +2816,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -8.5,
-     "el_nino_p": 0.0474,
+     "el_nino_p": 0.0461,
      "la_nina_effect_pct": 5.4,
-     "la_nina_p": 0.3171,
+     "la_nina_p": 0.3173,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2788,10 +2832,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 5.4,
-      "Apr-Sep wet season": 2.3
+      "Apr-Sep wet season": 2.2
      },
      "strong_el_nino_effect_pct": -14.0,
-     "strong_el_nino_p": 0.01,
+     "strong_el_nino_p": 0.0098,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2805,10 +2849,10 @@
     },
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
-     "el_nino_effect_pct": -9.1,
-     "el_nino_p": 0.175,
+     "el_nino_effect_pct": -8.9,
+     "el_nino_p": 0.177,
      "la_nina_effect_pct": 12.0,
-     "la_nina_p": 0.0748,
+     "la_nina_p": 0.073,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2818,14 +2862,14 @@
      "la_nina_window": "Oct-Sep water year",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 9.7,
-      "Apr-Sep wet season": -9.1
+      "Apr-Sep wet season": -8.9
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 12.0,
-      "Apr-Sep wet season": -0.3
+      "Apr-Sep wet season": -0.1
      },
-     "strong_el_nino_effect_pct": -8.8,
-     "strong_el_nino_p": 0.2649,
+     "strong_el_nino_effect_pct": -9.3,
+     "strong_el_nino_p": 0.231,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2838,20 +2882,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Apr 2026-Sep 2026",
    "impact_window_passed": true,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 8% less rain in the Apr-Sep wet season of El Nino years (p=0.05, n=16) (-14% in the 5 strong El Ninos). The most affected season (Apr 2026-Sep 2026) has largely passed, so check it against observed storage; the impact shows up in the following dry season.",
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.7248
+   "el_nino_q": 0.2459,
+   "la_nina_q": 0.7253
   },
   {
    "iso3": "CRI",
    "name": "Costa Rica",
    "variable": "basin_precip",
    "el_nino_effect_pct": -4.9,
-   "el_nino_p": 0.1424,
-   "la_nina_effect_pct": 4.1,
-   "la_nina_p": 0.2645,
+   "el_nino_p": 0.1476,
+   "la_nina_effect_pct": 3.9,
+   "la_nina_p": 0.3041,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2866,9 +2911,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -4.9,
-     "el_nino_p": 0.1424,
-     "la_nina_effect_pct": 4.1,
-     "la_nina_p": 0.2645,
+     "el_nino_p": 0.1476,
+     "la_nina_effect_pct": 3.9,
+     "la_nina_p": 0.3041,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2882,10 +2927,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -1.8,
-      "May-Oct wet season": 4.1
+      "May-Oct wet season": 3.9
      },
      "strong_el_nino_effect_pct": -4.6,
-     "strong_el_nino_p": 0.2595,
+     "strong_el_nino_p": 0.2691,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2900,9 +2945,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 1.7,
-     "el_nino_p": 0.975,
+     "el_nino_p": 0.9737,
      "la_nina_effect_pct": 18.2,
-     "la_nina_p": 0.0444,
+     "la_nina_p": 0.0398,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -2919,7 +2964,7 @@
       "May-Oct wet season": 18.2
      },
      "strong_el_nino_effect_pct": -4.9,
-     "strong_el_nino_p": 0.6815,
+     "strong_el_nino_p": 0.6697,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2933,20 +2978,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.322,
+   "la_nina_q": 0.7253
   },
   {
    "iso3": "MOZ",
    "name": "Mozambique",
    "variable": "basin_precip",
    "el_nino_effect_pct": -14.8,
-   "el_nino_p": 0.0712,
+   "el_nino_p": 0.0701,
    "la_nina_effect_pct": 9.8,
-   "la_nina_p": 0.2258,
+   "la_nina_p": 0.2274,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -2961,9 +3007,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -14.8,
-     "el_nino_p": 0.0712,
+     "el_nino_p": 0.0701,
      "la_nina_effect_pct": 9.8,
-     "la_nina_p": 0.2258,
+     "la_nina_p": 0.2274,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -2980,7 +3026,7 @@
       "Nov-Apr wet season": 9.8
      },
      "strong_el_nino_effect_pct": -27.2,
-     "strong_el_nino_p": 0.0156,
+     "strong_el_nino_p": 0.0166,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -2995,9 +3041,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -19.8,
-     "el_nino_p": 0.0222,
+     "el_nino_p": 0.0227,
      "la_nina_effect_pct": 9.5,
-     "la_nina_p": 0.2987,
+     "la_nina_p": 0.3033,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3014,7 +3060,7 @@
       "Nov-Apr wet season": 7.1
      },
      "strong_el_nino_effect_pct": -33.0,
-     "strong_el_nino_p": 0.0056,
+     "strong_el_nino_p": 0.0048,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3027,23 +3073,24 @@
      "confidence": "medium"
     }
    },
+   "robust": false,
    "impact_window_current_event": "Nov 2026-Apr 2027",
    "impact_window_passed": false,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 15% less rain in the Nov-Apr wet season of El Nino years (p=0.07, n=16) (-27% in the 5 strong El Ninos). Window to watch: Nov 2026-Apr 2027.",
    "secondary_evidence": [
     "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -20% under El Nino (p=0.02)"
    ],
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.2503,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "HRV",
    "name": "Croatia",
    "variable": "basin_precip",
    "el_nino_effect_pct": -5.0,
-   "el_nino_p": 0.5433,
+   "el_nino_p": 0.5393,
    "la_nina_effect_pct": -6.2,
-   "la_nina_p": 0.3901,
+   "la_nina_p": 0.3888,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3058,9 +3105,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -5.0,
-     "el_nino_p": 0.5433,
+     "el_nino_p": 0.5393,
      "la_nina_effect_pct": -6.2,
-     "la_nina_p": 0.3901,
+     "la_nina_p": 0.3888,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3077,7 +3124,7 @@
       "Sep-Feb wet season": -6.2
      },
      "strong_el_nino_effect_pct": 1.1,
-     "strong_el_nino_p": 0.9002,
+     "strong_el_nino_p": 0.9061,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3092,9 +3139,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 1.8,
-     "el_nino_p": 0.9498,
+     "el_nino_p": 0.95,
      "la_nina_effect_pct": -4.5,
-     "la_nina_p": 0.7029,
+     "la_nina_p": 0.7025,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3111,7 +3158,7 @@
       "Sep-Feb wet season": -4.5
      },
      "strong_el_nino_effect_pct": 10.6,
-     "strong_el_nino_p": 0.18,
+     "strong_el_nino_p": 0.1664,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3125,20 +3172,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Sep 2026-Feb 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.6863,
-   "la_nina_q": 0.7257
+   "el_nino_q": 0.6812,
+   "la_nina_q": 0.7465
   },
   {
    "iso3": "ISL",
    "name": "Iceland",
    "variable": "hydro_generation",
    "el_nino_effect_pct": -0.4,
-   "el_nino_p": 0.9538,
+   "el_nino_p": 0.9583,
    "la_nina_effect_pct": 3.2,
-   "la_nina_p": 0.6685,
+   "la_nina_p": 0.6623,
    "n_el_nino": 9,
    "n_la_nina": 11,
    "record": "WY 2000/01-2025/26",
@@ -3153,9 +3201,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -3.9,
-     "el_nino_p": 0.5259,
+     "el_nino_p": 0.5263,
      "la_nina_effect_pct": -2.7,
-     "la_nina_p": 0.6965,
+     "la_nina_p": 0.7168,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3172,7 +3220,7 @@
       "Sep-Feb wet season": 1.7
      },
      "strong_el_nino_effect_pct": -10.8,
-     "strong_el_nino_p": 0.0582,
+     "strong_el_nino_p": 0.0655,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3187,9 +3235,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -3.2,
-     "el_nino_p": 0.4831,
+     "el_nino_p": 0.4953,
      "la_nina_effect_pct": 2.5,
-     "la_nina_p": 0.6337,
+     "la_nina_p": 0.6522,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3206,7 +3254,7 @@
       "Sep-Feb wet season": 2.5
      },
      "strong_el_nino_effect_pct": -9.7,
-     "strong_el_nino_p": 0.0278,
+     "strong_el_nino_p": 0.0337,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3220,9 +3268,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": -0.4,
-     "el_nino_p": 0.9538,
+     "el_nino_p": 0.9583,
      "la_nina_effect_pct": 3.2,
-     "la_nina_p": 0.6685,
+     "la_nina_p": 0.6623,
      "n_el_nino": 9,
      "n_la_nina": 11,
      "n_neutral": 6,
@@ -3255,20 +3303,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.9741,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9787,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "BIH",
    "name": "Bosnia Herzegovina",
    "variable": "basin_precip",
    "el_nino_effect_pct": 1.7,
-   "el_nino_p": 0.91,
+   "el_nino_p": 0.9117,
    "la_nina_effect_pct": -1.6,
-   "la_nina_p": 0.9136,
+   "la_nina_p": 0.9182,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3283,9 +3332,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 1.7,
-     "el_nino_p": 0.91,
+     "el_nino_p": 0.9117,
      "la_nina_effect_pct": -1.6,
-     "la_nina_p": 0.9136,
+     "la_nina_p": 0.9182,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3302,7 +3351,7 @@
       "Oct-Mar wet season": -1.6
      },
      "strong_el_nino_effect_pct": 7.0,
-     "strong_el_nino_p": 0.2593,
+     "strong_el_nino_p": 0.2546,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3317,9 +3366,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 3.2,
-     "el_nino_p": 0.8188,
+     "el_nino_p": 0.813,
      "la_nina_effect_pct": 4.2,
-     "la_nina_p": 0.7087,
+     "la_nina_p": 0.7072,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3336,7 +3385,7 @@
       "Oct-Mar wet season": 4.2
      },
      "strong_el_nino_effect_pct": 9.4,
-     "strong_el_nino_p": 0.4141,
+     "strong_el_nino_p": 0.4148,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3350,20 +3399,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.9681,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9661,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "LKA",
    "name": "Sri Lanka",
    "variable": "basin_precip",
    "el_nino_effect_pct": 14.2,
-   "el_nino_p": 0.1276,
+   "el_nino_p": 0.1223,
    "la_nina_effect_pct": 7.0,
-   "la_nina_p": 0.4589,
+   "la_nina_p": 0.4629,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3378,9 +3428,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 14.2,
-     "el_nino_p": 0.1276,
+     "el_nino_p": 0.1223,
      "la_nina_effect_pct": 7.0,
-     "la_nina_p": 0.4589,
+     "la_nina_p": 0.4629,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3397,7 +3447,7 @@
       "Sep-Feb wet season": 7.0
      },
      "strong_el_nino_effect_pct": 10.3,
-     "strong_el_nino_p": 0.4441,
+     "strong_el_nino_p": 0.4447,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3412,9 +3462,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 24.5,
-     "el_nino_p": 0.0902,
+     "el_nino_p": 0.0826,
      "la_nina_effect_pct": 13.0,
-     "la_nina_p": 0.3851,
+     "la_nina_p": 0.3774,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3431,7 +3481,7 @@
       "Aug-Jan wet season": 13.0
      },
      "strong_el_nino_effect_pct": 38.9,
-     "strong_el_nino_p": 0.0464,
+     "strong_el_nino_p": 0.048,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3445,9 +3495,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 19.3,
-     "el_nino_p": 0.2432,
+     "el_nino_p": 0.2379,
      "la_nina_effect_pct": 15.5,
-     "la_nina_p": 0.3459,
+     "la_nina_p": 0.3559,
      "n_el_nino": 4,
      "n_la_nina": 4,
      "n_neutral": 2,
@@ -3468,20 +3518,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Sep 2026-Feb 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.8124
+   "el_nino_q": 0.2935,
+   "la_nina_q": 0.7935
   },
   {
    "iso3": "PAN",
    "name": "Panama",
    "variable": "basin_precip",
    "el_nino_effect_pct": -3.6,
-   "el_nino_p": 0.4547,
+   "el_nino_p": 0.4617,
    "la_nina_effect_pct": 0.5,
-   "la_nina_p": 0.9836,
+   "la_nina_p": 0.9865,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3496,9 +3547,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -3.6,
-     "el_nino_p": 0.4547,
+     "el_nino_p": 0.4617,
      "la_nina_effect_pct": 0.5,
-     "la_nina_p": 0.9836,
+     "la_nina_p": 0.9865,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3515,7 +3566,7 @@
       "Jun-Nov wet season": 0.0
      },
      "strong_el_nino_effect_pct": -10.0,
-     "strong_el_nino_p": 0.0176,
+     "strong_el_nino_p": 0.016,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3530,9 +3581,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 7.4,
-     "el_nino_p": 0.4581,
+     "el_nino_p": 0.4631,
      "la_nina_effect_pct": 17.1,
-     "la_nina_p": 0.0158,
+     "la_nina_p": 0.0167,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3549,7 +3600,7 @@
       "Jun-Nov wet season": 17.1
      },
      "strong_el_nino_effect_pct": 12.4,
-     "strong_el_nino_p": 0.157,
+     "strong_el_nino_p": 0.1615,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3562,20 +3613,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Jun 2026-Nov 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.5899,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.599,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "UGA",
    "name": "Uganda",
    "variable": "basin_precip",
    "el_nino_effect_pct": 10.4,
-   "el_nino_p": 0.0442,
-   "la_nina_effect_pct": 3.1,
-   "la_nina_p": 0.7355,
+   "el_nino_p": 0.045,
+   "la_nina_effect_pct": 2.9,
+   "la_nina_p": 0.7554,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3590,9 +3642,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 10.4,
-     "el_nino_p": 0.0442,
-     "la_nina_effect_pct": 3.1,
-     "la_nina_p": 0.7355,
+     "el_nino_p": 0.045,
+     "la_nina_effect_pct": 2.9,
+     "la_nina_p": 0.7554,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3606,10 +3658,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -0.5,
-      "Apr-Sep wet season": 3.1
+      "Apr-Sep wet season": 2.9
      },
      "strong_el_nino_effect_pct": 16.4,
-     "strong_el_nino_p": 0.0208,
+     "strong_el_nino_p": 0.0195,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3624,9 +3676,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 10.2,
-     "el_nino_p": 0.196,
-     "la_nina_effect_pct": -5.3,
-     "la_nina_p": 0.5963,
+     "el_nino_p": 0.1839,
+     "la_nina_effect_pct": -5.5,
+     "la_nina_p": 0.5664,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3636,14 +3688,14 @@
      "la_nina_window": "Mar-Aug wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 10.2,
-      "Mar-Aug wet season": 4.5
+      "Mar-Aug wet season": 4.2
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 0.7,
-      "Mar-Aug wet season": -5.3
+      "Mar-Aug wet season": -5.5
      },
      "strong_el_nino_effect_pct": 8.5,
-     "strong_el_nino_p": 0.3223,
+     "strong_el_nino_p": 0.3275,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3656,20 +3708,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.2459,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "LVA",
    "name": "Latvia",
    "variable": "basin_precip",
    "el_nino_effect_pct": -7.7,
-   "el_nino_p": 0.2464,
+   "el_nino_p": 0.252,
    "la_nina_effect_pct": -7.7,
-   "la_nina_p": 0.2651,
+   "la_nina_p": 0.2513,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3684,9 +3737,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -7.7,
-     "el_nino_p": 0.2464,
+     "el_nino_p": 0.252,
      "la_nina_effect_pct": -7.7,
-     "la_nina_p": 0.2651,
+     "la_nina_p": 0.2513,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3703,7 +3756,7 @@
       "Jul-Dec wet season": -7.0
      },
      "strong_el_nino_effect_pct": 1.1,
-     "strong_el_nino_p": 0.9038,
+     "strong_el_nino_p": 0.8986,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3718,9 +3771,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 1.9,
-     "el_nino_p": 0.933,
+     "el_nino_p": 0.9336,
      "la_nina_effect_pct": -7.7,
-     "la_nina_p": 0.2442,
+     "la_nina_p": 0.2517,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3737,7 +3790,7 @@
       "May-Oct wet season": 6.8
      },
      "strong_el_nino_effect_pct": 2.4,
-     "strong_el_nino_p": 0.801,
+     "strong_el_nino_p": 0.8003,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3751,9 +3804,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": -23.3,
-     "el_nino_p": 0.2899,
+     "el_nino_p": 0.2773,
      "la_nina_effect_pct": -7.4,
-     "la_nina_p": 0.7419,
+     "la_nina_p": 0.7322,
      "n_el_nino": 4,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -3775,20 +3828,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": false,
    "impact_window_current_event": "Jul 2026-Dec 2026",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.4154,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "GHA",
    "name": "Ghana",
    "variable": "basin_precip",
-   "el_nino_effect_pct": 8.5,
-   "el_nino_p": 0.1426,
+   "el_nino_effect_pct": 8.3,
+   "el_nino_p": 0.1572,
    "la_nina_effect_pct": 7.2,
-   "la_nina_p": 0.2226,
+   "la_nina_p": 0.2187,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3802,10 +3856,10 @@
    "variables": {
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
-     "el_nino_effect_pct": 8.5,
-     "el_nino_p": 0.1426,
+     "el_nino_effect_pct": 8.3,
+     "el_nino_p": 0.1572,
      "la_nina_effect_pct": 7.2,
-     "la_nina_p": 0.2226,
+     "la_nina_p": 0.2187,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3815,14 +3869,14 @@
      "la_nina_window": "Oct-Sep water year",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 1.2,
-      "May-Oct wet season": 8.5
+      "May-Oct wet season": 8.3
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 7.2,
       "May-Oct wet season": 6.1
      },
-     "strong_el_nino_effect_pct": 0.8,
-     "strong_el_nino_p": 0.9114,
+     "strong_el_nino_effect_pct": 0.0,
+     "strong_el_nino_p": 1.0,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3837,9 +3891,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 3.5,
-     "el_nino_p": 0.7924,
+     "el_nino_p": 0.799,
      "la_nina_effect_pct": 6.1,
-     "la_nina_p": 0.4777,
+     "la_nina_p": 0.4792,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3856,7 +3910,7 @@
       "May-Oct wet season": 4.0
      },
      "strong_el_nino_effect_pct": -0.7,
-     "strong_el_nino_p": 0.942,
+     "strong_el_nino_p": 0.943,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3869,27 +3923,28 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.3281,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "GTM",
    "name": "Guatemala",
    "variable": "basin_precip",
    "el_nino_effect_pct": -7.0,
-   "el_nino_p": 0.1006,
-   "la_nina_effect_pct": 6.6,
-   "la_nina_p": 0.1188,
+   "el_nino_p": 0.0981,
+   "la_nina_effect_pct": 6.5,
+   "la_nina_p": 0.1207,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
-   "exposure": "neutral",
+   "exposure": "el_nino_loser",
    "confidence": "medium",
    "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; same window for La Nina.",
-   "strong_el_nino_loser": false,
+   "strong_el_nino_loser": true,
    "hydro_gw": 1.58,
    "gw_source": "ember_yearly_latest_year",
    "continent": "North America",
@@ -3897,9 +3952,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -7.0,
-     "el_nino_p": 0.1006,
-     "la_nina_effect_pct": 6.6,
-     "la_nina_p": 0.1188,
+     "el_nino_p": 0.0981,
+     "la_nina_effect_pct": 6.5,
+     "la_nina_p": 0.1207,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -3913,10 +3968,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -1.2,
-      "May-Oct wet season": 6.6
+      "May-Oct wet season": 6.5
      },
-     "strong_el_nino_effect_pct": -8.5,
-     "strong_el_nino_p": 0.105,
+     "strong_el_nino_effect_pct": -9.0,
+     "strong_el_nino_p": 0.09,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3931,9 +3986,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -18.0,
-     "el_nino_p": 0.3825,
+     "el_nino_p": 0.384,
      "la_nina_effect_pct": -17.8,
-     "la_nina_p": 0.4009,
+     "la_nina_p": 0.4035,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -3950,7 +4005,7 @@
       "May-Oct wet season": -6.3
      },
      "strong_el_nino_effect_pct": -22.1,
-     "strong_el_nino_p": 0.3157,
+     "strong_el_nino_p": 0.3019,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -3963,20 +4018,21 @@
      "confidence": "medium"
     }
    },
+   "robust": false,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
-   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.6362
+   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 7% less rain in the May-Oct wet season of El Nino years (p=0.10, n=16) (-9% in the 5 strong El Ninos). The most affected season (May 2026-Oct 2026) has largely passed, so check it against observed storage; the impact shows up in the following dry season.",
+   "el_nino_q": 0.2915,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "SDN",
    "name": "Sudan",
    "variable": "basin_precip",
    "el_nino_effect_pct": 12.8,
-   "el_nino_p": 0.134,
+   "el_nino_p": 0.1323,
    "la_nina_effect_pct": 8.3,
-   "la_nina_p": 0.3875,
+   "la_nina_p": 0.4046,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -3991,9 +4047,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 12.8,
-     "el_nino_p": 0.134,
+     "el_nino_p": 0.1323,
      "la_nina_effect_pct": 8.3,
-     "la_nina_p": 0.3875,
+     "la_nina_p": 0.4046,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4003,14 +4059,14 @@
      "la_nina_window": "May-Oct wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 12.8,
-      "May-Oct wet season": 0.6
+      "May-Oct wet season": 0.8
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 1.2,
       "May-Oct wet season": 8.3
      },
      "strong_el_nino_effect_pct": -0.7,
-     "strong_el_nino_p": 0.946,
+     "strong_el_nino_p": 0.9392,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4025,9 +4081,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 22.6,
-     "el_nino_p": 0.1674,
+     "el_nino_p": 0.1696,
      "la_nina_effect_pct": 7.9,
-     "la_nina_p": 0.7684,
+     "la_nina_p": 0.7648,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4044,7 +4100,7 @@
       "May-Oct wet season": 7.9
      },
      "strong_el_nino_effect_pct": 16.0,
-     "strong_el_nino_p": 0.4099,
+     "strong_el_nino_p": 0.4011,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4057,20 +4113,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.7257
+   "el_nino_q": 0.3024,
+   "la_nina_q": 0.747
   },
   {
    "iso3": "CMR",
    "name": "Cameroon",
    "variable": "basin_precip",
    "el_nino_effect_pct": -3.7,
-   "el_nino_p": 0.4195,
+   "el_nino_p": 0.4177,
    "la_nina_effect_pct": 5.7,
-   "la_nina_p": 0.1358,
+   "la_nina_p": 0.1359,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4085,9 +4142,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -3.7,
-     "el_nino_p": 0.4195,
+     "el_nino_p": 0.4177,
      "la_nina_effect_pct": 5.7,
-     "la_nina_p": 0.1358,
+     "la_nina_p": 0.1359,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4097,14 +4154,14 @@
      "la_nina_window": "May-Oct wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": -3.7,
-      "May-Oct wet season": -1.2
+      "May-Oct wet season": -1.3
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 1.8,
       "May-Oct wet season": 5.7
      },
      "strong_el_nino_effect_pct": -6.5,
-     "strong_el_nino_p": 0.1222,
+     "strong_el_nino_p": 0.1205,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4121,7 +4178,7 @@
      "el_nino_effect_pct": 3.8,
      "el_nino_p": 0.8194,
      "la_nina_effect_pct": 11.7,
-     "la_nina_p": 0.1478,
+     "la_nina_p": 0.1515,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4138,7 +4195,7 @@
       "May-Oct wet season": 11.7
      },
      "strong_el_nino_effect_pct": 2.6,
-     "strong_el_nino_p": 0.7626,
+     "strong_el_nino_p": 0.7655,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4151,20 +4208,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.5753,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.5709,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "TZA",
    "name": "Tanzania (the United Republic of)",
    "variable": "basin_precip",
    "el_nino_effect_pct": 13.6,
-   "el_nino_p": 0.0604,
+   "el_nino_p": 0.0663,
    "la_nina_effect_pct": 0.5,
-   "la_nina_p": 0.9902,
+   "la_nina_p": 0.9862,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4179,9 +4237,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 13.6,
-     "el_nino_p": 0.0604,
+     "el_nino_p": 0.0663,
      "la_nina_effect_pct": 0.5,
-     "la_nina_p": 0.9902,
+     "la_nina_p": 0.9862,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4198,7 +4256,7 @@
       "Nov-Apr wet season": -0.4
      },
      "strong_el_nino_effect_pct": 27.9,
-     "strong_el_nino_p": 0.0044,
+     "strong_el_nino_p": 0.0059,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4213,9 +4271,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 9.8,
-     "el_nino_p": 0.2841,
+     "el_nino_p": 0.2837,
      "la_nina_effect_pct": 1.2,
-     "la_nina_p": 0.9618,
+     "la_nina_p": 0.9601,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4232,7 +4290,7 @@
       "Nov-Apr wet season": 1.2
      },
      "strong_el_nino_effect_pct": 20.3,
-     "strong_el_nino_p": 0.0732,
+     "strong_el_nino_p": 0.0758,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4245,20 +4303,21 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.2503,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "ZWE",
    "name": "Zimbabwe",
    "variable": "reservoir_level",
    "el_nino_effect_pct": -86.7,
-   "el_nino_p": 0.036,
+   "el_nino_p": 0.0371,
    "la_nina_effect_pct": 5.2,
-   "la_nina_p": 0.9064,
+   "la_nina_p": 0.9034,
    "n_el_nino": 11,
    "n_la_nina": 14,
    "record": "WY 1992/93-2025/26",
@@ -4273,9 +4332,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -15.1,
-     "el_nino_p": 0.0376,
+     "el_nino_p": 0.0305,
      "la_nina_effect_pct": 1.2,
-     "la_nina_p": 0.9108,
+     "la_nina_p": 0.9166,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4292,7 +4351,7 @@
       "Nov-Apr wet season": 0.3
      },
      "strong_el_nino_effect_pct": -15.5,
-     "strong_el_nino_p": 0.1208,
+     "strong_el_nino_p": 0.129,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4307,9 +4366,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -18.6,
-     "el_nino_p": 0.0676,
+     "el_nino_p": 0.0641,
      "la_nina_effect_pct": 1.8,
-     "la_nina_p": 0.8896,
+     "la_nina_p": 0.8981,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4326,7 +4385,7 @@
       "Nov-Apr wet season": -0.8
      },
      "strong_el_nino_effect_pct": -5.0,
-     "strong_el_nino_p": 0.7173,
+     "strong_el_nino_p": 0.7198,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4340,9 +4399,9 @@
     },
     "reservoir_level": {
      "el_nino_effect_pct": -86.7,
-     "el_nino_p": 0.036,
+     "el_nino_p": 0.0371,
      "la_nina_effect_pct": 5.2,
-     "la_nina_p": 0.9064,
+     "la_nina_p": 0.9034,
      "n_el_nino": 11,
      "n_la_nina": 14,
      "n_neutral": 9,
@@ -4354,24 +4413,25 @@
      "note": "Lake Kariba (G-REALM) level rise from Oct-Nov(y) to Jun-Jul(y+1); effect = % difference in that rise vs neutral years."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Nov 2026-Apr 2027",
    "impact_window_passed": false,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; in past El Nino years Lake Kariba rose 2.2 m less over the rainy season than in neutral years (-87% of the usual rise, p=0.04); basin rainfall was -16% in the 5 strong El Ninos. Window to watch: Nov 2026-Apr 2027.",
    "secondary_evidence": [
-    "basin_precip (medium confidence, WY 1979/80-2025/26) shows -15% under El Nino (p=0.04)",
-    "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -19% under El Nino (p=0.07)"
+    "basin_precip (medium confidence, WY 1979/80-2025/26) shows -15% under El Nino (p=0.03)",
+    "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -19% under El Nino (p=0.06)"
    ],
-   "el_nino_q": 0.251,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.2459,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "HND",
    "name": "Honduras",
    "variable": "basin_precip",
    "el_nino_effect_pct": -12.9,
-   "el_nino_p": 0.0734,
+   "el_nino_p": 0.073,
    "la_nina_effect_pct": 8.6,
-   "la_nina_p": 0.2571,
+   "la_nina_p": 0.271,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4386,9 +4446,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -12.9,
-     "el_nino_p": 0.0734,
+     "el_nino_p": 0.073,
      "la_nina_effect_pct": 8.6,
-     "la_nina_p": 0.2571,
+     "la_nina_p": 0.271,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4405,7 +4465,7 @@
       "Jun-Nov wet season": 8.6
      },
      "strong_el_nino_effect_pct": -9.0,
-     "strong_el_nino_p": 0.3801,
+     "strong_el_nino_p": 0.3713,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4420,9 +4480,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -25.4,
-     "el_nino_p": 0.0266,
+     "el_nino_p": 0.0281,
      "la_nina_effect_pct": 4.7,
-     "la_nina_p": 0.863,
+     "la_nina_p": 0.8706,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4439,7 +4499,7 @@
       "Jun-Nov wet season": 1.5
      },
      "strong_el_nino_effect_pct": -18.4,
-     "strong_el_nino_p": 0.2434,
+     "strong_el_nino_p": 0.2487,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4452,27 +4512,28 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Jun 2026-Nov 2026",
    "impact_window_passed": true,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 13% less rain in the Jun-Nov wet season of El Nino years (p=0.07, n=16) (-9% in the 5 strong El Ninos). The most affected season (Jun 2026-Nov 2026) has largely passed, so check it against observed storage; the impact shows up in the following dry season.",
    "secondary_evidence": [
     "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -25% under El Nino (p=0.03)"
    ],
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.2503,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "GIN",
    "name": "Guinea",
    "variable": "basin_precip",
    "el_nino_effect_pct": -4.6,
-   "el_nino_p": 0.2525,
+   "el_nino_p": 0.2443,
    "la_nina_effect_pct": -5.9,
-   "la_nina_p": 0.099,
+   "la_nina_p": 0.1025,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
-   "exposure": "la_nina_loser",
+   "exposure": "neutral",
    "confidence": "medium",
    "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; same window for La Nina.",
    "strong_el_nino_loser": false,
@@ -4483,9 +4544,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -4.6,
-     "el_nino_p": 0.2525,
+     "el_nino_p": 0.2443,
      "la_nina_effect_pct": -5.9,
-     "la_nina_p": 0.099,
+     "la_nina_p": 0.1025,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4501,8 +4562,8 @@
       "Oct-Sep water year": -3.3,
       "May-Oct wet season": -5.9
      },
-     "strong_el_nino_effect_pct": -5.7,
-     "strong_el_nino_p": 0.2152,
+     "strong_el_nino_effect_pct": -5.6,
+     "strong_el_nino_p": 0.218,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4517,9 +4578,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 9.7,
-     "el_nino_p": 0.3757,
+     "el_nino_p": 0.3739,
      "la_nina_effect_pct": 2.0,
-     "la_nina_p": 0.9592,
+     "la_nina_p": 0.9542,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4536,7 +4597,7 @@
       "May-Oct wet season": -1.8
      },
      "strong_el_nino_effect_pct": 15.9,
-     "strong_el_nino_p": 0.1634,
+     "strong_el_nino_p": 0.1676,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4549,20 +4610,21 @@
      "confidence": "medium"
     }
    },
+   "robust": false,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
-   "current_implication": "Loses under La Nina, which is not forecast for the next 6 months; La Nina often follows strong El Ninos, so watch late 2027.",
-   "el_nino_q": 0.4074,
-   "la_nina_q": 0.6362
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
+   "el_nino_q": 0.4154,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "MNE",
    "name": "Montenegro",
    "variable": "basin_precip",
    "el_nino_effect_pct": 1.7,
-   "el_nino_p": 0.9162,
+   "el_nino_p": 0.9117,
    "la_nina_effect_pct": -1.6,
-   "la_nina_p": 0.9162,
+   "la_nina_p": 0.9182,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4577,9 +4639,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 1.7,
-     "el_nino_p": 0.9162,
+     "el_nino_p": 0.9117,
      "la_nina_effect_pct": -1.6,
-     "la_nina_p": 0.9162,
+     "la_nina_p": 0.9182,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4596,7 +4658,7 @@
       "Oct-Mar wet season": -1.6
      },
      "strong_el_nino_effect_pct": 7.0,
-     "strong_el_nino_p": 0.2665,
+     "strong_el_nino_p": 0.2546,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4611,9 +4673,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": 4.6,
-     "el_nino_p": 0.7139,
+     "el_nino_p": 0.7049,
      "la_nina_effect_pct": 6.9,
-     "la_nina_p": 0.4801,
+     "la_nina_p": 0.4769,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4630,7 +4692,7 @@
       "Oct-Mar wet season": 6.9
      },
      "strong_el_nino_effect_pct": 10.6,
-     "strong_el_nino_p": 0.3903,
+     "strong_el_nino_p": 0.3812,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4644,9 +4706,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 37.3,
-     "el_nino_p": 0.1036,
+     "el_nino_p": 0.1049,
      "la_nina_effect_pct": 42.5,
-     "la_nina_p": 0.05,
+     "la_nina_p": 0.0467,
      "n_el_nino": 4,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -4668,20 +4730,21 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.9681,
-   "la_nina_q": 0.9958
+   "el_nino_q": 0.9661,
+   "la_nina_q": 0.9963
   },
   {
    "iso3": "SLV",
    "name": "El Salvador",
    "variable": "basin_precip",
    "el_nino_effect_pct": -8.6,
-   "el_nino_p": 0.1246,
-   "la_nina_effect_pct": 10.5,
-   "la_nina_p": 0.0456,
+   "el_nino_p": 0.1196,
+   "la_nina_effect_pct": 10.1,
+   "la_nina_p": 0.0536,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4696,9 +4759,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -8.6,
-     "el_nino_p": 0.1246,
-     "la_nina_effect_pct": 10.5,
-     "la_nina_p": 0.0456,
+     "el_nino_p": 0.1196,
+     "la_nina_effect_pct": 10.1,
+     "la_nina_p": 0.0536,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4712,10 +4775,10 @@
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": 1.9,
-      "May-Oct wet season": 10.5
+      "May-Oct wet season": 10.1
      },
-     "strong_el_nino_effect_pct": -10.7,
-     "strong_el_nino_p": 0.0972,
+     "strong_el_nino_effect_pct": -10.8,
+     "strong_el_nino_p": 0.089,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4730,9 +4793,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -3.1,
-     "el_nino_p": 0.9678,
+     "el_nino_p": 0.9653,
      "la_nina_effect_pct": 24.7,
-     "la_nina_p": 0.2456,
+     "la_nina_p": 0.2448,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4749,7 +4812,7 @@
       "May-Oct wet season": 24.7
      },
      "strong_el_nino_effect_pct": 34.1,
-     "strong_el_nino_p": 0.1464,
+     "strong_el_nino_p": 0.1416,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4763,20 +4826,21 @@
     },
     "hydro_generation": null
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.2976,
-   "la_nina_q": 0.5472
+   "el_nino_q": 0.2935,
+   "la_nina_q": 0.6432
   },
   {
    "iso3": "MWI",
    "name": "Malawi",
    "variable": "basin_precip",
    "el_nino_effect_pct": -14.8,
-   "el_nino_p": 0.0684,
+   "el_nino_p": 0.0701,
    "la_nina_effect_pct": 9.8,
-   "la_nina_p": 0.2158,
+   "la_nina_p": 0.2274,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4791,9 +4855,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": -14.8,
-     "el_nino_p": 0.0684,
+     "el_nino_p": 0.0701,
      "la_nina_effect_pct": 9.8,
-     "la_nina_p": 0.2158,
+     "la_nina_p": 0.2274,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4810,7 +4874,7 @@
       "Nov-Apr wet season": 9.8
      },
      "strong_el_nino_effect_pct": -27.2,
-     "strong_el_nino_p": 0.016,
+     "strong_el_nino_p": 0.0166,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4825,9 +4889,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -15.5,
-     "el_nino_p": 0.056,
+     "el_nino_p": 0.058,
      "la_nina_effect_pct": 4.0,
-     "la_nina_p": 0.6685,
+     "la_nina_p": 0.6882,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4844,7 +4908,7 @@
       "Nov-Apr wet season": 4.0
      },
      "strong_el_nino_effect_pct": -33.3,
-     "strong_el_nino_p": 0.0012,
+     "strong_el_nino_p": 0.002,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4857,23 +4921,24 @@
      "confidence": "medium"
     }
    },
+   "robust": false,
    "impact_window_current_event": "Nov 2026-Apr 2027",
    "impact_window_passed": false,
    "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 15% less rain in the Nov-Apr wet season of El Nino years (p=0.07, n=16) (-27% in the 5 strong El Ninos). Window to watch: Nov 2026-Apr 2027.",
    "secondary_evidence": [
     "basin_precip_merra2 (medium confidence, WY 1981/82-2025/26) shows -16% under El Nino (p=0.06)"
    ],
-   "el_nino_q": 0.2517,
-   "la_nina_q": 0.6362
+   "el_nino_q": 0.2503,
+   "la_nina_q": 0.6846
   },
   {
    "iso3": "NAM",
    "name": "Namibia",
    "variable": "basin_precip",
    "el_nino_effect_pct": 3.0,
-   "el_nino_p": 0.7269,
+   "el_nino_p": 0.7153,
    "la_nina_effect_pct": 17.4,
-   "la_nina_p": 0.0108,
+   "la_nina_p": 0.0115,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
@@ -4888,9 +4953,9 @@
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
      "el_nino_effect_pct": 3.0,
-     "el_nino_p": 0.7269,
+     "el_nino_p": 0.7153,
      "la_nina_effect_pct": 17.4,
-     "la_nina_p": 0.0108,
+     "la_nina_p": 0.0115,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4907,7 +4972,7 @@
       "Nov-Apr wet season": 17.4
      },
      "strong_el_nino_effect_pct": -4.3,
-     "strong_el_nino_p": 0.6365,
+     "strong_el_nino_p": 0.6553,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4922,9 +4987,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -16.9,
-     "el_nino_p": 0.5041,
+     "el_nino_p": 0.5015,
      "la_nina_effect_pct": 14.1,
-     "la_nina_p": 0.5715,
+     "la_nina_p": 0.5835,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -4941,7 +5006,7 @@
       "Nov-Apr wet season": 12.9
      },
      "strong_el_nino_effect_pct": -24.2,
-     "strong_el_nino_p": 0.4099,
+     "strong_el_nino_p": 0.4073,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -4954,37 +5019,38 @@
      "confidence": "medium"
     }
    },
+   "robust": true,
    "impact_window_current_event": "Oct 2026-Sep 2027",
    "impact_window_passed": false,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer.",
-   "el_nino_q": 0.8723,
-   "la_nina_q": 0.2592
+   "el_nino_q": 0.8584,
+   "la_nina_q": 0.276
   },
   {
    "iso3": "CHN-SC",
    "name": "Sichuan (China)",
    "variable": "basin_precip",
-   "el_nino_effect_pct": -3.7,
-   "el_nino_p": 0.5085,
-   "la_nina_effect_pct": 2.0,
-   "la_nina_p": 0.8036,
+   "el_nino_effect_pct": -3.6,
+   "el_nino_p": 0.5215,
+   "la_nina_effect_pct": 1.8,
+   "la_nina_p": 0.8364,
    "n_el_nino": 16,
    "n_la_nina": 17,
    "record": "WY 1979/80-2025/26",
    "exposure": "neutral",
    "confidence": "medium",
    "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; same window for La Nina.",
-   "strong_el_nino_loser": false,
+   "strong_el_nino_loser": true,
    "hydro_gw": null,
    "gw_source": null,
    "continent": "Asia",
    "variables": {
     "basin_precip": {
      "dataset": "GPCP v2.3 monthly (2.5 deg)",
-     "el_nino_effect_pct": -3.7,
-     "el_nino_p": 0.5085,
-     "la_nina_effect_pct": 2.0,
-     "la_nina_p": 0.8036,
+     "el_nino_effect_pct": -3.6,
+     "el_nino_p": 0.5215,
+     "la_nina_effect_pct": 1.8,
+     "la_nina_p": 0.8364,
      "n_el_nino": 16,
      "n_la_nina": 17,
      "n_neutral": 14,
@@ -4994,14 +5060,14 @@
      "la_nina_window": "May-Oct wet season",
      "effect_by_window_el_nino_pct": {
       "Oct-Sep water year": 2.3,
-      "May-Oct wet season": -3.7
+      "May-Oct wet season": -3.6
      },
      "effect_by_window_la_nina_pct": {
       "Oct-Sep water year": -0.7,
-      "May-Oct wet season": 2.0
+      "May-Oct wet season": 1.8
      },
-     "strong_el_nino_effect_pct": -8.5,
-     "strong_el_nino_p": 0.1036,
+     "strong_el_nino_effect_pct": -9.0,
+     "strong_el_nino_p": 0.0836,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -5016,9 +5082,9 @@
     "basin_precip_merra2": {
      "dataset": "NASA POWER MERRA-2 PRECTOTCORR (cross-check)",
      "el_nino_effect_pct": -2.8,
-     "el_nino_p": 0.765,
+     "el_nino_p": 0.778,
      "la_nina_effect_pct": -1.3,
-     "la_nina_p": 0.9382,
+     "la_nina_p": 0.9438,
      "n_el_nino": 15,
      "n_la_nina": 17,
      "n_neutral": 13,
@@ -5035,7 +5101,7 @@
       "May-Oct wet season": 0.1
      },
      "strong_el_nino_effect_pct": -8.3,
-     "strong_el_nino_p": 0.189,
+     "strong_el_nino_p": 0.1904,
      "n_strong_el_nino": 5,
      "strong_el_nino_years": [
       1982,
@@ -5049,9 +5115,9 @@
     },
     "hydro_generation": {
      "el_nino_effect_pct": 2.4,
-     "el_nino_p": 0.4285,
+     "el_nino_p": 0.4349,
      "la_nina_effect_pct": 1.2,
-     "la_nina_p": 0.6677,
+     "la_nina_p": 0.6721,
      "n_el_nino": 3,
      "n_la_nina": 5,
      "n_neutral": 2,
@@ -5072,6 +5138,7 @@
      "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
     }
    },
+   "robust": true,
    "impact_window_current_event": "May 2026-Oct 2026",
    "impact_window_passed": true,
    "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
@@ -5251,7 +5318,7 @@
   "mean_rise_la_nina_m": 2.6280119047618973,
   "mean_rise_other_m": 2.577576086956521,
   "el_nino_vs_other_m": -2.244659420289855,
-  "el_nino_vs_other_p": 0.009398120375924815,
+  "el_nino_vs_other_p": 0.0081991800819918,
   "rise_by_year_m": {
    "1992": 4.23,
    "1993": 0.98,
@@ -5298,7 +5365,7 @@
      "iso3": "ZMB",
      "name": "Zambia",
      "el_nino_precip_effect_pct": -15.2,
-     "p": 0.0326,
+     "p": 0.0289,
      "effect_by_window_pct": {
       "Oct-Sep water year": -12.6,
       "Nov-Apr wet season": -15.2
@@ -5306,13 +5373,13 @@
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -18.5,
-     "merra2_p": 0.063
+     "merra2_p": 0.06
     },
     {
      "iso3": "ZWE",
      "name": "Zimbabwe",
      "el_nino_precip_effect_pct": -15.1,
-     "p": 0.0376,
+     "p": 0.0305,
      "effect_by_window_pct": {
       "Oct-Sep water year": -12.5,
       "Nov-Apr wet season": -15.1
@@ -5320,13 +5387,13 @@
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -18.6,
-     "merra2_p": 0.0676
+     "merra2_p": 0.0641
     },
     {
      "iso3": "MOZ",
      "name": "Mozambique",
      "el_nino_precip_effect_pct": -14.8,
-     "p": 0.0712,
+     "p": 0.0701,
      "effect_by_window_pct": {
       "Oct-Sep water year": -12.9,
       "Nov-Apr wet season": -14.8
@@ -5334,13 +5401,13 @@
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -19.8,
-     "merra2_p": 0.0222
+     "merra2_p": 0.0227
     },
     {
      "iso3": "MWI",
      "name": "Malawi",
      "el_nino_precip_effect_pct": -14.8,
-     "p": 0.0684,
+     "p": 0.0701,
      "effect_by_window_pct": {
       "Oct-Sep water year": -12.9,
       "Nov-Apr wet season": -14.8
@@ -5348,7 +5415,7 @@
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -15.5,
-     "merra2_p": 0.056
+     "merra2_p": 0.058
     }
    ],
    "result": "4/4 with expected sign; 4 also p<0.1",
@@ -5362,29 +5429,29 @@
      "iso3": "COL",
      "name": "Colombia",
      "el_nino_precip_effect_pct": -4.4,
-     "p": 0.2448,
+     "p": 0.2485,
      "effect_by_window_pct": {
       "Oct-Sep water year": -4.4,
-      "Apr-Sep wet season": -2.0
+      "Apr-Sep wet season": -1.9
      },
      "sign_matches": true,
      "significant_p_lt_0_1": false,
      "merra2_effect_pct": -7.4,
-     "merra2_p": 0.5551
+     "merra2_p": 0.5492
     },
     {
      "iso3": "VEN",
      "name": "Venezuela",
      "el_nino_precip_effect_pct": -5.5,
-     "p": 0.2893,
+     "p": 0.2783,
      "effect_by_window_pct": {
       "Oct-Sep water year": -5.5,
-      "May-Oct wet season": -3.1
+      "May-Oct wet season": -3.0
      },
      "sign_matches": true,
      "significant_p_lt_0_1": false,
      "merra2_effect_pct": -11.4,
-     "merra2_p": 0.2781
+     "merra2_p": 0.2868
     }
    ],
    "result": "2/2 with expected sign; 0 also p<0.1",
@@ -5398,7 +5465,7 @@
      "iso3": "BRA-S",
      "name": "Southern Brazil (plants south of 23 S)",
      "el_nino_precip_effect_pct": 19.6,
-     "p": 0.003,
+     "p": 0.0032,
      "effect_by_window_pct": {
       "Oct-Sep water year": 11.3,
       "Sep-Feb wet season": 19.6
@@ -5406,25 +5473,25 @@
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": 16.0,
-     "merra2_p": 0.0722
+     "merra2_p": 0.0678
     },
     {
      "iso3": "URY",
      "name": "Uruguay",
      "el_nino_precip_effect_pct": 20.0,
-     "p": 0.0994,
+     "p": 0.101,
      "effect_by_window_pct": {
       "Oct-Sep water year": 10.2,
       "Nov-Apr wet season": 20.0
      },
      "sign_matches": true,
-     "significant_p_lt_0_1": true,
+     "significant_p_lt_0_1": false,
      "merra2_effect_pct": 21.8,
-     "merra2_p": 0.0814
+     "merra2_p": 0.0839
     }
    ],
-   "result": "2/2 with expected sign; 2 also p<0.1",
-   "passed": "yes"
+   "result": "2/2 with expected sign; 1 also p<0.1",
+   "passed": "sign only"
   },
   {
    "region": "Southeast Asia incl. Vietnam",
@@ -5434,7 +5501,7 @@
      "iso3": "VNM",
      "name": "Viet Nam",
      "el_nino_precip_effect_pct": -9.4,
-     "p": 0.007,
+     "p": 0.006,
      "effect_by_window_pct": {
       "Oct-Sep water year": -9.4,
       "May-Oct wet season": -5.9
@@ -5442,7 +5509,7 @@
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -11.7,
-     "merra2_p": 0.0278
+     "merra2_p": 0.0228
     },
     {
      "iso3": "LAO",
@@ -5451,26 +5518,26 @@
      "p": 0.0002,
      "effect_by_window_pct": {
       "Oct-Sep water year": -12.1,
-      "May-Oct wet season": -3.1
+      "May-Oct wet season": -3.3
      },
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -12.8,
-     "merra2_p": 0.1466
+     "merra2_p": 0.1423
     },
     {
      "iso3": "MMR",
      "name": "Myanmar",
      "el_nino_precip_effect_pct": -6.5,
-     "p": 0.0798,
+     "p": 0.0883,
      "effect_by_window_pct": {
       "Oct-Sep water year": -6.5,
-      "May-Oct wet season": -5.6
+      "May-Oct wet season": -5.9
      },
      "sign_matches": true,
      "significant_p_lt_0_1": true,
      "merra2_effect_pct": -11.3,
-     "merra2_p": 0.2026
+     "merra2_p": 0.2057
     }
    ],
    "result": "3/3 with expected sign; 3 also p<0.1",
@@ -5481,6 +5548,999 @@
   "literature": "Ng, Turner & Galelli 2017: more than a third of 1,593 simulated dams show significant annual production anomalies in at least one ENSO phase; effects are strong regionally and partly cancel globally; reservoirs dampen them.",
   "both_phases": "Both phases matter: El Nino 2023/24 drained Lake Kariba; Brazil's 2021 hydro crisis happened under La Nina."
  },
+ "robustness_1981_2019": {
+  "description": "Primary variable recomputed on water years 1981/82-2019/20 only (ENSO years 1981-2019), excluding 2020 onward because a GPCP drift/break after 2019-2020 is suspected over the Zambezi (2020/21 and 2021/22 read dry although Kariba rose ~3.2 m in 2020/21). Rainfall baselines (11-yr running median) are rebuilt from in-scope years only. Primary classes are kept; countries whose class changes are marked robust=false.",
+  "period": {
+   "from_enso_year": 1981,
+   "to_enso_year": 2019
+  },
+  "summary_full": {
+   "gw_el_nino_losers": 58.0,
+   "n_el_nino_losers": 12,
+   "gw_la_nina_losers": 5.8,
+   "n_la_nina_losers": 1,
+   "el_nino_losers": [
+    "ZMB",
+    "ZWE",
+    "MOZ",
+    "MWI",
+    "HND",
+    "LAO",
+    "NPL",
+    "VNM",
+    "BTN",
+    "PER",
+    "GTM",
+    "MMR"
+   ],
+   "la_nina_losers": [
+    "TJK"
+   ]
+  },
+  "summary_1981_2019": {
+   "gw_el_nino_losers": 55.4,
+   "n_el_nino_losers": 10,
+   "gw_la_nina_losers": 6.7,
+   "n_la_nina_losers": 2,
+   "el_nino_losers": [
+    "VNM",
+    "LAO",
+    "PER",
+    "ZMB",
+    "BTN",
+    "NPL",
+    "MMR",
+    "ZWE",
+    "HND",
+    "LVA"
+   ],
+   "la_nina_losers": [
+    "TJK",
+    "GIN"
+   ]
+  },
+  "n_class_changed": 5,
+  "class_changed": [
+   "MOZ: el_nino_loser -> neutral",
+   "GTM: el_nino_loser -> neutral",
+   "GIN: neutral -> la_nina_loser",
+   "LVA: neutral -> el_nino_loser",
+   "MWI: el_nino_loser -> neutral"
+  ],
+  "countries": [
+   {
+    "iso3": "BRA",
+    "name": "Brazil",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -3.0,
+    "el_nino_p_full": 0.4029,
+    "la_nina_effect_pct_full": 5.1,
+    "la_nina_p_full": 0.1113,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -5.1,
+    "el_nino_p": 0.1253,
+    "la_nina_effect_pct": 4.6,
+    "la_nina_p": 0.1919,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "CAN",
+    "name": "Canada",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -0.7,
+    "el_nino_p_full": 0.7714,
+    "la_nina_effect_pct_full": 0.8,
+    "la_nina_p_full": 0.7132,
+    "variable": "hydro_generation",
+    "el_nino_effect_pct": -2.5,
+    "el_nino_p": 0.0052,
+    "la_nina_effect_pct": -2.5,
+    "la_nina_p": 0.0123,
+    "n_el_nino": 4,
+    "n_la_nina": 3,
+    "n_neutral": 3,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "NOR",
+    "name": "Norway",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 7.6,
+    "el_nino_p_full": 0.2874,
+    "la_nina_effect_pct_full": 7.9,
+    "la_nina_p_full": 0.2612,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 10.5,
+    "el_nino_p": 0.1961,
+    "la_nina_effect_pct": 11.4,
+    "la_nina_p": 0.1529,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "VNM",
+    "name": "Viet Nam",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -9.4,
+    "el_nino_p_full": 0.006,
+    "la_nina_effect_pct_full": 4.9,
+    "la_nina_p_full": 0.2171,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -10.3,
+    "el_nino_p": 0.0068,
+    "la_nina_effect_pct": 6.9,
+    "la_nina_p": 0.0961,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "VEN",
+    "name": "Venezuela",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -5.5,
+    "el_nino_p_full": 0.2783,
+    "la_nina_effect_pct_full": 6.1,
+    "la_nina_p_full": 0.2184,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -2.8,
+    "el_nino_p": 0.721,
+    "la_nina_effect_pct": 3.8,
+    "la_nina_p": 0.5397,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "SWE",
+    "name": "Sweden",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -9.3,
+    "el_nino_p_full": 0.1093,
+    "la_nina_effect_pct_full": 3.3,
+    "la_nina_p_full": 0.7482,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -11.0,
+    "el_nino_p": 0.1077,
+    "la_nina_effect_pct": 3.8,
+    "la_nina_p": 0.7762,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "COL",
+    "name": "Colombia",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -4.4,
+    "el_nino_p_full": 0.2485,
+    "la_nina_effect_pct_full": 9.6,
+    "la_nina_p_full": 0.0024,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -2.2,
+    "el_nino_p": 0.729,
+    "la_nina_effect_pct": 9.6,
+    "la_nina_p": 0.0054,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "PRY",
+    "name": "Paraguay",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 21.7,
+    "el_nino_p_full": 0.0029,
+    "la_nina_effect_pct_full": -8.1,
+    "la_nina_p_full": 0.3621,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 15.1,
+    "el_nino_p": 0.0662,
+    "la_nina_effect_pct": -10.0,
+    "la_nina_p": 0.2675,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "LAO",
+    "name": "Lao PDR",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -12.1,
+    "el_nino_p_full": 0.0002,
+    "la_nina_effect_pct_full": 0.5,
+    "la_nina_p_full": 0.9858,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -12.7,
+    "el_nino_p": 0.0008,
+    "la_nina_effect_pct": 2.3,
+    "la_nina_p": 0.7723,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "AUT",
+    "name": "Austria",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -6.0,
+    "el_nino_p_full": 0.2755,
+    "la_nina_effect_pct_full": -3.4,
+    "la_nina_p_full": 0.6541,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -3.7,
+    "el_nino_p": 0.6259,
+    "la_nina_effect_pct": -2.8,
+    "la_nina_p": 0.7667,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "CHE",
+    "name": "Switzerland",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -1.8,
+    "el_nino_p_full": 0.9258,
+    "la_nina_effect_pct_full": -3.6,
+    "la_nina_p_full": 0.7147,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -1.1,
+    "el_nino_p": 0.9739,
+    "la_nina_effect_pct": 5.0,
+    "la_nina_p": 0.5812,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "PER",
+    "name": "Peru",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -7.1,
+    "el_nino_p_full": 0.0345,
+    "la_nina_effect_pct_full": 1.2,
+    "la_nina_p_full": 0.8425,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -7.4,
+    "el_nino_p": 0.0365,
+    "la_nina_effect_pct": 4.4,
+    "la_nina_p": 0.2727,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "ETH",
+    "name": "Ethiopia",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -6.0,
+    "el_nino_p_full": 0.2087,
+    "la_nina_effect_pct_full": -2.1,
+    "la_nina_p_full": 0.8393,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 8.0,
+    "el_nino_p": 0.0856,
+    "la_nina_effect_pct": 2.5,
+    "la_nina_p": 0.7805,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "ECU",
+    "name": "Ecuador",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 0.3,
+    "el_nino_p_full": 0.9888,
+    "la_nina_effect_pct_full": 0.5,
+    "la_nina_p_full": 0.9725,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 2.3,
+    "el_nino_p": 0.7052,
+    "la_nina_effect_pct": 1.0,
+    "la_nina_p": 0.9284,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "NZL",
+    "name": "New Zealand",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 1.3,
+    "el_nino_p_full": 0.7111,
+    "la_nina_effect_pct_full": 3.5,
+    "la_nina_p_full": 0.2555,
+    "variable": "hydro_generation",
+    "el_nino_effect_pct": -0.3,
+    "el_nino_p": 0.9451,
+    "la_nina_effect_pct": 1.4,
+    "la_nina_p": 0.6914,
+    "n_el_nino": 4,
+    "n_la_nina": 3,
+    "n_neutral": 3,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "TJK",
+    "name": "Tajikistan",
+    "exposure_full": "la_nina_loser",
+    "el_nino_effect_pct_full": 9.5,
+    "el_nino_p_full": 0.2515,
+    "la_nina_effect_pct_full": -15.1,
+    "la_nina_p_full": 0.0422,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 9.4,
+    "el_nino_p": 0.2799,
+    "la_nina_effect_pct": -16.6,
+    "la_nina_p": 0.0454,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "la_nina_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "PRK",
+    "name": "North Korea",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -8.6,
+    "el_nino_p_full": 0.2596,
+    "la_nina_effect_pct_full": -2.6,
+    "la_nina_p_full": 0.8887,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -10.3,
+    "el_nino_p": 0.18,
+    "la_nina_effect_pct": -5.6,
+    "la_nina_p": 0.6442,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "ZMB",
+    "name": "Zambia",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -86.7,
+    "el_nino_p_full": 0.0371,
+    "la_nina_effect_pct_full": 5.2,
+    "la_nina_p_full": 0.9034,
+    "variable": "reservoir_level",
+    "el_nino_effect_pct": -82.0,
+    "el_nino_p": 0.0757,
+    "la_nina_effect_pct": 1.5,
+    "la_nina_p": 0.9747,
+    "n_el_nino": 10,
+    "n_la_nina": 10,
+    "n_neutral": 8,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "MOZ",
+    "name": "Mozambique",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -14.8,
+    "el_nino_p_full": 0.0701,
+    "la_nina_effect_pct_full": 9.8,
+    "la_nina_p_full": 0.2274,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -12.2,
+    "el_nino_p": 0.1805,
+    "la_nina_effect_pct": 10.5,
+    "la_nina_p": 0.2609,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": true
+   },
+   {
+    "iso3": "COD",
+    "name": "Congo (DRC)",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 6.0,
+    "el_nino_p_full": 0.1087,
+    "la_nina_effect_pct_full": 5.8,
+    "la_nina_p_full": 0.1111,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 6.2,
+    "el_nino_p": 0.1556,
+    "la_nina_effect_pct": 7.6,
+    "la_nina_p": 0.0799,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "NGA",
+    "name": "Nigeria",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 4.2,
+    "el_nino_p_full": 0.4282,
+    "la_nina_effect_pct_full": 3.9,
+    "la_nina_p_full": 0.4629,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 3.1,
+    "el_nino_p": 0.6711,
+    "la_nina_effect_pct": 4.1,
+    "la_nina_p": 0.5,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "ISL",
+    "name": "Iceland",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -0.4,
+    "el_nino_p_full": 0.9583,
+    "la_nina_effect_pct_full": 3.2,
+    "la_nina_p_full": 0.6623,
+    "variable": "hydro_generation",
+    "el_nino_effect_pct": -3.6,
+    "el_nino_p": 0.6059,
+    "la_nina_effect_pct": 5.9,
+    "la_nina_p": 0.4,
+    "n_el_nino": 8,
+    "n_la_nina": 7,
+    "n_neutral": 5,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "KGZ",
+    "name": "Kyrgyzstan",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 11.2,
+    "el_nino_p_full": 0.1664,
+    "la_nina_effect_pct_full": -7.4,
+    "la_nina_p_full": 0.3841,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 13.9,
+    "el_nino_p": 0.0997,
+    "la_nina_effect_pct": -7.9,
+    "la_nina_p": 0.4253,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "SDN",
+    "name": "Sudan",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 12.8,
+    "el_nino_p_full": 0.1323,
+    "la_nina_effect_pct_full": 8.3,
+    "la_nina_p_full": 0.4046,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 12.3,
+    "el_nino_p": 0.1399,
+    "la_nina_effect_pct": 11.1,
+    "la_nina_p": 0.2173,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "BTN",
+    "name": "Bhutan",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -8.5,
+    "el_nino_p_full": 0.0461,
+    "la_nina_effect_pct_full": 5.4,
+    "la_nina_p_full": 0.3173,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -8.1,
+    "el_nino_p": 0.0955,
+    "la_nina_effect_pct": 5.0,
+    "la_nina_p": 0.4607,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "NPL",
+    "name": "Nepal",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -11.0,
+    "el_nino_p_full": 0.004,
+    "la_nina_effect_pct_full": 4.5,
+    "la_nina_p_full": 0.3872,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -9.9,
+    "el_nino_p": 0.007,
+    "la_nina_effect_pct": 4.1,
+    "la_nina_p": 0.4622,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "AGO",
+    "name": "Angola",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 7.7,
+    "el_nino_p_full": 0.0652,
+    "la_nina_effect_pct_full": 5.1,
+    "la_nina_p_full": 0.2297,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 7.9,
+    "el_nino_p": 0.0835,
+    "la_nina_effect_pct": 5.3,
+    "la_nina_p": 0.2869,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "GEO",
+    "name": "Georgia",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -0.5,
+    "el_nino_p_full": 0.9068,
+    "la_nina_effect_pct_full": 2.6,
+    "la_nina_p_full": 0.5253,
+    "variable": "hydro_generation",
+    "el_nino_effect_pct": -1.9,
+    "el_nino_p": 0.7004,
+    "la_nina_effect_pct": 2.4,
+    "la_nina_p": 0.6571,
+    "n_el_nino": 4,
+    "n_la_nina": 3,
+    "n_neutral": 3,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "MMR",
+    "name": "Myanmar",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -6.5,
+    "el_nino_p_full": 0.0883,
+    "la_nina_effect_pct_full": -2.0,
+    "la_nina_p_full": 0.7673,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -6.9,
+    "el_nino_p": 0.0871,
+    "la_nina_effect_pct": 1.8,
+    "la_nina_p": 0.8479,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "CRI",
+    "name": "Costa Rica",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -4.9,
+    "el_nino_p_full": 0.1476,
+    "la_nina_effect_pct_full": 3.9,
+    "la_nina_p_full": 0.3041,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -4.2,
+    "el_nino_p": 0.3048,
+    "la_nina_effect_pct": 4.9,
+    "la_nina_p": 0.1983,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "GHA",
+    "name": "Ghana",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 8.3,
+    "el_nino_p_full": 0.1572,
+    "la_nina_effect_pct_full": 7.2,
+    "la_nina_p_full": 0.2187,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 7.0,
+    "el_nino_p": 0.3472,
+    "la_nina_effect_pct": 7.7,
+    "la_nina_p": 0.2846,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "ALB",
+    "name": "Albania",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 2.3,
+    "el_nino_p_full": 0.8645,
+    "la_nina_effect_pct_full": 0.4,
+    "la_nina_p_full": 0.9963,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 2.3,
+    "el_nino_p": 0.8868,
+    "la_nina_effect_pct": -0.6,
+    "la_nina_p": 0.9909,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "LKA",
+    "name": "Sri Lanka",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 14.2,
+    "el_nino_p_full": 0.1223,
+    "la_nina_effect_pct_full": 7.0,
+    "la_nina_p_full": 0.4629,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 11.1,
+    "el_nino_p": 0.2737,
+    "la_nina_effect_pct": 5.7,
+    "la_nina_p": 0.6284,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "PAN",
+    "name": "Panama",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -3.6,
+    "el_nino_p_full": 0.4617,
+    "la_nina_effect_pct_full": 0.5,
+    "la_nina_p_full": 0.9865,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -2.6,
+    "el_nino_p": 0.7036,
+    "la_nina_effect_pct": 3.2,
+    "la_nina_p": 0.6099,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "GTM",
+    "name": "Guatemala",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -7.0,
+    "el_nino_p_full": 0.0981,
+    "la_nina_effect_pct_full": 6.5,
+    "la_nina_p_full": 0.1207,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -7.8,
+    "el_nino_p": 0.101,
+    "la_nina_effect_pct": 9.1,
+    "la_nina_p": 0.0444,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": true
+   },
+   {
+    "iso3": "HRV",
+    "name": "Croatia",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -5.0,
+    "el_nino_p_full": 0.5393,
+    "la_nina_effect_pct_full": -6.2,
+    "la_nina_p_full": 0.3888,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -4.5,
+    "el_nino_p": 0.6731,
+    "la_nina_effect_pct": -8.4,
+    "la_nina_p": 0.3092,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "ZWE",
+    "name": "Zimbabwe",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -86.7,
+    "el_nino_p_full": 0.0371,
+    "la_nina_effect_pct_full": 5.2,
+    "la_nina_p_full": 0.9034,
+    "variable": "reservoir_level",
+    "el_nino_effect_pct": -82.0,
+    "el_nino_p": 0.0757,
+    "la_nina_effect_pct": 1.5,
+    "la_nina_p": 0.9747,
+    "n_el_nino": 10,
+    "n_la_nina": 10,
+    "n_neutral": 8,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "BIH",
+    "name": "Bosnia Herzegovina",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 1.7,
+    "el_nino_p_full": 0.9117,
+    "la_nina_effect_pct_full": -1.6,
+    "la_nina_p_full": 0.9182,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 1.9,
+    "el_nino_p": 0.9189,
+    "la_nina_effect_pct": -1.5,
+    "la_nina_p": 0.9555,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "CMR",
+    "name": "Cameroon",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -3.7,
+    "el_nino_p_full": 0.4177,
+    "la_nina_effect_pct_full": 5.7,
+    "la_nina_p_full": 0.1359,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -4.9,
+    "el_nino_p": 0.2658,
+    "la_nina_effect_pct": 3.0,
+    "la_nina_p": 0.6208,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "UGA",
+    "name": "Uganda",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 10.4,
+    "el_nino_p_full": 0.045,
+    "la_nina_effect_pct_full": 2.9,
+    "la_nina_p_full": 0.7554,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 14.8,
+    "el_nino_p": 0.0083,
+    "la_nina_effect_pct": 3.5,
+    "la_nina_p": 0.7221,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "HND",
+    "name": "Honduras",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -12.9,
+    "el_nino_p_full": 0.073,
+    "la_nina_effect_pct_full": 8.6,
+    "la_nina_p_full": 0.271,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -12.7,
+    "el_nino_p": 0.0973,
+    "la_nina_effect_pct": 14.5,
+    "la_nina_p": 0.0578,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": false
+   },
+   {
+    "iso3": "GIN",
+    "name": "Guinea",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -4.6,
+    "el_nino_p_full": 0.2443,
+    "la_nina_effect_pct_full": -5.9,
+    "la_nina_p_full": 0.1025,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -4.7,
+    "el_nino_p": 0.3313,
+    "la_nina_effect_pct": -7.1,
+    "la_nina_p": 0.0917,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "la_nina_loser",
+    "class_changed": true
+   },
+   {
+    "iso3": "LVA",
+    "name": "Latvia",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -7.7,
+    "el_nino_p_full": 0.252,
+    "la_nina_effect_pct_full": -7.7,
+    "la_nina_p_full": 0.2513,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -11.3,
+    "el_nino_p": 0.0765,
+    "la_nina_effect_pct": -8.5,
+    "la_nina_p": 0.2454,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "el_nino_loser",
+    "class_changed": true
+   },
+   {
+    "iso3": "TZA",
+    "name": "Tanzania (the United Republic of)",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 13.6,
+    "el_nino_p_full": 0.0663,
+    "la_nina_effect_pct_full": 0.5,
+    "la_nina_p_full": 0.9862,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 13.0,
+    "el_nino_p": 0.1279,
+    "la_nina_effect_pct": 1.7,
+    "la_nina_p": 0.9068,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "SLV",
+    "name": "El Salvador",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -8.6,
+    "el_nino_p_full": 0.1196,
+    "la_nina_effect_pct_full": 10.1,
+    "la_nina_p_full": 0.0536,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -8.6,
+    "el_nino_p": 0.1857,
+    "la_nina_effect_pct": 11.6,
+    "la_nina_p": 0.0525,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "MWI",
+    "name": "Malawi",
+    "exposure_full": "el_nino_loser",
+    "el_nino_effect_pct_full": -14.8,
+    "el_nino_p_full": 0.0701,
+    "la_nina_effect_pct_full": 9.8,
+    "la_nina_p_full": 0.2274,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": -12.2,
+    "el_nino_p": 0.1805,
+    "la_nina_effect_pct": 10.5,
+    "la_nina_p": 0.2609,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": true
+   },
+   {
+    "iso3": "MNE",
+    "name": "Montenegro",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 1.7,
+    "el_nino_p_full": 0.9117,
+    "la_nina_effect_pct_full": -1.6,
+    "la_nina_p_full": 0.9182,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 1.9,
+    "el_nino_p": 0.9189,
+    "la_nina_effect_pct": -1.5,
+    "la_nina_p": 0.9555,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "NAM",
+    "name": "Namibia",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": 3.0,
+    "el_nino_p_full": 0.7153,
+    "la_nina_effect_pct_full": 17.4,
+    "la_nina_p_full": 0.0115,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 6.1,
+    "el_nino_p": 0.522,
+    "la_nina_effect_pct": 21.9,
+    "la_nina_p": 0.0089,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   },
+   {
+    "iso3": "CHN-SC",
+    "name": "Sichuan (China)",
+    "exposure_full": "neutral",
+    "el_nino_effect_pct_full": -3.6,
+    "el_nino_p_full": 0.5215,
+    "la_nina_effect_pct_full": 1.8,
+    "la_nina_p_full": 0.8364,
+    "variable": "basin_precip",
+    "el_nino_effect_pct": 3.8,
+    "el_nino_p": 0.544,
+    "la_nina_effect_pct": 1.9,
+    "la_nina_p": 0.8723,
+    "n_el_nino": 14,
+    "n_la_nina": 13,
+    "n_neutral": 12,
+    "exposure": "neutral",
+    "class_changed": false
+   }
+  ]
+ },
  "limitations": [
   "Few events: about 16 El Nino and 17 La Nina years since 1979 for rainfall, only about 13 neutral years as the baseline, and only 2-5 events per phase in the Ember generation records (mostly 2015/2019 onward). Effect sizes are noisy; with 48 grids and p<0.1, about 2-3 grids per phase would pass by chance (see BH q-values).",
   "Rainfall is a proxy for hydropower: reservoirs buffer one bad season (Ng et al. 2017 found production anomalies smaller than inflow anomalies), and snowmelt, glaciers and upstream catchments are not captured.",
@@ -5489,7 +6549,8 @@
   "Non-stationarity: ENSO teleconnections vary between decades and between El Nino flavours (Eastern vs Central Pacific); a historical fingerprint does not guarantee the response of the 2026/27 event. The 11-year running-median baseline removes slow trends but also part of genuine decadal variability.",
   "Power-plant locations come from WRI GPPD v1.3 (2021); newer plants are missing.",
   "Kariba level is managed (releases, allocation rules), so it mixes climate and operating decisions.",
-  "Strong-El-Nino effects rest on 5 events (1982, 1997, 2009, 2015, 2023) and are exploratory."
+  "Strong-El-Nino effects rest on 5 events (1982, 1997, 2009, 2015, 2023) and are exploratory.",
+  "Sensitivity to the record period: rerunning on water years 1981/82-2019/20 (dropping years with a suspected GPCP break) changes the class of MOZ (el_nino_loser -> neutral), GTM (el_nino_loser -> neutral), GIN (neutral -> la_nina_loser), LVA (neutral -> el_nino_loser), MWI (el_nino_loser -> neutral); these are marked robust=false and kept at their full-record class."
  ],
  "notes": [
   "Southern Brazil (GPPD plants south of 23 S) and Uruguay are computed for validation only; they are not in the 48-country list.",
@@ -5497,5 +6558,5 @@
   "Source id 'gpcp' (GPCP v2.3 monthly precipitation, NASA GSFC/GEWEX, https://psl.noaa.gov/data/gridded/data.gpcp.html) needs an entry in meta.json.",
   "Ng, Turner & Galelli 2017 (ERL) is the 1,593-dam ENSO-hydropower study; 'more than one third' of dams show significant anomalies in at least one phase."
  ],
- "runtime_s": 15.6
+ "runtime_s": 24.7
 }

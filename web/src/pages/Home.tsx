@@ -4,6 +4,7 @@ import type { Crises, Enso, Kariba, Ledger, Scoreboard, Trends, Watchlist } from
 import { Figure, Reveal, RiskPill, Stat, Loading, ExposureTag } from '../components/common';
 import { ProbStrip } from '../components/small';
 import { WorldMap } from '../components/WorldMap';
+import { TrendSplitBlock } from '../components/TrendSplit';
 import { TimeChart, LegendItem } from '../components/TimeChart';
 import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, periodOf, dateOf, costText, monthsBetween } from '../lib/format';
 import { RISK_ORDER, countryHref } from '../lib/risk';
@@ -118,12 +119,11 @@ export default function Home() {
         <div className="wrap">
           <Reveal>
             <p className="step-num">2 · It's getting worse</p>
-            <h2>{ts?.headline ?? 'Many hydropower basins are drying.'}</h2>
+            {trends.data ? <TrendSplitBlock trends={trends.data} compact /> : <h2>Many hydropower basins are losing water.</h2>}
             {(ts as any)?.headline_caveat && <p className="small muted" style={{ maxWidth: '80ch' }}>{(ts as any).headline_caveat}</p>}
             <div className="stat-row">
-              <Stat value={`${fmtNum(ts?.gw_drying)} GW`} label={`in basins with a significant drying trend (of ${fmtNum(ts?.gw_total)} GW mapped)`} tone="drying" />
-              <Stat value={`${fmtNum(ts?.gw_wetting)} GW`} label="in significantly wetting basins" tone="wetting" />
               <Stat value={`${fmtNum(es?.gw_el_nino_losers)} GW`} label="in grids that usually lose output under El Niño" tone="drying" />
+              <Stat value={`${fmtNum(es?.gw_la_nina_losers)} GW`} label="in grids that usually lose output under La Niña" tone="wetting" />
             </div>
             <Figure
               title="Hydropower basins by water-storage trend"

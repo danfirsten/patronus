@@ -316,3 +316,17 @@ ul.plain li { margin-bottom: 0.5em; }
 .reservoir-watch .eyebrow { margin: 0; }
 .reservoir-watch:hover { border-color: var(--accent); }
 .rw-title { font-weight: 700; font-size: var(--fs-lg); }
+
+/* Trend split (drying with vs without rain decline) */
+.trend-split h2 { max-width: 34ch; }
+.split-tiles { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 16px 0 12px; }
+.split-tile { flex: 1 1 170px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; display: grid; gap: 2px; }
+.split-tile b { font-size: var(--fs-xl); font-variant-numeric: tabular-nums; }
+.split-tile span { font-size: var(--fs-sm); color: var(--text-muted); }
+.split-tile.t-strong b { color: var(--drying-strong); }
+.split-tile.t-mild b { color: var(--drying-mild); }
+.split-tile.t-wet b { color: var(--wetting-mild); }
+.split-op { align-self: center; font-size: var(--fs-xl); color: var(--text-faint); }
+.split-bar { display: flex; height: 18px; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-elev-2); }
+.split-bar span { display: block; height: 100%; }
+@media (max-width: 640px) { .split-op { display: none; } }

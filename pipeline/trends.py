@@ -234,8 +234,20 @@ def precip_series(points: list[tuple[float, float]]) -> np.ndarray | None:
     return s.reindex(MONTHS).to_numpy(dtype=float)
 
 
-def precip_test(pr: np.ndarray | None) -> dict | None:
-    if pr is None or np.isnan(pr).sum() > len(pr) * 0.1:
+RAIN_END = "2019-12"  # GPCP drifts low vs MERRA-2 (and vs Kariba lake rises) from ~2020; see drift_check()
+
+
+def precip_test(pr: np.ndarray | None, end: str | None = None) -> dict | None:
+    """Rain trend; with `end`, months after it are dropped (deseasonalized and tested on the window only)."""
+    if pr is None:
+        return None
+    pr = pr.copy()
+    n = len(pr)
+    if end is not None:
+        cut = np.array([m > pd.Period(end, "M") for m in MONTHS])
+        pr[cut] = np.nan
+        n = int((~cut).sum())
+    if np.isnan(pr).sum() - (len(pr) - n) > n * 0.1:
         return None
     mean = float(np.nanmean(pr))
     if not mean > 0.05:  # deserts: % of ~0 is meaningless
@@ -356,7 +368,9 @@ def main() -> None:
     gp = load_gpcp()
     if gp is None:
         notes.append("GPCP file missing (data/raw/gpcp/precip.mon.mean.nc); precip fields fall back to null.")
-    gp_res = {bid: (precip_test(gpcp_series(gp, geoms[bid])) if gp is not None else None) for bid in geoms}
+    gp_ser = {bid: (gpcp_series(gp, geoms[bid]) if gp is not None else None) for bid in geoms}
+    gp_res = {bid: precip_test(gp_ser[bid], end=RAIN_END) for bid in geoms}          # primary: stable period
+    gp_full = {bid: precip_test(gp_ser[bid]) for bid in geoms}                        # full period, for comparison
 
     def _pr(bid):
         try:  # same sampling as pipeline.basins.basin_sample_points(bid, 3), without reloading the basin file per call
@@ -378,6 +392,7 @@ def main() -> None:
     ids = basins["basin_id"].tolist()
     tws_q = dict(zip(ids, bh_fdr([tws_res[b]["p"] if tws_res[b] else None for b in ids])))
     pr_q = dict(zip(ids, bh_fdr([gp_res[b]["p"] if gp_res[b] else None for b in ids])))
+    pr_q_full = dict(zip(ids, bh_fdr([gp_full[b]["p"] if gp_full[b] else None for b in ids])))
     pr_q_m2 = dict(zip(ids, bh_fdr([pr_res[b]["p"] if pr_res[b] else None for b in ids])))
 
     # --- plants per basin
@@ -394,7 +409,7 @@ def main() -> None:
     out_basins = []
     for r in basins.itertuples():
         bid = r.basin_id
-        t, p, pm = tws_res[bid], gp_res[bid], pr_res[bid]
+        t, p, pm, pf = tws_res[bid], gp_res[bid], pr_res[bid], gp_full[bid]
         q = tws_q[bid]
         slope = t["slope_per_month"] * 120 if t else None
         if t is None or q is None:
@@ -411,6 +426,7 @@ def main() -> None:
         main_ctry = [c for c, gw in ctry if gw >= 0.1 * r.hydro_gw][:3] or [c for c, _ in ctry[:1]]
         label = clean_plant_name(tp["name"].iat[0], tp["country_name"].iat[0]) if major else bid
         precip_decline = None if p is None or pr_q[bid] is None else bool(pr_q[bid] < ALPHA and p["slope_per_month"] < 0)
+        precip_decline_full = None if pf is None or pr_q_full[bid] is None else bool(pr_q_full[bid] < ALPHA and pf["slope_per_month"] < 0)
         pa = annual_p(anom_series[bid])
         gw_flag = None if (cls is None or precip_decline is None) else bool(cls == "drying" and not precip_decline)
         ii, _, nearest = cells[bid]
@@ -434,6 +450,10 @@ def main() -> None:
             "precip_slope_pct_per_decade": r_(p["slope_pct_per_decade"], 2) if p else None,
             "precip_p": r_(p["p"], 5) if p else None,
             "precip_q": r_(pr_q[bid], 5),
+            "precip_slope_pct_per_decade_full_period": r_(pf["slope_pct_per_decade"], 2) if pf else None,
+            "precip_p_full_period": r_(pf["p"], 5) if pf else None,
+            "precip_q_full_period": r_(pr_q_full[bid], 5),
+            "precip_decline_significant_full_period": precip_decline_full,
             "precip_mean_mm_day": r_(p["mean_mm_day"], 3) if p else None,
             "precip_slope_merra2_pct_per_decade": r_(pm["slope_pct_per_decade"], 2) if pm else None,
             "precip_p_merra2": r_(pm["p"], 5) if pm else None,
@@ -460,7 +480,9 @@ def main() -> None:
         ux = area_mean(tws, lat, ii, jj)
         ua = deseasonalize(ux)
         ut = trend_test(ua)
-        up_pr = precip_test(gpcp_series(gp, up_geom)) if gp is not None else None
+        up_gs = gpcp_series(gp, up_geom) if gp is not None else None
+        up_pr = precip_test(up_gs, end=RAIN_END)
+        up_pf = precip_test(up_gs)
         up_pm = precip_test(precip_series(grid_points(up_geom, 6)))
         kariba = {
             "description": "Lake Kariba (Zambia/Zimbabwe). 'basin' is the HydroBASINS level-4 basin holding the Kariba "
@@ -474,6 +496,8 @@ def main() -> None:
                 "significant": bool(ut and ut["p"] < ALPHA),
                 "precip_slope_pct_per_decade": r_(up_pr["slope_pct_per_decade"], 2) if up_pr else None,
                 "precip_p": r_(up_pr["p"], 5) if up_pr else None,
+                "precip_slope_pct_per_decade_full_period": r_(up_pf["slope_pct_per_decade"], 2) if up_pf else None,
+                "precip_p_full_period": r_(up_pf["p"], 5) if up_pf else None,
                 "precip_slope_merra2_pct_per_decade": r_(up_pm["slope_pct_per_decade"], 2) if up_pm else None,
                 "precip_p_merra2": r_(up_pm["p"], 5) if up_pm else None,
                 "series": series_block(ux, ua) | ({"sen_intercept_cm": r_(ut["intercept"], 3),

@@ -18,6 +18,7 @@ from sklearn.isotonic import IsotonicRegression
 from pipeline import gen_data as G
 from pipeline import gen_model as M
 from pipeline import gen_seasonal as S
+from pipeline import gen_ons as O
 from pipeline.gen_points import SICHUAN_BOX, plant_centroid, points_for
 from pipeline.paths import ISSUE_DATE, OUT
 
@@ -100,6 +101,7 @@ def build_dataset():
         for h in M.HORIZONS:
             rows.append(G.horizon_rows(iso, base, L, h, share[iso]))
     D = pd.concat(rows, ignore_index=True)
+    D = O.add_ons_features(D)
     D["tyear"] = D["target"].map(lambda p: p.year)
     D["iyear"] = D["issue"].map(lambda p: p.year)
     D["cluster"] = D["iso3"] + "-" + D["tyear"].astype(str)
@@ -286,6 +288,88 @@ def crisis_leads(d: pd.DataFrame, thr: float, lab: pd.DataFrame):
     return out
 
 
+def brazil_ons_test(D: pd.DataFrame, countries: list[str], log):
+    """Pre-specified rule (written before running): keep the ONS features only if, in the same blocked LOYO test with
+    the same stacked calibration, Brazil's own out-of-fold results improve: (a) mean Brazil AUC-PR over h=1..6 is
+    higher and higher at >= 4 of 6 horizons; (b) mean Brazil Brier over h=1..6 is not worse; (c) the Brazil 2021
+    alarm series (P any shortfall within 6 months, issue months 2020-11..2021-05) has a higher mean; and the pooled
+    metrics do not degrade (mean pooled AUC-PR not lower by more than 0.005 and mean pooled Brier not higher by more
+    than 0.0005)."""
+    base_f = list(G.FEATURES)
+    ons_f = base_f + O.ONS_FEATURES
+    rows = []
+    for h in M.HORIZONS:
+        d = D[(D["horizon"] == h) & D["y_short"].notna()].reset_index(drop=True)
+        y = d["y_short"].values.astype(float)
+        clim = M.oof_baselines(d, "y_short", countries)["climatology"]
+        out = {"horizon": h}
+        ps = {}
+        for tag, f in (("without", base_f), ("with", ons_f)):
+            raw = M.oof_classifier(d, f, "y_short")
+            ps[tag] = M.crossfit_stack(raw, clim, y, d["tyear"].values)
+        ok = ~np.isnan(ps["without"]) & ~np.isnan(ps["with"]) & ~np.isnan(clim)
+        b = ok & (d["iso3"] == "BRA").values
+        yb = y[b]
+        for tag in ("without", "with"):
+            out[f"bra_auc_pr_{tag}"] = M._r(M.auc_pr(ps[tag][b], yb))
+            out[f"bra_brier_{tag}"] = round(M.brier(ps[tag][b], yb), 4)
+            out[f"pooled_auc_pr_{tag}"] = M._r(M.auc_pr(ps[tag][ok], y[ok]))
+            out[f"pooled_brier_{tag}"] = round(M.brier(ps[tag][ok], y[ok]), 4)
+        out["bra_auc_pr_climatology"] = M._r(M.auc_pr(clim[b], yb))
+        out["bra_n"], out["bra_n_shortfalls"] = int(b.sum()), int(yb.sum())
+        pw, pn = ps["with"][b], ps["without"][b]
+
+        def fn(idx):
+            a, c = M.auc_pr(pw[idx], yb[idx]), M.auc_pr(pn[idx], yb[idx])
+            return None if a is None or c is None else a - c
+
+        bs = M.cluster_bootstrap(d.loc[b, "cluster"].values, fn, 1000)
+        out["bra_auc_pr_delta_ci90"] = M.ci90(bs)
+        bs2 = M.cluster_bootstrap(d.loc[b, "cluster"].values, lambda idx: M.brier(pw[idx], yb[idx]) - M.brier(pn[idx], yb[idx]), 1000)
+        out["bra_brier_delta_ci90"] = M.ci90(bs2)
+        rows.append(out)
+        log(f"  ONS h={h}: BRA AUC-PR {out['bra_auc_pr_without']} -> {out['bra_auc_pr_with']} (clim {out['bra_auc_pr_climatology']}), "
+            f"Brier {out['bra_brier_without']} -> {out['bra_brier_with']}; pooled AUC-PR {out['pooled_auc_pr_without']} -> {out['pooled_auc_pr_with']}")
+    # Brazil 2021 alarm series
+    d = D[(D["horizon"] == 1) & D["y_any6"].notna()].reset_index(drop=True)
+    y = d["y_any6"].values.astype(float)
+    clim = M.oof_baselines(d, "y_any6", countries, year_col="iyear")["climatology"]
+    win = pd.period_range("2020-11", "2021-05", freq="M")
+    series = {}
+    for tag, f in (("without", base_f), ("with", ons_f)):
+        raw = M.oof_classifier(d, f, "y_any6", year_col="iyear")
+        p = M.crossfit_stack(raw, clim, y, d["iyear"].values)
+        g = pd.Series(p, index=d["issue"])[(d["iso3"] == "BRA").values]
+        series[tag] = [_r(g.get(m), 3) for m in win]
+    mean_w = np.nanmean([v for v in series["with"] if v is not None])
+    mean_n = np.nanmean([v for v in series["without"] if v is not None])
+    A = lambda k: np.array([r[k] if r[k] is not None else np.nan for r in rows], dtype=float)
+    aw, an = A("bra_auc_pr_with"), A("bra_auc_pr_without")
+    crit = {
+        "bra_auc_pr_mean_higher": bool(np.nanmean(aw) > np.nanmean(an)),
+        "bra_auc_pr_higher_at_4of6": bool(int(np.nansum(aw > an)) >= 4),
+        "bra_brier_not_worse": bool(A("bra_brier_with").mean() <= A("bra_brier_without").mean()),
+        "bra_2021_series_higher": bool(mean_w > mean_n),
+        "pooled_auc_pr_not_degraded": bool(np.nanmean(A("pooled_auc_pr_with")) >= np.nanmean(A("pooled_auc_pr_without")) - 0.005),
+        "pooled_brier_not_degraded": bool(A("pooled_brier_with").mean() <= A("pooled_brier_without").mean() + 0.0005),
+    }
+    keep = all(crit.values())
+    log(f"  ONS 2021 series without {series['without']} with {series['with']}; criteria {crit} -> keep={keep}")
+    block = {"idea_credit": "Brazil ONS reservoir features suggested by the Future Detector back-test (PR #1, branch fd/backtest-v2, docs/BACKTEST-FD.md), which used no publication lag and a different label; re-tested here under our protocol.",
+             "data": "ONS open data, daily EAR (stored energy, MWmonth and max per subsystem) and ENA (natural inflow energy, % of long-term mean) per subsystem, 2000-2026; aggregated to the national grid (SIN) by summing subsystems.",
+             "features": {"ons_ear_pct": "SIN stored energy % of max (sum stored / sum max), monthly mean, at t-1",
+                          "ons_ear_change_3m": "EAR(t-1) - EAR(t-4), percentage points",
+                          "ons_ena_3m_pct_mlt": "SIN natural inflow energy % of long-term mean, mean of t-3..t-1"},
+             "lag": "1 month (data is ~1 day behind; conservative)",
+             "decision_rule": brazil_ons_test.__doc__.split("Pre-specified rule (written before running): ")[1].replace("\n    ", " "),
+             "by_horizon": rows,
+             "brazil_2021_alarm_series": {"issue_months": [str(m) for m in win], "without": series["without"], "with": series["with"],
+                                          "mean_without": _r(mean_n, 3), "mean_with": _r(mean_w, 3)},
+             "criteria": crit, "kept_in_primary_model": keep,
+             "caveat": "Brazil has few labelled shortfall months (its normal is set by already-dry 2018-2020), so Brazil-only AUC-PR rests on a handful of events and its CIs are wide."}
+    return block, keep
+
+
 # ------------------------------------------------------------------------------------------- final models + live
 def fit_final(D: pd.DataFrame, oof: dict):
     feats = G.FEATURES
@@ -439,6 +523,15 @@ def main():
         sanity.append({"iso3": iso, "period": f"{a}..{b}", "months": vals, "n_shortfall": n_hit, "n_months": len(ms)})
         log(f"sanity {iso} {a}..{b}: " + " ".join(f"{v['month']}:{v['cf_anom_pct']}" for v in vals))
 
+    log("Brazil ONS test...")
+    ons_block, ons_keep = brazil_ons_test(D, countries, log)
+    if ons_keep:
+        G.FEATURE_GROUPS["ons_brazil"] = list(O.ONS_FEATURES)
+        G.FEATURES.extend(O.ONS_FEATURES)
+    notes.append("Brazil ONS reservoir test (generation_backtest.json -> brazil_ons_test): idea credited to the Future Detector "
+                 "back-test (branch fd/backtest-v2). Re-tested with a 1-month publication lag and our label under a rule fixed "
+                 "before running; " + ("it passed and the ONS features are in the primary model (NaN for other grids)." if ons_keep
+                 else "it did not pass, so the primary model does not use ONS data."))
     log("backtest (LOYO)...")
     bt = run_backtest(D, countries, log)
     log("ablations...")
@@ -533,8 +626,13 @@ def main():
               "precip_month": str(ISSUE - 1),
               "oni": _r(base_row["oni"], 2), "oni_season": "ASO " + str((ISSUE - 1).year),
               "persist_anom_pct": _r(base_row["persist_anom_pct"]), "persist_month": base_row["persist_month"]}
+        if iso == "BRA":
+            r1 = D1[(D1["iso3"] == "BRA") & (D1["issue"] == ISSUE)].iloc[0]
+            dn.update({"ons_ear_pct": _r(r1["ons_ear_pct"]), "ons_ear_change_3m": _r(r1["ons_ear_change_3m"]),
+                       "ons_ena_3m_pct_mlt": _r(r1["ons_ena_3m_pct_mlt"]), "ons_month": str(ISSUE - 1),
+                       "ons_used_in_model": ons_keep})
         pts = points_for(iso)
-        page = {"generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly"] + (["ember_china"] if iso == "CHN-SC" else [])
+        page = {"generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly"] + (["ember_china"] if iso == "CHN-SC" else []) + (["ons"] if iso == "BRA" else [])
                 + ["gravis", "gpcp", "power", "oni", "gppd"],
                 "iso3": iso, "name": names.get(iso, iso), "tier": 1,
                 "label_basis": info[iso]["basis"], "monthly_from": info[iso]["first"], "monthly_to": last,
@@ -628,7 +726,7 @@ def main():
     bh = bt["by_horizon"]
     labelled = D[(D["horizon"] == 1) & D["y_short"].notna()]
     _write("generation_backtest.json", {
-        "generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly", "ember_china", "gravis", "gpcp", "power", "oni", "gppd"],
+        "generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly", "ember_china", "gravis", "gpcp", "power", "oni", "gppd", "ons"],
         "design": ("Blocked leave-one-year-out CV with a 12-month gap on each side (test year Y; train on target months outside "
                    "[Y-1, Y+1]); pooled LightGBM across tier-1 grids (23 countries + Sichuan); one classifier and three "
                    "quantile regressors per horizon; isotonic calibration cross-fitted on out-of-fold predictions; features "
@@ -659,6 +757,7 @@ def main():
                   "hit_rate_any6": _r(chosen[3], 3), "threshold_table": thr_table, **alarm_stats},
         "crisis_leads": leads,
         "seasonal_target": seasonal,
+        "brazil_ons_test": ons_block,
         "limitations": limitations, "notes": notes,
         "runtime_s": round(time.time() - t0, 1),
     })
