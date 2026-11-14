@@ -3,12 +3,13 @@ import { useData } from '../data/load';
 import { RISK_ORDER } from '../lib/risk';
 import '../components/pitch/pitch.css';
 import { Sources } from '../components/pitch/sources';
+import { DataSources, type MetaSource } from '../components/pitch/DataSources';
 import {
   Audience, CalledIt, Cost, Hero, Next, Proof,
-  type Crisis, type EnsembleScore, type EnsoCpc, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
+  type Crisis, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
 } from '../components/pitch/sections';
 
-/** Landing page as a pitch: hero, track record, cost, 2027 forecast, proof, audience. */
+/** Landing page as a pitch: hero, track record (hits first), cost, the data, 2027 forecast, proof with the full record, audience. */
 export default function Pitch() {
   const score = useData<any>('scoreboard.json');
   const crises = useData<any>('crises.json');
@@ -16,6 +17,7 @@ export default function Pitch() {
   const enso = useData<any>('enso.json');
   const watch = useData<any>('watchlist.json');
   const ledger = useData<any>('ledger.json');
+  const meta = useData<any>('meta.json');
 
   const rows: ScoreRow[] | null = score.data?.rows ?? null;
   const karibaRow = rows?.find((r) => r.id === 'kariba-2024') ?? null;
@@ -45,15 +47,26 @@ export default function Pitch() {
     return [...c].sort((a, b) => k(b) - k(a));
   }, [watch.data]);
 
+  // El Nino losers that hold in both the full record and the 1981-2019 check (enso.json summary).
+  const exposure: Exposure | null = useMemo(() => {
+    const s = enso.data?.summary;
+    if (!s || typeof s.n_robust_el_nino_losers !== 'number') return null;
+    const zmb = (enso.data?.countries as any[] | undefined)?.find((x) => x.iso3 === 'ZMB')?.variables?.basin_precip?.el_nino_effect_pct;
+    return { n: s.n_robust_el_nino_losers, gw: s.gw_robust_el_nino_losers, zmbEffect: typeof zmb === 'number' ? zmb : null };
+  }, [enso.data]);
+
+  const sources: MetaSource[] | null = meta.data?.sources ?? null;
+
   const cpc: EnsoCpc | null = enso.data?.outlook?.cpc ?? null;
 
   return (
     <div className="pt">
       <Hero kariba={karibaRow} />
-      <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} summary={score.data?.summary} loading={score.loading} />
+      <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} />
       <Cost />
-      <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} loading={kariba.loading || enso.loading || watch.loading} />
-      <Proof skill={skill} ens={ens} ledger={led} />
+      <DataSources sources={sources} missions={meta.data?.nasa_data_summary ?? null} nCountries={enso.data?.summary?.n_countries ?? null} loading={meta.loading} />
+      <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} exposure={exposure} loading={kariba.loading || enso.loading || watch.loading} />
+      <Proof skill={skill} ens={ens} ledger={led} rows={rows} />
       <Audience />
       <Sources />
     </div>

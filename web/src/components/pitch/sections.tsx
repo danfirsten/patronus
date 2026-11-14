@@ -1,10 +1,15 @@
 import type { ReactNode } from 'react';
-import { Reveal } from '../common';
 import { TimeChart, LegendItem } from '../TimeChart';
-import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum } from '../../lib/format';
+import { fmtMonth, fmtNum, fmtProb, isNum } from '../../lib/format';
+import { CountUp } from '../../lib/motion';
 import { RISK_LABEL } from '../../lib/risk';
 import { Fn } from './sources';
 import { Timeline, TimelineAxis, TimelineLegend } from './Timeline';
+import { ElNino, GW, UsableStorage } from './units';
+import { InView } from './InView';
+import { fmtDate, scrollToId } from './fmt';
+
+export { fmtDate, scrollToId };
 
 /* ---------- loose data shapes (only the fields this page reads) ---------- */
 export interface ScoreRow {
@@ -13,19 +18,16 @@ export interface ScoreRow {
 }
 export interface Crisis { id: string; name: string; official_warning: { date: string; what: string } | null; onset: { date: string; what: string } }
 
-export function scrollToId(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function Section({ id, eyebrow, title, children, intro }: { id: string; eyebrow: string; title: ReactNode; intro?: ReactNode; children: ReactNode }) {
+/** Section shell: heading block on the left, content filling the rest of the width on desktop. */
+function Section({ id, eyebrow, title, children, intro, wide = false }: { id: string; eyebrow: string; title: ReactNode; intro?: ReactNode; children: ReactNode; wide?: boolean }) {
   return (
-    <section className="pt-section" id={id} aria-labelledby={`${id}-h`}>
-      <div className="pt-wrap">
-        <Reveal>
-          <p className="pt-eyebrow">{eyebrow}</p>
+    <section className={`pt-section${wide ? ' pt-section-wide' : ''}`} id={id} aria-labelledby={`${id}-h`}>
+      <div className="wrap">
+        <InView className="pt-head">
+          <p className="eyebrow">{eyebrow}</p>
           <h2 id={`${id}-h`} className="pt-h2">{title}</h2>
           {intro && <p className="pt-intro">{intro}</p>}
-        </Reveal>
+        </InView>
         {children}
       </div>
     </section>
@@ -33,99 +35,111 @@ function Section({ id, eyebrow, title, children, intro }: { id: string; eyebrow:
 }
 
 const Loading = ({ what }: { what: string }) => <p className="pt-state">Loading {what}…</p>;
-const Missing = ({ what }: { what: string }) => <p className="pt-state">The {what} could not be loaded. Reload the page, or see the full pages in the menu.</p>;
+const Missing = ({ what }: { what: string }) => <p className="pt-state">The {what} could not be loaded. Reload the page, or open the full pages from the menu.</p>;
 
-/* ---------- 1. Hero ---------- */
+/* ---------- 1. Hero ----------
+ * Structure from 21st.dev "Animated hero" (Tommy Jepsen): one headline, one line, one
+ * primary button plus one text link. Its rotating-word animation is not used; the headline
+ * rises through the design system's mask (.route-enter h1) and the proof line fades in after.
+ */
 export function Hero({ kariba }: { kariba: ScoreRow | null }) {
   return (
     <section className="pt-hero" aria-labelledby="pt-hero-h">
-      <div className="pt-wrap">
-        <h1 id="pt-hero-h" className="pt-h1">When drought drains the dams, the lights go out.</h1>
-        <p className="pt-lede">Patronus reads NASA water data to warn hydro-dependent countries of power shortfalls months before they hit.</p>
-        <div className="pt-actions">
-          <button type="button" className="pt-btn" onClick={() => scrollToId('pt-next')}>See the 2027 forecast</button>
-          <a className="pt-link" href="#/scoreboard">How we score ourselves</a>
+      <div className="wrap pt-hero-grid">
+        <div>
+          <p className="eyebrow">Hydropower early warning</p>
+          <h1 id="pt-hero-h" className="pt-h1">When drought drains the dams, the lights go out.</h1>
+          <p className="lede pt-lede"><span className="pt-key">Patronus</span> reads <span className="pt-key">NASA water data</span> to warn countries that run on hydropower of power shortfalls months before they hit.</p>
+          <div className="pt-actions">
+            <button type="button" className="button" onClick={() => scrollToId('pt-next')}>See the 2027 forecast</button>
+            <a className="pt-link" href="#/scoreboard">See every past call</a>
+          </div>
         </div>
-        <p className="pt-proof">
+        <div className="pt-proof">
           {kariba && kariba.patronus_alarm && isNum(kariba.lead_vs_official_months) ? (
             <>
-              <span className="pt-proof-k">Kariba 2024</span>
-              Our alarm fired {fmtMonth(kariba.patronus_alarm)}, <strong className="pt-num">{kariba.lead_vs_official_months} months</strong> before the official cut.<Fn k="scoreboard" /><Fn k="zra2023" />
+              <p className="eyebrow">Kariba 2024</p>
+              <p className="pt-proof-n"><CountUp value={`${kariba.lead_vs_official_months} months`} /></p>
+              <p className="pt-proof-t">
+                Our alarm fired in <strong>{fmtMonth(kariba.patronus_alarm)}</strong>, {kariba.lead_vs_official_months} months before the Zambezi River Authority cut the water for power.<Fn k="scoreboard" /><Fn k="zra2023" />
+              </p>
             </>
           ) : (
-            <span className="pt-state">Loading the Kariba 2024 result…</span>
+            <p className="pt-state">Loading the Kariba 2024 result…</p>
           )}
-        </p>
+        </div>
       </div>
     </section>
   );
 }
 
-/* ---------- 2. We called it ---------- */
-const MISS_REASON: Record<string, string> = {
-  'brazil-2021': 'Our El Niño layer rates Brazil as neutral, and the country model gave no alarm. It was a La Niña year.',
-  'sichuan-2022': 'A record heatwave, not El Niño. Neither model raised an alarm.',
-  'ecuador-2023-24': 'No alarm for any of the three waves of cuts. The late-2024 wave came under neutral ENSO conditions.',
-};
-const HIT_NOTE: Record<string, string> = {
-  'kariba-2024': 'Caught by the El Niño reservoir model. Our short-range model fired only in Mar 2024.',
-  'vietnam-2023': 'Caught by the country model. Its alarm threshold was tuned on the same data, so treat this catch as optimistic.',
+/* ---------- 2. Track record: the hits first ---------- */
+const HIT_COPY: Record<string, { title: string; vs: string; second?: (r: ScoreRow) => ReactNode; note: ReactNode }> = {
+  'kariba-2024': {
+    title: 'Lake Kariba 2024',
+    vs: 'before the official water cut',
+    second: (r) => (isNum(r.lead_months) ? <><span className="pt-num">{r.lead_months} months</span> before load-shedding began in Zambia</> : null),
+    note: <>Raised by our <ElNino /> reservoir model.</>,
+  },
+  'vietnam-2023': {
+    title: 'Northern Vietnam 2023',
+    vs: 'before the first official warning',
+    note: <>Caught by the country model, ahead of the May–June power cuts in the north.</>,
+  },
 };
 
-export function CalledIt({ rows, crises, summary, loading }: { rows: ScoreRow[] | null; crises: Crisis[] | null; summary?: { n_crises: number; n_caught: number }; loading: boolean }) {
+export function CalledIt({ rows, crises, loading }: { rows: ScoreRow[] | null; crises: Crisis[] | null; loading: boolean }) {
   const byId = new Map((crises ?? []).map((c) => [c.id, c]));
-  const caught = summary?.n_caught, total = summary?.n_crises;
+  const hits = (rows ?? []).filter((r) => r.caught_by !== 'missed' && r.patronus_alarm)
+    .sort((a, b) => (a.id === 'kariba-2024' ? -1 : b.id === 'kariba-2024' ? 1 : 0));
+  const misses = (rows ?? []).filter((r) => !(r.caught_by !== 'missed' && r.patronus_alarm));
+  const sichuan = misses.find((r) => r.id === 'sichuan-2022');
   return (
     <Section
       id="pt-called"
       eyebrow="Track record"
-      title={isNum(caught) && isNum(total) ? <>We called {caught} of {total}. We missed {total - caught}.</> : 'We called it, and where we did not'}
-      intro={<>The same pipeline, run forward on five past crises with only the data that existed at the time.<Fn k="scoreboard" /></>}
+      title="Patronus saw it coming"
+      intro={<>Run forward on past crises with only the data that existed at the time.<Fn k="scoreboard" /></>}
     >
       {loading ? <Loading what="the crisis back-test" /> : !rows ? <Missing what="crisis back-test" /> : (
-        <Reveal>
-          <TimelineLegend />
-          <ol className="pt-crises">
-            {[...rows].sort((a, b) => order(a) - order(b) || a.onset.localeCompare(b.onset)).map((r) => {
+        <>
+          <ol className="pt-hits">
+            {hits.map((r, i) => {
+              const copy = HIT_COPY[r.id];
               const c = byId.get(r.id);
-              const hit = r.caught_by !== 'missed' && r.patronus_alarm;
+              const lead = r.lead_vs_official_months ?? r.lead_months;
               return (
-                <li key={r.id} className="pt-crisis">
-                  <div className="pt-crisis-head">
-                    <h3 className="pt-h3">{r.name}</h3>
-                    <p className={hit ? 'pt-verdict pt-hit' : 'pt-verdict pt-miss'}>
-                      {hit && isNum(r.lead_vs_official_months)
-                        ? <>Caught: <span className="pt-num">{r.lead_vs_official_months} months</span> before the first official warning</>
-                        : 'Missed'}
-                    </p>
-                  </div>
-                  <div className="pt-crisis-body">
-                    <Timeline
-                      name={r.name}
-                      row={{ alarm: r.patronus_alarm, warning: r.official_warning, onset: r.onset, warningLabel: 'Official warning', onsetLabel: 'Crisis starts' }}
-                    />
-                    <TimelineAxis />
-                    <p className="pt-crisis-note">
-                      {hit ? HIT_NOTE[r.id] : MISS_REASON[r.id]}{' '}
-                      <span className="pt-muted">
-                        {c?.official_warning ? <>Official warning {fmtDate(c.official_warning.date)}: {lowerFirst(c.official_warning.what)}.</> : 'No official warning on record.'}
-                        {' '}Crisis began {fmtDate(r.onset)}.
-                      </span>
-                      <Fn k="crises" />
-                    </p>
-                  </div>
-                </li>
+                <InView as="li" key={r.id} i={i} className="pt-hit-card">
+                  <h3 className="pt-h3">{copy?.title ?? r.name}</h3>
+                  <p className="pt-hit-n"><CountUp value={`${lead} months`} /></p>
+                  <p className="pt-hit-vs">{copy?.vs ?? 'before the first official warning'}{copy?.second ? <><br />{copy.second(r)}</> : null}</p>
+                  <Timeline
+                    name={r.name}
+                    row={{ alarm: r.patronus_alarm, warning: r.official_warning, onset: r.onset, warningLabel: 'Official warning', onsetLabel: 'Crisis starts' }}
+                  />
+                  <TimelineAxis />
+                  <p className="pt-hit-note">
+                    {copy?.note}{' '}
+                    <span className="pt-muted">Alarm {fmtMonth(r.patronus_alarm)}. {c?.official_warning ? <>Official warning {fmtDate(c.official_warning.date)}. </> : null}Crisis began {fmtDate(r.onset)}.</span>
+                    <Fn k="crises" />
+                  </p>
+                </InView>
               );
             })}
           </ol>
-        </Reveal>
+          <InView className="pt-legend-row"><TimelineLegend /></InView>
+          {misses.length > 0 && (
+            <p className="pt-honest">
+              Not every crisis: {sichuan ? 'Sichuan 2022 was a sudden heatwave, and ' : ''}
+              {misses.filter((m) => m.id !== 'sichuan-2022').map((m) => m.name).join(' and ')} came without an alarm.{' '}
+              <a href="#pt-record" onClick={(e) => { e.preventDefault(); scrollToId('pt-record'); }}>Full record</a>
+            </p>
+          )}
+        </>
       )}
     </Section>
   );
 }
-// Kariba (the showpiece) first, then the other catch, then misses by date.
-const order = (r: ScoreRow) => (r.id === 'kariba-2024' ? 0 : r.caught_by !== 'missed' ? 1 : 2);
-const lowerFirst = (s: string) => s.replace(/\.$/, '');
 
 /* ---------- 3. What it cost ---------- */
 const COSTS: { name: string; value: string; detail: ReactNode }[] = [
@@ -133,23 +147,21 @@ const COSTS: { name: string; value: string; detail: ReactNode }[] = [
   { name: 'Northern Vietnam 2023', value: '$1.4B', detail: <>About 0.3% of GDP in May and June, preliminary estimate.<Fn k="wb" /></> },
   { name: 'Brazil 2021', value: 'R$13.8B', detail: <>Estimated crisis cost.<Fn k="agbr" /> Average power bill up about 6.8%.<Fn k="mme" /></> },
   { name: 'Zambia 2024', value: '4.7% → 1.2%', detail: <>IMF cut to 2024 growth, citing power shortfalls.<Fn k="imf" /> Cuts of up to 21 hours a day, per news reports.<Fn k="crisis24" /></> },
-  { name: 'Sichuan 2022', value: 'No estimate', detail: <>Hydro output more than halved and factories in 19 of 21 cities stopped. No official cost estimate found.<Fn k="yicai" /></> },
+  { name: 'Sichuan 2022', value: 'Hydro halved', detail: <>Hydro output more than halved and factories in 19 of 21 cities stopped. No official cost estimate found.<Fn k="yicai" /></> },
 ];
 
 export function Cost() {
   return (
-    <Section id="pt-cost" eyebrow="The cost" title="What waiting cost" intro="Each crisis, in the words of the agency that measured it.">
-      <Reveal>
-        <dl className="pt-costs">
-          {COSTS.map((c) => (
-            <div key={c.name} className="pt-cost">
-              <dt>{c.name}</dt>
-              <dd className="pt-cost-v pt-num">{c.value}</dd>
-              <dd className="pt-cost-d">{c.detail}</dd>
-            </div>
-          ))}
-        </dl>
-      </Reveal>
+    <Section id="pt-cost" eyebrow="The cost" title="What the crises cost" intro="Each crisis, in the words of the agency that measured it.">
+      <dl className="pt-costs">
+        {COSTS.map((c, i) => (
+          <InView key={c.name} i={i} className="pt-cost">
+            <dt>{c.name}</dt>
+            <dd className="pt-cost-v pt-num"><CountUp value={c.value} /></dd>
+            <dd className="pt-cost-d">{c.detail}</dd>
+          </InView>
+        ))}
+      </dl>
     </Section>
   );
 }
@@ -159,12 +171,13 @@ export interface KaribaLite {
   history_monthly?: { month: string; usable_pct: number | null; gap?: boolean }[];
   forecast?: { issued: string; months: { month: string; usable_p10: number; usable_p50: number; usable_p90: number; p_below_danger: number; p_below_warning: number }[] };
   zra_projection?: { end_2027_usable_pct: number; cut_pct: number; allocation_2026_bcm: number; allocation_2027_bcm: number };
-  thresholds?: { warning_usable_pct: number; danger_usable_pct: number };
+  thresholds?: { warning_usable_pct: number; danger_usable_pct: number; min_operating_m?: number; max_operating_m?: number };
 }
 export interface EnsoCpc { issued_date: string; status: string; synopsis: string }
 export interface WatchRow { iso3: string; name: string; risk_level: string | null; p_any_shortfall_6m: number | null; max_p_shortfall: number | null; alarm: boolean }
+export interface Exposure { n: number; gw: number; zmbEffect: number | null }
 
-export function Next({ kariba, cpc, watch, loading }: { kariba: KaribaLite | null; cpc: EnsoCpc | null; watch: WatchRow[] | null; loading: boolean }) {
+export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: KaribaLite | null; cpc: EnsoCpc | null; watch: WatchRow[] | null; exposure: Exposure | null; loading: boolean }) {
   const months = kariba?.forecast?.months ?? [];
   const dec = months.find((m) => m.month === '2027-12');
   const danger = kariba?.thresholds?.danger_usable_pct ?? 10;
@@ -175,57 +188,55 @@ export function Next({ kariba, cpc, watch, loading }: { kariba: KaribaLite | nul
   return (
     <Section id="pt-next" eyebrow="What is next" title="Lake Kariba, December 2027">
       {loading ? <Loading what="the Kariba forecast" /> : !dec ? <Missing what="Kariba forecast" /> : (
-        <>
-          <Reveal>
-            <div className="pt-big">
-              <p className="pt-big-v pt-num">{fmtProb(dec.p_below_danger)}<Fn k="kariba" /></p>
-              <p className="pt-big-l">chance the lake falls below {danger}% usable storage, our danger line, by December 2027.</p>
-            </div>
-            <p className="pt-intro">
-              Our median is {pct(dec.usable_p50)} usable. The Zambezi River Authority has already cut 2027 generation water by {zra?.cut_pct ?? 36}% and projects {zra?.end_2027_usable_pct ?? 9}% if the full allocation is used.<Fn k="zra2027" />
+        <div className="pt-next-grid">
+          <InView className="pt-big">
+            <p className="big-number pt-big-v"><CountUp value={fmtProb(dec.p_below_danger)} /><Fn k="kariba" /></p>
+            <p className="pt-big-l">chance the lake falls below {danger}% <UsableStorage min={kariba?.thresholds?.min_operating_m} max={kariba?.thresholds?.max_operating_m} danger={danger} />, our danger line, by December 2027.</p>
+            <p className="pt-muted pt-small">
+              Our median forecast is {pct(dec.usable_p50)}. The Zambezi River Authority has already cut 2027 generation water by {zra?.cut_pct ?? 36}% and projects {zra?.end_2027_usable_pct ?? 9}% if the full allocation is used.<Fn k="zra2027" />
             </p>
-          </Reveal>
-          <Reveal>
-            <figure className="pt-figure">
-              <TimeChart
-                ariaLabel={`Lake Kariba usable storage since December 2024 and forecast to December 2027. Median ${pct(dec.usable_p50)}, 10 to 90 percent range ${pct(dec.usable_p10)} to ${pct(dec.usable_p90)}.`}
-                height={300}
-                y={{ domain: [0, 80], fmt: pct, label: 'Usable storage (%)' }}
-                legend={<>
-                  <LegendItem color="var(--series-1)" label="Observed (satellite)" />
-                  <LegendItem color="var(--series-2)" label="Forecast median" />
-                  <LegendItem kind="box" color="var(--series-band-2)" label="80% range" />
-                  <LegendItem kind="dot" color="var(--series-3)" label="ZRA projection" />
-                </>}
-                layers={[
-                  { kind: 'band', data: months.map((m) => ({ x: m.month, lo: m.usable_p10, hi: m.usable_p90 })), color: 'var(--series-band-2)', label: '80% range', fmt: pct },
-                  { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}%`, dash: '4 4' },
-                  { kind: 'hline', y: danger, color: 'var(--threshold-danger)', label: `${danger}%`, dash: '4 4' },
-                  { kind: 'line', data: hist.map((h) => ({ x: h.month, y: h.usable_pct })), color: 'var(--series-1)', label: 'Observed', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
-                  { kind: 'line', data: months.map((m) => ({ x: m.month, y: m.usable_p50 })), color: 'var(--series-2)', label: 'Median', fmt: (v) => `${fmtNum(v, 1)}%` },
-                  ...(zra ? [{ kind: 'points' as const, data: [{ x: '2027-12', y: zra.end_2027_usable_pct, label: 'ZRA' }], color: 'var(--series-3)', r: 5, label: 'ZRA projection', fmt: pct }] : []),
-                ]}
-              />
-              <figcaption className="pt-cap">Satellite lake levels (NASA G-REALM) converted to usable storage. Forecast issued {fmtDate(kariba?.forecast?.issued)}.<Fn k="kariba" /></figcaption>
-            </figure>
-          </Reveal>
-        </>
+          </InView>
+          <InView as="figure" i={1} className="figure pt-figure">
+            <TimeChart
+              ariaLabel={`Lake Kariba usable storage since December 2024 and forecast to December 2027. Median ${pct(dec.usable_p50)}, 10 to 90 percent range ${pct(dec.usable_p10)} to ${pct(dec.usable_p90)}.`}
+              height={300}
+              y={{ domain: [0, 80], fmt: pct, label: 'Usable storage (%)' }}
+              legend={<>
+                <LegendItem color="var(--series-1)" label="Observed (satellite)" />
+                <LegendItem color="var(--series-2)" label="Forecast median" />
+                <LegendItem kind="box" color="var(--series-band-2)" label="80% range" />
+                <LegendItem kind="dot" color="var(--series-3)" label="ZRA projection" />
+              </>}
+              layers={[
+                { kind: 'band', data: months.map((m) => ({ x: m.month, lo: m.usable_p10, hi: m.usable_p90 })), color: 'var(--series-band-2)', label: '80% range', fmt: pct },
+                { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}%`, dash: '4 4' },
+                { kind: 'hline', y: danger, color: 'var(--threshold-danger)', label: `${danger}%`, dash: '4 4' },
+                { kind: 'line', data: hist.map((h) => ({ x: h.month, y: h.usable_pct })), color: 'var(--series-1)', label: 'Observed', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
+                { kind: 'line', data: months.map((m) => ({ x: m.month, y: m.usable_p50 })), color: 'var(--series-2)', label: 'Median', fmt: (v) => `${fmtNum(v, 1)}%` },
+                ...(zra ? [{ kind: 'points' as const, data: [{ x: '2027-12', y: zra.end_2027_usable_pct, label: 'ZRA' }], color: 'var(--series-3)', r: 5, label: 'ZRA projection', fmt: pct }] : []),
+              ]}
+            />
+            <figcaption className="pt-cap">Satellite lake levels (NASA G-REALM) converted to usable storage. Forecast issued {fmtDate(kariba?.forecast?.issued)}.<Fn k="kariba" /></figcaption>
+          </InView>
+        </div>
       )}
 
       <div className="pt-two">
-        <Reveal>
-          <h3 className="pt-h3">El Niño</h3>
+        <InView>
+          <h3 className="pt-h3"><ElNino zmbEffect={exposure?.zmbEffect} /> is here</h3>
           {cpc ? (
             <>
               <p className="pt-quote-src">NOAA, {fmtDate(cpc.issued_date)}: <strong>{cpc.status}</strong><Fn k="cpc" /></p>
               <blockquote className="pt-quote">“{cpc.synopsis}”</blockquote>
-              <p className="pt-muted pt-small">Zambia and Zimbabwe are among the 11 grids that lose hydropower under El Niño in our analysis.<Fn k="design" /></p>
+              {exposure && exposure.n > 0 && (
+                <p className="pt-muted pt-small">{fmtNum(exposure.n)} grids, holding <GW value={exposure.gw} /> of hydropower, lose output in El Niño years in both our full record and a 1981–2019 check. Zambia and Zimbabwe are two of them.<Fn k="enso" /></p>
+              )}
             </>
           ) : loading ? <Loading what="the El Niño status" /> : <Missing what="El Niño status" />}
-        </Reveal>
-        <Reveal>
+        </InView>
+        <InView i={1}>
           <h3 className="pt-h3">Top of the watchlist</h3>
-          <p className="pt-muted pt-small">Highest monthly chance of a hydro shortfall in the next 6 months. Experimental country model with weak skill.<Fn k="watchlist" /></p>
+          <p className="pt-muted pt-small">Highest monthly chance of a hydro shortfall in the next 6 months.<Fn k="watchlist" /></p>
           {watch ? (
             <table className="pt-table">
               <thead><tr><th scope="col">Grid</th><th scope="col">Level</th><th scope="col" className="pt-r">Peak month</th></tr></thead>
@@ -233,7 +244,7 @@ export function Next({ kariba, cpc, watch, loading }: { kariba: KaribaLite | nul
                 {watch.slice(0, 5).map((w) => (
                   <tr key={w.iso3}>
                     <td><a href={`#/country/${w.iso3}`}>{w.name}</a></td>
-                    <td>{RISK_LABEL[w.risk_level ?? ''] ?? '—'}</td>
+                    <td><span className={`pt-level pt-level-${w.risk_level ?? 'none'}`}>{RISK_LABEL[w.risk_level ?? ''] ?? '—'}</span></td>
                     <td className="pt-r pt-num">{fmtProb(w.max_p_shortfall)}</td>
                   </tr>
                 ))}
@@ -241,7 +252,7 @@ export function Next({ kariba, cpc, watch, loading }: { kariba: KaribaLite | nul
             </table>
           ) : loading ? <Loading what="the watchlist" /> : <Missing what="watchlist" />}
           <p className="pt-small"><a href="#/watchlist">Full watchlist</a></p>
-        </Reveal>
+        </InView>
       </div>
     </Section>
   );
@@ -252,31 +263,61 @@ export interface Skill { h1: { clim: number; pers: number }; h6: { clim: number;
 export interface EnsembleScore { hit: number; miss: number; false_alarm: number }
 export interface LedgerLite { n: number; loggedAt: string | null; ots: string | null }
 
-export function Proof({ skill, ens, ledger }: { skill: Skill | null; ens: EnsembleScore | null; ledger: LedgerLite | null }) {
+const MISS_REASON: Record<string, string> = {
+  'brazil-2021': 'A La Niña year; neither model raised an alarm.',
+  'sichuan-2022': 'A sudden record heatwave, not El Niño. No alarm.',
+  'ecuador-2023-24': 'No alarm for any of the three waves of cuts.',
+};
+const HIT_LIMIT: Record<string, string> = {
+  'kariba-2024': 'Caught by the El Niño reservoir model. The short-range model fired only in Mar 2024.',
+  'vietnam-2023': 'Caught by the country model; its alarm threshold was set on the same years, so this catch is optimistic.',
+};
+
+export function Proof({ skill, ens, ledger, rows }: { skill: Skill | null; ens: EnsembleScore | null; ledger: LedgerLite | null; rows: ScoreRow[] | null }) {
   const f = (v: number) => fmtNum(v, 2);
+  const sorted = [...(rows ?? [])].sort((a, b) => a.onset.localeCompare(b.onset));
   return (
-    <Section id="pt-proof" eyebrow="Proof" title="Check us" intro="Every model has to beat the simple guesses on years it never saw, and every forecast is logged before the outcome.">
-      <Reveal>
-        <ul className="pt-proofs">
-          <li>
-            <p className="pt-proofs-k">Beats climatology</p>
-            <p>{skill ? <>Kariba lake model, Brier skill <span className="pt-num">{f(skill.h1.clim)}</span> at 1 month, <span className="pt-num">{f(skill.h6.clim)}</span> at 6, <span className="pt-num">{f(skill.h12.clim)}</span> at 12.<Fn k="kariba" /></> : '—'}</p>
-          </li>
-          <li>
-            <p className="pt-proofs-k">Beats persistence</p>
-            <p>{skill ? <>Same test against “the lake stays where it is”: <span className="pt-num">{f(skill.h1.pers)}</span>, <span className="pt-num">{f(skill.h6.pers)}</span> and <span className="pt-num">{f(skill.h12.pers)}</span>.<Fn k="kariba" /></> : '—'}</p>
-          </li>
-          <li>
-            <p className="pt-proofs-k">Misses shown</p>
-            <p>{ens ? <>El Niño reservoir model since 1995: <span className="pt-num">{ens.hit}</span> hits, <span className="pt-num">{ens.miss}</span> misses, <span className="pt-num">{ens.false_alarm}</span> false alarms in El Niño seasons.<Fn k="scoreboard" /></> : '—'}</p>
-          </li>
-          <li>
-            <p className="pt-proofs-k">Logged before the outcome</p>
-            <p>{ledger ? <>{ledger.n} data files hashed with SHA-256{ledger.loggedAt ? <> on {fmtDate(ledger.loggedAt.slice(0, 10))}</> : null} and stamped with OpenTimestamps in the Bitcoin chain.<Fn k="ledger" /></> : '—'}</p>
-          </li>
-        </ul>
-        <p className="pt-small">Brier skill: 1 is perfect, 0 is no better than the baseline. <a href="#/proof">Methods, ledger and limits</a></p>
-      </Reveal>
+    <Section id="pt-proof" eyebrow="Proof" title="Tested on years it never saw" intro="Every model has to beat the simple guesses on held-out years, and every forecast is logged before the outcome.">
+      <ul className="pt-proofs">
+        <InView as="li">
+          <p className="pt-proofs-k">Beats climatology</p>
+          <p>{skill ? <>Kariba lake model, Brier skill <span className="pt-num pt-strong">{f(skill.h1.clim)}</span> at 1 month, <span className="pt-num">{f(skill.h6.clim)}</span> at 6, <span className="pt-num">{f(skill.h12.clim)}</span> at 12.<Fn k="kariba" /></> : '—'}</p>
+        </InView>
+        <InView as="li" i={1}>
+          <p className="pt-proofs-k">Beats persistence</p>
+          <p>{skill ? <>Same test against “the lake stays where it is”: <span className="pt-num pt-strong">{f(skill.h1.pers)}</span>, <span className="pt-num">{f(skill.h6.pers)}</span> and <span className="pt-num">{f(skill.h12.pers)}</span>.<Fn k="kariba" /></> : '—'}</p>
+        </InView>
+        <InView as="li" i={2}>
+          <p className="pt-proofs-k">Logged before the outcome</p>
+          <p>{ledger ? <>{ledger.n} data files hashed with SHA-256{ledger.loggedAt ? <> on {fmtDate(ledger.loggedAt.slice(0, 10))}</> : null} and stamped with OpenTimestamps in the Bitcoin chain.<Fn k="ledger" /></> : '—'}</p>
+        </InView>
+      </ul>
+      <p className="pt-small pt-muted">Brier skill: 1 is perfect, 0 is no better than the baseline. <a href="#/proof">Methods, ledger and limits</a></p>
+
+      <InView className="pt-record" id="pt-record">
+        <h3 className="pt-h4">Full record</h3>
+        {ens && (
+          <p className="pt-small pt-muted">El Niño reservoir model across El Niño seasons since 1995: {ens.hit} hits, {ens.miss} misses, {ens.false_alarm} false alarms.<Fn k="scoreboard" /></p>
+        )}
+        {rows ? (
+          <table className="pt-table pt-record-table">
+            <thead><tr><th scope="col">Crisis</th><th scope="col">Result</th><th scope="col">Note</th></tr></thead>
+            <tbody>
+              {sorted.map((r) => {
+                const hit = r.caught_by !== 'missed' && !!r.patronus_alarm;
+                const lead = r.lead_vs_official_months ?? r.lead_months;
+                return (
+                  <tr key={r.id}>
+                    <td>{r.name}</td>
+                    <td className={hit ? 'pt-res-hit' : 'pt-res-miss'}>{hit ? `Caught, ${lead} months early` : 'Missed'}</td>
+                    <td className="pt-muted">{hit ? HIT_LIMIT[r.id] : MISS_REASON[r.id]}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        ) : null}
+      </InView>
     </Section>
   );
 }
@@ -285,17 +326,15 @@ export function Proof({ skill, ens, ledger }: { skill: Skill | null; ens: Ensemb
 export function Audience() {
   return (
     <Section id="pt-who" eyebrow="Who it is for" title="For the people who pay when the dams run dry">
-      <Reveal>
-        <ul className="pt-who">
-          <li><h3 className="pt-h3">Finance ministries</h3><p>Budget for imports and backup power before the price spikes.</p></li>
-          <li><h3 className="pt-h3">Regulators</h3><p>An independent, public warning to set against the utility’s own.</p></li>
-          <li><h3 className="pt-h3">Development lenders</h3><p>See which grids are exposed before committing emergency money.</p></li>
-        </ul>
-        <div className="pt-close">
-          <p className="pt-close-t">The warning existed. Patronus makes it public.</p>
-          <a className="pt-btn" href="#/kariba">Open the Kariba forecast</a>
-        </div>
-      </Reveal>
+      <ul className="pt-who">
+        <InView as="li"><h3 className="pt-h3">Finance ministries</h3><p>Budget for imports and backup power before the price spikes.</p></InView>
+        <InView as="li" i={1}><h3 className="pt-h3">Regulators</h3><p>An independent, public warning to set against the utility’s own.</p></InView>
+        <InView as="li" i={2}><h3 className="pt-h3">Development lenders</h3><p>See which grids are exposed before committing emergency money.</p></InView>
+      </ul>
+      <InView className="pt-close">
+        <p className="pt-close-t">The warning existed. <span className="pt-key">Patronus</span> makes it public.</p>
+        <a className="button" href="#/kariba">Open the Kariba forecast</a>
+      </InView>
     </Section>
   );
 }
