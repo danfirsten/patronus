@@ -1,0 +1,348 @@
+<title>Pick Our Project</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column of ink-and-paper chapters; option cards double as ballot buttons; live tally on ink. Single deliberate look, no accent colour. */
+:root {
+  --ink: #0b0b0b;
+  --paper: #f7f7f4;
+  --white: #ffffff;
+  --mute: #5e5e5a;
+  --line: #e4e4df;
+  --well: #e9e9e4;
+  --ink-text: #f2f2ee;
+  --ink-mute: #8f8f8a;
+  --ink-soft: #b4b4af;
+  --ink-line: #262626;
+  --ink-tile: #161616;
+  --ink-tile-line: #242424;
+  --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --max: 1040px;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 8px; }
+p { margin: 0; }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mute); }
+.dark .label { color: var(--ink-mute); }
+.h1 { margin: 0; font-size: clamp(48px, 9vw, 120px); font-weight: 500; letter-spacing: -0.06em; line-height: 0.9; }
+.h2 { margin: 0; font-size: clamp(32px, 4.4vw, 56px); font-weight: 500; letter-spacing: -0.045em; line-height: 1; text-wrap: balance; }
+.lede { margin: 0; max-width: 46ch; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; letter-spacing: -0.012em; }
+.muted { color: var(--mute); }
+.dark .muted { color: var(--ink-soft); }
+.section {
+  padding-block: clamp(56px, 8vw, 112px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 700px) {
+  .section { padding-left: max(clamp(16px, 4.45vw, 64px), env(safe-area-inset-left, 0px)); padding-right: max(clamp(16px, 4.45vw, 64px), env(safe-area-inset-right, 0px)); }
+}
+.wrap { max-width: var(--max); margin: 0 auto; display: grid; gap: clamp(28px, 4vw, 48px); }
+.dark { background: var(--ink); color: var(--ink-text); }
+.section-head { display: flex; justify-content: space-between; gap: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.dark .section-head { border-color: var(--ink-line); }
+.hero { padding-top: clamp(40px, 6vw, 72px); }
+
+/* options */
+.opts { display: grid; gap: 14px; }
+.opt {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px 32px;
+  width: 100%;
+  text-align: left;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: clamp(20px, 2.6vw, 28px);
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 250ms var(--ease-out), background 250ms var(--ease-out), color 250ms var(--ease-out), transform 150ms var(--ease-out);
+}
+.opt:hover { border-color: var(--ink); }
+.opt:active { transform: scale(0.99); }
+.opt[aria-pressed="true"] { background: var(--ink); color: var(--ink-text); border-color: var(--ink); }
+.opt[aria-pressed="true"] .label, .opt[aria-pressed="true"] .muted { color: var(--ink-soft); }
+.opt[aria-pressed="true"] .pros li::before { color: var(--ink-mute); }
+.opt[disabled] { cursor: default; }
+@media (min-width: 820px) { .opt { grid-template-columns: 1.1fr 1fr; } }
+.opt-head { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.opt-top { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; }
+.letter { font-family: var(--mono); font-size: 13px; }
+.opt-name { font-size: clamp(22px, 2.4vw, 28px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.1; }
+.pill-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 999px; padding: 3px 10px; opacity: 0.8; }
+.opt-head p { font-size: 15px; }
+.pros { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; min-width: 0; }
+.pros li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; }
+.pros li::before { font-family: var(--mono); color: var(--mute); }
+.pros .up::before { content: "+"; }
+.pros .down::before { content: "−"; }
+.voted-mark { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* note + status */
+.note-row { display: grid; gap: 10px; }
+.note-row textarea {
+  width: 100%; min-height: 84px; resize: vertical;
+  font: inherit; font-size: 15px; color: var(--ink);
+  background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
+}
+.note-row textarea:focus { outline: none; border-color: var(--ink); }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn { min-height: 48px; padding: 0 24px; border-radius: 999px; font: inherit; font-size: 15px; cursor: pointer; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); transition: opacity 200ms var(--ease-out), transform 150ms var(--ease-out); }
+.btn:active { transform: scale(0.97); }
+.btn[disabled] { opacity: 0.4; cursor: default; }
+.status { font-size: 14px; color: var(--mute); }
+
+/* tally */
+.tally { display: grid; gap: 16px; }
+.t-row { display: grid; gap: 8px; }
+.t-top { display: flex; justify-content: space-between; gap: 16px; font-size: 16px; }
+.t-top .n { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.t-track { height: 10px; border-radius: 999px; background: var(--ink-tile); border: 1px solid var(--ink-tile-line); overflow: hidden; }
+.t-fill { height: 100%; width: var(--w, 0%); background: var(--ink-text); border-radius: 999px; transition: width 900ms var(--ease-expo); }
+.t-names { font-size: 13px; color: var(--ink-mute); }
+.notes { display: grid; gap: 10px; }
+.note-item { border-top: 1px solid var(--ink-line); padding-top: 12px; display: grid; gap: 4px; font-size: 15px; }
+.note-item .who { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-mute); }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+.foot a { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+@media (prefers-reduced-motion: reduce) { .t-fill, .opt, .btn { transition: none; } }
+</style>
+
+<header class="section hero">
+  <div class="wrap">
+    <div class="section-head label"><span>Team vote · Space Apps 2026</span><span>Nov 14, 2026</span></div>
+    <h1 class="h1">Which one do we build?</h1>
+    <p class="lede muted">Three ideas on the table. Read the five options below, tap one, add a line on why, and submit. You can change your vote until we lock it in.</p>
+  </div>
+</header>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head label"><span>The options</span><span>Tap to choose</span></div>
+    <div class="opts" id="opts">
+      <button class="opt" type="button" id="opt-combo" data-choice="combo" aria-pressed="false">
+        <div class="opt-head">
+          <div class="opt-top"><span class="letter">A</span><span class="opt-name">Patronus on the Future Detector engine</span><span class="pill-tag">Claude's pick</span></div>
+          <p class="muted">Hydropower blackout early warning and cost of waiting. Built on Future Detector's working pipeline, honest testing, look-alike cases and prediction ledger. Adds HarvestShield's idea as "your backup grid is in the same drought."</p>
+        </div>
+        <ul class="pros">
+          <li class="up">Strongest story: Kariba, El Niño, a dated public forecast</li>
+          <li class="up">Slow-moving water is where NASA data has real signal</li>
+          <li class="up">Half the engine already exists and is tested</li>
+          <li class="down">Hydro labels are monthly, so fewer data points than weekly fire cells</li>
+          <li class="down">Pipeline has to be adapted from cells to basins</li>
+        </ul>
+      </button>
+
+      <button class="opt" type="button" id="opt-patronus" data-choice="patronus" aria-pressed="false">
+        <div class="opt-head">
+          <div class="opt-top"><span class="letter">B</span><span class="opt-name">Patronus on its own</span></div>
+          <p class="muted">Same idea, built from scratch with its own pipeline.</p>
+        </div>
+        <ul class="pros">
+          <li class="up">Same story and impact as A</li>
+          <li class="up">Clean design with no legacy choices</li>
+          <li class="down">Rebuilds what Future Detector already does</li>
+          <li class="down">More risk of an unfinished backtest by Sunday</li>
+        </ul>
+      </button>
+
+      <button class="opt" type="button" id="opt-fd" data-choice="future-detector" aria-pressed="false">
+        <div class="opt-head">
+          <div class="opt-top"><span class="letter">C</span><span class="opt-name">Future Detector as is</span></div>
+          <p class="muted">Weekly wildfire risk for every 10 km of California, plus side tests on floods, landslides and Africa food security.</p>
+        </div>
+        <ul class="pros">
+          <li class="up">Already built and working</li>
+          <li class="up">Rare honesty: a Proof page and a "what it can't do" list</li>
+          <li class="down">1.6× better than climatology; 32% of fires flagged vs 22%</li>
+          <li class="down">Its own finding: NASA layers add no reliable gain over fire history</li>
+          <li class="down">Wildfire is a crowded topic, and the hazards spread the story thin</li>
+        </ul>
+      </button>
+
+      <button class="opt" type="button" id="opt-hs" data-choice="harvestshield" aria-pressed="false">
+        <div class="opt-head">
+          <div class="opt-top"><span class="letter">D</span><span class="opt-name">HarvestShield</span></div>
+          <p class="muted">Find crop stress that greenness hides using fluorescence and thermal data, then stress-test a buyer's sourcing regions.</p>
+        </div>
+        <ul class="pros">
+          <li class="up">Fresh science (SIF, ECOSTRESS) and a smart portfolio angle</li>
+          <li class="up">Strong NASA data fit</li>
+          <li class="down">Nothing built; the pretrained model hasn't been run</li>
+          <li class="down">Outputs are vegetation stress, not tonnes or dollars</li>
+          <li class="down">Fictional portfolio, Europe-only data, hard to validate this weekend</li>
+        </ul>
+      </button>
+
+      <button class="opt" type="button" id="opt-other" data-choice="other" aria-pressed="false">
+        <div class="opt-head">
+          <div class="opt-top"><span class="letter">E</span><span class="opt-name">Something else</span></div>
+          <p class="muted">A different mix or a new direction. Say what in your note.</p>
+        </div>
+        <ul class="pros"><li class="up">Write it in the note below</li></ul>
+      </button>
+    </div>
+
+    <div class="note-row">
+      <label class="label" for="note">Why (optional, one line)</label>
+      <textarea id="note" maxlength="280" placeholder="e.g. A, but only if the Future Detector team is happy to adapt their pipeline"></textarea>
+      <div class="actions">
+        <button class="btn" type="button" id="submit" disabled>Submit vote</button>
+        <span class="status" id="status" role="status">Connecting to the shared ballot…</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section dark">
+  <div class="wrap">
+    <div class="section-head label"><span>Results</span><span id="count">Live</span></div>
+    <h2 class="h2" id="leader">Waiting for votes.</h2>
+    <div class="tally" id="tally"></div>
+    <div class="notes" id="notes"></div>
+    <div class="foot label">
+      <span>Full reasoning: ask Claude for the comparison, or read DESIGN.md</span>
+      <span>One vote per person</span>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var CHOICES = [
+    { id: 'combo', letter: 'A', name: 'Patronus on the Future Detector engine' },
+    { id: 'patronus', letter: 'B', name: 'Patronus on its own' },
+    { id: 'future-detector', letter: 'C', name: 'Future Detector as is' },
+    { id: 'harvestshield', letter: 'D', name: 'HarvestShield' },
+    { id: 'other', letter: 'E', name: 'Something else' }
+  ];
+  var byId = {}; CHOICES.forEach(function (c) { byId[c.id] = c; });
+
+  var optEls = Array.prototype.slice.call(document.querySelectorAll('.opt'));
+  var noteEl = document.getElementById('note');
+  var submitEl = document.getElementById('submit');
+  var statusEl = document.getElementById('status');
+  var tallyEl = document.getElementById('tally');
+  var notesEl = document.getElementById('notes');
+  var leaderEl = document.getElementById('leader');
+  var countEl = document.getElementById('count');
+
+  var selected = null, db = null, user = null, myId = null, myVote = null, votes = [], saving = false;
+
+  function setStatus(t) { statusEl.textContent = t; }
+  function paintSelection() {
+    optEls.forEach(function (el) { el.setAttribute('aria-pressed', String(el.getAttribute('data-choice') === selected)); });
+    var changed = !myVote || myVote.choice !== selected || (myVote.note || '') !== noteEl.value.trim();
+    submitEl.disabled = !db || !myId || !selected || saving || !changed;
+    submitEl.textContent = myVote ? 'Update vote' : 'Submit vote';
+  }
+  optEls.forEach(function (el) {
+    el.addEventListener('click', function () { selected = el.getAttribute('data-choice'); paintSelection(); });
+  });
+  noteEl.addEventListener('input', paintSelection);
+
+  function renderTally(names) {
+    var total = votes.length;
+    countEl.textContent = total === 1 ? '1 vote' : total + ' votes';
+    var counts = {}; CHOICES.forEach(function (c) { counts[c.id] = []; });
+    votes.forEach(function (v) { if (counts[v.choice]) counts[v.choice].push(v); });
+    var ranked = CHOICES.slice().sort(function (a, b) { return counts[b.id].length - counts[a.id].length; });
+    if (!total) leaderEl.textContent = 'No votes yet. Be the first.';
+    else {
+      var top = ranked[0], n = counts[top.id].length, tie = ranked[1] && counts[ranked[1].id].length === n;
+      leaderEl.textContent = tie ? 'Tied at ' + n + '. Keep voting.' : top.letter + ' leads: ' + top.name + '.';
+    }
+    tallyEl.textContent = '';
+    CHOICES.forEach(function (c) {
+      var list = counts[c.id], pct = total ? Math.round(list.length / total * 100) : 0;
+      var row = document.createElement('div'); row.className = 't-row';
+      var topEl = document.createElement('div'); topEl.className = 't-top';
+      var nm = document.createElement('span'); nm.textContent = c.letter + ' · ' + c.name;
+      var n = document.createElement('span'); n.className = 'n'; n.textContent = list.length + (total ? ' · ' + pct + '%' : '');
+      topEl.appendChild(nm); topEl.appendChild(n);
+      var track = document.createElement('div'); track.className = 't-track';
+      var fill = document.createElement('div'); fill.className = 't-fill'; fill.style.setProperty('--w', pct + '%');
+      track.appendChild(fill);
+      row.appendChild(topEl); row.appendChild(track);
+      if (list.length) {
+        var who = document.createElement('div'); who.className = 't-names';
+        who.textContent = list.map(function (v) { return (names[v.id] && names[v.id].name) || 'Someone'; }).join(', ');
+        row.appendChild(who);
+      }
+      tallyEl.appendChild(row);
+    });
+    notesEl.textContent = '';
+    votes.filter(function (v) { return v.note; }).forEach(function (v) {
+      var item = document.createElement('div'); item.className = 'note-item';
+      var w = document.createElement('span'); w.className = 'who';
+      w.textContent = ((names[v.id] && names[v.id].name) || 'Someone') + ' · ' + ((byId[v.choice] && byId[v.choice].letter) || '?');
+      var t = document.createElement('p'); t.textContent = v.note;
+      item.appendChild(w); item.appendChild(t); notesEl.appendChild(item);
+    });
+  }
+
+  function refresh() {
+    var ids = votes.map(function (v) { return v.id; });
+    if (user && ids.length && user.profiles) {
+      user.profiles(ids).then(renderTally, function () { renderTally({}); });
+    } else renderTally({});
+  }
+
+  renderTally({});
+
+  submitEl.addEventListener('click', function () {
+    if (!db || !myId || !selected || saving) return;
+    saving = true; paintSelection(); setStatus('Saving…');
+    var data = { choice: selected, note: noteEl.value.trim().slice(0, 280), at: new Date().toISOString() };
+    db.doc('votes/' + myId).set(data).then(function () {
+      myVote = data; saving = false; setStatus('Your vote is in. You can change it anytime.'); paintSelection();
+    }, function (e) {
+      saving = false; paintSelection();
+      setStatus(e && e.code === 'not_granted'
+        ? 'You can view results but not vote. Ask the page owner for Contributor access.'
+        : 'Your vote did not save. Check your connection and try again.');
+    });
+  });
+
+  if (!window.claude || !window.claude.use) { setStatus('Open this page on claude.ai to vote.'); return; }
+  Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+    db = r[0]; user = r[1];
+    if (!db) { setStatus('Sign in to claude.ai to vote and see results.'); return; }
+    var timer = setTimeout(function () { setStatus('The ballot is slow to load. Results will appear when it connects.'); }, 10000);
+    (user && user.id ? user.id() : Promise.resolve(null)).then(function (id) {
+      myId = id;
+      if (!myId) setStatus('Sign in to claude.ai to vote.');
+      db.collection('votes').onSnapshot(function (snap) {
+        clearTimeout(timer);
+        votes = snap.docs.filter(function (d) { return d.exists; }).map(function (d) {
+          var x = d.data() || {};
+          return { id: d.id, choice: String(x.choice || ''), note: String(x.note || '').slice(0, 280) };
+        }).filter(function (v) { return byId[v.choice]; });
+        var mine = votes.filter(function (v) { return v.id === myId; })[0];
+        if (mine && !myVote) {
+          myVote = { choice: mine.choice, note: mine.note };
+          if (!selected) { selected = mine.choice; noteEl.value = mine.note; }
+          setStatus('You voted ' + byId[mine.choice].letter + '. Change it anytime.');
+        } else if (!mine && myId && !saving) {
+          setStatus('Pick an option, then submit.');
+        }
+        paintSelection(); refresh();
+      }, function () {
+        clearTimeout(timer);
+        setStatus('Could not load the ballot. Reload the page to try again.');
+      });
+    });
+  });
+})();
+</script>
