@@ -41,7 +41,7 @@ export default function MapPage() {
           <Figure
             title="Hydropower basins by trend in total water storage"
             sub="Basins that contain hydro plants. Colour shows a statistically significant trend after correcting for testing many basins at once."
-            source={<>GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS), {period}; NASA POWER rainfall; WRI Global Power Plant Database; HydroBASINS level 4. Method: {trends.data?.method ?? '—'}</>}
+            source={<>GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS), {period}; NASA POWER rainfall; WRI Global Power Plant Database; HydroBASINS level 4.</>}
             files={['trends.json', 'basins.geojson']}
           >
             <div className="legend">
@@ -52,6 +52,7 @@ export default function MapPage() {
               <LegendItem kind="box" color="var(--wetting-strong)" label="Wetting (stronger)" />
             </div>
             {trends.loading || basins.loading ? <Loading what="map" /> : <WorldMap mode="trend" trends={trends.data} basinsGeo={basins.data} enso={enso.data} />}
+            {trends.data?.method && <details className="more"><summary>Method</summary><div className="muted small">{trends.data.method}</div></details>}
           </Figure>
         </>
       ) : (
@@ -67,7 +68,7 @@ export default function MapPage() {
           <Figure
             title="How each hydro-dependent grid responds to El Niño and La Niña"
             sub="A grid counts as a loser in a phase when output or storage is 5% or more below normal with permutation p < 0.1."
-            source={<>Ember generation, G-REALM lake levels, NASA POWER basin rainfall; ENSO phases from NOAA ONI. Records vary by country (shown in the tooltip). Method: {enso.data?.method ?? '—'}</>}
+            source={<>Ember generation, G-REALM lake levels, NASA POWER basin rainfall; ENSO phases from NOAA ONI. Records vary by country (shown in the tooltip).</>}
             files={['enso.json']}
           >
             <div className="legend">
@@ -78,6 +79,7 @@ export default function MapPage() {
               <LegendItem kind="box" color="var(--enso-nodata)" label="Not hydro-dependent" />
             </div>
             {enso.loading ? <Loading what="map" /> : <WorldMap mode="enso" trends={trends.data} basinsGeo={basins.data} enso={enso.data} />}
+            {enso.data?.method && <details className="more"><summary>Method</summary><div className="muted small">{enso.data.method}</div></details>}
           </Figure>
           {enso.data?.projections?.text && (
             <div className="callout">

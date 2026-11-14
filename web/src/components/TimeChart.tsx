@@ -161,7 +161,9 @@ export function TimeChart({
                     {l.data.filter((d) => isNum(d.y)).map((d, j) => (
                       <g key={j} transform={`translate(${px(d.x)},${s(d.y as number)})`}>
                         <circle r={l.r ?? 4} fill={l.color} stroke="var(--bg)" strokeWidth={1.5} />
-                        {d.label && <text x={7} dy="0.32em" className="point-label">{d.label}</text>}
+                        {d.label && (px(d.x) > iw * 0.7
+                          ? <text x={-8} dy="-0.6em" textAnchor="end" className="point-label">{d.label}</text>
+                          : <text x={7} dy="0.32em" className="point-label">{d.label}</text>)}
                       </g>
                     ))}
                   </g>

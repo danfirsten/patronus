@@ -30,7 +30,13 @@ export default function KaribaPage() {
   const histPeriod = periodOf([hist[0]?.date, hist[hist.length - 1]?.date]);
   const recent = hist.filter((h) => h.date >= '2025-06');
   const crisisWin = hist.filter((h) => h.date >= '2023-01' && h.date <= '2025-03');
-  const cw = d.cost_of_waiting;
+  const cw = d.cost_of_waiting as any;
+  const c24Series: { issue: string; p_warning?: number | null; p_danger?: number | null }[] = Array.isArray((c24 as any)?.series) ? (c24 as any).series : [];
+  const lead = (n: number | null | undefined) => !isNum(n) ? '—' : n > 0 ? `${n} month${n === 1 ? '' : 's'} before` : n === 0 ? 'the same month as' : `${-n} month${n === -1 ? '' : 's'} after`;
+  const curve: any[] = cw?.curve ?? [];
+  const hasMean = curve.some((c) => isNum(c.expected_cost_musd_mean));
+  const policies: any[] = Array.isArray(cw?.policies) ? cw.policies : [];
+  const POLICY: Record<string, string> = { wait_warning: 'Wait until the lake drops below 20%', no_action: 'Take no action' };
   const pct = (v: number) => `${Math.round(v)}%`;
 
   return (
@@ -98,6 +104,8 @@ export default function KaribaPage() {
           height={300}
           xDomain={['2023-01-01', '2025-03-01']}
           y={{ domain: [0, 40], fmt: pct, label: 'Usable storage (%)' }}
+          y2={c24Series.length ? { domain: [0, 1], fmt: (v) => fmtProb(v), label: 'Alarm probability (dashed)' } : undefined}
+          legend={<><LegendItem color="var(--series-1)" label="Usable storage" />{c24Series.length > 0 && <><LegendItem kind="dash" color="var(--series-2)" label={`Chance of < ${warn}% (forecast at the time)`} /><LegendItem kind="dash" color="var(--series-3)" label={`Chance of < ${dang}%`} /></>}</>}
           layers={[
             { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}%` },
             { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}%` },
@@ -107,6 +115,10 @@ export default function KaribaPage() {
             { kind: 'vline', x: c24?.zra_allocation_cut ?? '2023-12-28', color: 'var(--text-muted)', label: 'ZRA cuts allocation', row: 2 },
             { kind: 'vline', x: c24?.load_shedding_start ?? '2024-03-11', color: 'var(--threshold-danger)', label: 'Load-shedding starts', row: 3 },
             { kind: 'points', data: [{ x: LOWEST_2024.date, y: LOWEST_2024.usable_pct, label: '2.89% (11 Dec 2024)' }], color: 'var(--threshold-danger)', r: 5 },
+            ...(c24Series.length ? [
+              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_warning })), color: 'var(--series-2)', dash: '4 3', width: 1.5, label: `Patronus: chance of < ${warn}%`, fmt: fmtProb },
+              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_danger })), color: 'var(--series-3)', dash: '4 3', width: 1.5, label: `Patronus: chance of < ${dang}%`, fmt: fmtProb },
+            ] : []),
           ]}
         />
       </Figure>
@@ -119,9 +131,10 @@ export default function KaribaPage() {
         <li><span className="tl-date">11 Dec 2024</span><span>Lake at 475.91 m: 2.89% usable, the lowest point.</span></li>
       </ol>
       <p className="headline">
-        Patronus lead time: <b>{isNum(c24?.lead_months_vs_load_shedding) ? `${c24!.lead_months_vs_load_shedding} months` : '—'}</b> before load-shedding,
-        and <b>{isNum(c24?.lead_months_vs_zra) ? `${c24!.lead_months_vs_zra} months` : '—'}</b> before the ZRA allocation cut.
+        Patronus' first warning (chance above 50%) came <b>{lead(c24?.lead_months_vs_load_shedding)}</b> load-shedding began,
+        and <b>{lead(c24?.lead_months_vs_zra)}</b> the ZRA allocation cut.
       </p>
+      {(c24 as any)?.definition && <p className="muted small">How the alarm is defined: {(c24 as any).definition}</p>}
 
       <h2 className="section-title">2027: the forecast</h2>
       <Figure
@@ -158,7 +171,7 @@ export default function KaribaPage() {
       <Figure
         title="The cost of waiting"
         sub="Expected cost of the shortfall depending on the month conservation and import contracts start. Later action means emergency power at higher prices and more unserved energy."
-        source={<>Patronus water balance and cost model; {String(cw?.assumptions?.source ?? 'ZESCO ERB filing Jul 2024; VoLL literature')}. Action months {periodOf([cw?.curve?.[0]?.action_month, cw?.curve?.[(cw?.curve?.length ?? 1) - 1]?.action_month])}.</>}
+        source={<>Patronus water balance and cost model; {String(cw?.assumptions?.source ?? 'ZESCO ERB filing Jul 2024; VoLL literature')}. Action months {periodOf([curve[0]?.action_month, curve[curve.length - 1]?.action_month])}.{cw?.headline_note ? ` ${cw.headline_note}` : ''}</>}
         files={['kariba.json']}
       >
         {cw?.headline && <p className="headline">{cw.headline}</p>}
@@ -166,11 +179,16 @@ export default function KaribaPage() {
           ariaLabel="Expected cost by month action starts"
           height={240}
           y={{ fmt: (v) => fmtMusd(v), label: 'Expected cost (US$ millions)' }}
-          legend={<><LegendItem color="var(--drying-strong)" label="Median expected cost" /><LegendItem kind="box" color="var(--shortfall-shade)" label="P10–P90" /></>}
+          legend={<>
+            <LegendItem color="var(--drying-strong)" label={hasMean ? 'Expected cost (mean across scenarios)' : 'Median expected cost'} />
+            {!hasMean && <LegendItem kind="box" color="var(--shortfall-shade)" label="P10–P90" />}
+            {policies.map((p, i) => <LegendItem key={i} kind="dash" color={i === 0 ? 'var(--risk-warning)' : 'var(--text-muted)'} label={`${POLICY[p.policy] ?? p.policy}: ${fmtMusd(p.expected_cost_musd_mean ?? p.expected_cost_musd_p50)}`} />)}
+          </>}
           layers={[
-            { kind: 'band', data: (cw?.curve ?? []).map((c) => ({ x: c.action_month, lo: c.expected_cost_musd_p10, hi: c.expected_cost_musd_p90 })), color: 'var(--shortfall-shade)', label: 'P10–P90', fmt: fmtMusd },
-            { kind: 'line', data: (cw?.curve ?? []).map((c) => ({ x: c.action_month, y: c.expected_cost_musd_p50 })), color: 'var(--drying-strong)', label: 'Median', fmt: fmtMusd },
-            { kind: 'points', data: (cw?.curve ?? []).map((c) => ({ x: c.action_month, y: c.expected_cost_musd_p50 })), color: 'var(--drying-strong)', r: 3 },
+            ...(!hasMean ? [{ kind: 'band' as const, data: curve.map((c) => ({ x: c.action_month, lo: c.expected_cost_musd_p10, hi: c.expected_cost_musd_p90 })), color: 'var(--shortfall-shade)', label: 'P10–P90', fmt: fmtMusd }] : []),
+            ...policies.map((p, i) => ({ kind: 'hline' as const, y: p.expected_cost_musd_mean ?? p.expected_cost_musd_p50 ?? 0, color: i === 0 ? 'var(--risk-warning)' : 'var(--text-muted)', label: POLICY[p.policy] ?? p.policy })),
+            { kind: 'line', data: curve.map((c) => ({ x: c.action_month, y: hasMean ? c.expected_cost_musd_mean : c.expected_cost_musd_p50 })), color: 'var(--drying-strong)', label: hasMean ? 'Expected cost' : 'Median', fmt: fmtMusd },
+            { kind: 'points', data: curve.map((c) => ({ x: c.action_month, y: hasMean ? c.expected_cost_musd_mean : c.expected_cost_musd_p50 })), color: 'var(--drying-strong)', r: 3 },
           ]}
         />
         <dl className="kv inline">
@@ -212,14 +230,14 @@ export default function KaribaPage() {
       {(d.other_reservoirs ?? []).length > 0 && (
         <div className="panel">
           <h3>Other reservoirs we track</h3>
-          <table className="data-table compact">
+          <div className="table-wrap"><table className="data-table compact">
             <thead><tr><th>Reservoir</th><th>Country</th><th>Latest level</th><th>vs normal</th></tr></thead>
             <tbody>
               {(d.other_reservoirs ?? []).map((r, i) => (
                 <tr key={i}><td>{r.name}</td><td>{r.country}</td><td className="num">{fmtNum(r.latest_level_m, 2)} m</td><td className="num">{isNum(r.anomaly_m) ? `${r.anomaly_m > 0 ? '+' : ''}${fmtNum(r.anomaly_m, 2)} m` : '—'}</td></tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
           <SourceNote files={['kariba.json']}>G-REALM satellite lake levels (NASA/USDA).</SourceNote>
         </div>
       )}
@@ -237,22 +255,25 @@ export default function KaribaPage() {
 function SkillTable({ rows, noGrace }: { rows: SkillRow[]; noGrace: any[] }) {
   if (!rows.length) return null;
   const ng = new Map(noGrace.filter((x) => x && typeof x === 'object').map((x: any) => [x.horizon, x]));
+  // kariba.json nests metrics per threshold ({warning: {...}, danger: {...}}); flat rows also work.
+  const m = (r: any): SkillRow => ({ ...(r.warning ?? r), horizon: r.horizon });
+  const ngAuc = (x: any) => x?.auc_pr_warning_no_grace ?? x?.auc_pr;
   return (
     <div className="panel">
       <h3>How good is the Kariba model? Backtest by lead time</h3>
-      <p className="muted">Brier skill above 0 means better than the baseline. Without GRACE: the same model with NASA's water-storage data removed.</p>
+      <p className="muted">Target: usable storage below the 20% warning line. Brier skill above 0 means better than the baseline. Without GRACE: the same model with NASA's water-storage data removed.</p>
       <div className="table-wrap">
         <table className="data-table compact">
           <thead><tr><th>Months ahead</th><th>Skill vs climatology</th><th>vs persistence</th><th>vs ENSO only</th><th>AUC-PR</th><th>AUC-PR without GRACE</th></tr></thead>
           <tbody>
-            {rows.map((r, i) => (
+            {rows.map(m).map((r, i) => (
               <tr key={i}>
                 <td>{r.horizon}</td>
                 <td className="num">{fmtNum(r.bss_vs_climatology, 2)}</td>
                 <td className="num">{fmtNum(r.bss_vs_persistence, 2)}</td>
                 <td className="num">{fmtNum(r.bss_vs_enso_only, 2)}</td>
                 <td className="num">{fmtNum(r.auc_pr, 2)}{r.auc_pr_ci90 ? <span className="muted"> [{fmtNum(r.auc_pr_ci90[0], 2)}–{fmtNum(r.auc_pr_ci90[1], 2)}]</span> : null}</td>
-                <td className="num">{fmtNum(ng.get(r.horizon)?.auc_pr, 2)}</td>
+                <td className="num">{fmtNum(ngAuc(ng.get(r.horizon)), 2)}</td>
               </tr>
             ))}
           </tbody>
@@ -273,7 +294,7 @@ function NightFrameImg({ f }: { f: NightFrame }) {
       {failed ? (
         <div className="night-placeholder" role="img" aria-label="Image not available">Image not loaded<br /><span className="muted">{f.src ?? 'no file'}</span></div>
       ) : (
-        <img src={candidates[srcIdx]} alt={`Night lights over ${f.place ?? 'the region'}, ${fmtDate(f.date)}`} loading="lazy" onError={() => setSrcIdx((i) => i + 1)} />
+        <img src={candidates[srcIdx]} alt={`Night lights over ${f.place ?? 'the region'}, ${fmtDate(f.date)}`} onError={() => setSrcIdx((i) => i + 1)} />
       )}
       <figcaption>
         <b>{fmtDate(f.date)}</b> · {f.place}<br /><span className="muted">{f.caption}</span>

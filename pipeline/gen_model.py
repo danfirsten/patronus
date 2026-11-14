@@ -223,3 +223,31 @@ def reliability_bins(p, y, edges=(0, .1, .2, .3, .4, .5, .6, .8, 1.0001)):
 
 def _r(x, k=3):
     return None if x is None or not np.isfinite(x) else round(float(x), k)
+
+
+def _logit(p):
+    p = np.clip(p, 1e-3, 1 - 1e-3)
+    return np.log(p / (1 - p))
+
+
+class Stacker:
+    """Logistic blend of the LightGBM probability with the climatology prior: p = sigmoid(a + b*logit(lgbm) + c*logit(clim))."""
+
+    def fit(self, raw, clim, y):
+        from sklearn.linear_model import LogisticRegression
+        self.m = LogisticRegression(C=1.0, max_iter=1000).fit(np.column_stack([_logit(raw), _logit(clim)]), y.astype(int))
+        return self
+
+    def predict(self, raw, clim):
+        return self.m.predict_proba(np.column_stack([_logit(raw), _logit(clim)]))[:, 1]
+
+
+def crossfit_stack(raw, clim, y, years):
+    out = np.full(len(raw), np.nan)
+    ok = ~np.isnan(raw) & ~np.isnan(clim)
+    for Y, tr, te in loyo_folds(years):
+        tr, te = tr & ok, te & ok
+        if tr.sum() < 50 or te.sum() == 0:
+            continue
+        out[te] = Stacker().fit(raw[tr], clim[tr], y[tr]).predict(raw[te], clim[te])
+    return out

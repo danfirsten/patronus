@@ -93,7 +93,7 @@ export default function WatchlistPage() {
                     <td data-label="Max chance" className="num">{fmtProb(r.max_p_shortfall)}</td>
                     <td data-label="Next 6 months"><ProbStrip months={r.months} /></td>
                     <td data-label="Drivers" className="cell-drivers">
-                      <ul>{(r.drivers ?? []).map((d) => <li key={d}>{d}</li>)}</ul>
+                      <ul>{(r.drivers ?? []).map((d, i) => <li key={i}>{d}</li>)}</ul>
                     </td>
                     <td data-label="ENSO"><ExposureTag exposure={r.enso_exposure} /></td>
                   </tr>

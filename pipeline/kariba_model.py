@@ -22,8 +22,9 @@ from pipeline import kariba_data as K
 HORIZONS = list(range(1, 19))
 QS = (0.1, 0.5, 0.9)
 CLIM_BASE = ("1981-01-01", "2000-12-01")  # anomaly baseline, entirely before the first test year
-PRECIP_BASELINE = "fixed"   # "fixed" (1981-2000) or "trailing" (prior 15 years)
-RES_BY_PHASE = False        # condition the residual pool on the issue-time ONI phase
+PRECIP_BASELINE = "trailing"  # "fixed" (1981-2000) or "trailing" (prior 15 years)
+import os
+RES_BY_PHASE = os.environ.get("KARIBA_RES_BY_PHASE", "0") == "1"  # condition the residual pool on the issue-time ONI phase
 
 FEATURES_ALL = ["usable_now", "level_now", "d1", "d3", "d6", "obs_age_days",
                 "precip_1m_anom", "precip_3m_anom", "precip_6m_anom", "precip_std_anom",
@@ -334,7 +335,12 @@ def reliability(P, h, col="m_pw", thr=K.WARNING_PCT, bins=(0, .1, .3, .5, .7, .9
 # --------------------------------------------------------------------------------------
 # Live forecast
 # --------------------------------------------------------------------------------------
-def live_forecast(S, X, feats, issue="2026-11-01", horizons=range(1, 14)):
+def live_forecast(S, X, feats, issue="2026-11-01", horizons=range(1, 14), res_by_phase=None):
+    """res_by_phase overrides RES_BY_PHASE (residual pool from issues in the same ONI phase)."""
+    global RES_BY_PHASE
+    saved = RES_BY_PHASE
+    if res_by_phase is not None:
+        RES_BY_PHASE = res_by_phase
     t = pd.Timestamp(issue)
     row = X.loc[t]
     out, imps = [], []
@@ -352,5 +358,6 @@ def live_forecast(S, X, feats, issue="2026-11-01", horizons=range(1, 14)):
                     "p_below_warning": sm["p_warn"], "p_below_danger": sm["p_danger"],
                     "n_train": int(len(train)), "_ens": ens})
         imps.append(pd.Series(m.booster_.feature_importance("gain"), index=feats))
+    RES_BY_PHASE = saved
     imp = pd.concat(imps, axis=1).mean(axis=1)
     return out, (imp / imp.sum()).sort_values(ascending=False)

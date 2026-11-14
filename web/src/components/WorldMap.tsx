@@ -167,8 +167,8 @@ function BasinTip({ b, period }: { b: Basin; period?: { from: string; to: string
       <div className="tip-sub">{(b.countries ?? []).join(', ')} · {fmtNum(b.hydro_gw, 1)} GW hydro · {fmtNum(b.n_plants)} plants</div>
       <dl className="tip-dl">
         <dt>Trend</dt><dd>{cls}</dd>
-        <dt>Water storage</dt><dd>{isNum(b.tws_slope_cm_per_decade) ? `${fmtNum(b.tws_slope_cm_per_decade, 1)} cm per decade` : '—'} {isNum(b.tws_q) && <span className="muted">(q = {fmtNum(b.tws_q, 3)})</span>}</dd>
-        <dt>Rainfall</dt><dd>{fmtPct(b.precip_slope_pct_per_decade, 1, true)} per decade {isNum(b.precip_q) && <span className="muted">(q = {fmtNum(b.precip_q, 2)})</span>}</dd>
+        <dt>Water storage</dt><dd>{isNum(b.tws_slope_cm_per_decade) ? `${fmtNum(b.tws_slope_cm_per_decade, 1)} cm per decade` : '—'} {isNum(b.tws_q) && <span className="muted">(q {b.tws_q < 0.001 ? '< 0.001' : `= ${fmtNum(b.tws_q, 3)}`})</span>}</dd>
+        <dt>Rainfall</dt><dd>{fmtPct(b.precip_slope_pct_per_decade, 1, true)} per decade {isNum(b.precip_q) && <span className="muted">(q {b.precip_q < 0.001 ? '< 0.001' : `= ${fmtNum(b.precip_q, 3)}`})</span>}</dd>
       </dl>
       {b.series?.tws_anom_cm?.length ? (
         <>

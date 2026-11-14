@@ -115,6 +115,8 @@ def run_backtest(D: pd.DataFrame, countries: list[str], log):
         raw = M.oof_classifier(d, feats, "y_short")
         cal = M.crossfit_isotonic(raw, y, d["tyear"].values)
         base = M.oof_baselines(d, "y_short", countries)
+        iso_cal = cal
+        cal = M.crossfit_stack(raw, base["climatology"], y, d["tyear"].values)
         q = M.oof_quantiles(d, feats)
         ys = d["y_severe"].values.astype(float)
         raw_s = M.oof_classifier(d, feats, "y_severe")
@@ -126,7 +128,10 @@ def run_backtest(D: pd.DataFrame, countries: list[str], log):
         cov = np.mean((d["y_anom"].values >= q[:, 0]) & (d["y_anom"].values <= q[:, 2]))
         mae50 = np.mean(np.abs(d["y_anom"].values - q[:, 1]))
         clim_mae = np.mean(np.abs(d["y_anom"].values))  # climatological median anomaly is ~0 by construction
-        mh.update({"horizon": h, "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+        mi = M.horizon_metrics(iso_cal[ok], bsel, y[ok], d.loc[ok, "cluster"].values, n_boot=300)
+        mi["horizon"] = h
+        res.setdefault("by_horizon_isotonic", []).append(mi)
+        mh.update({"horizon": h, "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
                    "quantile_p10_p90_coverage": round(float(cov), 3), "p50_mae_pct": round(float(mae50), 2),
                    "zero_anomaly_mae_pct": round(float(clim_mae), 2)})
         mr["horizon"] = h
@@ -136,7 +141,7 @@ def run_backtest(D: pd.DataFrame, countries: list[str], log):
         res["severe"].append({"horizon": h, "n": int(oks.sum()), "n_severe": int(ys[oks].sum()),
                               "brier": round(M.brier(cal_s[oks], ys[oks]), 4),
                               "auc_pr": M._r(M.auc_pr(cal_s[oks], ys[oks])), "base_rate": round(float(ys[oks].mean()), 3)})
-        d = d.assign(p_raw=raw, p_cal=cal, p_sev=cal_s, p_sev_raw=raw_s, q10=q[:, 0], q50=q[:, 1], q90=q[:, 2],
+        d = d.assign(p_iso=iso_cal, p_raw=raw, p_cal=cal, p_sev=cal_s, p_sev_raw=raw_s, q10=q[:, 0], q50=q[:, 1], q90=q[:, 2],
                      **{f"b_{k}": v for k, v in base.items()})
         res["oof"][h] = d
         log(f"  h={h}: n={ok.sum()} AUC-PR {mh['auc_pr']} (clim {mh['auc_pr_climatology']}) "
@@ -149,9 +154,11 @@ def run_backtest(D: pd.DataFrame, countries: list[str], log):
         p_raw = m.predict_proba(dte[feats])[:, 1]
         inner = M.oof_classifier(dtr, feats, "y_short")
         okk = ~np.isnan(inner)
-        iso = IsotonicRegression(y_min=0.005, y_max=0.995, out_of_bounds="clip").fit(inner[okk], dtr["y_short"].values[okk])
-        p_cal = iso.predict(p_raw)
-        yb = {"climatology": M.Climatology().fit(dtr, dtr["y_short"].values).predict(dte),
+        inner_clim = M.oof_baselines(dtr, "y_short", countries)["climatology"]
+        okk &= ~np.isnan(inner_clim)
+        clim_te = M.Climatology().fit(dtr, dtr["y_short"].values).predict(dte)
+        p_cal = M.Stacker().fit(inner[okk], inner_clim[okk], dtr["y_short"].values[okk]).predict(p_raw, clim_te)
+        yb = {"climatology": clim_te,
               "persistence": M.Persistence().fit(dtr, dtr["y_short"].values).predict(dte),
               "enso_only": M.EnsoOnly(countries).fit(dtr, dtr["y_short"].values).predict(dte)}
         yt = dte["y_short"].values.astype(float)
@@ -216,10 +223,10 @@ def alarm_model(D: pd.DataFrame, log):
     d = D[(D["horizon"] == 1) & D["y_any6"].notna()].reset_index(drop=True)
     y = d["y_any6"].values.astype(float)
     raw = M.oof_classifier(d, G.FEATURES, "y_any6", year_col="iyear")
-    cal = M.crossfit_isotonic(raw, y, d["iyear"].values)
-    d = d.assign(p_any_raw=raw, p_any=cal)
-    ok = d["p_any"].notna()
     clim = M.oof_baselines(d, "y_any6", sorted(d["iso3"].unique()), year_col="iyear")["climatology"]
+    cal = M.crossfit_stack(raw, clim, y, d["iyear"].values)
+    d = d.assign(p_any_raw=raw, p_any=cal, p_any_clim=clim)
+    ok = d["p_any"].notna()
     log(f"  alarm model: n={ok.sum()} AUC-PR {M.auc_pr(cal[ok], y[ok]):.3f} vs clim {M.auc_pr(clim[ok], y[ok]):.3f}")
     stats = {"n": int(ok.sum()), "base_rate": round(float(y[ok].mean()), 3),
              "auc_pr": M._r(M.auc_pr(cal[ok], y[ok])), "auc_pr_climatology": M._r(M.auc_pr(clim[ok], y[ok])),
@@ -286,14 +293,16 @@ def fit_final(D: pd.DataFrame, oof: dict):
         d = D[(D["horizon"] == h) & D["y_short"].notna()]
         o = oof[h]
         ok = o["p_raw"].notna()
-        iso = IsotonicRegression(y_min=0.005, y_max=0.995, out_of_bounds="clip").fit(o.loc[ok, "p_raw"], o.loc[ok, "y_short"])
+        okc = ok & o["b_climatology"].notna()
+        iso = M.Stacker().fit(o.loc[okc, "p_raw"].values, o.loc[okc, "b_climatology"].values, o.loc[okc, "y_short"].values)
+        clim_all = M.Climatology().fit(d, d["y_short"].values)
         clf = M.fit_clf(d[feats], d["y_short"].values)
         sev = M.fit_clf(d[feats], d["y_severe"].values)
         raw_s = o["p_sev_raw"].values
         okS = ~np.isnan(raw_s)
         iso_s = IsotonicRegression(y_min=0.002, y_max=0.995, out_of_bounds="clip").fit(raw_s[okS], o["y_severe"].values[okS])
         qs = [M.fit_qr(d[feats], d["y_anom"].values, a) for a in M.QUANTILES]
-        models[h] = {"clf": clf, "iso": iso, "sev": sev, "iso_s": iso_s, "qr": qs}
+        models[h] = {"clf": clf, "iso": iso, "clim": clim_all, "sev": sev, "iso_s": iso_s, "qr": qs}
     return models
 
 
@@ -370,9 +379,10 @@ def live_forecast(iso3, D, models, lab, info):
     rows = []
     for h in M.HORIZONS:
         tgt = ISSUE + h
-        X = D[(D["iso3"] == iso3) & (D["issue"] == ISSUE) & (D["horizon"] == h)][G.FEATURES].astype(float)
+        row = D[(D["iso3"] == iso3) & (D["issue"] == ISSUE) & (D["horizon"] == h)]
+        X = row[G.FEATURES].astype(float)
         m = models[h]
-        p = float(m["iso"].predict(m["clf"].predict_proba(X)[:, 1])[0])
+        p = float(m["iso"].predict(m["clf"].predict_proba(X)[:, 1], m["clim"].predict(row))[0])
         ps = float(m["iso_s"].predict(m["sev"].predict_proba(X)[:, 1])[0])
         ps = min(ps, p)
         q = sorted(float(r.predict(X)[0]) for r in m["qr"])
@@ -444,8 +454,9 @@ def main():
     # alarm model on all data for live P(any shortfall within 6 months)
     dAll = D[(D["horizon"] == 1) & D["y_any6"].notna()]
     alarm_clf = M.fit_clf(dAll[G.FEATURES], dAll["y_any6"].values)
-    okA = dA["p_any_raw"].notna()
-    alarm_iso = IsotonicRegression(y_min=0.005, y_max=0.995, out_of_bounds="clip").fit(dA.loc[okA, "p_any_raw"], dA.loc[okA, "y_any6"])
+    okA = dA["p_any_raw"].notna() & dA["p_any_clim"].notna()
+    alarm_iso = M.Stacker().fit(dA.loc[okA, "p_any_raw"].values, dA.loc[okA, "p_any_clim"].values, dA.loc[okA, "y_any6"].values)
+    alarm_clim = M.Climatology().fit(dAll, dAll["y_any6"].values)
 
     enso = {}
     try:
@@ -460,8 +471,8 @@ def main():
     for iso in countries:
         base_row = bases[iso].loc[ISSUE].copy()
         months = live_forecast(iso, D, models, lab, info)
-        Xa = D1[(D1["iso3"] == iso) & (D1["issue"] == ISSUE)][G.FEATURES]
-        p_any = float(alarm_iso.predict(alarm_clf.predict_proba(Xa)[:, 1])[0])
+        ra = D1[(D1["iso3"] == iso) & (D1["issue"] == ISSUE)]
+        p_any = float(alarm_iso.predict(alarm_clf.predict_proba(ra[G.FEATURES])[:, 1], alarm_clim.predict(ra))[0])
         last = info[iso]["last"]
         stale = pd.Period(last, "M") < ISSUE - 2
         maxp = max(m["p_shortfall"] for m in months)
@@ -609,6 +620,8 @@ def main():
         "base_rate_severe": round(float(labelled["y_severe"].mean()), 3),
         "by_horizon": bh,
         "by_horizon_uncalibrated": bt["by_horizon_raw"],
+        "by_horizon_isotonic": bt["by_horizon_isotonic"],
+        "calibration_note": "Primary probabilities (by_horizon) blend the LightGBM probability with the climatology prior in a logistic stack, cross-fitted on out-of-fold predictions. We added this after a first run showed LightGBM alone (isotonic-calibrated) ranked shortfalls slightly worse than climatology beyond 1 month; both versions are reported.",
         "severe_by_horizon": bt["severe"],
         "forward_test": {"train": "targets <= 2023-11", "test": "targets >= 2024-01", "by_horizon": bt["forward"]},
         "reliability": bt["reliability"],

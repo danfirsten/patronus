@@ -12,6 +12,12 @@ const DRIVER_LABEL: Record<string, [string, (v: number) => string]> = {
   precip_3m_anom_pct: ['Rain, last 3 months', (v) => `${fmtPct(v, 0, true)} vs normal`],
   soil_root_anom_sd: ['Root-zone soil wetness', (v) => `${fmtNum(v, 1)} SD vs normal`],
   oni: ['Oceanic Niño Index', (v) => fmtNum(v, 2)],
+  precip_1m_anom_pct: ['Rain, last month', (v) => `${fmtPct(v, 0, true)} vs normal`],
+  precip_6m_anom_pct: ['Rain, last 6 months', (v) => `${fmtPct(v, 0, true)} vs normal`],
+  precip_12m_anom_pct: ['Rain, last 12 months', (v) => `${fmtPct(v, 0, true)} vs normal`],
+  soil_top_anom_sd: ['Surface soil wetness', (v) => `${fmtNum(v, 1)} SD vs normal`],
+  t2m_3m_anom_sd: ['Temperature, last 3 months', (v) => `${fmtNum(v, 1)} SD vs normal`],
+  persist_anom_pct: ['Latest hydro output', (v) => `${fmtPct(v, 0, true)} vs normal`],
 };
 
 /** Months from issue until the first forecast month with P(shortfall) >= 0.4 (warning level). */
@@ -107,36 +113,48 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
         <div className="panel">
           <h3>Expected cost of shortfalls, next 6 months</h3>
           <p className="big-number">{fmtMusd(cost?.p50)}</p>
-          <p className="muted">Range {fmtMusd(cost?.p10)} to {fmtMusd(cost?.p90)} (P10–P90).</p>
+          <p className="muted">Range {fmtMusd(cost?.p10)} to {fmtMusd(cost?.p90)} (P10–P90).{cost?.p50 === 0 && isNum(cost?.p90) && cost!.p90! > 0 ? ` The most likely cost is zero, but there is a 1-in-10 chance it exceeds ${fmtMusd(cost?.p90)}.` : ''}</p>
           <p className="small">
             Assumes replacement power at ${fmtNum(d.costs?.replacement_usd_per_kwh, 2)}/kWh and
             unserved energy valued at ${fmtNum(d.costs?.voll_usd_per_kwh, 2)}/kWh. These are editable assumptions, not quotes.
           </p>
+          {(d.costs as any)?.method && <details className="more"><summary>How this is estimated</summary><div className="muted small">{(d.costs as any).method}</div></details>}
           <SourceNote files={[file]}>Patronus cost model: expected shortfall × replacement cost + unserved energy × value of lost load.</SourceNote>
         </div>
       </div>
 
       <Figure
         title="Chance of a hydro shortfall, month by month"
-        sub="Bars: chance that output falls 15% or more below normal. Band: likely range of output vs normal (P10–P90)."
+        sub="Top: chance that hydro output falls 15% or more below normal. Bottom: likely range of output vs normal."
         source={<>Patronus forecast issued {fmtDate(issued)}, months {periodOf([fc[0]?.month, fc[fc.length - 1]?.month])}. Inputs: Ember, GRACE/GRACE-FO, NASA POWER, NOAA ONI.</>}
         files={[file]}
       >
         {fc.length === 0 ? <Empty>No forecast months in this file.</Empty> : (
-          <TimeChart
-            ariaLabel="Monthly chance of a shortfall with anomaly range"
-            height={260}
-            y={{ label: 'Output vs normal (%)', fmt: (v) => `${v}%` }}
-            y2={{ domain: [0, 1], label: 'Chance of shortfall', fmt: (v) => `${Math.round(v * 100)}%` }}
-            legend={<><LegendItem kind="box" color="var(--risk-warning)" label="Chance of shortfall (right axis)" /><LegendItem kind="box" color="var(--series-band)" label="Output vs normal, P10–P90" /><LegendItem color="var(--series-1)" label="Median" /></>}
-            layers={[
-              { kind: 'bars', axis: 'right', data: fc.map((m) => ({ x: m.month, y: m.p_shortfall, color: riskVar(riskOf(m.p_shortfall)) })), color: 'var(--risk-warning)', label: 'Chance of shortfall', fmt: (v) => fmtProb(v), widthDays: 14 },
-              { kind: 'band', data: fc.map((m) => ({ x: m.month, lo: m.anomaly_p10_pct, hi: m.anomaly_p90_pct })), color: 'var(--series-band)', label: 'P10–P90', fmt: (v) => fmtPct(v, 0, true) },
-              { kind: 'line', data: fc.map((m) => ({ x: m.month, y: m.anomaly_p50_pct })), color: 'var(--series-1)', label: 'Median', fmt: (v) => fmtPct(v, 0, true) },
-              { kind: 'hline', y: -15, color: 'var(--threshold-warning)', label: 'Shortfall line (−15%)' },
-              { kind: 'hline', y: 0, color: 'var(--border-strong)', dash: '1 0' },
-            ]}
-          />
+          <>
+            <TimeChart
+              ariaLabel="Monthly chance of a shortfall"
+              height={190}
+              y={{ domain: [0, 1], label: 'Chance of a shortfall', fmt: (v) => `${Math.round(v * 100)}%`, ticks: 4 }}
+              layers={[
+                { kind: 'bars', data: fc.map((m) => ({ x: m.month, y: m.p_shortfall, color: riskVar(riskOf(m.p_shortfall)) })), color: 'var(--risk-warning)', label: 'Chance of shortfall', fmt: (v) => fmtProb(v), widthDays: 16 },
+                { kind: 'line', data: fc.map((m) => ({ x: m.month, y: m.p_severe })), color: 'var(--risk-danger)', label: 'Chance of severe shortfall (30%+)', fmt: (v) => fmtProb(v), curve: false },
+                { kind: 'hline', y: 0.4, color: 'var(--threshold-warning)', label: '40%: warning level' },
+              ]}
+              legend={<><LegendItem kind="box" color="var(--risk-watch)" label="Chance of shortfall (coloured by risk level)" /><LegendItem color="var(--risk-danger)" label="Chance of severe shortfall" /></>}
+            />
+            <TimeChart
+              ariaLabel="Forecast hydro output vs normal"
+              height={200}
+              y={{ label: 'Output vs normal (%)', fmt: (v) => `${v}%` }}
+              legend={<><LegendItem kind="box" color="var(--series-band)" label="Likely range, P10–P90" /><LegendItem color="var(--series-1)" label="Median" /></>}
+              layers={[
+                { kind: 'band', data: fc.map((m) => ({ x: m.month, lo: m.anomaly_p10_pct, hi: m.anomaly_p90_pct })), color: 'var(--series-band)', label: 'P10–P90', fmt: (v) => fmtPct(v, 0, true) },
+                { kind: 'line', data: fc.map((m) => ({ x: m.month, y: m.anomaly_p50_pct })), color: 'var(--series-1)', label: 'Median', fmt: (v) => fmtPct(v, 0, true) },
+                { kind: 'hline', y: -15, color: 'var(--threshold-warning)', label: 'Shortfall line (−15%)' },
+                { kind: 'hline', y: 0, color: 'var(--border-strong)', dash: '1 0' },
+              ]}
+            />
+          </>
         )}
       </Figure>
 
@@ -176,26 +194,26 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
         <div className="panel">
           <h3>What is driving the risk now</h3>
           <dl className="kv">
-            {Object.entries(d.drivers_now ?? {}).map(([k, v]) => {
+            {Object.entries(d.drivers_now ?? {}).filter(([k, v]) => isNum(v) || k in DRIVER_LABEL).map(([k, v]) => {
               const [label, f] = DRIVER_LABEL[k] ?? [k.replace(/_/g, ' '), (x: number) => fmtNum(x, 2)];
               return (<div key={k}><dt>{label}</dt><dd>{isNum(v) ? f(v) : '—'}</dd></div>);
             })}
           </dl>
-          {wrow?.drivers?.length ? <ul className="drivers">{wrow.drivers.map((x) => <li key={x}>{x}</li>)}</ul> : null}
+          {(() => { const dr = (d as any).drivers ?? wrow?.drivers; return Array.isArray(dr) && dr.length ? <ul className="drivers">{dr.map((x: string, i: number) => <li key={i}>{x}</li>)}</ul> : null; })()}
           <SourceNote files={[file, 'watchlist.json']}>GRACE/GRACE-FO, NASA POWER, NOAA ONI; latest available month at issue.</SourceNote>
         </div>
         <div className="panel">
           <h3>Look-alike past situations</h3>
-          <p className="muted">Past months whose water and climate conditions most resemble today's.</p>
+          <p className="muted">Past months, in this or other grids, whose water and climate conditions most resemble today's.</p>
           {(d.analogs ?? []).length === 0 ? <Empty>No analogs in this file.</Empty> : (
-            <table className="data-table compact">
-              <thead><tr><th>Month</th><th>Similarity</th><th>Shortfall in next 6 months?</th></tr></thead>
+            <div className="table-wrap"><table className="data-table compact">
+              <thead><tr><th>Month</th><th>Grid</th><th>Similarity</th><th>Shortfall in next 6 months?</th></tr></thead>
               <tbody>
                 {(d.analogs ?? []).map((a, i) => (
-                  <tr key={i}><td>{fmtMonth(a.month)}</td><td className="num">{fmtNum(a.similarity, 2)}</td><td>{a.shortfall_next_6m === true ? <b className="yes">Yes</b> : a.shortfall_next_6m === false ? 'No' : '—'}</td></tr>
+                  <tr key={i}><td>{fmtMonth(a.month)}</td><td>{(a as any).iso3 ?? iso3}</td><td className="num">{fmtNum(a.similarity, 2)}</td><td>{a.shortfall_next_6m === true ? <b className="yes">Yes</b> : a.shortfall_next_6m === false ? 'No' : '—'}</td></tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
           <SourceNote files={[file]}>Nearest neighbours on standardized features, {histPeriod}.</SourceNote>
         </div>

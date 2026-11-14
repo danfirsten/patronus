@@ -70,6 +70,9 @@ export default function ScoreboardPage() {
                       <td data-label="Caught by"><span className={`caught caught-${r.caught_by}`}>{CAUGHT[r.caught_by ?? ''] ?? r.caught_by ?? '—'}</span></td>
                       <td data-label="Notes" className="cell-notes">
                         {r.notes ?? c?.summary}
+                        {c && (c.costs?.length || c.cost_text || c.peak || c.sources?.length) ? (
+                        <details className="more">
+                          <summary>Costs and sources</summary>
                         {(c?.costs ?? (c?.cost_text ? [c.cost_text] : [])).map((x) => <div key={x} className="muted">Cost: {costText(x)}</div>)}
                         {c?.peak && <div className="muted">Worst point: {c.peak}</div>}
                         {(c?.sources ?? []).length > 0 && (
@@ -78,6 +81,8 @@ export default function ScoreboardPage() {
                             : <span key={i}><a href={src.url} target="_blank" rel="noreferrer">{src.title ?? src.url}</a>{i < c!.sources!.length - 1 ? '; ' : ''}</span>)}
                           </div>
                         )}
+                        </details>
+                        ) : null}
                       </td>
                     </tr>
                   );
@@ -198,8 +203,8 @@ function BacktestBlock({ g }: { g: GenBacktest }) {
         </Figure>
       </div>
       {(g.feature_importance ?? []).length > 0 && (
-        <Figure title="What the model leans on" sub="Share of total split gain." source={<>Patronus generation model (LightGBM).</>} files={['generation_backtest.json']}>
-          <HBars items={(g.feature_importance ?? []).map((f) => ({ label: f.feature.replace(/_/g, ' '), value: f.gain_share }))} fmt={(v) => fmtProb(v)} color="var(--series-1)" />
+        <Figure title="What the model leans on" sub="Top 10 inputs by share of total split gain." source={<>Patronus generation model (LightGBM).</>} files={['generation_backtest.json']}>
+          <HBars items={[...(g.feature_importance ?? [])].sort((a, b) => b.gain_share - a.gain_share).slice(0, 10).map((f) => ({ label: f.feature.replace(/_/g, ' '), value: f.gain_share }))} fmt={(v) => fmtProb(v)} color="var(--series-1)" />
         </Figure>
       )}
     </>

@@ -137,7 +137,7 @@ def simulate(q, policy, act_idx=None, s0=None, k=None, voll=None, c_con=None, c_
             "unserved_gwh": unserved_gwh, "s_end": S, "path": path}
 
 
-def run(levels, enso_years, all_years, voll=None, k=None, r_hist=None):
+def run(levels, enso_years, all_years, voll=None, k=None, r_hist=None, credit=True):
     lv0 = levels.iloc[-1]
     s0 = float(K.pct_to_bcm(K.level_to_pct(lv0["level_m"])))
     k = k or A["energy_twh_per_bcm"]
@@ -150,8 +150,8 @@ def run(levels, enso_years, all_years, voll=None, k=None, r_hist=None):
         base = {Y: simulate(sc[Y], "none", s0=s0, k=k, voll=voll) for Y in years}
 
         def total(r, Y):
-            credit = (r["s_end"] - base[Y]["s_end"]) * gwh * A["replacement_contracted_usd_per_kwh"]
-            return r["cost_contracted"] + r["cost_emergency"] + r["cost_unserved"] - credit
+            cr = (r["s_end"] - base[Y]["s_end"]) * gwh * A["replacement_contracted_usd_per_kwh"] if credit else 0.0
+            return r["cost_contracted"] + r["cost_emergency"] + r["cost_unserved"] - cr
 
         pol = {}
         for j, mth in enumerate(MONTHS):

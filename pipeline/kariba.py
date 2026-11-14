@@ -254,8 +254,9 @@ def main():
     # ---------------- live forecast
     fc, imp = M.live_forecast(S, X, M.FEATURES_ALL)
     fc_ng, _ = M.live_forecast(S, X, M.FEATURES_NO_GRACE)
+    fc_en, _ = M.live_forecast(S, X, M.FEATURES_ALL, res_by_phase=True)
     print(f"[kariba] live forecast done ({time.time()-t0:.0f}s)")
-    for f in fc + fc_ng:
+    for f in fc + fc_ng + fc_en:
         f.pop("_ens", None)
     dec27 = [f for f in fc if f["month"] == "2027-12"][0]
 
@@ -273,7 +274,8 @@ def main():
     sens = {}
     for name, kw in {"voll_0.5": {"voll": 0.5}, "voll_1.5": {"voll": 1.5},
                      "energy_0.19_twh_per_bcm": {"k": 0.19}, "energy_0.25_twh_per_bcm": {"k": 0.25},
-                     "hist_release_23_bcm": {"r_hist": 23.0}, "hist_release_36_bcm": {"r_hist": 36.0}}.items():
+                     "hist_release_23_bcm": {"r_hist": 23.0}, "hist_release_36_bcm": {"r_hist": 36.0},
+                     "no_terminal_credit": {"credit": False}}.items():
         r = C.run(lv, nino_years, all_years, **kw)["el_nino"]
         cv = {c["action_month"] or c["policy"]: c["expected_cost_musd_mean"] for c in C.summarize(r)}
         sens[name] = {"act_2026_12": cv["2026-12"], "act_2027_04": cv["2027-04"],
@@ -341,7 +343,7 @@ def main():
                    "altimetry_minus_gauge_m": round(latest.level_m - 479.98, 2)},
         "drivers_now": {k: X.loc["2026-11-01", k] for k in M.FEATURES_ALL},
         "drivers_now_units": {"usable_now": "%", "level_now": "m", "d1": "m change over 1 month", "d3": "m, 3 months",
-                              "d6": "m, 6 months", "precip_1m_anom": "mm vs 1981-2000 mean (Oct 2026)",
+                              "d6": "m, 6 months", "precip_1m_anom": "mm vs trailing 15-year mean of the same month (Oct 2026)",
                               "precip_3m_anom": "mm, Aug-Oct 2026", "precip_6m_anom": "mm, May-Oct 2026",
                               "precip_std_anom": "mm, rainy season to date (Oct 2026)",
                               "root_anom_z": "SD, POWER root-zone wetness, Sep 2026",
@@ -359,7 +361,7 @@ def main():
                        "ensemble. Baselines refitted on the same training window: climatology (target calendar month), "
                        "persistence (no change, deterministic) and ENSO-only (target-month composite for the issue-time "
                        "ONI phase). Features respect publication lags (G-REALM latest pass, GRACE t-3, POWER "
-                       "precipitation complete months to t-1 from the daily API, root-zone wetness t-2, ONI season "
+                       "precipitation complete months to t-1 from the daily API as anomalies vs a trailing 15-year mean, root-zone wetness t-2, ONI season "
                        "ending t-1)."),
             "test_period": "2005-01..2026-10 (targets)", "n_test_issues": int(P_full["issue"].nunique()),
             "events": {"warning": "usable < 20 %", "danger": "usable < 10 %"},
@@ -381,6 +383,11 @@ def main():
                                "usable_pct": round(float(latest.usable_pct), 2)},
                      "months": [{k: v for k, v in f.items() if k != "n_train"} for f in fc],
                      "months_no_grace": [{k: v for k, v in f.items() if k != "n_train"} for f in fc_ng],
+                     "months_el_nino_spread": [{k: v for k, v in f.items() if k != "n_train"} for f in fc_en],
+                     "el_nino_spread_note": ("Sensitivity: same median model, but the uncertainty is drawn only from past "
+                                             "forecast errors made when ONI was >= 0.5. In the backtest this variant scored "
+                                             "about the same as the default (not better), so it is shown as a sensitivity, "
+                                             "not the headline."),
                      "max_p_below_warning": max(f["p_below_warning"] for f in fc),
                      "max_p_below_danger": max(f["p_below_danger"] for f in fc),
                      "skill_caveat": f"Backtest skill over all baselines holds to about {max_skill_h} months; later months lean on climatology of the residuals."},
@@ -411,7 +418,7 @@ def main():
             "policies_all_years": [c for c in curve_all if not c["action_month"]],
             "sensitivity_mean_musd": sens,
             "headline": headline,
-            "headline_note": "Expected cost = mean over the historical El Nino inflow scenarios; P10/P50/P90 are across scenarios. Costs are relative to the no-action storage path (end-2027 water credited at 17 c/kWh).",
+            "headline_note": "Expected cost = mean over the historical El Nino inflow scenarios; P10/P50/P90 are across scenarios. Costs are relative to the no-action storage path (end-2027 water credited at 17 c/kWh). The ranking depends on that credit: if water saved in 2027 is assumed worth nothing in 2028, acting in December costs more than waiting (see sensitivity_mean_musd.no_terminal_credit).",
             "calibration_context": {"zambia_2024_imf_growth_cut": "4.7% -> 1.2% (IMF, Nov 2024)", "imf_url": IMF_URL,
                                     "zesco_2024_replacement": "300 MW = 218 GWh/month = $51M/month; 2024 deficit 825 MW vs 2,300 MW demand",
                                     "erb_url": ERB_URL},
@@ -428,6 +435,13 @@ def main():
             "Usable storage comes from a quadratic level-storage curve fitted to five ZRA points; it is an approximation of ZRA's bathymetric table (fit error < 0.12 points at the ZRA pairs).",
             "Satellite passes are every ~10 days with gaps of up to 60 days (marked in history_monthly as gap); monthly means use linear interpolation between passes.",
             "The backtest uses today's versions of POWER, GRACE and ONI, not the values as first published (no vintage archive), so real-time skill may be somewhat lower.",
+            ("Rainfall source: NASA POWER (MERRA-2) catchment precipitation from 15 points inside the HydroBASINS catchment. "
+             "We checked it against GPCP v2.3 over the same catchment (hydrological-year totals 1981-2025). POWER drifts "
+             "relative to GPCP (POWER/GPCP ratio ~1.1-1.4 in the 1980s, ~0.75 in 2002-2006, ~1.0 after 2008), but GPCP shows "
+             "an implausible drop from 2020 (e.g. 2020/21 and 2021/22 as dry as the 2023/24 drought while the lake rose 3.2 m "
+             "in 2020/21). Nov-Mar POWER rain correlates better with the Oct-Jun lake rise (Spearman 0.54 vs 0.37), so we keep "
+             "POWER and express anomalies against a trailing 15-year same-month mean (prior years only), which removes slow "
+             "drift without look-ahead. In the backtest this was as good or slightly better than a fixed 1981-2000 baseline."),
             "POWER root-zone wetness shows a step change on 1 Oct 2026 (near-real-time stream); the model uses it with a 2-month lag, so the live forecast uses September 2026.",
             "GRACE features are missing before mid-2002 and during the 2017-18 GRACE/GRACE-FO gap; LightGBM treats them as missing.",
             "About 34 years and ~10 El Nino events: the danger event (< 10 %) is rare, so its skill estimates have wide intervals.",

@@ -49,7 +49,7 @@ nav a:hover { color: var(--text); background: var(--bg-elev); }
 nav a.active { color: var(--accent-text); background: var(--accent); font-weight: 600; }
 @media (max-width: 640px) {
   .header-row { flex-wrap: wrap; gap: 4px; padding-top: 8px; padding-bottom: 6px; }
-  nav { margin-left: 0; width: 100%; }
+  nav { margin-left: 0; width: 100%; flex-wrap: wrap; overflow: visible; }
   nav a { padding: 5px 9px; }
 }
 
@@ -213,7 +213,9 @@ ul.plain li { margin-bottom: 0.5em; }
 .sort:hover { color: var(--text); }
 .cell-name { font-weight: 600; }
 .cell-drivers ul { margin: 0; padding-left: 1em; color: var(--text-muted); }
-.cell-notes { max-width: 34ch; color: var(--text-muted); }
+.cell-notes { min-width: 26ch; max-width: 46ch; color: var(--text-muted); }
+.more summary { cursor: pointer; color: var(--link); font-size: var(--fs-xs); margin-top: 4px; }
+.more > div { margin-top: 4px; font-size: var(--fs-xs); }
 .hash { word-break: break-all; font-size: var(--fs-xs); }
 .cmd { display: block; font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 4px; word-break: break-all; }
 .prob-table th { font-size: 10px; }
@@ -281,3 +283,13 @@ ul.plain li { margin-bottom: 0.5em; }
 
 .method p { max-width: 80ch; }
 .city-change { margin: 6px 0 0; padding-left: 1em; font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* Compact watchlist cards on phone */
+@media (max-width: 720px) {
+  .watch-table tr { display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 10px; }
+  .watch-table td.cell-name, .watch-table td[data-label="Next 6 months"], .watch-table td.cell-drivers, .watch-table td[data-label="ENSO"] { grid-column: 1 / -1; }
+  .watch-table td.cell-name::before { display: none; }
+  .watch-table td.cell-name { font-size: var(--fs-lg); }
+  .watch-table .cell-drivers ul { font-size: var(--fs-xs); }
+}
+@media (max-width: 640px) { .site-header { position: static; } }
