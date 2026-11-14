@@ -23,7 +23,8 @@ from pipeline.power import monthly_point
 SHORTFALL_PCT = -15.0
 SEVERE_PCT = -30.0
 SICHUAN = "CHN-SC"
-CLIM_BASE = (1981, 2010)  # POWER climatology baseline (entirely before the label period)
+CLIM_BASE = (1981, 2010)
+POWER_LAND_CUTOFF = pd.Period("2026-10", "M")  # first month of the POWER soil/temperature step change  # POWER climatology baseline (entirely before the label period)
 
 
 def reference() -> pd.DataFrame:
@@ -286,6 +287,8 @@ def driver_table(iso3: str, oni: pd.Series) -> pd.DataFrame:
     pw = pw.reindex(idx)
     d = _precip_anoms(gp, idx, "precip_")                       # GPCP v2.3 (primary rain input)
     d = d.join(_precip_anoms(pw["PRECTOTCORR"], idx, "merra_precip_"))  # POWER/MERRA-2 rain (comparison only)
+    # POWER soil wetness/T2M show a step change from 2026-10 (MERRA-2 stream change); treat >= 2026-10 as unavailable
+    pw.loc[pw.index >= POWER_LAND_CUTOFF, ["GWETROOT", "GWETTOP", "T2M"]] = np.nan
     for v, name in (("GWETROOT", "soil_root"), ("GWETTOP", "soil_top"), ("T2M", "t2m")):
         d[f"{name}_anom_sd"] = trailing_month_z(pw[v])
     d["soil_root_3m_anom_sd"] = d["soil_root_anom_sd"].rolling(3, min_periods=3).mean()
@@ -321,8 +324,12 @@ def issue_features(drv: pd.DataFrame, lab: pd.Series, issue_months: pd.PeriodInd
     t = issue_months
     out = pd.DataFrame(index=t)
     pw = drv.reindex(t - LAGS["power"])
-    for c in FEATURE_GROUPS["gpcp_precip"] + MERRA_PRECIP + FEATURE_GROUPS["power_soil"] + FEATURE_GROUPS["power_temp"]:
+    for c in FEATURE_GROUPS["gpcp_precip"] + MERRA_PRECIP:
         out[c] = pw[c].values
+    # soil/temperature: t-1, falling back to t-2 when t-1 is unavailable (live: 2026-10 masked, so 2026-09 is used)
+    pw2 = drv.reindex(t - LAGS["power"] - 1)
+    for c in FEATURE_GROUPS["power_soil"] + FEATURE_GROUPS["power_temp"]:
+        out[c] = np.where(np.isnan(pw[c].values), pw2[c].values, pw[c].values)
     gz = drv["tws_anom_sd"]
     out["tws_anom_sd"] = gz.reindex(t - LAGS["grace"]).values
     out["tws_change_3m_sd"] = (gz.reindex(t - LAGS["grace"]).values - gz.reindex(t - LAGS["grace"] - 3).values)

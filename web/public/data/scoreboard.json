@@ -1,0 +1,212 @@
+{
+ "generated_at": "2026-11-14T20:30:42+00:00",
+ "sources": [
+  "ember_monthly",
+  "ember_china",
+  "grealm",
+  "gravis",
+  "gpcp",
+  "power",
+  "oni",
+  "news"
+ ],
+ "rows": [
+  {
+   "id": "brazil-2021",
+   "name": "Brazil 2021",
+   "countries": [
+    "BRA"
+   ],
+   "enso": "La Nina",
+   "official_warning": "2021-05-27",
+   "onset": "2021-05-28",
+   "now_alarm": null,
+   "now_model": "Country monthly generation model (blocked leave-one-year-out test)",
+   "next_alarm": null,
+   "next_model": "El Nino layer (exposure x ENSO state); no reservoir ensemble for this grid yet",
+   "enso_exposure": "neutral",
+   "oni_6m_before_onset": {
+    "season": "SON 2020",
+    "value": -1.0
+   },
+   "notes": "Country model: missed. ENSO layer classifies BRA as 'neutral'.",
+   "caught_by": "missed",
+   "patronus_alarm": null,
+   "lead_months": null,
+   "lead_vs_official_months": null
+  },
+  {
+   "id": "sichuan-2022",
+   "name": "Sichuan 2022",
+   "countries": [
+    "CHN-SC"
+   ],
+   "enso": "La Nina year; record heatwave and drought",
+   "official_warning": null,
+   "onset": "2022-08-14",
+   "now_alarm": null,
+   "now_model": "Country monthly generation model (blocked leave-one-year-out test)",
+   "next_alarm": null,
+   "next_model": "El Nino layer (exposure x ENSO state); no reservoir ensemble for this grid yet",
+   "enso_exposure": "neutral",
+   "oni_6m_before_onset": {
+    "season": "DJF 2022",
+    "value": -0.76
+   },
+   "notes": "Country model: missed. ENSO layer classifies CHN-SC as 'neutral'.",
+   "caught_by": "missed",
+   "patronus_alarm": null,
+   "lead_months": null,
+   "lead_vs_official_months": null
+  },
+  {
+   "id": "vietnam-2023",
+   "name": "Northern Vietnam 2023",
+   "countries": [
+    "VNM"
+   ],
+   "enso": "El Nino developing",
+   "official_warning": "2023-05-10",
+   "onset": "2023-05-25",
+   "now_alarm": "2022-11",
+   "now_model": "Country monthly generation model (blocked leave-one-year-out test)",
+   "next_alarm": null,
+   "next_model": "El Nino layer (exposure x ENSO state); no reservoir ensemble for this grid yet",
+   "enso_exposure": "el_nino_loser",
+   "oni_6m_before_onset": {
+    "season": "SON 2022",
+    "value": -0.89
+   },
+   "notes": "Country model: caught. ENSO layer classifies VNM as 'el_nino_loser'.",
+   "caught_by": "now",
+   "patronus_alarm": "2022-11",
+   "lead_months": 6,
+   "lead_vs_official_months": 6
+  },
+  {
+   "id": "ecuador-2023-24",
+   "name": "Ecuador 2023-24",
+   "countries": [
+    "ECU"
+   ],
+   "enso": "Wave 1 El Nino; late-2024 wave ENSO-neutral",
+   "official_warning": "2023-10-24",
+   "onset": "2023-10-27",
+   "now_alarm": null,
+   "now_model": "Country monthly generation model (blocked leave-one-year-out test)",
+   "next_alarm": null,
+   "next_model": "El Nino layer (exposure x ENSO state); no reservoir ensemble for this grid yet",
+   "enso_exposure": "neutral",
+   "oni_6m_before_onset": {
+    "season": "FMA 2023",
+    "value": -0.11
+   },
+   "notes": "Country model: missed. ENSO layer classifies ECU as 'neutral'. Later 2024 waves: missed, missed.",
+   "caught_by": "missed",
+   "patronus_alarm": null,
+   "lead_months": null,
+   "lead_vs_official_months": null
+  },
+  {
+   "id": "kariba-2024",
+   "name": "Lake Kariba 2024",
+   "countries": [
+    "ZMB",
+    "ZWE"
+   ],
+   "enso": "El Nino 2023/24",
+   "official_warning": "2023-12-28",
+   "onset": "2024-03-11",
+   "now_alarm": "2024-03",
+   "now_model": "Lake-level ML model (strictly forward test)",
+   "next_alarm": "2023-07",
+   "next_model": "El Nino water-balance ensemble (strictly forward, ENSO state known at the time)",
+   "notes": "Ensemble first alarm Jul 2023 came from low storage under a neutral ONI; El Nino analogs used from Aug 2023, P(below 20%) = 0.8 in Oct-Dec 2023. The ML model expected the usual rainy-season recovery and fired only in Mar 2024.",
+   "caught_by": "next",
+   "patronus_alarm": "2023-07",
+   "lead_months": 8,
+   "lead_vs_official_months": 5
+  }
+ ],
+ "summary": {
+  "n_crises": 5,
+  "n_caught": 2,
+  "headline": "Kariba 2024 was flagged in Jul 2023 by the El Nino reservoir model, 5 months before the official water cut; the country monthly model caught 1 of 5 other crises (Vietnam 2023). Short-range monthly country forecasts have little skill; the early warning comes from reservoir storage and the El Nino signal."
+ },
+ "false_alarms": {
+  "country_model": {
+   "threshold": 0.66,
+   "threshold_rule": "Lowest threshold (grid 0.05-0.95) giving <= 1 false alarm per country per 5 calm years. Calm issue months have no observed shortfall in the next 6 months. An alarm covers a 6-month window, so 6 alarm-months in calm periods count as one false alarm: rate = (calm alarm-months / 6) / (calm months / 60). Equivalent to a false-positive rate of <= 10% on calm months.",
+   "false_alarms_per_country_5yr": 0.908,
+   "hit_rate_any6": 0.21
+  },
+  "kariba_next_model_warning": {
+   "el_nino_seasons": {
+    "ensemble": {
+     "hit": 3,
+     "miss": 2,
+     "false_alarm": 2,
+     "correct_quiet": 3
+    },
+    "ml_2006_onward": {
+     "hit": 1,
+     "miss": 4,
+     "false_alarm": 1,
+     "correct_quiet": 1
+    },
+    "ensemble_2006_onward": {
+     "hit": 3,
+     "miss": 2,
+     "false_alarm": 1,
+     "correct_quiet": 1
+    }
+   },
+   "other_seasons": {
+    "ensemble": {
+     "hit": 3,
+     "miss": 2,
+     "false_alarm": 4,
+     "correct_quiet": 11
+    },
+    "ml_2006_onward": {
+     "hit": 3,
+     "miss": 1,
+     "false_alarm": 2,
+     "correct_quiet": 7
+    },
+    "ensemble_2006_onward": {
+     "hit": 2,
+     "miss": 2,
+     "false_alarm": 3,
+     "correct_quiet": 6
+    }
+   },
+   "all": {
+    "ensemble": {
+     "hit": 6,
+     "miss": 4,
+     "false_alarm": 6,
+     "correct_quiet": 14
+    },
+    "ml_2006_onward": {
+     "hit": 4,
+     "miss": 5,
+     "false_alarm": 3,
+     "correct_quiet": 8
+    },
+    "ensemble_2006_onward": {
+     "hit": 5,
+     "miss": 4,
+     "false_alarm": 4,
+     "correct_quiet": 7
+    }
+   }
+  },
+  "kariba_next_model_definition": "Seasons Oct-Dec 1995-2025; alarm = P(below 20%) > 0.5 on any Oct-Dec issue; event = below 20% at any point Apr-Dec of the following year."
+ },
+ "notes": [
+  "lead_months = months from the first Patronus alarm (either model) to crisis onset.",
+  "lead_vs_official_months is positive when Patronus fired before the first official warning.",
+  "The country model's alarm threshold was chosen on the same out-of-fold predictions used to measure leads, so its catches are optimistic."
+ ]
+}

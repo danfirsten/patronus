@@ -17,6 +17,7 @@ from sklearn.isotonic import IsotonicRegression
 
 from pipeline import gen_data as G
 from pipeline import gen_model as M
+from pipeline import gen_seasonal as S
 from pipeline.gen_points import SICHUAN_BOX, plant_centroid, points_for
 from pipeline.paths import ISSUE_DATE, OUT
 
@@ -448,6 +449,15 @@ def main():
     thr = chosen[0]
     log(f"alarm threshold {thr}: {chosen[1]} alarm-months in {chosen[2]} calm months -> {chosen[4]:.2f}/5y; hit rate {chosen[3]:.2f}")
     leads = crisis_leads(dA, thr, lab)
+    log("seasonal robustness test...")
+    seasonal, seasonal_live = S.run(D, lab, countries, ISSUE, log, choose_threshold, crisis_leads)
+    q_any = any(seasonal["qualifies"].values())
+    notes.append("Seasonal target (generation_backtest.json -> seasonal_target): a robustness test pre-specified by the team "
+                 "after the primary monthly analysis was run and before its results were seen (3-month mean anomaly <= -15%, "
+                 "same features, folds, baselines and calibration, no tuning). "
+                 + ("It beat climatology on AUC-PR with a 90% CI above zero for: " + ", ".join(k for k, v in seasonal["qualifies"].items() if v)
+                    + ", so seasonal forecasts are added alongside the monthly ones." if q_any else
+                    "It did not beat climatology on AUC-PR with a CI above zero, so the live outputs stay monthly only."))
     for c in leads:
         log(f"  {c['id']}: alarm {c['alarm_month']} lead {c['lead_months']} vs official {c['lead_vs_official_months']}")
 
@@ -497,6 +507,8 @@ def main():
              "months": [{k: v for k, v in m.items() if k not in ("normal_twh",)} for m in months],
              "drivers": drv, "enso_exposure": enso.get(iso, {}).get("exposure"),
              "expected_cost_next_6m_musd": cst, "label_basis": info[iso]["basis"]}
+        if q_any and iso in seasonal_live:
+            w["seasonal"] = {k: v for k, v in seasonal_live[iso].items() if seasonal["qualifies"].get(k)}
         watch.append(w)
 
         # country page
@@ -517,7 +529,8 @@ def main():
               "precip_source": "GPCP v2.3", "precip_1m_anom_pct": _r(base_row["precip_1m_anom_pct"]), "precip_3m_anom_pct": _r(base_row["precip_3m_anom_pct"]),
               "precip_6m_anom_pct": _r(base_row["precip_6m_anom_pct"]), "precip_12m_anom_pct": _r(base_row["precip_12m_anom_pct"]),
               "soil_root_anom_sd": _r(base_row["soil_root_anom_sd"], 2), "soil_top_anom_sd": _r(base_row["soil_top_anom_sd"], 2),
-              "t2m_3m_anom_sd": _r(base_row["t2m_3m_anom_sd"], 2), "power_month": str(ISSUE - 1),
+              "t2m_3m_anom_sd": _r(base_row["t2m_3m_anom_sd"], 2), "power_month": str(min(ISSUE - 1, G.POWER_LAND_CUTOFF - 1)),
+              "precip_month": str(ISSUE - 1),
               "oni": _r(base_row["oni"], 2), "oni_season": "ASO " + str((ISSUE - 1).year),
               "persist_anom_pct": _r(base_row["persist_anom_pct"]), "persist_month": base_row["persist_month"]}
         pts = points_for(iso)
@@ -542,6 +555,10 @@ def main():
                                      "large exporters (Norway, Canada, Sweden) mostly lose export revenue, not supply.")},
                 "notes": ([f"Ember data ends {last}; forecast months start {months[0]['month']}."]
                           + (["Sichuan: no provincial capacity series, so the anomaly is generation vs the same calendar month in earlier years rescaled by the last full year's total output. Sampling box lon 97.3-108.6, lat 26.0-34.4 also catches some Yunnan, Tibet, Gansu and Chongqing plants."] if iso == "CHN-SC" else []))}
+        if q_any and iso in seasonal_live:
+            page["seasonal_forecast"] = {"definition": "P(mean capacity-factor anomaly over the 3-month window <= -15%)",
+                                         "issued": ISSUE_DATE,
+                                         "windows": {k: v for k, v in seasonal_live[iso].items() if seasonal["qualifies"].get(k)}}
         _write(f"country/{iso}.json", page)
 
     watch.sort(key=lambda w: -w["max_p_shortfall"])
@@ -603,6 +620,7 @@ def main():
         "Blocked leave-one-year-out CV trains on years after the test year too; expanding normals for those later years include the test year's labels (mild leakage). The strictly forward 2024+ test avoids this but is small.",
         "The alarm threshold and crisis lead times are chosen and measured on the same out-of-fold predictions, so they are optimistic. The five crises are illustrations; the skill table is the main test.",
         "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a 2-month lag (falling back to 3 when t-2 is unpublished, as for Brazil, Canada, Ecuador and Nigeria now); Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data, so their live forecasts have no persistence input.",
+        "NASA POWER root-zone/surface soil wetness and temperature have a step change from 2026-10 (e.g. Peru root-zone +3.7 SD, Brazil -4.0 SD in that month). Those variables are treated as unavailable from 2026-10; the live forecast uses 2026-09 for them (one month older than in the backtest). GPCP rain for 2026-10 is used. No backtest row is affected: the first issue month that would read 2026-10 is the live one (2026-11), which has no labels.",
         "Cost estimates are rough and labelled as such: fixed 20 c/kWh replacement, VoLL $1.00/kWh on 10% of the deficit, no import or demand response modelling.",
     ]
     thr_table = [{"threshold": t, "calm_alarm_months": f, "calm_months": nc, "hit_rate_any6": _r(hr, 3),
@@ -640,6 +658,7 @@ def main():
                   "false_alarms_per_country_5yr": _r(chosen[4], 3), "calm_alarm_months": chosen[1], "calm_months": chosen[2],
                   "hit_rate_any6": _r(chosen[3], 3), "threshold_table": thr_table, **alarm_stats},
         "crisis_leads": leads,
+        "seasonal_target": seasonal,
         "limitations": limitations, "notes": notes,
         "runtime_s": round(time.time() - t0, 1),
     })
