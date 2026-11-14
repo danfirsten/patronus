@@ -207,7 +207,7 @@ export default function KaribaPage() {
       <SkillTable rows={d.backtest?.by_horizon ?? []} noGrace={d.backtest?.ablation_no_grace ?? []} />
 
       <h2 className="section-title">What the 2024 blackout looked like from space</h2>
-      <NightStrip frames={nl.data?.frames ?? []} />
+      <NightStrip frames={(nl.data?.frames ?? []).filter((f) => !f.region || f.region === 'zambia')} />
 
       {(d.other_reservoirs ?? []).length > 0 && (
         <div className="panel">
@@ -265,7 +265,8 @@ function SkillTable({ rows, noGrace }: { rows: SkillRow[]; noGrace: any[] }) {
 
 function NightFrameImg({ f }: { f: NightFrame }) {
   const [srcIdx, setSrcIdx] = useState(0);
-  const candidates = f.src ? [`data/${f.src}`, f.src] : [];
+  // src is relative to the site root (public/); fall back to data/ for older layouts
+  const candidates = f.src ? [f.src, `data/${f.src}`] : [];
   const failed = srcIdx >= candidates.length;
   return (
     <figure className="night-frame">
@@ -274,7 +275,16 @@ function NightFrameImg({ f }: { f: NightFrame }) {
       ) : (
         <img src={candidates[srcIdx]} alt={`Night lights over ${f.place ?? 'the region'}, ${fmtDate(f.date)}`} loading="lazy" onError={() => setSrcIdx((i) => i + 1)} />
       )}
-      <figcaption><b>{fmtDate(f.date)}</b> · {f.place}<br /><span className="muted">{f.caption}</span></figcaption>
+      <figcaption>
+        <b>{fmtDate(f.date)}</b> · {f.place}<br /><span className="muted">{f.caption}</span>
+        {!f.is_baseline && f.cities && (
+          <ul className="city-change">
+            {Object.entries(f.cities).slice(0, 2).map(([name, c]) => isNum(c?.vs_baseline_pct) ? (
+              <li key={name}>{name.split(' (')[0]}: <b>{c.vs_baseline_pct > 0 ? '+' : ''}{fmtNum(c.vs_baseline_pct, 0)}%</b> brightness vs baseline</li>
+            ) : null)}
+          </ul>
+        )}
+      </figcaption>
     </figure>
   );
 }
@@ -287,7 +297,7 @@ function NightStrip({ frames }: { frames: NightFrame[] }) {
         {frames.map((f) => <NightFrameImg key={f.id} f={f} />)}
       </div>
       <SourceNote files={['nightlights.json']}>
-        NASA Black Marble night lights (VNP46) via NASA GIBS, {periodOf([frames[0]?.date, frames[frames.length - 1]?.date])}. Display images only; clouds and moonlight affect single nights.
+        NASA Black Marble night lights (VNP46A2) via NASA GIBS, {periodOf([frames[0]?.date, frames[frames.length - 1]?.date])}. Multi-night composites of display imagery; brightness changes are approximate.
       </SourceNote>
     </>
   );

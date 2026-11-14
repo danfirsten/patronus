@@ -55,3 +55,19 @@ export function periodOf(dates: (string | undefined | null)[]): string {
   if (!ds.length) return '—';
   return `${fmtMonth(ds[0])} – ${fmtMonth(ds[ds.length - 1])}`;
 }
+
+/** crises.json uses {date, what} objects; scoreboard uses plain strings. Accept both. */
+export function dateOf(v: unknown): string | null {
+  if (typeof v === 'string') return v;
+  if (v && typeof v === 'object' && typeof (v as any).date === 'string') return (v as any).date;
+  return null;
+}
+export function whatOf(v: unknown): string | null {
+  if (v && typeof v === 'object' && typeof (v as any).what === 'string') return (v as any).what;
+  return null;
+}
+
+/** crises.json cost strings end in [P] (primary source) or [N] (news only). */
+export function costText(s: string): string {
+  return s.replace(/\s*\[P\]\s*$/, '').replace(/\s*\[N\]\s*$/, ' (news reports only)');
+}

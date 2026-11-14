@@ -60,6 +60,12 @@ SOURCES = [
         "use": "El Nino / La Nina phase for the ENSO fingerprints and the ENSO-only baseline.",
     },
     {
+        "id": "gpcp", "name": "GPCP v2.3 monthly precipitation (satellite + gauge)", "provider": "NASA GSFC / GEWEX; distributed by NOAA PSL", "nasa": True,
+        "url": "https://psl.noaa.gov/data/gridded/data.gpcp.html",
+        "coverage": "1979-01..2026-10, 2.5 degree grid (months after 2021-11 are interim)", "license": "Public domain (US Government work)",
+        "use": "Main rainfall record for the ENSO fingerprints and basin rainfall trends; chosen because it has no artificial breaks.",
+    },
+    {
         "id": "cpc_enso", "name": "CPC ENSO diagnostic discussion (official ENSO outlook)", "provider": "NOAA Climate Prediction Center / IRI", "nasa": False,
         "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
         "coverage": "monthly issues", "license": "Public domain (US Government work)",

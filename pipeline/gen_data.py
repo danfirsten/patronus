@@ -228,26 +228,66 @@ def power_series(points: list[tuple[float, float, float]]) -> pd.DataFrame:
     return out
 
 
+_GPCP = None
+
+
+def _gpcp():
+    global _GPCP
+    if _GPCP is None:
+        d = xr.open_dataset(RAW / "gpcp" / "precip.mon.mean.nc", decode_times=False, drop_variables=["time_bnds"])
+        t = (pd.Timestamp("1800-01-01") + pd.to_timedelta(d["time"].values, "D")).to_period("M")
+        _GPCP = (d["precip"], t)
+    return _GPCP
+
+
+def gpcp_series(points: list[tuple[float, float, float]]) -> pd.Series:
+    """GPCP v2.3 monthly rain (mm/day, 2.5 deg), nearest cell per point, capacity-weighted."""
+    pr, per = _gpcp()
+    acc = None
+    for x, y, w in points:
+        v = pr.sel(lat=y, lon=x % 360, method="nearest").values.astype(float)
+        v = np.where((v >= 0) & (v < 1e3), v, np.nan) * w
+        acc = v if acc is None else acc + v
+    return pd.Series(acc, index=per).groupby(level=0).mean()
+
+
+def _precip_anoms(p_mmday: pd.Series, idx: pd.PeriodIndex, prefix: str) -> pd.DataFrame:
+    p_mmday = p_mmday.reindex(idx)
+    base = p_mmday[(idx.year >= CLIM_BASE[0]) & (idx.year <= CLIM_BASE[1])]
+    clim = base.groupby(base.index.month).mean()
+    p = p_mmday * idx.days_in_month
+    pc = pd.Series(clim.reindex(idx.month).values * idx.days_in_month, index=idx)
+    out = pd.DataFrame(index=idx)
+    for k in (1, 3, 6, 12):
+        out[f"{prefix}{k}m_anom_pct"] = (p.rolling(k, min_periods=k).sum() / pc.rolling(k, min_periods=k).sum() - 1.0) * 100.0
+    return out
+
+
+def trailing_month_z(s: pd.Series, years: int = 10, min_years: int = 5) -> pd.Series:
+    """z vs the same calendar month in the previous `years` years (causal). A trailing baseline absorbs step
+    changes in the MERRA-2 land record after a few years (it does not remove one-off artefacts)."""
+    out = pd.Series(np.nan, index=s.index)
+    for m in range(1, 13):
+        g = s[s.index.month == m].dropna()
+        v = g.values
+        for i in range(len(g)):
+            prev = v[max(0, i - years):i]
+            if len(prev) >= min_years and prev.std(ddof=1) > 0:
+                out[g.index[i]] = (v[i] - prev.mean()) / prev.std(ddof=1)
+    return out
+
+
 def driver_table(iso3: str, oni: pd.Series) -> pd.DataFrame:
     """Monthly driver series for one area, indexed by observation month (not yet lagged)."""
     pts = points_for(iso3)
     pw = power_series(pts)
-    idx = pd.period_range("1981-01", pw.index.max(), freq="M")
+    gp = gpcp_series(pts)
+    idx = pd.period_range("1981-01", max(pw.index.max(), gp.index.max()), freq="M")
     pw = pw.reindex(idx)
-    base = pw[(pw.index.year >= CLIM_BASE[0]) & (pw.index.year <= CLIM_BASE[1])]
-    clim_mean = base.groupby(base.index.month).mean()
-    clim_sd = base.groupby(base.index.month).std()
-    mon = pw.index.month
-    d = pd.DataFrame(index=idx)
-    p = pw["PRECTOTCORR"] * pw.index.days_in_month  # mm per month
-    pc = clim_mean["PRECTOTCORR"].reindex(mon).values * pw.index.days_in_month
-    for k in (1, 3, 6, 12):
-        num = p.rolling(k, min_periods=k).sum()
-        den = pd.Series(pc, index=idx).rolling(k, min_periods=k).sum()
-        d[f"precip_{k}m_anom_pct"] = (num / den - 1.0) * 100.0
+    d = _precip_anoms(gp, idx, "precip_")                       # GPCP v2.3 (primary rain input)
+    d = d.join(_precip_anoms(pw["PRECTOTCORR"], idx, "merra_precip_"))  # POWER/MERRA-2 rain (comparison only)
     for v, name in (("GWETROOT", "soil_root"), ("GWETTOP", "soil_top"), ("T2M", "t2m")):
-        z = (pw[v].values - clim_mean[v].reindex(mon).values) / clim_sd[v].reindex(mon).values
-        d[f"{name}_anom_sd"] = z
+        d[f"{name}_anom_sd"] = trailing_month_z(pw[v])
     d["soil_root_3m_anom_sd"] = d["soil_root_anom_sd"].rolling(3, min_periods=3).mean()
     d["t2m_3m_anom_sd"] = d["t2m_anom_sd"].rolling(3, min_periods=3).mean()
     g = grace_series(pts)
@@ -263,13 +303,16 @@ LAGS = {"ember": 2, "grace": 3, "power": 1, "oni": 1}
 FEATURE_GROUPS = {
     "ember": ["persist_anom_pct", "persist_3m_anom_pct", "anom_lag12_target_pct"],
     "gravis": ["tws_anom_sd", "tws_change_3m_sd"],
-    "power_precip": ["precip_1m_anom_pct", "precip_3m_anom_pct", "precip_6m_anom_pct", "precip_12m_anom_pct"],
+    "gpcp_precip": ["precip_1m_anom_pct", "precip_3m_anom_pct", "precip_6m_anom_pct", "precip_12m_anom_pct"],
     "power_soil": ["soil_root_anom_sd", "soil_root_3m_anom_sd", "soil_top_anom_sd"],
     "power_temp": ["t2m_anom_sd", "t2m_3m_anom_sd"],
     "oni": ["oni", "oni_change_3m"],
     "calendar": ["target_month_sin", "target_month_cos", "issue_month_sin", "issue_month_cos"],
     "static": ["hydro_share_pct"],
+    "history": ["hist_short_rate", "hist_short_rate_cal", "hist_anom_sd"],
 }
+MERRA_PRECIP = ["merra_precip_1m_anom_pct", "merra_precip_3m_anom_pct", "merra_precip_6m_anom_pct",
+                "merra_precip_12m_anom_pct"]
 FEATURES = [f for g in FEATURE_GROUPS.values() for f in g]
 
 
@@ -278,7 +321,7 @@ def issue_features(drv: pd.DataFrame, lab: pd.Series, issue_months: pd.PeriodInd
     t = issue_months
     out = pd.DataFrame(index=t)
     pw = drv.reindex(t - LAGS["power"])
-    for c in FEATURE_GROUPS["power_precip"] + FEATURE_GROUPS["power_soil"] + FEATURE_GROUPS["power_temp"]:
+    for c in FEATURE_GROUPS["gpcp_precip"] + MERRA_PRECIP + FEATURE_GROUPS["power_soil"] + FEATURE_GROUPS["power_temp"]:
         out[c] = pw[c].values
     gz = drv["tws_anom_sd"]
     out["tws_anom_sd"] = gz.reindex(t - LAGS["grace"]).values
@@ -290,6 +333,13 @@ def issue_features(drv: pd.DataFrame, lab: pd.Series, issue_months: pd.PeriodInd
     out["persist_anom_pct"] = lab.reindex(t - LAGS["ember"]).values
     out["persist_3m_anom_pct"] = pd.concat([lab.reindex(t - LAGS["ember"] - k).reset_index(drop=True)
                                             for k in range(3)], axis=1).mean(axis=1, skipna=False).values
+    # causal grid history: shortfall rate and anomaly spread from labels observed by t-2
+    sh = (lab <= SHORTFALL_PCT).astype(float).where(lab.notna())
+    cum_n = sh.notna().cumsum()
+    rate = (sh.fillna(0).cumsum() / cum_n).where(cum_n >= 12)
+    sd = lab.expanding(min_periods=12).std()
+    out["hist_short_rate"] = rate.reindex(t - LAGS["ember"]).values
+    out["hist_anom_sd"] = sd.reindex(t - LAGS["ember"]).values
     out["issue_month_sin"] = np.sin(2 * np.pi * t.month / 12)
     out["issue_month_cos"] = np.cos(2 * np.pi * t.month / 12)
     return out
@@ -309,6 +359,13 @@ def horizon_rows(iso3: str, base: pd.DataFrame, lab: pd.DataFrame, h: int, share
     df["target_month_cos"] = np.cos(2 * np.pi * tgt.month / 12)
     df["anom_lag12_target_pct"] = L["anom_pct"].reindex(tgt - 12).values
     df["hydro_share_pct"] = share
+    # shortfall rate in the target's calendar month, from labels observed by t-2 (>= 2 years)
+    sh = (L["anom_pct"] <= SHORTFALL_PCT).astype(float).where(L["anom_pct"].notna())
+    cal = []
+    for ti, tg in zip(t, tgt):
+        v = sh[(sh.index.month == tg.month) & (sh.index <= ti - LAGS["ember"])].dropna()
+        cal.append((v.sum() + 1) / (len(v) + 2) if len(v) >= 2 else np.nan)
+    df["hist_short_rate_cal"] = cal
     df["y_anom"] = L["anom_pct"].reindex(tgt).values
     df["y_short"] = L["shortfall"].reindex(tgt).values
     df["y_severe"] = L["severe"].reindex(tgt).values

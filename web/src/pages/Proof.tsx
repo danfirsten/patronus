@@ -106,7 +106,7 @@ export default function ProofPage() {
                   <td data-label="File"><code>{e.file}</code></td>
                   <td data-label="SHA-256"><code className="hash">{e.sha256 ?? '—'}</code></td>
                   <td data-label="Logged">{e.logged_at ? e.logged_at.replace('T', ' ').replace(/\.\d+/, '').replace('Z', '') : '—'}</td>
-                  <td data-label="Proof">{e.ots ? <a href={`data/${e.ots}`}>OpenTimestamps file</a> : <span className="muted">Git commit time</span>}</td>
+                  <td data-label="Proof">{e.ots ? <a href={e.ots}>OpenTimestamps file</a> : <span className="muted">Git commit time</span>}</td>
                   <td data-label="Verify">
                     {e.verify && <code className="cmd">{e.verify}</code>}
                     {ledgerReal && <VerifyButton file={e.file} expected={e.sha256} />}
@@ -156,6 +156,14 @@ export default function ProofPage() {
         <p><b>How.</b> A gradient-boosted model (LightGBM) with calibrated probabilities and quantiles, fed by NASA water storage, rain and soil wetness, the El Niño index and recent generation. Months 7–18 come from each grid's El Niño fingerprint combined with the official outlook. Long-term exposure comes from trend tests on 2002–2026 water storage.</p>
         <p><b>How we test it.</b> Blocked leave-one-year-out cross-validation with a 12-month gap, plus a strictly forward test. Baselines: climatology, persistence and ENSO only. Metrics: Brier skill, AUC-PR, reliability, and months of warning at a fixed false-alarm rate.</p>
       </div>
+      {(meta.data?.nasa_data_summary ?? []).length > 0 && (
+        <div className="callout">
+          <h3>NASA data at the core</h3>
+          <ul className="plain">
+            {(meta.data?.nasa_data_summary ?? []).map((n) => <li key={n.mission}><b>{n.mission}:</b> {n.what}</li>)}
+          </ul>
+        </div>
+      )}
       {meta.loading ? <Loading /> : sources.length === 0 ? <Empty>Source list not available yet.</Empty> : (
         <div className="table-wrap">
           <table className="data-table sources-table">
@@ -166,6 +174,7 @@ export default function ProofPage() {
                   <td data-label="Dataset">
                     {s.url ? <a href={s.url} target="_blank" rel="noreferrer">{s.name}</a> : s.name}
                     {s.nasa && <span className="nasa-tag">NASA data</span>}
+                    {s.use && <div className="muted small">{s.use}</div>}
                   </td>
                   <td data-label="Provider">{s.provider ?? '—'}</td>
                   <td data-label="Coverage">{s.coverage ?? '—'}</td>
@@ -185,6 +194,7 @@ export default function ProofPage() {
           The concept is the team's own. Briefs written by AI are labelled as AI-written and checked against the data files.
           No AI-generated images or video are used on this site.
         </p>
+        {meta.data?.ai_disclosure && <p className="muted">{meta.data.ai_disclosure}</p>}
         <p className="muted small">Patronus is a NASA Space Apps 2026 project. It is not affiliated with or endorsed by NASA, and it is unrelated to any company of the same name.</p>
       </div>
     </div>

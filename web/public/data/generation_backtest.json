@@ -1,0 +1,1824 @@
+{
+ "generated_at": "2026-11-14T20:08:53+00:00",
+ "sources": [
+  "ember_monthly",
+  "ember_yearly",
+  "ember_china",
+  "gravis",
+  "power",
+  "oni",
+  "gppd"
+ ],
+ "design": "Blocked leave-one-year-out CV with a 12-month gap on each side (test year Y; train on target months outside [Y-1, Y+1]); pooled LightGBM across tier-1 grids (23 countries + Sichuan); one classifier and three quantile regressors per horizon; isotonic calibration cross-fitted on out-of-fold predictions; features respect publication lags (Ember t-2, GRACE t-3, POWER t-1, ONI t-1). Plus a strictly forward test (train on targets <= 2023-11, test targets 2024-01 onward).",
+ "target": {
+  "definition": "monthly hydro capacity factor (TWh / (Ember yearly GW interpolated x hours)) vs the median of the same calendar month in earlier years only (>= 2 years)",
+  "shortfall_pct": -15.0,
+  "severe_pct": -30.0,
+  "threshold_check": [
+   {
+    "iso3": "VNM",
+    "period": "2023-05..2023-06",
+    "months": [
+     {
+      "month": "2023-05",
+      "cf_anom_pct": -18.0,
+      "shortfall": true
+     },
+     {
+      "month": "2023-06",
+      "cf_anom_pct": -32.9,
+      "shortfall": true
+     }
+    ],
+    "n_shortfall": 2,
+    "n_months": 2
+   },
+   {
+    "iso3": "ECU",
+    "period": "2023-10..2023-11",
+    "months": [
+     {
+      "month": "2023-10",
+      "cf_anom_pct": -9.7,
+      "shortfall": false
+     },
+     {
+      "month": "2023-11",
+      "cf_anom_pct": -20.3,
+      "shortfall": true
+     }
+    ],
+    "n_shortfall": 1,
+    "n_months": 2
+   },
+   {
+    "iso3": "ECU",
+    "period": "2024-09..2024-12",
+    "months": [
+     {
+      "month": "2024-09",
+      "cf_anom_pct": -24.5,
+      "shortfall": true
+     },
+     {
+      "month": "2024-10",
+      "cf_anom_pct": -35.9,
+      "shortfall": true
+     },
+     {
+      "month": "2024-11",
+      "cf_anom_pct": -45.7,
+      "shortfall": true
+     },
+     {
+      "month": "2024-12",
+      "cf_anom_pct": -30.0,
+      "shortfall": true
+     }
+    ],
+    "n_shortfall": 4,
+    "n_months": 4
+   },
+   {
+    "iso3": "BRA",
+    "period": "2021-06..2021-11",
+    "months": [
+     {
+      "month": "2021-06",
+      "cf_anom_pct": -7.8,
+      "shortfall": false
+     },
+     {
+      "month": "2021-07",
+      "cf_anom_pct": -14.9,
+      "shortfall": false
+     },
+     {
+      "month": "2021-08",
+      "cf_anom_pct": -16.9,
+      "shortfall": true
+     },
+     {
+      "month": "2021-09",
+      "cf_anom_pct": -13.4,
+      "shortfall": false
+     },
+     {
+      "month": "2021-10",
+      "cf_anom_pct": -22.0,
+      "shortfall": true
+     },
+     {
+      "month": "2021-11",
+      "cf_anom_pct": -4.7,
+      "shortfall": false
+     }
+    ],
+    "n_shortfall": 2,
+    "n_months": 6
+   },
+   {
+    "iso3": "CHN-SC",
+    "period": "2022-07..2022-09",
+    "months": [
+     {
+      "month": "2022-07",
+      "cf_anom_pct": 17.6,
+      "shortfall": false
+     },
+     {
+      "month": "2022-08",
+      "cf_anom_pct": 1.3,
+      "shortfall": false
+     },
+     {
+      "month": "2022-09",
+      "cf_anom_pct": -12.9,
+      "shortfall": false
+     }
+    ],
+    "n_shortfall": 0,
+    "n_months": 3
+   }
+  ],
+  "threshold_decision": "Kept -15% / -30%. Vietnam May-Jun 2023 and Ecuador Sep-Dec 2024 register clearly; Ecuador late 2023 and Brazil mid-2021 register in part (Brazil's normal is set by already-dry 2018-2020); Sichuan Aug 2022 does not register in monthly data (a two-week event plus heat-driven demand). Loosening to -10% would roughly double the base rate to catch two borderline months, so we kept the design thresholds and report the misses."
+ },
+ "n_countries": 24,
+ "countries": [
+  "AUT",
+  "BIH",
+  "BRA",
+  "CAN",
+  "CHE",
+  "CHN-SC",
+  "COL",
+  "CRI",
+  "ECU",
+  "GEO",
+  "HRV",
+  "ISL",
+  "KGZ",
+  "LKA",
+  "LVA",
+  "MNE",
+  "NGA",
+  "NOR",
+  "NZL",
+  "PER",
+  "SLV",
+  "SWE",
+  "TJK",
+  "VNM"
+ ],
+ "n_country_months": 2564,
+ "base_rate_shortfall": 0.161,
+ "base_rate_severe": 0.05,
+ "by_horizon": [
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1286,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.076,
+   "brier_persistence": 0.1339,
+   "bss_vs_persistence": 0.04,
+   "brier_enso_only": 0.1388,
+   "bss_vs_enso_only": 0.074,
+   "auc_pr": 0.275,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.239,
+   "auc_pr_enso_only": 0.209,
+   "auc_pr_ci90": [
+    0.237,
+    0.317
+   ],
+   "auc_pr_climatology_ci90": [
+    0.196,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    0.017,
+    0.082
+   ],
+   "bss_vs_climatology_ci90": [
+    0.043,
+    0.108
+   ],
+   "bss_vs_persistence_ci90": [
+    0.017,
+    0.062
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.038,
+    0.107
+   ],
+   "horizon": 1,
+   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "quantile_p10_p90_coverage": 0.732,
+   "p50_mae_pct": 16.72,
+   "zero_anomaly_mae_pct": 17.71
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1311,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.057,
+   "brier_persistence": 0.1371,
+   "bss_vs_persistence": 0.044,
+   "brier_enso_only": 0.1383,
+   "bss_vs_enso_only": 0.052,
+   "auc_pr": 0.243,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.172,
+   "auc_pr_enso_only": 0.21,
+   "auc_pr_ci90": [
+    0.211,
+    0.284
+   ],
+   "auc_pr_climatology_ci90": [
+    0.196,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.014,
+    0.049
+   ],
+   "bss_vs_climatology_ci90": [
+    0.026,
+    0.085
+   ],
+   "bss_vs_persistence_ci90": [
+    0.022,
+    0.066
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.018,
+    0.082
+   ],
+   "horizon": 2,
+   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "quantile_p10_p90_coverage": 0.73,
+   "p50_mae_pct": 17.14,
+   "zero_anomaly_mae_pct": 17.71
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1325,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.047,
+   "brier_persistence": 0.1382,
+   "bss_vs_persistence": 0.041,
+   "brier_enso_only": 0.1383,
+   "bss_vs_enso_only": 0.042,
+   "auc_pr": 0.219,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.132,
+   "auc_pr_enso_only": 0.211,
+   "auc_pr_ci90": [
+    0.189,
+    0.258
+   ],
+   "auc_pr_climatology_ci90": [
+    0.196,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.035,
+    0.02
+   ],
+   "bss_vs_climatology_ci90": [
+    0.018,
+    0.075
+   ],
+   "bss_vs_persistence_ci90": [
+    0.021,
+    0.06
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.011,
+    0.073
+   ],
+   "horizon": 3,
+   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "quantile_p10_p90_coverage": 0.728,
+   "p50_mae_pct": 17.28,
+   "zero_anomaly_mae_pct": 17.71
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1345,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.033,
+   "brier_persistence": 0.1381,
+   "bss_vs_persistence": 0.026,
+   "brier_enso_only": 0.1385,
+   "bss_vs_enso_only": 0.028,
+   "auc_pr": 0.194,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.134,
+   "auc_pr_enso_only": 0.209,
+   "auc_pr_ci90": [
+    0.168,
+    0.228
+   ],
+   "auc_pr_climatology_ci90": [
+    0.196,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.056,
+    -0.01
+   ],
+   "bss_vs_climatology_ci90": [
+    0.005,
+    0.061
+   ],
+   "bss_vs_persistence_ci90": [
+    0.01,
+    0.042
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.004,
+    0.062
+   ],
+   "horizon": 4,
+   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "quantile_p10_p90_coverage": 0.722,
+   "p50_mae_pct": 17.31,
+   "zero_anomaly_mae_pct": 17.71
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1352,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.028,
+   "brier_persistence": 0.138,
+   "bss_vs_persistence": 0.02,
+   "brier_enso_only": 0.1391,
+   "bss_vs_enso_only": 0.028,
+   "auc_pr": 0.193,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.128,
+   "auc_pr_enso_only": 0.207,
+   "auc_pr_ci90": [
+    0.165,
+    0.229
+   ],
+   "auc_pr_climatology_ci90": [
+    0.196,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.058,
+    -0.01
+   ],
+   "bss_vs_climatology_ci90": [
+    -0.0,
+    0.055
+   ],
+   "bss_vs_persistence_ci90": [
+    0.003,
+    0.036
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.002,
+    0.06
+   ],
+   "horizon": 5,
+   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "quantile_p10_p90_coverage": 0.732,
+   "p50_mae_pct": 17.43,
+   "zero_anomaly_mae_pct": 17.71
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1345,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.033,
+   "brier_persistence": 0.138,
+   "bss_vs_persistence": 0.025,
+   "brier_enso_only": 0.14,
+   "bss_vs_enso_only": 0.039,
+   "auc_pr": 0.203,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.128,
+   "auc_pr_enso_only": 0.201,
+   "auc_pr_ci90": [
+    0.173,
+    0.24
+   ],
+   "auc_pr_climatology_ci90": [
+    0.196,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.047,
+    0.001
+   ],
+   "bss_vs_climatology_ci90": [
+    0.006,
+    0.059
+   ],
+   "bss_vs_persistence_ci90": [
+    0.008,
+    0.041
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.012,
+    0.069
+   ],
+   "horizon": 6,
+   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "quantile_p10_p90_coverage": 0.729,
+   "p50_mae_pct": 17.34,
+   "zero_anomaly_mae_pct": 17.71
+  }
+ ],
+ "by_horizon_uncalibrated": [
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1292,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.072,
+   "brier_persistence": 0.1339,
+   "bss_vs_persistence": 0.035,
+   "brier_enso_only": 0.1388,
+   "bss_vs_enso_only": 0.07,
+   "auc_pr": 0.285,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.239,
+   "auc_pr_enso_only": 0.209,
+   "auc_pr_ci90": [
+    0.248,
+    0.324
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    0.027,
+    0.091
+   ],
+   "bss_vs_climatology_ci90": [
+    0.035,
+    0.104
+   ],
+   "bss_vs_persistence_ci90": [
+    0.006,
+    0.061
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.031,
+    0.105
+   ],
+   "horizon": 1
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1328,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.045,
+   "brier_persistence": 0.1371,
+   "bss_vs_persistence": 0.032,
+   "brier_enso_only": 0.1383,
+   "bss_vs_enso_only": 0.04,
+   "auc_pr": 0.246,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.172,
+   "auc_pr_enso_only": 0.21,
+   "auc_pr_ci90": [
+    0.212,
+    0.285
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.008,
+    0.048
+   ],
+   "bss_vs_climatology_ci90": [
+    0.014,
+    0.073
+   ],
+   "bss_vs_persistence_ci90": [
+    0.004,
+    0.056
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.009,
+    0.073
+   ],
+   "horizon": 2
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.136,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.022,
+   "brier_persistence": 0.1382,
+   "bss_vs_persistence": 0.016,
+   "brier_enso_only": 0.1383,
+   "bss_vs_enso_only": 0.017,
+   "auc_pr": 0.221,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.132,
+   "auc_pr_enso_only": 0.211,
+   "auc_pr_ci90": [
+    0.19,
+    0.258
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.032,
+    0.02
+   ],
+   "bss_vs_climatology_ci90": [
+    -0.011,
+    0.05
+   ],
+   "bss_vs_persistence_ci90": [
+    -0.012,
+    0.04
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.016,
+    0.052
+   ],
+   "horizon": 3
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1374,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.012,
+   "brier_persistence": 0.1381,
+   "bss_vs_persistence": 0.005,
+   "brier_enso_only": 0.1385,
+   "bss_vs_enso_only": 0.008,
+   "auc_pr": 0.2,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.134,
+   "auc_pr_enso_only": 0.209,
+   "auc_pr_ci90": [
+    0.173,
+    0.231
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.049,
+    -0.007
+   ],
+   "bss_vs_climatology_ci90": [
+    -0.018,
+    0.036
+   ],
+   "bss_vs_persistence_ci90": [
+    -0.019,
+    0.027
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.026,
+    0.041
+   ],
+   "horizon": 4
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.137,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.015,
+   "brier_persistence": 0.138,
+   "bss_vs_persistence": 0.007,
+   "brier_enso_only": 0.1391,
+   "bss_vs_enso_only": 0.015,
+   "auc_pr": 0.205,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.128,
+   "auc_pr_enso_only": 0.207,
+   "auc_pr_ci90": [
+    0.177,
+    0.242
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.044,
+    0.0
+   ],
+   "bss_vs_climatology_ci90": [
+    -0.014,
+    0.041
+   ],
+   "bss_vs_persistence_ci90": [
+    -0.02,
+    0.03
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.02,
+    0.046
+   ],
+   "horizon": 5
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1376,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.011,
+   "brier_persistence": 0.138,
+   "bss_vs_persistence": 0.003,
+   "brier_enso_only": 0.14,
+   "bss_vs_enso_only": 0.017,
+   "auc_pr": 0.205,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.128,
+   "auc_pr_enso_only": 0.201,
+   "auc_pr_ci90": [
+    0.178,
+    0.248
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.044,
+    0.008
+   ],
+   "bss_vs_climatology_ci90": [
+    -0.02,
+    0.041
+   ],
+   "bss_vs_persistence_ci90": [
+    -0.024,
+    0.026
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.017,
+    0.051
+   ],
+   "horizon": 6
+  }
+ ],
+ "severe_by_horizon": [
+  {
+   "horizon": 1,
+   "n": 2564,
+   "n_severe": 128,
+   "brier": 0.0458,
+   "auc_pr": 0.135,
+   "base_rate": 0.05
+  },
+  {
+   "horizon": 2,
+   "n": 2564,
+   "n_severe": 128,
+   "brier": 0.0471,
+   "auc_pr": 0.096,
+   "base_rate": 0.05
+  },
+  {
+   "horizon": 3,
+   "n": 2564,
+   "n_severe": 128,
+   "brier": 0.0467,
+   "auc_pr": 0.092,
+   "base_rate": 0.05
+  },
+  {
+   "horizon": 4,
+   "n": 2564,
+   "n_severe": 128,
+   "brier": 0.0463,
+   "auc_pr": 0.09,
+   "base_rate": 0.05
+  },
+  {
+   "horizon": 5,
+   "n": 2564,
+   "n_severe": 128,
+   "brier": 0.0465,
+   "auc_pr": 0.094,
+   "base_rate": 0.05
+  },
+  {
+   "horizon": 6,
+   "n": 2564,
+   "n_severe": 128,
+   "brier": 0.0469,
+   "auc_pr": 0.092,
+   "base_rate": 0.05
+  }
+ ],
+ "forward_test": {
+  "train": "targets <= 2023-11",
+  "test": "targets >= 2024-01",
+  "by_horizon": [
+   {
+    "n": 763,
+    "n_shortfalls": 151,
+    "base_rate": 0.198,
+    "brier": 0.1546,
+    "brier_climatology": 0.1619,
+    "bss_vs_climatology": 0.045,
+    "brier_persistence": 0.159,
+    "bss_vs_persistence": 0.027,
+    "brier_enso_only": 0.1628,
+    "bss_vs_enso_only": 0.05,
+    "auc_pr": 0.27,
+    "auc_pr_climatology": 0.271,
+    "auc_pr_persistence": 0.283,
+    "auc_pr_enso_only": 0.254,
+    "auc_pr_ci90": [
+     0.219,
+     0.328
+    ],
+    "auc_pr_climatology_ci90": [
+     0.215,
+     0.335
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.061,
+     0.048
+    ],
+    "bss_vs_climatology_ci90": [
+     -0.028,
+     0.102
+    ],
+    "bss_vs_persistence_ci90": [
+     -0.014,
+     0.064
+    ],
+    "bss_vs_enso_only_ci90": [
+     -0.027,
+     0.113
+    ],
+    "horizon": 1,
+    "brier_uncalibrated": 0.1586,
+    "auc_pr_uncalibrated": 0.289
+   },
+   {
+    "n": 763,
+    "n_shortfalls": 151,
+    "base_rate": 0.198,
+    "brier": 0.1559,
+    "brier_climatology": 0.1619,
+    "bss_vs_climatology": 0.037,
+    "brier_persistence": 0.1613,
+    "bss_vs_persistence": 0.033,
+    "brier_enso_only": 0.1624,
+    "bss_vs_enso_only": 0.04,
+    "auc_pr": 0.261,
+    "auc_pr_climatology": 0.271,
+    "auc_pr_persistence": 0.252,
+    "auc_pr_enso_only": 0.266,
+    "auc_pr_ci90": [
+     0.207,
+     0.323
+    ],
+    "auc_pr_climatology_ci90": [
+     0.215,
+     0.335
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.061,
+     0.036
+    ],
+    "bss_vs_climatology_ci90": [
+     -0.033,
+     0.086
+    ],
+    "bss_vs_persistence_ci90": [
+     -0.015,
+     0.069
+    ],
+    "bss_vs_enso_only_ci90": [
+     -0.036,
+     0.098
+    ],
+    "horizon": 2,
+    "brier_uncalibrated": 0.1604,
+    "auc_pr_uncalibrated": 0.266
+   },
+   {
+    "n": 763,
+    "n_shortfalls": 151,
+    "base_rate": 0.198,
+    "brier": 0.1584,
+    "brier_climatology": 0.1619,
+    "bss_vs_climatology": 0.021,
+    "brier_persistence": 0.1621,
+    "bss_vs_persistence": 0.023,
+    "brier_enso_only": 0.1612,
+    "bss_vs_enso_only": 0.017,
+    "auc_pr": 0.238,
+    "auc_pr_climatology": 0.271,
+    "auc_pr_persistence": 0.198,
+    "auc_pr_enso_only": 0.262,
+    "auc_pr_ci90": [
+     0.187,
+     0.297
+    ],
+    "auc_pr_climatology_ci90": [
+     0.215,
+     0.335
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.087,
+     0.013
+    ],
+    "bss_vs_climatology_ci90": [
+     -0.039,
+     0.069
+    ],
+    "bss_vs_persistence_ci90": [
+     -0.011,
+     0.05
+    ],
+    "bss_vs_enso_only_ci90": [
+     -0.053,
+     0.076
+    ],
+    "horizon": 3,
+    "brier_uncalibrated": 0.1628,
+    "auc_pr_uncalibrated": 0.247
+   },
+   {
+    "n": 763,
+    "n_shortfalls": 151,
+    "base_rate": 0.198,
+    "brier": 0.1578,
+    "brier_climatology": 0.1619,
+    "bss_vs_climatology": 0.025,
+    "brier_persistence": 0.1621,
+    "bss_vs_persistence": 0.026,
+    "brier_enso_only": 0.1613,
+    "bss_vs_enso_only": 0.021,
+    "auc_pr": 0.238,
+    "auc_pr_climatology": 0.271,
+    "auc_pr_persistence": 0.21,
+    "auc_pr_enso_only": 0.258,
+    "auc_pr_ci90": [
+     0.19,
+     0.289
+    ],
+    "auc_pr_climatology_ci90": [
+     0.215,
+     0.335
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.089,
+     0.006
+    ],
+    "bss_vs_climatology_ci90": [
+     -0.03,
+     0.073
+    ],
+    "bss_vs_persistence_ci90": [
+     0.007,
+     0.04
+    ],
+    "bss_vs_enso_only_ci90": [
+     -0.04,
+     0.073
+    ],
+    "horizon": 4,
+    "brier_uncalibrated": 0.1614,
+    "auc_pr_uncalibrated": 0.248
+   },
+   {
+    "n": 763,
+    "n_shortfalls": 151,
+    "base_rate": 0.198,
+    "brier": 0.1578,
+    "brier_climatology": 0.1619,
+    "bss_vs_climatology": 0.025,
+    "brier_persistence": 0.1621,
+    "bss_vs_persistence": 0.027,
+    "brier_enso_only": 0.1649,
+    "bss_vs_enso_only": 0.043,
+    "auc_pr": 0.23,
+    "auc_pr_climatology": 0.271,
+    "auc_pr_persistence": 0.217,
+    "auc_pr_enso_only": 0.245,
+    "auc_pr_ci90": [
+     0.188,
+     0.276
+    ],
+    "auc_pr_climatology_ci90": [
+     0.215,
+     0.335
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.093,
+     -0.002
+    ],
+    "bss_vs_climatology_ci90": [
+     -0.027,
+     0.07
+    ],
+    "bss_vs_persistence_ci90": [
+     0.001,
+     0.047
+    ],
+    "bss_vs_enso_only_ci90": [
+     -0.01,
+     0.085
+    ],
+    "horizon": 5,
+    "brier_uncalibrated": 0.1602,
+    "auc_pr_uncalibrated": 0.253
+   },
+   {
+    "n": 763,
+    "n_shortfalls": 151,
+    "base_rate": 0.198,
+    "brier": 0.1567,
+    "brier_climatology": 0.1619,
+    "bss_vs_climatology": 0.032,
+    "brier_persistence": 0.1621,
+    "bss_vs_persistence": 0.033,
+    "brier_enso_only": 0.1691,
+    "bss_vs_enso_only": 0.073,
+    "auc_pr": 0.232,
+    "auc_pr_climatology": 0.271,
+    "auc_pr_persistence": 0.232,
+    "auc_pr_enso_only": 0.225,
+    "auc_pr_ci90": [
+     0.189,
+     0.277
+    ],
+    "auc_pr_climatology_ci90": [
+     0.215,
+     0.335
+    ],
+    "auc_pr_minus_climatology_ci90": [
+     -0.087,
+     -0.005
+    ],
+    "bss_vs_climatology_ci90": [
+     -0.017,
+     0.074
+    ],
+    "bss_vs_persistence_ci90": [
+     0.009,
+     0.052
+    ],
+    "bss_vs_enso_only_ci90": [
+     0.027,
+     0.111
+    ],
+    "horizon": 6,
+    "brier_uncalibrated": 0.1613,
+    "auc_pr_uncalibrated": 0.244
+   }
+  ]
+ },
+ "reliability": [
+  {
+   "horizon": 3,
+   "calibrated": true,
+   "bins": [
+    {
+     "p_lo": 0,
+     "p_hi": 0.1,
+     "p_mean": 0.078,
+     "observed_rate": 0.085,
+     "n": 1053
+    },
+    {
+     "p_lo": 0.1,
+     "p_hi": 0.2,
+     "p_mean": 0.164,
+     "observed_rate": 0.178,
+     "n": 482
+    },
+    {
+     "p_lo": 0.2,
+     "p_hi": 0.3,
+     "p_mean": 0.238,
+     "observed_rate": 0.23,
+     "n": 1016
+    },
+    {
+     "p_lo": 0.3,
+     "p_hi": 0.4,
+     "p_mean": 0.333,
+     "observed_rate": 0.429,
+     "n": 7
+    },
+    {
+     "p_lo": 0.5,
+     "p_hi": 0.6,
+     "p_mean": 0.516,
+     "observed_rate": 0.5,
+     "n": 2
+    },
+    {
+     "p_lo": 0.6,
+     "p_hi": 0.8,
+     "p_mean": 0.711,
+     "observed_rate": 0.0,
+     "n": 4
+    }
+   ]
+  },
+  {
+   "horizon": 3,
+   "calibrated": false,
+   "bins": [
+    {
+     "p_lo": 0,
+     "p_hi": 0.1,
+     "p_mean": 0.063,
+     "observed_rate": 0.091,
+     "n": 1104
+    },
+    {
+     "p_lo": 0.1,
+     "p_hi": 0.2,
+     "p_mean": 0.143,
+     "observed_rate": 0.209,
+     "n": 824
+    },
+    {
+     "p_lo": 0.2,
+     "p_hi": 0.3,
+     "p_mean": 0.244,
+     "observed_rate": 0.231,
+     "n": 373
+    },
+    {
+     "p_lo": 0.3,
+     "p_hi": 0.4,
+     "p_mean": 0.342,
+     "observed_rate": 0.213,
+     "n": 178
+    },
+    {
+     "p_lo": 0.4,
+     "p_hi": 0.5,
+     "p_mean": 0.443,
+     "observed_rate": 0.149,
+     "n": 67
+    },
+    {
+     "p_lo": 0.5,
+     "p_hi": 0.6,
+     "p_mean": 0.535,
+     "observed_rate": 0.412,
+     "n": 17
+    },
+    {
+     "p_lo": 0.6,
+     "p_hi": 0.8,
+     "p_mean": 0.626,
+     "observed_rate": 0.0,
+     "n": 1
+    }
+   ]
+  }
+ ],
+ "ablations": [
+  {
+   "removed": "gravis",
+   "horizon": 3,
+   "auc_pr": 0.225,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": 0.005,
+   "delta_ci90": [
+    -0.008,
+    0.018
+   ],
+   "brier": 0.1345,
+   "brier_full": 0.136
+  },
+  {
+   "removed": "power_precip",
+   "horizon": 3,
+   "auc_pr": 0.216,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": -0.005,
+   "delta_ci90": [
+    -0.019,
+    0.008
+   ],
+   "brier": 0.1362,
+   "brier_full": 0.136
+  },
+  {
+   "removed": "power_soil",
+   "horizon": 3,
+   "auc_pr": 0.221,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": -0.0,
+   "delta_ci90": [
+    -0.007,
+    0.007
+   ],
+   "brier": 0.136,
+   "brier_full": 0.136
+  },
+  {
+   "removed": "power_temp",
+   "horizon": 3,
+   "auc_pr": 0.218,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": -0.003,
+   "delta_ci90": [
+    -0.011,
+    0.004
+   ],
+   "brier": 0.1364,
+   "brier_full": 0.136
+  },
+  {
+   "removed": "oni",
+   "horizon": 3,
+   "auc_pr": 0.217,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": -0.003,
+   "delta_ci90": [
+    -0.011,
+    0.004
+   ],
+   "brier": 0.1364,
+   "brier_full": 0.136
+  },
+  {
+   "removed": "ember_persistence",
+   "horizon": 3,
+   "auc_pr": 0.21,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": -0.011,
+   "delta_ci90": [
+    -0.024,
+    0.003
+   ],
+   "brier": 0.1375,
+   "brier_full": 0.136
+  },
+  {
+   "removed": "all_nasa (gravis+power)",
+   "horizon": 3,
+   "auc_pr": 0.221,
+   "auc_pr_full": 0.221,
+   "delta_vs_full": 0.0,
+   "delta_ci90": [
+    -0.022,
+    0.024
+   ],
+   "brier": 0.1351,
+   "brier_full": 0.136
+  }
+ ],
+ "ablation_note": "Each NASA input group is removed in turn and the h=3 classifier is refit in the same blocked CV (uncalibrated probabilities). Negative delta = the input helps. CI from 500 country-year bootstrap resamples.",
+ "feature_importance": [
+  {
+   "feature": "hydro_share_pct",
+   "group": "static",
+   "gain_share": 0.138
+  },
+  {
+   "feature": "persist_anom_pct",
+   "group": "ember",
+   "gain_share": 0.1045
+  },
+  {
+   "feature": "persist_3m_anom_pct",
+   "group": "ember",
+   "gain_share": 0.0946
+  },
+  {
+   "feature": "anom_lag12_target_pct",
+   "group": "ember",
+   "gain_share": 0.0881
+  },
+  {
+   "feature": "tws_anom_sd",
+   "group": "gravis",
+   "gain_share": 0.0858
+  },
+  {
+   "feature": "precip_3m_anom_pct",
+   "group": "power_precip",
+   "gain_share": 0.0579
+  },
+  {
+   "feature": "precip_1m_anom_pct",
+   "group": "power_precip",
+   "gain_share": 0.044
+  },
+  {
+   "feature": "tws_change_3m_sd",
+   "group": "gravis",
+   "gain_share": 0.0415
+  },
+  {
+   "feature": "soil_root_3m_anom_sd",
+   "group": "power_soil",
+   "gain_share": 0.0393
+  },
+  {
+   "feature": "oni_change_3m",
+   "group": "oni",
+   "gain_share": 0.0393
+  },
+  {
+   "feature": "t2m_3m_anom_sd",
+   "group": "power_temp",
+   "gain_share": 0.0368
+  },
+  {
+   "feature": "precip_12m_anom_pct",
+   "group": "power_precip",
+   "gain_share": 0.0363
+  },
+  {
+   "feature": "oni",
+   "group": "oni",
+   "gain_share": 0.0353
+  },
+  {
+   "feature": "t2m_anom_sd",
+   "group": "power_temp",
+   "gain_share": 0.0349
+  },
+  {
+   "feature": "precip_6m_anom_pct",
+   "group": "power_precip",
+   "gain_share": 0.0336
+  },
+  {
+   "feature": "soil_top_anom_sd",
+   "group": "power_soil",
+   "gain_share": 0.0239
+  },
+  {
+   "feature": "target_month_cos",
+   "group": "calendar",
+   "gain_share": 0.0153
+  },
+  {
+   "feature": "soil_root_anom_sd",
+   "group": "power_soil",
+   "gain_share": 0.014
+  },
+  {
+   "feature": "issue_month_cos",
+   "group": "calendar",
+   "gain_share": 0.0126
+  },
+  {
+   "feature": "issue_month_sin",
+   "group": "calendar",
+   "gain_share": 0.0126
+  },
+  {
+   "feature": "target_month_sin",
+   "group": "calendar",
+   "gain_share": 0.012
+  }
+ ],
+ "feature_importance_by_group": [
+  {
+   "group": "ember",
+   "gain_share": 0.2872
+  },
+  {
+   "group": "power_precip",
+   "gain_share": 0.1717
+  },
+  {
+   "group": "static",
+   "gain_share": 0.138
+  },
+  {
+   "group": "gravis",
+   "gain_share": 0.1272
+  },
+  {
+   "group": "power_soil",
+   "gain_share": 0.0772
+  },
+  {
+   "group": "oni",
+   "gain_share": 0.0745
+  },
+  {
+   "group": "power_temp",
+   "gain_share": 0.0717
+  },
+  {
+   "group": "calendar",
+   "gain_share": 0.0525
+  }
+ ],
+ "feature_importance_note": "Gain share in the final (all-data) shortfall classifiers, averaged over horizons 1-6.",
+ "alarm": {
+  "definition": "P(any shortfall in t+1..t+6), separate LightGBM classifier, out-of-fold by issue year with a +/-1 year gap, isotonic-calibrated (cross-fitted)",
+  "threshold": 0.05,
+  "threshold_rule": "Lowest threshold (grid 0.05-0.95) giving <= 1 false alarm per country per 5 calm years. An alarm episode is a run of consecutive issue months at or above the threshold; it is false if no shortfall is observed from its first month to 6 months after its last. Calm country-years = issue months with no shortfall in the next 6 months / 12.",
+  "false_alarms_per_country_5yr": 0.389,
+  "false_alarm_episodes": 9,
+  "alarm_episodes": 39,
+  "calm_country_years": 115.6,
+  "threshold_table": [
+   {
+    "threshold": 0.05,
+    "false_alarm_episodes": 9,
+    "alarm_episodes": 39,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 0.389
+   },
+   {
+    "threshold": 0.2,
+    "false_alarm_episodes": 83,
+    "alarm_episodes": 139,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 3.59
+   },
+   {
+    "threshold": 0.3,
+    "false_alarm_episodes": 68,
+    "alarm_episodes": 154,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 2.942
+   },
+   {
+    "threshold": 0.4,
+    "false_alarm_episodes": 68,
+    "alarm_episodes": 161,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 2.942
+   },
+   {
+    "threshold": 0.5,
+    "false_alarm_episodes": 58,
+    "alarm_episodes": 184,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 2.509
+   },
+   {
+    "threshold": 0.6,
+    "false_alarm_episodes": 62,
+    "alarm_episodes": 219,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 2.682
+   },
+   {
+    "threshold": 0.7,
+    "false_alarm_episodes": 16,
+    "alarm_episodes": 72,
+    "calm_country_years": 115.6,
+    "false_alarms_per_country_5yr": 0.692
+   }
+  ],
+  "n": 2517,
+  "base_rate": 0.449,
+  "auc_pr": 0.606,
+  "auc_pr_climatology": 0.638,
+  "brier": 0.2193,
+  "bss_vs_climatology": 0.018
+ },
+ "crisis_leads": [
+  {
+   "id": "brazil-2021",
+   "name": "Brazil 2021",
+   "iso3": "BRA",
+   "official_warning": "2021-05-27",
+   "onset": "2021-05-28",
+   "enso": "La Nina",
+   "alarm_month": "2020-11",
+   "lead_months": 6,
+   "lead_vs_official_months": 6,
+   "caught": true,
+   "status": "caught",
+   "p_series": [
+    {
+     "issue": "2020-11",
+     "p_any_shortfall_6m": 0.524
+    },
+    {
+     "issue": "2020-12",
+     "p_any_shortfall_6m": 0.522
+    },
+    {
+     "issue": "2021-01",
+     "p_any_shortfall_6m": 0.612
+    },
+    {
+     "issue": "2021-02",
+     "p_any_shortfall_6m": 0.705
+    },
+    {
+     "issue": "2021-03",
+     "p_any_shortfall_6m": 0.612
+    },
+    {
+     "issue": "2021-04",
+     "p_any_shortfall_6m": 0.612
+    },
+    {
+     "issue": "2021-05",
+     "p_any_shortfall_6m": 0.54
+    }
+   ],
+   "observed_anomaly_around_onset": [
+    {
+     "month": "2021-04",
+     "cf_anom_pct": -4.7
+    },
+    {
+     "month": "2021-05",
+     "cf_anom_pct": -1.1
+    },
+    {
+     "month": "2021-06",
+     "cf_anom_pct": -7.8
+    },
+    {
+     "month": "2021-07",
+     "cf_anom_pct": -14.9
+    },
+    {
+     "month": "2021-08",
+     "cf_anom_pct": -16.9
+    }
+   ]
+  },
+  {
+   "id": "sichuan-2022",
+   "name": "Sichuan 2022",
+   "iso3": "CHN-SC",
+   "official_warning": null,
+   "onset": "2022-08-14",
+   "enso": "La Nina",
+   "alarm_month": "2022-02",
+   "lead_months": 6,
+   "lead_vs_official_months": null,
+   "caught": true,
+   "status": "caught",
+   "p_series": [
+    {
+     "issue": "2022-02",
+     "p_any_shortfall_6m": 0.12
+    },
+    {
+     "issue": "2022-03",
+     "p_any_shortfall_6m": 0.051
+    },
+    {
+     "issue": "2022-04",
+     "p_any_shortfall_6m": 0.12
+    },
+    {
+     "issue": "2022-05",
+     "p_any_shortfall_6m": 0.12
+    },
+    {
+     "issue": "2022-06",
+     "p_any_shortfall_6m": 0.12
+    },
+    {
+     "issue": "2022-07",
+     "p_any_shortfall_6m": 0.31
+    },
+    {
+     "issue": "2022-08",
+     "p_any_shortfall_6m": 0.627
+    }
+   ],
+   "observed_anomaly_around_onset": [
+    {
+     "month": "2022-07",
+     "cf_anom_pct": 17.6
+    },
+    {
+     "month": "2022-08",
+     "cf_anom_pct": 1.3
+    },
+    {
+     "month": "2022-09",
+     "cf_anom_pct": -12.9
+    },
+    {
+     "month": "2022-10",
+     "cf_anom_pct": 3.1
+    },
+    {
+     "month": "2022-11",
+     "cf_anom_pct": -3.0
+    }
+   ]
+  },
+  {
+   "id": "vietnam-2023",
+   "name": "Northern Vietnam 2023",
+   "iso3": "VNM",
+   "official_warning": "2023-05-10",
+   "onset": "2023-05-25",
+   "enso": "El Nino developing",
+   "alarm_month": "2022-11",
+   "lead_months": 6,
+   "lead_vs_official_months": 6,
+   "caught": true,
+   "status": "caught",
+   "p_series": [
+    {
+     "issue": "2022-11",
+     "p_any_shortfall_6m": 0.627
+    },
+    {
+     "issue": "2022-12",
+     "p_any_shortfall_6m": 0.528
+    },
+    {
+     "issue": "2023-01",
+     "p_any_shortfall_6m": 0.432
+    },
+    {
+     "issue": "2023-02",
+     "p_any_shortfall_6m": 0.432
+    },
+    {
+     "issue": "2023-03",
+     "p_any_shortfall_6m": 0.432
+    },
+    {
+     "issue": "2023-04",
+     "p_any_shortfall_6m": 0.514
+    },
+    {
+     "issue": "2023-05",
+     "p_any_shortfall_6m": 0.514
+    }
+   ],
+   "observed_anomaly_around_onset": [
+    {
+     "month": "2023-04",
+     "cf_anom_pct": -1.4
+    },
+    {
+     "month": "2023-05",
+     "cf_anom_pct": -18.0
+    },
+    {
+     "month": "2023-06",
+     "cf_anom_pct": -32.9
+    },
+    {
+     "month": "2023-07",
+     "cf_anom_pct": -7.6
+    },
+    {
+     "month": "2023-08",
+     "cf_anom_pct": 12.1
+    }
+   ]
+  },
+  {
+   "id": "ecuador-2023",
+   "name": "Ecuador 2023 (wave 1)",
+   "iso3": "ECU",
+   "official_warning": "2023-10-24",
+   "onset": "2023-10-27",
+   "enso": "El Nino",
+   "alarm_month": "2023-04",
+   "lead_months": 6,
+   "lead_vs_official_months": 6,
+   "caught": true,
+   "status": "caught",
+   "p_series": [
+    {
+     "issue": "2023-04",
+     "p_any_shortfall_6m": 0.289
+    },
+    {
+     "issue": "2023-05",
+     "p_any_shortfall_6m": 0.08
+    },
+    {
+     "issue": "2023-06",
+     "p_any_shortfall_6m": 0.051
+    },
+    {
+     "issue": "2023-07",
+     "p_any_shortfall_6m": 0.08
+    },
+    {
+     "issue": "2023-08",
+     "p_any_shortfall_6m": 0.08
+    },
+    {
+     "issue": "2023-09",
+     "p_any_shortfall_6m": 0.415
+    },
+    {
+     "issue": "2023-10",
+     "p_any_shortfall_6m": 0.415
+    }
+   ],
+   "observed_anomaly_around_onset": [
+    {
+     "month": "2023-09",
+     "cf_anom_pct": -8.6
+    },
+    {
+     "month": "2023-10",
+     "cf_anom_pct": -9.7
+    },
+    {
+     "month": "2023-11",
+     "cf_anom_pct": -20.3
+    },
+    {
+     "month": "2023-12",
+     "cf_anom_pct": -15.0
+    },
+    {
+     "month": "2024-01",
+     "cf_anom_pct": 2.8
+    }
+   ]
+  },
+  {
+   "id": "ecuador-2024-apr",
+   "name": "Ecuador 2024 (wave 2)",
+   "iso3": "ECU",
+   "official_warning": "2023-12",
+   "onset": "2024-04-14",
+   "enso": "El Nino decaying",
+   "alarm_month": "2023-10",
+   "lead_months": 6,
+   "lead_vs_official_months": 2,
+   "caught": true,
+   "status": "caught",
+   "p_series": [
+    {
+     "issue": "2023-10",
+     "p_any_shortfall_6m": 0.415
+    },
+    {
+     "issue": "2023-11",
+     "p_any_shortfall_6m": 0.432
+    },
+    {
+     "issue": "2023-12",
+     "p_any_shortfall_6m": 0.432
+    },
+    {
+     "issue": "2024-01",
+     "p_any_shortfall_6m": 0.43
+    },
+    {
+     "issue": "2024-02",
+     "p_any_shortfall_6m": 0.57
+    },
+    {
+     "issue": "2024-03",
+     "p_any_shortfall_6m": 0.133
+    },
+    {
+     "issue": "2024-04",
+     "p_any_shortfall_6m": 0.133
+    }
+   ],
+   "observed_anomaly_around_onset": [
+    {
+     "month": "2024-03",
+     "cf_anom_pct": -8.0
+    },
+    {
+     "month": "2024-04",
+     "cf_anom_pct": -11.9
+    },
+    {
+     "month": "2024-05",
+     "cf_anom_pct": -2.0
+    },
+    {
+     "month": "2024-06",
+     "cf_anom_pct": 7.6
+    },
+    {
+     "month": "2024-07",
+     "cf_anom_pct": -1.9
+    }
+   ]
+  },
+  {
+   "id": "ecuador-2024-sep",
+   "name": "Ecuador 2024 (wave 3)",
+   "iso3": "ECU",
+   "official_warning": "2023-12",
+   "onset": "2024-09-22",
+   "enso": "ENSO-neutral",
+   "alarm_month": "2024-03",
+   "lead_months": 6,
+   "lead_vs_official_months": -3,
+   "caught": true,
+   "status": "caught",
+   "p_series": [
+    {
+     "issue": "2024-03",
+     "p_any_shortfall_6m": 0.133
+    },
+    {
+     "issue": "2024-04",
+     "p_any_shortfall_6m": 0.133
+    },
+    {
+     "issue": "2024-05",
+     "p_any_shortfall_6m": 0.287
+    },
+    {
+     "issue": "2024-06",
+     "p_any_shortfall_6m": 0.43
+    },
+    {
+     "issue": "2024-07",
+     "p_any_shortfall_6m": 0.359
+    },
+    {
+     "issue": "2024-08",
+     "p_any_shortfall_6m": 0.359
+    },
+    {
+     "issue": "2024-09",
+     "p_any_shortfall_6m": 0.359
+    }
+   ],
+   "observed_anomaly_around_onset": [
+    {
+     "month": "2024-08",
+     "cf_anom_pct": -19.4
+    },
+    {
+     "month": "2024-09",
+     "cf_anom_pct": -24.5
+    },
+    {
+     "month": "2024-10",
+     "cf_anom_pct": -35.9
+    },
+    {
+     "month": "2024-11",
+     "cf_anom_pct": -45.7
+    },
+    {
+     "month": "2024-12",
+     "cf_anom_pct": -30.0
+    }
+   ]
+  }
+ ],
+ "limitations": [
+  "Ember monthly records mostly start in 2015-2019 (2000 for Iceland, 2010 for Canada, Georgia, New Zealand), and the anomaly needs 2 earlier years of the same calendar month, so most countries have labels only from 2021: few independent drought events, and wide confidence intervals.",
+  "Hydro capacity is yearly (Ember), treated as a mid-year value and interpolated; capacity for the latest year is carried forward (Viet Nam, Sri Lanka, Iceland, Kyrgyzstan, El Salvador lack 2025 capacity). Capacity revisions (e.g. Kyrgyzstan 3.67 -> 2.78 GW in 2021) show up as jumps in capacity factor.",
+  "Hydro output partly reflects operator decisions (reservoir management, exports, curtailment, market prices) and demand, not just water. Small run-of-river systems (Bosnia, Croatia, Latvia, Montenegro) swing a lot month to month and dominate the shortfall count.",
+  "The normal is an expanding median of only earlier years; in short records it is set by 2-4 years. Brazil's 2021 normal comes from 2018-2020, which were themselves dry, so the 2021 anomaly is understated.",
+  "Sichuan has no provincial capacity series; its anomaly uses generation rescaled by the previous year's total. The monthly data does not show the two-week August 2022 crisis (Aug 2022 is near normal; Sep 2022 about -13%). The sampling box for Sichuan also covers some Yunnan/Tibet/Chongqing plants.",
+  "Climate inputs are sampled at up to 8 capacity-weighted 1-degree cells near the plants (GPPD 2021; newer plants such as Coca Codo Sinclair missing), not over full upstream catchments. GRACE (~300 km) is too coarse for small Andean or Balkan basins.",
+  "NASA POWER (MERRA-2 reanalysis) stands in for GPM IMERG rain and SMAP soil moisture, which need an Earthdata login. Recent months come from POWER daily data.",
+  "Blocked leave-one-year-out CV trains on years after the test year too; expanding normals for those later years include the test year's labels (mild leakage). The strictly forward 2024+ test avoids this but is small.",
+  "The alarm threshold and crisis lead times are chosen and measured on the same out-of-fold predictions, so they are optimistic. The five crises are illustrations; the skill table is the main test.",
+  "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a uniform 2-month lag; in the live forecast Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data.",
+  "Cost estimates are rough and labelled as such: fixed 20 c/kWh replacement, VoLL $1.00/kWh on 10% of the deficit, no import or demand response modelling."
+ ],
+ "notes": [],
+ "runtime_s": 246.6
+}

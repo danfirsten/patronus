@@ -498,12 +498,17 @@ def main() -> None:
                             + " (a rough comparison: GRACE smears the lake's mass beyond the basin edge).")
             kariba["interpretation"] = (
                 f"The Kariba level-4 basin shows significant TWS drying ({kb['tws_slope_cm_per_decade']:+.1f} cm/decade, "
-                f"q={kb['tws_q']:.3f}) with " + ("no significant" if not kb["precip_decline_significant"] else "a significant")
-                + f" rainfall decline (GPCP {kb['precip_slope_pct_per_decade']:+.1f}%/decade), while the whole catchment draining into Kariba "
-                f"(upper Zambezi, {up['area_km2']:,.0f} km2) shows none ({up['tws_slope_cm_per_decade']:+.1f} cm/decade, "
-                f"p={up['tws_p']:.2f}).{lake_txt} The decline is mostly the reservoir drawing down, not a long-term drying "
-                f"of the upper Zambezi: Kariba's risk comes from year-to-year (ENSO-driven) rainfall swings and release "
-                f"decisions, which is why Patronus forecasts it month by month.")
+                f"q={kb['tws_q']:.3f}), while water storage over the whole catchment draining into Kariba "
+                f"(upper Zambezi, {up['area_km2']:,.0f} km2) shows no significant trend ({up['tws_slope_cm_per_decade']:+.1f} "
+                f"cm/decade, p={up['tws_p']:.2f}).{lake_txt}"
+                + (f" GPCP rainfall is drifting down: {up['precip_slope_pct_per_decade']:+.1f}%/decade over the upstream "
+                   f"catchment (p={up['precip_p']:.4f}) and {kb['precip_slope_pct_per_decade']:+.1f}%/decade over the Kariba basin "
+                   f"(p={kb['precip_p']:.3f}, q={kb['precip_q']:.2f} after FDR across all basins). MERRA-2 shows no such decline "
+                   f"({up['precip_slope_merra2_pct_per_decade']:+.1f}%/decade upstream), so treat it as a warning sign, not a settled trend."
+                   if up.get("precip_slope_pct_per_decade") is not None and up.get("precip_p") is not None else "")
+                + " The storage decline in the Kariba basin is mostly the reservoir drawing down; storage across the upper "
+                "Zambezi has not followed. Kariba's risk comes mainly from year-to-year (ENSO-driven) rainfall swings and "
+                "release decisions, which is why Patronus forecasts it month by month.")
         else:
             kariba["interpretation"] = (
                 f"Kariba basin: {kb['trend_class']} ({kb['tws_slope_cm_per_decade']} cm/decade, q={kb['tws_q']}); "

@@ -175,14 +175,19 @@ def run_ablations(D: pd.DataFrame, log, h: int = 3):
     d = D[(D["horizon"] == h) & D["y_short"].notna()].reset_index(drop=True)
     y = d["y_short"].values.astype(float)
     full = M.oof_classifier(d, G.FEATURES, "y_short")
-    groups = {"gravis": G.FEATURE_GROUPS["gravis"], "power_precip": G.FEATURE_GROUPS["power_precip"],
+    nasa = (G.FEATURE_GROUPS["gravis"] + G.FEATURE_GROUPS["gpcp_precip"] + G.FEATURE_GROUPS["power_soil"]
+            + G.FEATURE_GROUPS["power_temp"])
+    groups = {"gravis": G.FEATURE_GROUPS["gravis"], "gpcp_precip": G.FEATURE_GROUPS["gpcp_precip"],
               "power_soil": G.FEATURE_GROUPS["power_soil"], "power_temp": G.FEATURE_GROUPS["power_temp"],
               "oni": G.FEATURE_GROUPS["oni"], "ember_persistence": G.FEATURE_GROUPS["ember"],
-              "all_nasa (gravis+power)": G.FEATURE_GROUPS["gravis"] + G.FEATURE_GROUPS["power_precip"]
-              + G.FEATURE_GROUPS["power_soil"] + G.FEATURE_GROUPS["power_temp"]}
+              "grid_history": G.FEATURE_GROUPS["history"],
+              "all_nasa (gravis+gpcp+power)": nasa}
     preds = {}
     for name, cols in groups.items():
         preds[name] = M.oof_classifier(d, [f for f in G.FEATURES if f not in cols], "y_short")
+    # rainfall source swap: GPCP rain replaced by NASA POWER/MERRA-2 rain (same anomaly definitions)
+    preds["swap: gpcp_precip -> power_merra2_precip"] = M.oof_classifier(
+        d, [f for f in G.FEATURES if f not in G.FEATURE_GROUPS["gpcp_precip"]] + G.MERRA_PRECIP, "y_short")
     ok = ~np.isnan(full)
     for v in preds.values():
         ok &= ~np.isnan(v)
@@ -222,47 +227,28 @@ def alarm_model(D: pd.DataFrame, log):
     return d, stats
 
 
-def false_alarm_rate(d: pd.DataFrame, short_by: dict, thr: float):
-    """False alarm episodes per 5 calm country-years.
-    Episode = consecutive issue months with P >= thr. It is false if no shortfall is observed from its first
-    month through 6 months after its last month. Calm country-years = issue months with no shortfall in
-    t+1..t+6, divided by 12. Episodes whose outcome window runs past the data are skipped."""
-    false_eps, eps = 0, 0
-    calm_years = (d["y_any6"] == 0).sum() / 12.0
-    for iso, g in d.groupby("iso3"):
-        g = g.sort_values("issue")
-        a = (g["p_any"] >= thr).values
-        months = g["issue"].values
-        sb = short_by[iso]
-        i = 0
-        while i < len(a):
-            if a[i]:
-                j = i
-                while j + 1 < len(a) and a[j + 1] and (months[j + 1] - months[j]).n == 1:
-                    j += 1
-                win = pd.period_range(months[i], months[j] + 6, freq="M")
-                obs = sb.reindex(win)
-                hit = (obs == 1).any()
-                if hit:
-                    eps += 1
-                elif obs.notna().all():
-                    eps += 1
-                    false_eps += 1
-                i = j + 1
-            else:
-                i += 1
-    return false_eps, eps, calm_years, (5 * false_eps / calm_years if calm_years > 0 else np.nan)
+def false_alarm_rate(d: pd.DataFrame, thr: float):
+    """False-alarm rate in calm periods. A calm issue month has no shortfall in t+1..t+6. One alarm covers a
+    6-month window, so 6 alarm-months in calm periods count as one false alarm. Rate = false alarms per 5 calm
+    country-years = (calm alarm-months / 6) / (calm months / 60)."""
+    calm = d["y_any6"] == 0
+    n_calm = int(calm.sum())
+    fa_months = int(((d["p_any"] >= thr) & calm).sum())
+    hits = int(((d["p_any"] >= thr) & (d["y_any6"] == 1)).sum())
+    pos = int((d["y_any6"] == 1).sum())
+    rate = (fa_months / 6) / (n_calm / 60) if n_calm else np.nan
+    return fa_months, n_calm, hits / pos if pos else np.nan, rate
 
 
-def choose_threshold(d, short_by):
+def choose_threshold(d):
+    d = d[d["p_any"].notna()]
     grid = np.round(np.arange(0.05, 0.96, 0.01), 2)
-    table = []
-    chosen = None
+    table, chosen = [], None
     for thr in grid:
-        f, e, cy, rate = false_alarm_rate(d, short_by, thr)
-        table.append((thr, f, e, cy, rate))
+        fa, nc, hit_rate, rate = false_alarm_rate(d, thr)
+        table.append((thr, fa, nc, hit_rate, rate))
         if chosen is None and rate <= ALARM_MAX_FALSE_PER_5Y:
-            chosen = (thr, f, e, cy, rate)
+            chosen = (thr, fa, nc, hit_rate, rate)
     return chosen, table
 
 
@@ -379,23 +365,18 @@ def analogs(bases: dict, D_any: pd.DataFrame, iso3: str, k: int = 5):
              "shortfall_next_6m": bool(r.y_any6), "n_features_compared": int(n[r.Index])} for r in top.itertuples()]
 
 
-def live_forecast(iso3, base_row, share, models, lab, info):
+def live_forecast(iso3, D, models, lab, info):
     L = lab[lab["iso3"] == iso3].set_index("month")
     rows = []
     for h in M.HORIZONS:
         tgt = ISSUE + h
-        x = base_row.copy()
-        x["target_month_sin"] = np.sin(2 * np.pi * tgt.month / 12)
-        x["target_month_cos"] = np.cos(2 * np.pi * tgt.month / 12)
-        x["anom_lag12_target_pct"] = L["anom_pct"].get(tgt - 12, np.nan)
-        x["hydro_share_pct"] = share
-        X = pd.DataFrame([x[G.FEATURES].astype(float).values], columns=G.FEATURES)
+        X = D[(D["iso3"] == iso3) & (D["issue"] == ISSUE) & (D["horizon"] == h)][G.FEATURES].astype(float)
         m = models[h]
         p = float(m["iso"].predict(m["clf"].predict_proba(X)[:, 1])[0])
         ps = float(m["iso_s"].predict(m["sev"].predict_proba(X)[:, 1])[0])
         ps = min(ps, p)
         q = sorted(float(r.predict(X)[0]) for r in m["qr"])
-        # normal generation for the target month: latest normal for that calendar month, rescaled to latest capacity
+        # normal generation for the target month: median of that calendar month's metric, at the latest capacity
         same = L[L.index.month == tgt.month].dropna(subset=["metric"])
         normal_metric = float(np.median(same["metric"].values)) if len(same) >= 2 else np.nan
         hours = tgt.days_in_month * 24.0
@@ -450,10 +431,9 @@ def main():
     abl = run_ablations(D, log)
     log("alarm model...")
     dA, alarm_stats = alarm_model(D, log)
-    short_by = {iso: lab[lab["iso3"] == iso].set_index("month")["shortfall"].astype(float) for iso in countries}
-    chosen, table = choose_threshold(dA, short_by)
+    chosen, table = choose_threshold(dA)
     thr = chosen[0]
-    log(f"alarm threshold {thr}: {chosen[1]} false of {chosen[2]} episodes over {chosen[3]:.1f} calm country-years -> {chosen[4]:.2f}/5y")
+    log(f"alarm threshold {thr}: {chosen[1]} alarm-months in {chosen[2]} calm months -> {chosen[4]:.2f}/5y; hit rate {chosen[3]:.2f}")
     leads = crisis_leads(dA, thr, lab)
     for c in leads:
         log(f"  {c['id']}: alarm {c['alarm_month']} lead {c['lead_months']} vs official {c['lead_vs_official_months']}")
@@ -479,7 +459,7 @@ def main():
     D1 = D[D["horizon"] == 1]
     for iso in countries:
         base_row = bases[iso].loc[ISSUE].copy()
-        months = live_forecast(iso, base_row, share[iso], models, lab, info)
+        months = live_forecast(iso, D, models, lab, info)
         Xa = D1[(D1["iso3"] == iso) & (D1["issue"] == ISSUE)][G.FEATURES]
         p_any = float(alarm_iso.predict(alarm_clf.predict_proba(Xa)[:, 1])[0])
         last = info[iso]["last"]
@@ -608,8 +588,8 @@ def main():
         "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a uniform 2-month lag; in the live forecast Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data.",
         "Cost estimates are rough and labelled as such: fixed 20 c/kWh replacement, VoLL $1.00/kWh on 10% of the deficit, no import or demand response modelling.",
     ]
-    thr_table = [{"threshold": t, "false_alarm_episodes": f, "alarm_episodes": e, "calm_country_years": round(cy, 1),
-                  "false_alarms_per_country_5yr": _r(rt, 3)} for t, f, e, cy, rt in table if t in (0.2, 0.3, 0.4, 0.5, 0.6, 0.7, thr)]
+    thr_table = [{"threshold": t, "calm_alarm_months": f, "calm_months": nc, "hit_rate_any6": _r(hr, 3),
+                  "false_alarms_per_country_5yr": _r(rt, 3)} for t, f, nc, hr, rt in table if t in (0.2, 0.3, 0.4, 0.5, 0.6, 0.7, thr)]
     bh = bt["by_horizon"]
     labelled = D[(D["horizon"] == 1) & D["y_short"].notna()]
     _write("generation_backtest.json", {
@@ -637,9 +617,9 @@ def main():
         "feature_importance_note": "Gain share in the final (all-data) shortfall classifiers, averaged over horizons 1-6.",
         "alarm": {"definition": "P(any shortfall in t+1..t+6), separate LightGBM classifier, out-of-fold by issue year with a +/-1 year gap, isotonic-calibrated (cross-fitted)",
                   "threshold": thr,
-                  "threshold_rule": f"Lowest threshold (grid 0.05-0.95) giving <= {ALARM_MAX_FALSE_PER_5Y:g} false alarm per country per 5 calm years. An alarm episode is a run of consecutive issue months at or above the threshold; it is false if no shortfall is observed from its first month to 6 months after its last. Calm country-years = issue months with no shortfall in the next 6 months / 12.",
-                  "false_alarms_per_country_5yr": _r(chosen[4], 3), "false_alarm_episodes": chosen[1], "alarm_episodes": chosen[2],
-                  "calm_country_years": round(chosen[3], 1), "threshold_table": thr_table, **alarm_stats},
+                  "threshold_rule": f"Lowest threshold (grid 0.05-0.95) giving <= {ALARM_MAX_FALSE_PER_5Y:g} false alarm per country per 5 calm years. Calm issue months have no observed shortfall in the next 6 months. An alarm covers a 6-month window, so 6 alarm-months in calm periods count as one false alarm: rate = (calm alarm-months / 6) / (calm months / 60). Equivalent to a false-positive rate of <= 10% on calm months.",
+                  "false_alarms_per_country_5yr": _r(chosen[4], 3), "calm_alarm_months": chosen[1], "calm_months": chosen[2],
+                  "hit_rate_any6": _r(chosen[3], 3), "threshold_table": thr_table, **alarm_stats},
         "crisis_leads": leads,
         "limitations": limitations, "notes": notes,
         "runtime_s": round(time.time() - t0, 1),

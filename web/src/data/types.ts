@@ -20,10 +20,13 @@ export interface Source {
   url?: string;
   coverage?: string;
   license?: string;
+  use?: string;
 }
 export interface Meta extends Base {
   issue_date?: string;
   sources?: any;
+  ai_disclosure?: string;
+  nasa_data_summary?: { mission: string; what: string; source_id?: string }[];
 }
 
 export interface Country {
@@ -226,13 +229,18 @@ export interface Scoreboard extends Base {
 }
 
 // crises.json shape is not fixed in CONTRACTS.md; this is what the web app reads (all optional).
+export type DatedText = string | { date?: string | null; what?: string } | null;
 export interface Crisis {
   id: string;
   name?: string;
   countries?: string[];
   enso?: string;
-  official_warning?: string | null;
-  onset?: string | null;
+  official_warning?: DatedText;
+  onset?: DatedText;
+  summary?: string;
+  peak?: string;
+  costs?: string[];
+  events?: { date: string; type?: string; text?: string }[];
   what_happened?: string;
   cost_text?: string;
   sources?: ({ title?: string; url?: string } | string)[];
@@ -243,6 +251,9 @@ export interface Crises extends Base {
 
 export interface NightFrame {
   id: string;
+  region?: string;
+  is_baseline?: boolean;
+  cities?: Record<string, { vs_baseline_pct?: number | null }>;
   place?: string;
   date?: string;
   src?: string;

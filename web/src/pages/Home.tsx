@@ -5,7 +5,7 @@ import { Figure, Reveal, RiskPill, Stat, Loading, ExposureTag } from '../compone
 import { ProbStrip } from '../components/small';
 import { WorldMap } from '../components/WorldMap';
 import { TimeChart, LegendItem } from '../components/TimeChart';
-import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, periodOf } from '../lib/format';
+import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, periodOf, dateOf, costText } from '../lib/format';
 import { RISK_ORDER, countryHref } from '../lib/risk';
 
 export default function Home() {
@@ -19,7 +19,21 @@ export default function Home() {
   const ledger = useData<Ledger>('ledger.json');
 
   const rows = score.data?.rows ?? [];
-  const crisisById = new Map((crises.data?.crises ?? []).map((c) => [c.id, c]));
+  const rowById = new Map(rows.map((r) => [r.id, r]));
+  const crisisList = crises.data?.crises ?? [];
+  const cards = (crisisList.length ? crisisList.map((c) => ({ c, r: rowById.get(c.id) })) : rows.map((r) => ({ c: undefined, r })))
+    .map(({ c, r }) => ({
+      id: c?.id ?? r!.id,
+      name: c?.name ?? r?.name ?? '',
+      summary: c?.summary ?? c?.what_happened ?? r?.notes,
+      warning: dateOf(c?.official_warning) ?? r?.official_warning ?? null,
+      onset: dateOf(c?.onset) ?? r?.onset ?? null,
+      cost: c?.costs?.[0] ?? c?.cost_text,
+      alarm: r?.patronus_alarm,
+      lead: r?.lead_months,
+      caught: r?.caught_by,
+      hasScore: !!r,
+    }));
   const top = [...(watch.data?.countries ?? [])]
     .sort((a, b) => (RISK_ORDER[b.risk_level ?? ''] ?? -1) - (RISK_ORDER[a.risk_level ?? ''] ?? -1) || (b.max_p_shortfall ?? 0) - (a.max_p_shortfall ?? 0))
     .slice(0, 5);
@@ -73,24 +87,21 @@ export default function Home() {
           <Reveal>
             <p className="step-num">1 · This keeps happening</p>
             <h2>Five hydropower crises in four years. Here is when Patronus would have raised the alarm.</h2>
-            {score.loading ? <Loading /> : (
+            {score.loading || crises.loading ? <Loading /> : (
               <div className="crisis-grid">
-                {rows.map((r) => {
-                  const c = crisisById.get(r.id);
-                  return (
-                    <article key={r.id} className="crisis-card">
-                      <h3>{r.name}</h3>
-                      <p className="muted">{c?.what_happened ?? r.notes}</p>
-                      <dl>
-                        <dt>First official warning</dt><dd>{fmtDate(r.official_warning)}</dd>
-                        <dt>Crisis began</dt><dd>{fmtDate(r.onset)}</dd>
-                        <dt>Patronus alarm</dt>
-                        <dd>{r.caught_by === 'missed' || !r.patronus_alarm ? <span className="miss">Missed</span> : <>{fmtMonth(r.patronus_alarm)}{isNum(r.lead_months) && <> · <b>{r.lead_months} months</b> ahead</>}</>}</dd>
-                        {c?.cost_text && (<><dt>Cost</dt><dd>{c.cost_text}</dd></>)}
-                      </dl>
-                    </article>
-                  );
-                })}
+                {cards.map((r) => (
+                  <article key={r.id} className="crisis-card">
+                    <h3>{r.name}</h3>
+                    {r.summary && <p className="muted">{r.summary}</p>}
+                    <dl>
+                      <dt>First official warning</dt><dd>{r.warning ? fmtDate(r.warning) : 'None found'}</dd>
+                      <dt>Crisis began</dt><dd>{fmtDate(r.onset)}</dd>
+                      <dt>Patronus alarm</dt>
+                      <dd>{!r.hasScore ? '—' : r.caught === 'missed' || !r.alarm ? <span className="miss">Missed</span> : <>{fmtMonth(r.alarm)}{isNum(r.lead) && <> · <b>{r.lead} months</b> ahead</>}</>}</dd>
+                      {r.cost && (<><dt>Cost</dt><dd>{costText(r.cost)}</dd></>)}
+                    </dl>
+                  </article>
+                ))}
               </div>
             )}
             <p className="source-inline">Crisis dates: official announcements and news, hand-collected. Alarm months: Patronus backtest using only data available at the time. <a href="#/scoreboard">See the full scoreboard, misses and false alarms →</a></p>

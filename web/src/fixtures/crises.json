@@ -19,10 +19,18 @@
     "BRA"
    ],
    "enso": "La Nina",
-   "official_warning": "2021-05-27",
-   "onset": "2021-05-28",
-   "what_happened": "Water-emergency alert, then a red tariff flag. South-east storage fell to 16.5%. No rationing.",
-   "cost_text": "Average bills up about 6.8%",
+   "official_warning": {
+    "date": "2021-05-27",
+    "what": "Sample text"
+   },
+   "onset": {
+    "date": "2021-05-28",
+    "what": "Sample text"
+   },
+   "summary": "Water-emergency alert, then a red tariff flag. South-east storage fell to 16.5%. No rationing.",
+   "costs": [
+    "Average bills up about 6.8%"
+   ],
    "sources": []
   },
   {
@@ -33,9 +41,14 @@
    ],
    "enso": "La Nina",
    "official_warning": null,
-   "onset": "2022-08-14",
-   "what_happened": "A record heatwave and drought more than halved hydro output. Factories were shut for 11 days.",
-   "cost_text": "No official estimate",
+   "onset": {
+    "date": "2022-08-14",
+    "what": "Sample text"
+   },
+   "summary": "A record heatwave and drought more than halved hydro output. Factories were shut for 11 days.",
+   "costs": [
+    "No official estimate"
+   ],
    "sources": []
   },
   {
@@ -45,23 +58,39 @@
     "VNM"
    ],
    "enso": "El Nino",
-   "official_warning": "2023-05-10",
-   "onset": "2023-05-25",
-   "what_happened": "Rolling cuts across the north. About 900 GWh went unserved.",
-   "cost_text": "About $1.4B, roughly 0.3% of GDP (World Bank, preliminary)",
+   "official_warning": {
+    "date": "2023-05-10",
+    "what": "Sample text"
+   },
+   "onset": {
+    "date": "2023-05-25",
+    "what": "Sample text"
+   },
+   "summary": "Rolling cuts across the north. About 900 GWh went unserved.",
+   "costs": [
+    "About $1.4B, roughly 0.3% of GDP (World Bank, preliminary)"
+   ],
    "sources": []
   },
   {
-   "id": "ecuador-2023",
+   "id": "ecuador-2023-24",
    "name": "Ecuador 2023–24",
    "countries": [
     "ECU"
    ],
    "enso": "El Nino, then neutral",
-   "official_warning": "2023-10-24",
-   "onset": "2023-10-27",
-   "what_happened": "Three waves of cuts, reaching 14 hours a day from 24 Oct 2024.",
-   "cost_text": "About 1–1.5% of GDP (finance minister)",
+   "official_warning": {
+    "date": "2023-10-24",
+    "what": "Sample text"
+   },
+   "onset": {
+    "date": "2023-10-27",
+    "what": "Sample text"
+   },
+   "summary": "Three waves of cuts, reaching 14 hours a day from 24 Oct 2024.",
+   "costs": [
+    "About 1–1.5% of GDP (finance minister)"
+   ],
    "sources": []
   },
   {
@@ -72,10 +101,18 @@
     "ZWE"
    ],
    "enso": "El Nino",
-   "official_warning": "2023-12-28",
-   "onset": "2024-03-11",
-   "what_happened": "Allocation cut, then load-shedding of 8, then 12 hours a day. The lake fell to 2.89% usable.",
-   "cost_text": "IMF cut Zambia 2024 growth from 4.7% to 1.2%",
+   "official_warning": {
+    "date": "2023-12-28",
+    "what": "Sample text"
+   },
+   "onset": {
+    "date": "2024-03-11",
+    "what": "Sample text"
+   },
+   "summary": "Allocation cut, then load-shedding of 8, then 12 hours a day. The lake fell to 2.89% usable.",
+   "costs": [
+    "IMF cut Zambia 2024 growth from 4.7% to 1.2%"
+   ],
    "sources": []
   }
  ]

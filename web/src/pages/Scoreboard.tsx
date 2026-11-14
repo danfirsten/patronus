@@ -4,7 +4,7 @@ import { useData } from '../data/load';
 import type { Crises, GenBacktest, ScoreRow, Scoreboard } from '../data/types';
 import { Figure, Loading, Stat, Empty, useWidth } from '../components/common';
 import { LegendItem } from '../components/TimeChart';
-import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, monthsBetween } from '../lib/format';
+import { fmtDate, fmtMonth, fmtNum, fmtProb, isNum, monthsBetween, costText } from '../lib/format';
 
 const CAUGHT: Record<string, string> = {
   now: 'Water layer (0–6 months)',
@@ -69,8 +69,9 @@ export default function ScoreboardPage() {
                       <td data-label="vs official" className="num">{isNum(r.lead_vs_official_months) ? (r.lead_vs_official_months > 0 ? `+${r.lead_vs_official_months}` : r.lead_vs_official_months) : '—'}</td>
                       <td data-label="Caught by"><span className={`caught caught-${r.caught_by}`}>{CAUGHT[r.caught_by ?? ''] ?? r.caught_by ?? '—'}</span></td>
                       <td data-label="Notes" className="cell-notes">
-                        {r.notes}
-                        {c?.cost_text && <div className="muted">Cost: {c.cost_text}</div>}
+                        {r.notes ?? c?.summary}
+                        {(c?.costs ?? (c?.cost_text ? [c.cost_text] : [])).map((x) => <div key={x} className="muted">Cost: {costText(x)}</div>)}
+                        {c?.peak && <div className="muted">Worst point: {c.peak}</div>}
                         {(c?.sources ?? []).length > 0 && (
                           <div className="muted">Sources: {(c!.sources ?? []).map((src, i) => typeof src === 'string'
                             ? <span key={i}>{src}{i < c!.sources!.length - 1 ? '; ' : ''}</span>
