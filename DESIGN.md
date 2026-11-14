@@ -30,7 +30,7 @@ Team pages: `site/patronus-brief.html` (concept, v1), `site/team-vote.html` (vot
 | **Later, decades** | GRACE/GPM drying trend + projected rise in extreme El Niños | Structural exposure | Preventive: diversify, interconnect, change reservoir rules |
 
 - **We do not build an ENSO forecaster.** NOAA, IRI and WMO already do this well. We consume their forecasts.
-- **ENSO fingerprint:** for each grid, how its hydro output and basin water historically respond to El Niño and La Niña, with permutation-test significance. Both phases matter. About 35% of the world's hydro dams show reliable ENSO anomalies (Ho et al. 2017, ERL). Large reservoirs dampen the effect, so use generation and storage, not only rain.
+- **ENSO fingerprint:** for each grid, how its hydro output and basin water historically respond to El Niño and La Niña, with permutation-test significance. Both phases matter. More than a third of the world's hydro dams show reliable ENSO anomalies (Ng, Turner & Galelli 2017, ERL 12:034010; 1,593 dams). Large reservoirs dampen the effect, so use generation and storage, not only rain.
 - **Cost layer:** expected shortfall (MWh) × replacement cost ($/MWh), plus blackout hours × GDP loss per hour. Compare acting now with acting in N months. Validate against Ecuador 2024, Vietnam 2023 and Zambia 2024 estimates.
 - **Shared-exposure feature** (adapted from HarvestShield): "your backup grid is in the same drought." Example: Colombia cut exports to Ecuador on Oct 1, 2024. Zambia and Zimbabwe share Kariba.
 
@@ -105,7 +105,7 @@ Backbone: Google Earth Engine, with `earthaccess` as a fallback.
   - **Do not say** "warned in January, nothing until April." That claim is unconfirmed.
 - **Kariba:** the 2027 power allocation was cut 36% (36 → 23 BCM). Usable storage was 36.7% on 14 Oct 2026. ZRA projects 9% at the end of 2027 if the full allocation is used.
 - **ENSO:** NOAA (Oct 2026) puts the odds above 83% of a strong-to-very-strong El Niño through Jan–Mar 2027. SARCOF expects below-normal rain over most of central and southern SADC, Zambia and Zimbabwe included, in Jan–Mar 2027.
-- **Projections:** extreme El Niños roughly double, from about once every 20 years to about once a decade (Cai et al. 2014), and keep rising after warming stabilizes (Wang et al. 2020).
+- **Projections:** extreme El Niños roughly double, from about once every 20 years to about once a decade (Cai et al. 2014), and keep rising after warming stabilizes (Wang et al. 2017, Nature Climate Change).
 - **Corrections (Nov 14):** Brazil 2021 had no rationing, and its "50%" was the tariff surcharge, not bills. Ecuador's late-2024 drought was ENSO-neutral. Zambia's "21 h/day" is news-only. See section 11.7 for the checked versions.
 
 ## 9. Landscape (we checked whether this exists)
