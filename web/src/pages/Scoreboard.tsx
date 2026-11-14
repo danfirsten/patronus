@@ -207,8 +207,8 @@ function LeadChart({ rows }: { rows: ScoreRow[] }) {
                 <rect x={x(0) - 3} y={y - 12} width={6} height={24} fill="var(--risk-danger)" rx={2} />
                 {isNum(earliest) && <line x1={x(earliest)} x2={x(0)} y1={y} y2={y} stroke="var(--series-2)" strokeWidth={2} strokeOpacity={0.4} />}
                 {isNum(o) && <circle cx={x(o)} cy={y} r={6} fill="var(--text-muted)" />}
-                {isNum(a) && <circle cx={x(a)} cy={y + 5} r={6} fill="var(--series-4)" stroke="var(--bg)" strokeWidth={1.5} />}
-                {isNum(nx) && <circle cx={x(nx)} cy={y - 5} r={7} fill="var(--series-2)" stroke="var(--bg)" strokeWidth={1.5} />}
+                {isNum(a) && <circle cx={x(a)} cy={y + 5} r={6} fill="var(--series-4)" stroke="var(--bg-elev)" strokeWidth={1.5} />}
+                {isNum(nx) && <circle cx={x(nx)} cy={y - 5} r={7} fill="var(--series-2)" stroke="var(--bg-elev)" strokeWidth={1.5} />}
                 {!isNum(earliest) && <text x={x(0) + 10} y={y} dy="0.32em" className="miss-label">no alarm</text>}
               </g>
             );

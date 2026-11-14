@@ -3,6 +3,7 @@ import { line } from 'd3-shape';
 import type { ForecastMonth } from '../data/types';
 import { fmtMonth, fmtProb, isNum } from '../lib/format';
 import { riskOf, riskVar, riskTextVar } from '../lib/risk';
+import { CountUp, useMounted } from '../lib/motion';
 
 /** Small TWS anomaly sparkline for map tooltips. */
 export function Sparkline({ values, width = 220, height = 48, color = 'var(--series-1)' }: {
@@ -65,7 +66,9 @@ export function Gauge({ months, max = 12, label, sub, beyond }: { months: number
     { from: 4, to: 6, c: 'var(--risk-watch)' },
     { from: 6, to: max, c: 'var(--risk-low)' },
   ];
-  const nx = cx + (r - 18) * Math.cos(angle), ny = cy - (r - 18) * Math.sin(angle);
+  // The needle is drawn pointing at 0 and swept to its reading on mount (spring ease).
+  const mounted = useMounted();
+  const sweep = ((Math.PI - angle) * 180) / Math.PI;
   return (
     <div className="gauge">
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 280 }} role="img"
@@ -73,12 +76,14 @@ export function Gauge({ months, max = 12, label, sub, beyond }: { months: number
         {seg.map((s) => (
           <path key={s.from} d={arc(Math.PI * (1 - s.from / max), Math.PI * (1 - s.to / max))} stroke={s.c} strokeWidth={14} fill="none" />
         ))}
-        <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="var(--text)" strokeWidth={3} strokeLinecap="round" />
+        <g className="gauge-needle" style={{ transform: `rotate(${mounted ? sweep : 0}deg)`, transformOrigin: `${cx}px ${cy}px` }}>
+          <line x1={cx} y1={cy} x2={cx - (r - 18)} y2={cy} stroke="var(--text)" strokeWidth={3} strokeLinecap="round" />
+        </g>
         <circle cx={cx} cy={cy} r={6} fill="var(--text)" />
         <text x={cx - r} y={cy + 16} textAnchor="middle" className="tick">0</text>
         <text x={cx + r} y={cy + 16} textAnchor="middle" className="tick">{max}+</text>
       </svg>
-      <div className="gauge-value">{months === null ? beyond ?? `${max}+` : months}<span> months</span></div>
+      <div className="gauge-value">{months === null ? beyond ?? `${max}+` : <CountUp value={months} duration={1200} />}<span> months</span></div>
       <div className="gauge-label">{label}</div>
       {sub && <div className="gauge-sub muted">{sub}</div>}
     </div>

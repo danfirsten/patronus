@@ -1,116 +1,149 @@
 /*
- * Patronus theme tokens. This is the ONLY file that defines colours, fonts and radii.
- * Swap the identity by editing values here; components only use var(--...).
+ * Patronus theme tokens: the "Drawdown" identity.
+ * This is the ONLY file that defines colours, fonts, radii and motion tokens.
+ * Components only use var(--...). See DESIGN_SYSTEM.md at the repo root.
  *
- * Data palettes use the Okabe-Ito colour-blind-safe set:
- *   drying = warm (vermillion / orange), wetting = cool (blue / sky blue).
+ * Idea: a reservoir. Water (blue) below the line, the bleached "bathtub ring"
+ * (ochre) where water used to be, bare rock (brown) when it's gone.
+ * Every data scale pairs blue with ochre/brown and steps in lightness, so it
+ * reads in greyscale and for red-green colour blindness.
  */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* Type */
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-sans: 'Schibsted Grotesk Variable', 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
   --fs-md: 1rem;
-  --fs-lg: 1.25rem;
-  --fs-xl: 1.75rem;
-  --fs-2xl: clamp(2rem, 5vw, 3.25rem);
+  --fs-lg: 1.1875rem;
+  --fs-xl: clamp(1.5rem, 2.6vw, 2.25rem);
+  --fs-2xl: clamp(2.75rem, 6.4vw, 5.5rem);
+  --fs-label: 0.6875rem;
   --lh: 1.55;
+  --tracking-display: -0.045em;
+  --tracking-head: -0.03em;
+  --tracking-label: 0.08em;
 
   /* Shape */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 14px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
   --radius-pill: 999px;
-  --maxw: 1180px;
+  --maxw: 1280px;
   --gutter: 16px;
 
-  /* Surfaces */
-  --bg: #0d1117;
-  --bg-elev: #151b24;
-  --bg-elev-2: #1c2430;
-  --border: #2a3442;
-  --border-strong: #3b4757;
+  /* Brand */
+  --ink: #0B1F2A;
+  --water: #0B4F6C;
+  --deep: #0B2A3C;
+  --shallow: #8DC3D6;
+  --ring: #D9C9A3;
+  --rock: #6E4B1B;
+  --fog: #EEF2F3;
+  --sky: #DCE3E6;
 
-  /* Text */
-  --text: #e8edf3;
-  --text-muted: #9aa7b6;
-  --text-faint: #6b7889;
-  --link: #7cc4f2;
-  --focus: #f0e442;
+  /* Surfaces */
+  --bg: #EEF2F3;          /* fog */
+  --bg-elev: #FFFFFF;
+  --bg-elev-2: #F4F7F8;
+  --bg-deep: #0B2A3C;     /* dark sections, footer */
+  --border: #DCE3E6;
+  --border-strong: #C2CCD0;
+
+  /* Text (contrast on #FFFFFF / #EEF2F3) */
+  --text: #0B1F2A;        /* 16.9 / 15.0 */
+  --text-muted: #4E616B;  /* 6.5 / 5.7 */
+  --text-faint: #5F717A;  /* 5.1 / 4.5 */
+  --text-on-deep: #E8F1F4;
+  --text-on-deep-muted: #B9D7E2;
+  --link: #0B4F6C;
+  --focus: #0B4F6C;
 
   /* Accent (UI, not data) */
-  --accent: #e69f00;
-  --accent-text: #111111;
+  --accent: #0B4F6C;
+  --accent-text: #FFFFFF;
 
   /* Map */
-  --map-ocean: #0b1420;
-  --map-land: #222c38;
-  --map-land-stroke: #36414f;
-  --map-graticule: #16202c;
-  --map-highlight: #ffffff;
+  --map-ocean: #F6F8F9;
+  --map-land: #DCE3E6;
+  --map-land-stroke: #FFFFFF;
+  --map-graticule: #E6ECEE;
+  --map-highlight: #0B1F2A;
 
-  /* Data: trend (diverging, colour-blind safe) */
-  --drying-strong: #d55e00;
-  --drying-mild: #f0a35e;
-  --neutral-data: #5f6b7a;
-  --wetting-mild: #7fbfe8;
-  --wetting-strong: #0072b2;
+  /* Data: storage trend (diverging: water -> bare rock) */
+  --drying-strong: #6E4B1B;
+  --drying-mild: #C4A266;
+  --neutral-data: #C2CCD0;
+  --wetting-mild: #6FAEC6;
+  --wetting-strong: #0B4F6C;
 
   /* Data: ENSO exposure */
-  --enso-el-nino: #d55e00;
-  --enso-la-nina: #56b4e9;
-  --enso-both: #cc79a7;
-  --enso-neutral: #5f6b7a;
-  --enso-nodata: #222c38;
+  --enso-el-nino: #B08945;
+  --enso-la-nina: #2C7FA0;
+  --enso-both: #0B1F2A;
+  --enso-neutral: #C2CCD0;
+  --enso-nodata: #E6ECEE;
 
-  /* Data: risk levels */
-  --risk-low: #4f6b5c;
-  --risk-watch: #f0e442;
-  --risk-warning: #e69f00;
-  --risk-danger: #d55e00;
-  --risk-text-dark: #111111;
-  --risk-text-light: #ffffff;
+  /* Data: risk levels. The ring darkens as risk rises (Clear -> Watch -> Warning -> Act). */
+  --risk-low: #E6E9E8;
+  --risk-watch: #D9C29A;
+  --risk-warning: #B08945;
+  --risk-danger: #6E4B1B;
+  --risk-text-dark: #0B1F2A;
+  --risk-text-light: #FFFFFF;
 
   /* Data: series */
-  --series-1: #56b4e9;
-  --series-2: #e69f00;
-  --series-3: #cc79a7;
-  --series-4: #009e73;
-  --series-band: rgba(86, 180, 233, 0.22);
-  --series-band-2: rgba(230, 159, 0, 0.22);
-  --threshold-warning: #e69f00;
-  --threshold-danger: #d55e00;
-  --event-mark: #f0e442;
-  --shortfall-shade: rgba(213, 94, 0, 0.28);
-  --grid-line: #232d3a;
-  --axis-text: #8794a4;
+  --series-1: #0B4F6C;    /* observed: water */
+  --series-2: #B08945;    /* forecast: ring ochre */
+  --series-3: #6E4B1B;    /* third series: rock */
+  --series-4: #5F8FA3;    /* fourth series: slate blue, use dashed */
+  --series-band: rgba(11, 79, 108, 0.16);
+  --series-band-2: rgba(176, 137, 69, 0.24);
+  --threshold-warning: #B08945;
+  --threshold-danger: #6E4B1B;
+  --event-mark: #0B1F2A;
+  --shortfall-shade: rgba(176, 137, 69, 0.22);
+  --grid-line: #E6ECEE;
+  --axis-text: #4E616B;
 
   /* Sample-data banner */
-  --sample-bg: #3a2a00;
-  --sample-border: #e69f00;
-  --sample-text: #ffd27a;
+  --sample-bg: #F6F1E6;
+  --sample-border: #B08945;
+  --sample-text: #5A3D15;
 
   /* Elevation */
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow: 0 1px 2px rgba(11, 31, 42, 0.06), 0 12px 32px rgba(11, 31, 42, 0.10);
 
-  /* Motion */
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --dur: 400ms;
+  /* Backtest outcomes */
+  --outcome-hit: #0B4F6C;
+  --outcome-miss: #6E4B1B;
+  --outcome-false: #D9C29A;
+  --outcome-quiet: #E6E9E8;
+
+  /* Motion. Only transform, opacity and clip-path animate (compositor-only). */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);     /* hovers, fades */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);     /* entrances, headline rise */
+  --ease-inout: cubic-bezier(0.77, 0, 0.175, 1);  /* waterline, wipes, chart draw */
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1); /* needle overshoot */
+  --dur-1: 160ms;   /* press, colour */
+  --dur-2: 280ms;   /* hover, toggles, tooltips */
+  --dur-3: 700ms;   /* reveals */
+  --dur-4: 1000ms;  /* headline rise, page enter */
+  --dur-5: 1400ms;  /* waterline, chart draw, needle */
+  --stagger: 60ms;
+  --rise: 18px;
+
+  /* Legacy aliases kept for older components */
+  --ease: var(--ease-expo);
+  --dur: var(--dur-3);
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dur: 0ms;
+    --dur-1: 0ms; --dur-2: 0ms; --dur-3: 0ms; --dur-4: 0ms; --dur-5: 0ms;
+    --stagger: 0ms; --rise: 0px; --dur: 0ms;
   }
-}
-
-/* Backtest outcome colours (added for season strip) */
-:root {
-  --outcome-hit: #009e73;
-  --outcome-miss: #d55e00;
-  --outcome-false: #e69f00;
-  --outcome-quiet: #2a3442;
 }

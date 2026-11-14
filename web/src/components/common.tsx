@@ -1,6 +1,7 @@
 import { Component, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { RISK_LABEL, riskTextVar, riskVar, EXPOSURE_LABEL, exposureVar } from '../lib/risk';
 import { SampleContext } from './sample';
+import { CountUp } from '../lib/motion';
 
 /** Measure an element's width so charts draw at real pixel size. */
 export function useWidth<T extends HTMLElement>(fallback = 600): [React.RefObject<T>, number] {
@@ -48,7 +49,7 @@ export function Figure({ title, sub, children, source, files, id }: {
 export function Stat({ value, label, tone }: { value: ReactNode; label: ReactNode; tone?: 'drying' | 'wetting' | 'accent' }) {
   return (
     <div className={`stat ${tone ? 'stat-' + tone : ''}`}>
-      <div className="stat-value">{value}</div>
+      <div className="stat-value"><CountUp value={value} /></div>
       <div className="stat-label">{label}</div>
     </div>
   );

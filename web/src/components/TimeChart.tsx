@@ -155,7 +155,7 @@ export function TimeChart({
                 const pts = l.data.filter((d) => isNum(d.lo) && isNum(d.hi) && toDate(d.x));
                 const s = ys(l.axis);
                 const p = area<typeof pts[number]>().x((d) => px(d.x)).y0((d) => s(d.lo as number)).y1((d) => s(d.hi as number)).curve(curveMonotoneX)(pts);
-                return p ? <path key={k} d={p} fill={l.color} stroke="none" /> : null;
+                return p ? <path key={k} className="band-in" d={p} fill={l.color} stroke="none" /> : null;
               }
               case 'bars': {
                 const s = ys(l.axis);
@@ -176,15 +176,17 @@ export function TimeChart({
                   .defined((d) => isNum(d.y) && !!toDate(d.x))
                   .x((d) => px(d.x)).y((d) => s(d.y as number));
                 if (l.curve !== false) gen.curve(curveMonotoneX);
-                return <path key={k} d={gen(l.data) ?? ''} fill="none" stroke={l.color} strokeWidth={l.width ?? 2} strokeDasharray={l.dash} />;
+                return l.dash
+                  ? <path key={k} className="band-in" d={gen(l.data) ?? ''} fill="none" stroke={l.color} strokeWidth={l.width ?? 2} strokeDasharray={l.dash} />
+                  : <path key={k} className="draw" pathLength={1} d={gen(l.data) ?? ''} fill="none" stroke={l.color} strokeWidth={l.width ?? 2} strokeLinecap="round" strokeLinejoin="round" />;
               }
               case 'points': {
                 const s = ys(l.axis);
                 return (
-                  <g key={k}>
+                  <g key={k} className="pt-in">
                     {l.data.filter((d) => isNum(d.y)).map((d, j) => (
                       <g key={j} transform={`translate(${px(d.x)},${s(d.y as number)})`}>
-                        <circle r={l.r ?? 4} fill={l.color} stroke="var(--bg)" strokeWidth={1.5} />
+                        <circle r={l.r ?? 4} fill={l.color} stroke="var(--bg-elev)" strokeWidth={1.5} />
                         {d.label && (px(d.x) > iw * 0.7
                           ? <text x={-8} dy="-0.6em" textAnchor="end" className="point-label">{d.label}</text>
                           : <text x={7} dy="0.32em" className="point-label">{d.label}</text>)}

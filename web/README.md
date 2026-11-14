@@ -25,14 +25,15 @@ Optional AI briefs are shown if `data/briefs/<ISO3>.md` or `data/briefs/kariba.m
 
 ## Theme
 
-All colours, fonts and radii live in `src/theme.css` as CSS custom properties. Swap the identity there; components only use `var(--...)`. Data palettes are Okabe-Ito (colour-blind safe): drying = warm, wetting = cool. Motion is disabled under `prefers-reduced-motion`.
+The identity is **Drawdown** (see `../DESIGN_SYSTEM.md`). All colours, fonts, radii and motion tokens live in `src/theme.css`; components only use `var(--...)`. Data palettes pair water blue with ochre/brown and step in lightness, so they are colour-blind safe. Motion hooks (scroll reveal, count-up, live waterline logo) are in `src/lib/motion.tsx`; everything is still under `prefers-reduced-motion`.
 
 ## Layout
 
 ```
 src/
   App.tsx            nav, routing, per-page sample banner
-  theme.css          design tokens (only place with colours)
+  theme.css          design tokens (only place with colours and motion tokens)
+  lib/motion.tsx     motion system: reveal, count-up, waterline wordmark
   app.css            layout and components
   data/load.ts       fetch + fixture fallback + reporting
   data/types.ts      types mirroring docs/CONTRACTS.md
