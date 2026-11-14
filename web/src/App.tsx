@@ -4,6 +4,7 @@ import { ReportContext, type DataSource } from './data/load';
 import { SampleBanner, SampleContext } from './components/sample';
 import { ErrorBoundary } from './components/common';
 import { useAutoReveal, Wordmark, WaterlineContext } from './lib/motion';
+import Pitch from './pages/Pitch';
 import Home from './pages/Home';
 import MapPage from './pages/MapPage';
 import WatchlistPage from './pages/Watchlist';
@@ -13,7 +14,8 @@ import ScoreboardPage from './pages/Scoreboard';
 import ProofPage from './pages/Proof';
 
 const NAV = [
-  ['', 'Story'],
+  ['', 'Overview'],
+  ['story', 'Story'],
   ['map', 'Map'],
   ['watchlist', 'Watchlist'],
   ['kariba', 'Kariba'],
@@ -50,14 +52,15 @@ export default function App() {
   const [page, arg] = route;
   let body: ReactNode;
   switch (page) {
-    case undefined: body = <Home />; break;
+    case undefined: body = <Pitch />; break;
+    case 'story': body = <Home />; break;
     case 'map': body = <MapPage />; break;
     case 'watchlist': body = <WatchlistPage />; break;
     case 'country': body = <CountryPage iso3={(arg ?? '').toUpperCase()} />; break;
     case 'kariba': body = <KaribaPage />; break;
     case 'scoreboard': body = <ScoreboardPage />; break;
     case 'proof': body = <ProofPage />; break;
-    default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the story</a></p></div>;
+    default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the overview</a></p></div>;
   }
   const active = page === 'country' ? 'watchlist' : page ?? '';
   const mainRef = useRef<HTMLElement>(null);
