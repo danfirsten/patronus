@@ -98,8 +98,9 @@ export function WorldMap({ mode, trends, basinsGeo, enso, compact = false }: {
                 key={String(c.id ?? c.properties.name)}
                 d={path(c as any) ?? ''}
                 fill={fill}
-                stroke="var(--map-land-stroke)"
-                strokeWidth={0.5}
+                stroke={interactive && (ec as any)?.robust === false ? 'var(--map-highlight)' : 'var(--map-land-stroke)'}
+                strokeWidth={interactive && (ec as any)?.robust === false ? 1.4 : 0.5}
+                strokeDasharray={interactive && (ec as any)?.robust === false ? '3 2' : undefined}
                 className={interactive ? 'map-shape' : undefined}
                 onPointerMove={interactive ? (e) => setHover({ kind: 'country', iso3: c.iso3, name: ec?.name ?? c.properties.name, enso: ec, ...pos(e) }) : undefined}
                 onClick={interactive ? (e) => setPinned({ kind: 'country', iso3: c.iso3, name: ec?.name ?? c.properties.name, enso: ec, ...pos(e) }) : undefined}
@@ -193,6 +194,7 @@ function CountryTip({ t }: { t: Extract<Tip, { kind: 'country' }> }) {
       ) : (
         <>
           <div className="tip-sub">{EXPOSURE_LABEL[e.exposure ?? ''] ?? e.exposure}</div>
+          {(e as any).robust === false && <div className="tip-flag">Not robust: class changes when 2020+ data are excluded (possible GPCP rainfall break).</div>}
           <dl className="tip-dl">
             <dt>El Niño</dt><dd>{fmtPct(e.el_nino_effect_pct, 0, true)} {isNum(e.el_nino_p) && <span className="muted">(p = {fmtNum(e.el_nino_p, 2)}, n = {e.n_el_nino ?? '—'})</span>}</dd>
             <dt>La Niña</dt><dd>{fmtPct(e.la_nina_effect_pct, 0, true)} {isNum(e.la_nina_p) && <span className="muted">(p = {fmtNum(e.la_nina_p, 2)}, n = {e.n_la_nina ?? '—'})</span>}</dd>

@@ -330,3 +330,5 @@ ul.plain li { margin-bottom: 0.5em; }
 .split-bar { display: flex; height: 18px; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-elev-2); }
 .split-bar span { display: block; height: 100%; }
 @media (max-width: 640px) { .split-op { display: none; } }
+.lg-outline { width: 12px; height: 12px; border: 1.5px dashed var(--map-highlight); border-radius: 2px; }
+.tip-flag { font-size: var(--fs-xs); color: var(--risk-watch); margin-bottom: 4px; }

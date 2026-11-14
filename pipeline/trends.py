@@ -330,6 +330,43 @@ def kariba_lake_equivalent(basin_area_km2: float) -> dict | None:
             "method": "Sen slope of deseasonalized monthly-mean G-REALM level, 2002-04..2026-08, times lake area / basin area"}
 
 
+HYBAS_REGION = {"1": "Africa", "2": "Europe", "3": "Siberia", "4": "Asia", "5": "Australasia", "6": "South America",
+                "7": "North America", "8": "Arctic", "9": "Greenland"}
+
+
+def drift_check(gp_ser: dict, m2_ser: dict, gw: dict) -> dict:
+    """GPCP / MERRA-2 annual-mean ratio per basin, normalized to its 2010-2019 mean. A drop after 2019 in the ratio means
+    GPCP reads drier relative to MERRA-2 than it used to (either product could move; see Kariba lake check)."""
+    yrs = np.array([m.year for m in MONTHS])
+    rat = {}
+    for bid, g in gp_ser.items():
+        m = m2_ser.get(bid)
+        if g is None or m is None:
+            continue
+        G = pd.Series(g).groupby(yrs).mean()
+        M = pd.Series(m).groupby(yrs).mean()
+        rr = (G / M)[(G.index >= 2003) & (G.index <= 2025)]
+        base = rr[(rr.index >= 2010) & (rr.index <= 2019)].mean()
+        if np.isfinite(base) and base > 0:
+            rat[bid] = rr / base
+    D = pd.DataFrame(rat).T
+    post = D[[c for c in D.columns if c >= 2020]].mean(axis=1)
+    reg = pd.Series({b: HYBAS_REGION.get(b[0], "other") for b in D.index})
+    w = pd.Series({b: gw[b] for b in D.index})
+    by_reg = {k: {"n_basins": int((reg == k).sum()), "median_post2020_ratio": r_(post[reg == k].median(), 3)}
+              for k in sorted(reg.unique())}
+    return {
+        "method": "per basin: annual GPCP / MERRA-2 rainfall ratio, normalized to its 2010-2019 mean; values < 1 after "
+                  "2019 mean GPCP reads drier relative to MERRA-2 than before",
+        "median_ratio_by_year": {str(int(y)): r_(v, 3) for y, v in D.median().items()},
+        "median_post2020_ratio": r_(post.median(), 3),
+        "gw_weighted_post2020_ratio": r_((post * w).sum() / w.sum(), 3),
+        "share_basins_below_0_95": r_((post < 0.95).mean(), 3),
+        "by_region": by_reg,
+        "kariba_basin_post2020_ratio": r_(post.get(KARIBA_BASIN), 3),
+    }
+
+
 def series_block(raw: np.ndarray, anom: np.ndarray) -> dict:
     return {"months": [str(m) for m in MONTHS],
             "tws_anom_cm": [r_(v, 2) for v in anom],
@@ -374,11 +411,19 @@ def main() -> None:
 
     def _pr(bid):
         try:  # same sampling as pipeline.basins.basin_sample_points(bid, 3), without reloading the basin file per call
-            return bid, precip_test(precip_series(grid_points(geoms[bid], 3)))
+            ser = precip_series(grid_points(geoms[bid], 3))
+            return bid, (ser, precip_test(ser))
         except Exception:  # noqa: BLE001
-            return bid, None
+            return bid, (None, None)
     with ThreadPoolExecutor(max_workers=6) as ex:
-        pr_res = dict(ex.map(_pr, basins["basin_id"].tolist()))
+        tmp = dict(ex.map(_pr, basins["basin_id"].tolist()))
+    m2_ser = {k: v[0] for k, v in tmp.items()}
+    pr_res = {k: v[1] for k, v in tmp.items()}
+    drift = None
+    try:
+        drift = drift_check(gp_ser, m2_ser, dict(zip(basins["basin_id"], basins["hydro_gw"])))
+    except Exception as e:  # noqa: BLE001
+        notes.append(f"GPCP drift check failed: {e}")
     n_pr_fail = sum(v is None for v in pr_res.values())
     if n_pr_fail:
         notes.append(f"MERRA-2 precipitation trend unavailable for {n_pr_fail} basins (POWER request failed, data incomplete, "
@@ -525,13 +570,16 @@ def main() -> None:
                 f"q={kb['tws_q']:.3f}), while water storage over the whole catchment draining into Kariba "
                 f"(upper Zambezi, {up['area_km2']:,.0f} km2) shows no significant trend ({up['tws_slope_cm_per_decade']:+.1f} "
                 f"cm/decade, p={up['tws_p']:.2f}).{lake_txt}"
-                + (f" GPCP rainfall is drifting down: {up['precip_slope_pct_per_decade']:+.1f}%/decade over the upstream "
-                   f"catchment (p={up['precip_p']:.4f}) and {kb['precip_slope_pct_per_decade']:+.1f}%/decade over the Kariba basin "
-                   f"(p={kb['precip_p']:.3f}, q={kb['precip_q']:.2f} after FDR across all basins). MERRA-2 shows no such decline "
-                   f"({up['precip_slope_merra2_pct_per_decade']:+.1f}%/decade upstream), so treat it as a warning sign, not a settled trend."
-                   if up.get("precip_slope_pct_per_decade") is not None and up.get("precip_p") is not None else "")
-                + " The storage decline in the Kariba basin is mostly the reservoir drawing down; storage across the upper "
-                "Zambezi has not followed. Kariba's risk comes mainly from year-to-year (ENSO-driven) rainfall swings and "
+                + (f" Rainfall shows no significant long-term trend either: GPCP over 2002-2019 (its stable period) gives "
+                   f"{up['precip_slope_pct_per_decade']:+.1f}%/decade over the upstream catchment (p={up['precip_p']:.2f}) and "
+                   f"{kb['precip_slope_pct_per_decade']:+.1f}%/decade over the Kariba basin (p={kb['precip_p']:.2f}); MERRA-2 gives "
+                   f"{up['precip_slope_merra2_pct_per_decade']:+.1f}%/decade upstream. The apparent full-period GPCP decline "
+                   f"({up['precip_slope_pct_per_decade_full_period']:+.1f}%/decade, p={up['precip_p_full_period']:.4f}) comes from "
+                   f"GPCP reading too dry after 2019 over southern Africa: it shows 2020/21 and 2021/22 as dry while G-REALM shows "
+                   f"the lake rising from about 476 m in early 2020 to about 482 m in mid-2021."
+                   if up.get("precip_p") is not None and up.get("precip_p_full_period") is not None else "")
+                + " So the storage decline in the Kariba basin is mostly the reservoir drawing down, not a drying upper "
+                "Zambezi. Kariba's risk comes mainly from year-to-year (ENSO-driven) rainfall swings and "
                 "release decisions, which is why Patronus forecasts it month by month.")
         else:
             kariba["interpretation"] = (
@@ -551,6 +599,8 @@ def main() -> None:
     drying = sorted([b for b in out_basins if b["trend_class"] == "drying"], key=lambda b: -b["hydro_gw"])
     gw_dry_gwsig = sum(b["hydro_gw"] for b in drying if b["possible_groundwater_signal"])
     gw_dry_robust = sum(b["hydro_gw"] for b in drying if b["possible_groundwater_signal"] is False)
+    gw_dry_full = sum(b["hydro_gw"] for b in drying if b["precip_decline_significant_full_period"])
+    gw_dry_nodecl = gw_dry - gw_dry_robust
     gw_dry_annual = sum(b["hydro_gw"] for b in drying if b["tws_p_annual"] is not None and b["tws_p_annual"] < ALPHA)
     summary = {
         "n_basins": len(out_basins), "n_tested": len(tested), "n_drying": n_dry, "n_wetting": n_wet,
@@ -558,7 +608,11 @@ def main() -> None:
         "gw_total": r_(gw_total, 1), "gw_drying": r_(gw_dry, 1), "gw_wetting": r_(gw_wet, 1),
         "gw_no_significant_trend": r_(gw_none, 1),
         "gw_drying_pct": r_(100 * gw_dry / gw_total, 1), "gw_wetting_pct": r_(100 * gw_wet / gw_total, 1),
+        "split": {"gw_drying_with_rain_decline": r_(gw_dry_robust, 1),
+                  "gw_drying_without_rain_decline": r_(gw_dry_nodecl, 1),
+                  "gw_wetting": r_(gw_wet, 1)},
         "gw_drying_with_precip_decline": r_(gw_dry_robust, 1),
+        "gw_drying_with_precip_decline_full_period": r_(gw_dry_full, 1),
         "gw_drying_possible_groundwater_signal": r_(gw_dry_gwsig, 1),
         "gw_drying_also_significant_annual": r_(gw_dry_annual, 1),
         "n_drying_also_significant_annual": sum(1 for b in drying if b["tws_p_annual"] is not None and b["tws_p_annual"] < ALPHA),
@@ -566,15 +620,20 @@ def main() -> None:
                                and b["precip_slope_pct_per_decade"] < 0),
         "n_precip_wetting": sum(1 for b in out_basins if b["precip_q"] is not None and b["precip_q"] < ALPHA
                                 and b["precip_slope_pct_per_decade"] > 0),
-        "headline": (f"{gw_dry:.0f} GW of hydropower ({100 * gw_dry / gw_total:.0f}% of the {gw_total:.0f} GW mapped) sits in "
-                     f"{n_dry} basins with a significant drying trend in GRACE water storage since 2002; "
-                     f"{gw_wet:.0f} GW sits in {n_wet} significantly wetting basins."),
-        "headline_caveat": (f"Only {gw_dry_robust:.0f} GW of the drying total is in basins where rainfall also declined "
-                            f"significantly; elsewhere the storage loss may be groundwater pumping (e.g. north India), "
-                            f"glacier and snow loss (Alps, Norway) or reservoir drawdown rather than less rain."),
+        "n_precip_drying_full_period": sum(1 for b in out_basins if b["precip_q_full_period"] is not None
+                                           and b["precip_q_full_period"] < ALPHA and b["precip_slope_pct_per_decade_full_period"] < 0),
+        "n_precip_wetting_full_period": sum(1 for b in out_basins if b["precip_q_full_period"] is not None
+                                            and b["precip_q_full_period"] < ALPHA
+                                            and b["precip_slope_pct_per_decade_full_period"] > 0),
+        "headline": (f"In basins with significant GRACE drying since 2002, {gw_dry_robust:.0f} GW of hydropower also saw "
+                     f"significantly less rain; another {gw_dry_nodecl:.0f} GW lost water storage without a rain decline, "
+                     f"pointing to groundwater pumping, glacier/snow loss or reservoir operations."),
+        "headline_supporting": (f"{gw_dry:.0f} GW of hydropower ({100 * gw_dry / gw_total:.0f}% of the {gw_total:.0f} GW mapped) "
+                                f"sits in {n_dry} basins with a significant drying trend in GRACE water storage since 2002; "
+                                f"{gw_wet:.0f} GW sits in {n_wet} significantly wetting basins."),
         "top_drying": [{k: b[k] for k in ("basin_id", "name", "countries", "hydro_gw", "major_plants",
                                           "tws_slope_cm_per_decade", "tws_q", "precip_slope_pct_per_decade",
-                                          "precip_q", "precip_slope_merra2_pct_per_decade", "precip_decline_significant", "possible_groundwater_signal",
+                                          "precip_q", "precip_slope_pct_per_decade_full_period", "precip_slope_merra2_pct_per_decade", "precip_decline_significant", "possible_groundwater_signal",
                                           "tws_p_annual", "low_resolution")}
                        for b in drying[:10]],
     }
@@ -586,10 +645,12 @@ def main() -> None:
                    "TWS (GFZ GravIS, 1-degree), 2002-04..2026-08; Benjamini-Hochberg FDR q<0.05 across basins. Basin value = "
                    "cos(latitude)-weighted mean of grid cells whose centres lie in the basin (nearest land cell if none). "
                    "Deseasonalized by subtracting each calendar month's mean; missing months (incl. the 2017-18 mission gap) "
-                   "are not interpolated; Sen slope is computed on the real time axis. Precipitation: GPCP v2.3 monthly "
-                   "(NASA GSFC/GEWEX, 2.5-degree), mean of cells overlapping the basin weighted by overlap area x cos(lat), "
-                   "same test on deseasonalized anomalies, slope as % of mean per decade, separate BH-FDR. NASA POWER "
-                   "(MERRA-2) PRECTOTCORR at up to 3 points per basin is kept as *_merra2 for comparison."),
+                   "are not interpolated; Sen slope is computed on the real time axis. Rain trends over 2002-2019, where GPCP is "
+                   "stable: GPCP v2.3 monthly (NASA GSFC/GEWEX, 2.5-degree), 2002-04..2019-12, mean of cells overlapping the "
+                   "basin weighted by overlap area x cos(lat), same test on deseasonalized anomalies, slope as % of mean per "
+                   "decade, separate BH-FDR. Full-period GPCP (2002-04..2026-08) is kept as *_full_period and NASA POWER "
+                   "(MERRA-2) PRECTOTCORR at up to 3 points per basin as *_merra2, both for comparison only."),
+        "rain_period": {"from": START, "to": RAIN_END},
         "period": {"from": START, "to": END},
         "definitions": {
             "trend_class": "drying / wetting if TWS BH-FDR q < 0.05 with negative / positive Sen slope, else no_significant_trend",
@@ -607,6 +668,7 @@ def main() -> None:
         },
         "summary": summary,
         "kariba_basin": kariba,
+        "rain_drift_check": drift,
         "limitations": [
             "GRACE TWS is the sum of all water: groundwater, soil moisture, snow, lakes and reservoirs. Declines in heavily "
             "irrigated regions (e.g. north India, the North China Plain, the Middle East) can come from groundwater pumping and "
@@ -623,6 +685,12 @@ def main() -> None:
             "some points (e.g. Colombia drops to ~30% of normal in 2007-08 and 2021; Vietnam roughly doubles from the 1980s "
             "to the 2010s) and could create false rainfall trends; it is kept only as *_merra2 for comparison. GPCP's 2.5-degree "
             "cells smooth small, steep basins (Andes, Alps, Himalaya), and its data after 2021-11 are interim.",
+            "GPCP drifts after 2019: relative to MERRA-2 its rainfall drops in a step around 2020 (see rain_drift_check; "
+            "strongest over Africa and south Asia, absent over the Americas), and over the Zambezi it reads 2020/21 and "
+            "2021/22 as dry as 2023/24 although G-REALM shows Lake Kariba rising from about 476 m (early 2020) to about 482 m (mid-2021). Rain trends therefore use 2002-04..2019-12 only; "
+            "the full-period GPCP numbers (*_full_period) roughly double the count of significant rain declines, mostly as an "
+            "artefact. The rain window is therefore shorter than the TWS window (2002-04..2026-08), so the TWS-vs-rain "
+            "comparison is approximate.",
             "Basins are weighted by installed capacity in WRI GPPD v1.3 (2021); plants built since then are missing.",
             "Glacier and ice-sheet mass loss (e.g. Alaska, Patagonia, High Mountain Asia) appears as TWS decline and may leak "
             "into neighbouring basins at GRACE resolution.",

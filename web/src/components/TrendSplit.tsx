@@ -39,7 +39,17 @@ export function rainPeriodOf(t: Trends | null): string | null {
     const r = /(\d{4}(?:-\d{2})?)\s*(?:\.\.|–|-|to)\s*(\d{4}(?:-\d{2})?)/.exec(m.slice(i));
     if (r) return `${r[1]} to ${r[2]}`;
   }
-  return a.period ? `${periodOf([a.period.from, a.period.to])} (same as water storage)` : null;
+  return null;
+}
+
+/** The precipitation part of trends.json `method`, so the page states exactly what the pipeline did. */
+export function rainMethodOf(t: Trends | null): string | null {
+  const m = typeof (t as any)?.method === 'string' ? (t as any).method as string : '';
+  const i = m.search(/Precipitation:|Rain(fall)?:/);
+  if (i < 0) return null;
+  const rest = m.slice(i);
+  const end = rest.search(/\.\s+(NASA POWER|MERRA|Hydro|Basin|Capacity)/);
+  return (end > 0 ? rest.slice(0, end + 1) : rest).trim();
 }
 
 export function TrendSplitBlock({ trends, compact = false }: { trends: Trends | null; compact?: boolean }) {
@@ -73,7 +83,9 @@ export function TrendSplitBlock({ trends, compact = false }: { trends: Trends | 
         {isNum(s.mapped) && <span className="legend-item">of {fmtNum(s.mapped)} GW mapped</span>}
       </div>
       <p className="small muted">
-        Water storage trend: GRACE/GRACE-FO, {trends?.period ? periodOf([trends.period.from, trends.period.to]) : '2002–2026'}. Rain trend period: {s.rainPeriod ?? '—'}.
+        Water storage trend: GRACE/GRACE-FO, {trends?.period ? periodOf([trends.period.from, trends.period.to]) : '2002–2026'}.
+        {s.rainPeriod ? ` Rain trend period: ${s.rainPeriod}.` : ''}
+        {rainMethodOf(trends) ? ` Rain trend method: ${rainMethodOf(trends)}` : ''}
       </p>
     </div>
   );

@@ -6,7 +6,7 @@ import { Figure, Loading, Stat } from '../components/common';
 import { WorldMap, type MapMode } from '../components/WorldMap';
 import { TrendSplitBlock, trendSplit } from '../components/TrendSplit';
 import { LegendItem } from '../components/TimeChart';
-import { fmtNum, periodOf } from '../lib/format';
+import { fmtNum, isNum, periodOf } from '../lib/format';
 
 export default function MapPage() {
   const [mode, setMode] = useState<MapMode>('trend');
@@ -44,7 +44,7 @@ export default function MapPage() {
           <Figure
             title="Hydropower basins by trend in total water storage"
             sub="Basins that contain hydro plants. Colour shows a statistically significant trend after correcting for testing many basins at once."
-            source={<>{trends.data?.sources?.length ? srcName(trends.data.sources) : 'GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS); WRI Global Power Plant Database; HydroBASINS level 4'}. Water storage {period}; rain trend {trendSplit(trends.data).rainPeriod ?? period}.</>}
+            source={<>{trends.data?.sources?.length ? srcName(trends.data.sources) : 'GRACE/GRACE-FO terrestrial water storage (NASA/GFZ GravIS); WRI Global Power Plant Database; HydroBASINS level 4'}. Water storage {period}; rain trend {trendSplit(trends.data).rainPeriod ?? "period as stated in the method"}.</>}
             files={['trends.json', 'basins.geojson']}
           >
             <div className="legend">
@@ -61,13 +61,15 @@ export default function MapPage() {
       ) : (
         <>
           <div className="stat-row">
-            <Stat value={`${fmtNum(es?.gw_el_nino_losers)} GW`} label={`in ${fmtNum(es?.n_el_nino_losers)} grids that lose under El Niño`} tone="drying" />
+            {isNum((es as any)?.gw_robust_el_nino_losers) && <Stat value={`${fmtNum((es as any).gw_robust_el_nino_losers)} GW`} label={`in ${fmtNum((es as any).n_robust_el_nino_losers ?? (es as any).robust_el_nino_losers?.length)} grids that lose under El Niño in both the full record and the 1981–2019 check`} tone="drying" />}
+            <Stat value={`${fmtNum(es?.gw_el_nino_losers)} GW`} label={`in ${fmtNum(es?.n_el_nino_losers)} grids that lose under El Niño (full record)`} tone={isNum((es as any)?.gw_robust_el_nino_losers) ? undefined : 'drying'} />
             <Stat value={`${fmtNum(es?.gw_la_nina_losers)} GW`} label={`in ${fmtNum(es?.n_la_nina_losers)} grids that lose under La Niña`} tone="wetting" />
             {enso.data?.outlook?.oni_latest && (
               <Stat value={fmtNum(enso.data.outlook.oni_latest.value, 2)} label={`Oceanic Niño Index, ${enso.data.outlook.oni_latest.season ?? ''} (${enso.data.outlook.status ?? ''})`} tone="accent" />
             )}
           </div>
-          {es?.headline && <p className="headline">{es.headline}</p>}
+          {((es as any)?.headline_robust ?? es?.headline) && <p className="headline">{(es as any)?.headline_robust ?? es?.headline}</p>}
+          {(es as any)?.headline_robust && es?.headline && <p className="small muted">Full record: {es.headline}</p>}
           <Figure
             title="How each hydro-dependent grid responds to El Niño and La Niña"
             sub="A grid counts as a loser in a phase when output or storage is 5% or more below normal with permutation p < 0.1."
@@ -80,9 +82,24 @@ export default function MapPage() {
               <LegendItem kind="box" color="var(--enso-both)" label="Loses under both" />
               <LegendItem kind="box" color="var(--enso-neutral)" label="No clear effect" />
               <LegendItem kind="box" color="var(--enso-nodata)" label="Not hydro-dependent" />
+              {(enso.data?.countries ?? []).some((c: any) => c.robust === false) && <span className="legend-item"><i className="lg-outline" />Dashed outline: class changes when 2020+ data are excluded (possible GPCP rainfall break)</span>}
             </div>
             {enso.loading ? <Loading what="map" /> : <WorldMap mode="enso" trends={trends.data} basinsGeo={basins.data} enso={enso.data} />}
-            {enso.data?.method && <details className="more"><summary>Method</summary><div className="muted small">{enso.data.method}</div></details>}
+            {enso.data?.method && (
+              <details className="more"><summary>Method</summary>
+                <div className="muted small">{enso.data.method}</div>
+                {(enso.data as any).robustness_1981_2019 && (() => {
+                  const r: any = (enso.data as any).robustness_1981_2019;
+                  return (
+                    <div className="muted small">
+                      <p><b>Robustness check, 1981–2019:</b> {r.description}</p>
+                      {r.summary_full && r.summary_1981_2019 && <p>El Niño losers: {fmtNum(r.summary_full.gw_el_nino_losers)} GW in {r.summary_full.n_el_nino_losers} grids (full record) vs {fmtNum(r.summary_1981_2019.gw_el_nino_losers)} GW in {r.summary_1981_2019.n_el_nino_losers} grids (1981–2019).</p>}
+                      {Array.isArray(r.class_changed) && r.class_changed.length > 0 && <p>Class changes: {r.class_changed.join('; ')}.</p>}
+                    </div>
+                  );
+                })()}
+              </details>
+            )}
           </Figure>
           {enso.data?.projections?.text && (
             <div className="callout">

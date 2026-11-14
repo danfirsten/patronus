@@ -122,7 +122,7 @@ export default function Home() {
             {trends.data ? <TrendSplitBlock trends={trends.data} compact /> : <h2>Many hydropower basins are losing water.</h2>}
             {(ts as any)?.headline_caveat && <p className="small muted" style={{ maxWidth: '80ch' }}>{(ts as any).headline_caveat}</p>}
             <div className="stat-row">
-              <Stat value={`${fmtNum(es?.gw_el_nino_losers)} GW`} label="in grids that usually lose output under El Niño" tone="drying" />
+              <Stat value={`${fmtNum((es as any)?.gw_robust_el_nino_losers ?? es?.gw_el_nino_losers)} GW`} label={(es as any)?.gw_robust_el_nino_losers != null ? 'in grids that lose output under El Niño (full record and 1981–2019 check)' : 'in grids that usually lose output under El Niño'} tone="drying" />
               <Stat value={`${fmtNum(es?.gw_la_nina_losers)} GW`} label="in grids that usually lose output under La Niña" tone="wetting" />
             </div>
             <Figure
@@ -133,7 +133,8 @@ export default function Home() {
             >
               {trends.loading || basins.loading ? <Loading what="map" /> : <WorldMap mode="trend" trends={trends.data} basinsGeo={basins.data} enso={enso.data} compact />}
             </Figure>
-            {es?.headline && <p className="lede">{es.headline}</p>}
+            {((es as any)?.headline_robust ?? es?.headline) && <p className="lede">{(es as any)?.headline_robust ?? es?.headline}</p>}
+            {(es as any)?.headline_robust && es?.headline && <p className="small muted">Full record: {es.headline}</p>}
             {enso.data?.projections?.text && <p className="small muted" style={{ maxWidth: '80ch' }}>{enso.data.projections.text}</p>}
             <p><a href="#/map">Explore the trend and El Niño exposure maps →</a></p>
           </Reveal>
