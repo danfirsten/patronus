@@ -189,8 +189,8 @@ function BacktestBlock({ g }: { g: GenBacktest }) {
             <table className="data-table compact">
               <thead><tr><th>Months ahead</th><th>AUC-PR</th><th>90% interval</th><th>Climatology</th><th>Brier</th></tr></thead>
               <tbody>
-                {bh.map((r) => (
-                  <tr key={r.horizon}><td>{r.horizon}</td><td className="num">{fmtNum(r.auc_pr, 2)}</td><td className="num">{r.auc_pr_ci90 ? `${fmtNum(r.auc_pr_ci90[0], 2)}–${fmtNum(r.auc_pr_ci90[1], 2)}` : '—'}</td><td className="num">{fmtNum(r.auc_pr_climatology, 2)}</td><td className="num">{fmtNum(r.brier, 3)}</td></tr>
+                {bh.map((r, i) => (
+                  <tr key={i}><td>{r.horizon}</td><td className="num">{fmtNum(r.auc_pr, 2)}</td><td className="num">{r.auc_pr_ci90 ? `${fmtNum(r.auc_pr_ci90[0], 2)}–${fmtNum(r.auc_pr_ci90[1], 2)}` : '—'}</td><td className="num">{fmtNum(r.auc_pr_climatology, 2)}</td><td className="num">{fmtNum(r.brier, 3)}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -206,7 +206,7 @@ function BacktestBlock({ g }: { g: GenBacktest }) {
   );
 }
 
-const SRC_LABEL: Record<string, string> = { gravis: 'GRACE', power: 'NASA POWER', oni: 'ENSO index', grealm: 'G-REALM' };
+const SRC_LABEL: Record<string, string> = { gravis: 'GRACE', power: 'NASA POWER', power_precip: 'NASA POWER rain', power_soil: 'NASA POWER soil wetness', power_temp: 'NASA POWER temperature', oni: 'ENSO index', grealm: 'G-REALM', persistence: 'recent generation' };
 const labelSource = (s: string) => SRC_LABEL[s] ?? s;
 
 function SkillBars({ rows }: { rows: GenBacktest['by_horizon'] & {} }) {
@@ -233,8 +233,8 @@ function SkillBars({ rows }: { rows: GenBacktest['by_horizon'] & {} }) {
             <g key={t} transform={`translate(0,${y(t)})`}><line x2={iw} className="grid" /><text x={-6} dy="0.32em" textAnchor="end" className="tick">{t}</text></g>
           ))}
           <line x2={iw} y1={y(0)} y2={y(0)} className="axis" />
-          {rows.map((r) => (
-            <g key={r.horizon} transform={`translate(${x0(r.horizon)},0)`}>
+          {rows.map((r, ri) => (
+            <g key={`${r.horizon}-${ri}`} transform={`translate(${x0(r.horizon)},0)`}>
               {keys.map(([k, l, c]) => {
                 const v = r[k];
                 if (!isNum(v)) return null;
@@ -262,7 +262,7 @@ function Reliability({ g }: { g: GenBacktest }) {
   if (!rel.length) return <Empty>No reliability data yet.</Empty>;
   return (
     <div className="chart" ref={ref}>
-      <div className="legend">{rel.map((r, i) => <LegendItem key={r.horizon} kind="dot" color={colors[i % 4]} label={`${r.horizon} months ahead`} />)}</div>
+      <div className="legend">{rel.map((r, i) => <LegendItem key={i} kind="dot" color={colors[i % 4]} label={`${r.horizon} months ahead${(r as any).calibrated === true ? ', calibrated' : (r as any).calibrated === false ? ', before calibration' : ''}`} />)}</div>
       <svg width={size} height={size} role="img" aria-label="Reliability diagram">
         <g transform={`translate(${m.left},${m.top})`}>
           {[0, 0.25, 0.5, 0.75, 1].map((t) => (
@@ -277,10 +277,10 @@ function Reliability({ g }: { g: GenBacktest }) {
           {rel.map((r, i) => {
             const pts = r.bins.filter((b) => isNum(b.observed_rate));
             return (
-              <g key={r.horizon}>
+              <g key={i}>
                 <path d={line<typeof pts[number]>().x((b) => x(b.p_mean)).y((b) => y(b.observed_rate as number))(pts) ?? ''} fill="none" stroke={colors[i % 4]} strokeWidth={1.5} />
-                {pts.map((b) => (
-                  <circle key={b.p_mean} cx={x(b.p_mean)} cy={y(b.observed_rate as number)} r={3 + 6 * Math.sqrt((b.n ?? 1) / maxN)} fill={colors[i % 4]} fillOpacity={0.8}>
+                {pts.map((b, j) => (
+                  <circle key={j} cx={x(b.p_mean)} cy={y(b.observed_rate as number)} r={3 + 6 * Math.sqrt((b.n ?? 1) / maxN)} fill={colors[i % 4]} fillOpacity={0.8}>
                     <title>{`Forecast ${fmtProb(b.p_mean)}, observed ${fmtProb(b.observed_rate)}, n = ${b.n ?? '—'}`}</title>
                   </circle>
                 ))}
@@ -309,7 +309,7 @@ function HBars({ items, fmt, color }: { items: { label: string; value: number | 
         <g transform={`translate(${m.left},${m.top})`}>
           <line x1={x(0)} x2={x(0)} y2={items.length * rowH} className="axis" />
           {items.map((it, i) => (
-            <g key={it.label} transform={`translate(0,${i * rowH})`}>
+            <g key={i} transform={`translate(0,${i * rowH})`}>
               <text x={-8} y={rowH / 2} dy="0.32em" textAnchor="end" className="row-label">{it.label}</text>
               {isNum(it.value) && (
                 <>

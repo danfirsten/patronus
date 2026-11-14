@@ -314,7 +314,7 @@ def drivers_text(row: pd.Series, info: dict, iso3: str, lab: pd.DataFrame, enso_
     cand = []
     p3 = row.get("precip_3m_anom_pct")
     if pd.notna(p3) and abs(p3) >= 15:
-        cand.append((abs(p3) / 15, f"Rain over the hydro basins {abs(p3):.0f}% {'below' if p3 < 0 else 'above'} normal for the last 3 months"))
+        cand.append((abs(p3) / 15, f"Rain (GPCP) near the hydro plants {abs(p3):.0f}% {'below' if p3 < 0 else 'above'} normal for the last 3 months"))
     p12 = row.get("precip_12m_anom_pct")
     if pd.notna(p12) and abs(p12) >= 10:
         cand.append((abs(p12) / 10, f"12-month rainfall {abs(p12):.0f}% {'below' if p12 < 0 else 'above'} normal"))
@@ -498,7 +498,7 @@ def main():
         alarm_hist = [{"issue": str(r.issue), "p_any_shortfall_6m": round(r.p_any, 3), "observed_any_shortfall_6m": bool(r.y_any6)}
                       for r in dA[(dA["iso3"] == iso) & dA["p_any"].notna()].itertuples()]
         dn = {"tws_anom_sd": _r(base_row["tws_anom_sd"], 2), "tws_month": str(ISSUE - 3),
-              "precip_1m_anom_pct": _r(base_row["precip_1m_anom_pct"]), "precip_3m_anom_pct": _r(base_row["precip_3m_anom_pct"]),
+              "precip_source": "GPCP v2.3", "precip_1m_anom_pct": _r(base_row["precip_1m_anom_pct"]), "precip_3m_anom_pct": _r(base_row["precip_3m_anom_pct"]),
               "precip_6m_anom_pct": _r(base_row["precip_6m_anom_pct"]), "precip_12m_anom_pct": _r(base_row["precip_12m_anom_pct"]),
               "soil_root_anom_sd": _r(base_row["soil_root_anom_sd"], 2), "soil_top_anom_sd": _r(base_row["soil_top_anom_sd"], 2),
               "t2m_3m_anom_sd": _r(base_row["t2m_3m_anom_sd"], 2), "power_month": str(ISSUE - 1),
@@ -506,7 +506,7 @@ def main():
               "persist_anom_pct": _r(base_row["persist_anom_pct"]), "persist_month": str(ISSUE - 2)}
         pts = points_for(iso)
         page = {"generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly"] + (["ember_china"] if iso == "CHN-SC" else [])
-                + ["gravis", "power", "oni", "gppd"],
+                + ["gravis", "gpcp", "power", "oni", "gppd"],
                 "iso3": iso, "name": names.get(iso, iso), "tier": 1,
                 "label_basis": info[iso]["basis"], "monthly_from": info[iso]["first"], "monthly_to": last,
                 "history": hist, "drivers_now": dn, "drivers": drv,
@@ -530,10 +530,10 @@ def main():
 
     watch.sort(key=lambda w: -w["max_p_shortfall"])
     _write("watchlist.json", {
-        "generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly", "ember_china", "gravis", "power", "oni", "gppd"],
+        "generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly", "ember_china", "gravis", "gpcp", "power", "oni", "gppd"],
         "issued": ISSUE_DATE, "issue_month": str(ISSUE),
         "method": ("Pooled LightGBM per horizon (1-6 months after the issue month), isotonic-calibrated on out-of-fold predictions. "
-                   "Inputs available on the issue date: Ember hydro anomaly at t-2, GRACE-FO TWS at t-3, NASA POWER at t-1, ONI at t-1. "
+                   "Inputs available on the issue date: Ember hydro anomaly at t-2, GRACE-FO TWS at t-3, GPCP rain and NASA POWER soil/temperature at t-1, ONI at t-1. "
                    "Shortfall = hydro capacity factor >= 15% below that calendar month's normal; severe = >= 30% below."),
         "alarm_definition": f"alarm = P(any shortfall in the next 6 months) >= {thr} (threshold set for <= 1 false alarm per country per 5 calm years in the backtest)",
         "countries": watch, "notes": notes})
@@ -582,7 +582,8 @@ def main():
         "The normal is an expanding median of only earlier years; in short records it is set by 2-4 years. Brazil's 2021 normal comes from 2018-2020, which were themselves dry, so the 2021 anomaly is understated.",
         "Sichuan has no provincial capacity series; its anomaly uses generation rescaled by the previous year's total. The monthly data does not show the two-week August 2022 crisis (Aug 2022 is near normal; Sep 2022 about -13%). The sampling box for Sichuan also covers some Yunnan/Tibet/Chongqing plants.",
         "Climate inputs are sampled at up to 8 capacity-weighted 1-degree cells near the plants (GPPD 2021; newer plants such as Coca Codo Sinclair missing), not over full upstream catchments. GRACE (~300 km) is too coarse for small Andean or Balkan basins.",
-        "NASA POWER (MERRA-2 reanalysis) stands in for GPM IMERG rain and SMAP soil moisture, which need an Earthdata login. Recent months come from POWER daily data.",
+        "Rainfall: NASA POWER (MERRA-2) point rainfall has artificial breaks at plant points (Colombia annual rain ~30% of GPCP in 2008 and 2021; Viet Nam's POWER/GPCP ratio jumps from ~0.6 to ~1.1 in 2016-17), so the rain features use GPCP v2.3 (NASA GSFC/GEWEX satellite-gauge merge, 2.5 deg, anomalies vs 1981-2010). A swap ablation reports the model with POWER rain instead. GPCP's 2.5 deg cells are coarse for Andean and Balkan basins.",
+        "NASA POWER root-zone/surface wetness and temperature inherit the same MERRA-2 breaks (e.g. Colombia 2021 root-zone -2.4 SD, Viet Nam +2 SD from 2017). They are standardized against a trailing 10-year same-month baseline, which absorbs step changes after a few years but not one-off artefacts like Colombia 2021. They stand in for SMAP, which needs an Earthdata login.",
         "Blocked leave-one-year-out CV trains on years after the test year too; expanding normals for those later years include the test year's labels (mild leakage). The strictly forward 2024+ test avoids this but is small.",
         "The alarm threshold and crisis lead times are chosen and measured on the same out-of-fold predictions, so they are optimistic. The five crises are illustrations; the skill table is the main test.",
         "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a uniform 2-month lag; in the live forecast Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data.",
@@ -593,11 +594,11 @@ def main():
     bh = bt["by_horizon"]
     labelled = D[(D["horizon"] == 1) & D["y_short"].notna()]
     _write("generation_backtest.json", {
-        "generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly", "ember_china", "gravis", "power", "oni", "gppd"],
+        "generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly", "ember_china", "gravis", "gpcp", "power", "oni", "gppd"],
         "design": ("Blocked leave-one-year-out CV with a 12-month gap on each side (test year Y; train on target months outside "
                    "[Y-1, Y+1]); pooled LightGBM across tier-1 grids (23 countries + Sichuan); one classifier and three "
                    "quantile regressors per horizon; isotonic calibration cross-fitted on out-of-fold predictions; features "
-                   "respect publication lags (Ember t-2, GRACE t-3, POWER t-1, ONI t-1). Plus a strictly forward test "
+                   "respect publication lags (Ember t-2, GRACE t-3, GPCP rain and POWER soil/temperature t-1, ONI t-1); grid-history features (shortfall rate, anomaly spread) use only labels observed by t-2. Plus a strictly forward test "
                    "(train on targets <= 2023-11, test targets 2024-01 onward)."),
         "target": {"definition": "monthly hydro capacity factor (TWh / (Ember yearly GW interpolated x hours)) vs the median of the same calendar month in earlier years only (>= 2 years)",
                    "shortfall_pct": G.SHORTFALL_PCT, "severe_pct": G.SEVERE_PCT,

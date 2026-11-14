@@ -195,8 +195,8 @@ export default function KaribaPage() {
           <h3>Look-alike past situations</h3>
           {(d.analogs ?? []).length === 0 ? <Empty>No analogs yet.</Empty> : (
             <ul className="analogs">
-              {(d.analogs ?? []).map((a) => (
-                <li key={a.date}><b>{fmtMonth(a.date)}</b> <span className="muted">similarity {fmtNum(a.similarity, 2)}</span><br />{a.what_happened}</li>
+              {(d.analogs ?? []).map((a, i) => (
+                <li key={i}><b>{fmtMonth(a.date)}</b> <span className="muted">similarity {fmtNum(a.similarity, 2)}</span><br />{a.what_happened}</li>
               ))}
             </ul>
           )}
@@ -215,8 +215,8 @@ export default function KaribaPage() {
           <table className="data-table compact">
             <thead><tr><th>Reservoir</th><th>Country</th><th>Latest level</th><th>vs normal</th></tr></thead>
             <tbody>
-              {(d.other_reservoirs ?? []).map((r) => (
-                <tr key={r.name}><td>{r.name}</td><td>{r.country}</td><td className="num">{fmtNum(r.latest_level_m, 2)} m</td><td className="num">{isNum(r.anomaly_m) ? `${r.anomaly_m > 0 ? '+' : ''}${fmtNum(r.anomaly_m, 2)} m` : '—'}</td></tr>
+              {(d.other_reservoirs ?? []).map((r, i) => (
+                <tr key={i}><td>{r.name}</td><td>{r.country}</td><td className="num">{fmtNum(r.latest_level_m, 2)} m</td><td className="num">{isNum(r.anomaly_m) ? `${r.anomaly_m > 0 ? '+' : ''}${fmtNum(r.anomaly_m, 2)} m` : '—'}</td></tr>
               ))}
             </tbody>
           </table>
@@ -245,8 +245,8 @@ function SkillTable({ rows, noGrace }: { rows: SkillRow[]; noGrace: any[] }) {
         <table className="data-table compact">
           <thead><tr><th>Months ahead</th><th>Skill vs climatology</th><th>vs persistence</th><th>vs ENSO only</th><th>AUC-PR</th><th>AUC-PR without GRACE</th></tr></thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.horizon}>
+            {rows.map((r, i) => (
+              <tr key={i}>
                 <td>{r.horizon}</td>
                 <td className="num">{fmtNum(r.bss_vs_climatology, 2)}</td>
                 <td className="num">{fmtNum(r.bss_vs_persistence, 2)}</td>

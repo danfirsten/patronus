@@ -191,8 +191,8 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
             <table className="data-table compact">
               <thead><tr><th>Month</th><th>Similarity</th><th>Shortfall in next 6 months?</th></tr></thead>
               <tbody>
-                {(d.analogs ?? []).map((a) => (
-                  <tr key={a.month}><td>{fmtMonth(a.month)}</td><td className="num">{fmtNum(a.similarity, 2)}</td><td>{a.shortfall_next_6m === true ? <b className="yes">Yes</b> : a.shortfall_next_6m === false ? 'No' : '—'}</td></tr>
+                {(d.analogs ?? []).map((a, i) => (
+                  <tr key={i}><td>{fmtMonth(a.month)}</td><td className="num">{fmtNum(a.similarity, 2)}</td><td>{a.shortfall_next_6m === true ? <b className="yes">Yes</b> : a.shortfall_next_6m === false ? 'No' : '—'}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -229,8 +229,8 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
               <p className="h-big">{fmtNum(gwDry, 1)} GW</p>
               <p>of {fmtNum(gwAll, 1)} GW mapped hydro sits in significantly drying basins{gwWet > 0 ? `; ${fmtNum(gwWet, 1)} GW in wetting basins` : ''}.</p>
               <ul className="small">
-                {myBasins.slice(0, 4).map((b) => (
-                  <li key={b.basin_id}>{b.name || `Basin ${b.basin_id}`}: {b.trend_class === 'no_significant_trend' ? 'no significant trend' : b.trend_class}, {fmtNum(b.tws_slope_cm_per_decade, 1)} cm/decade</li>
+                {myBasins.slice(0, 4).map((b, i) => (
+                  <li key={i}>{b.name || `Basin ${b.basin_id}`}: {b.trend_class === 'no_significant_trend' ? 'no significant trend' : b.trend_class}, {fmtNum(b.tws_slope_cm_per_decade, 1)} cm/decade</li>
                 ))}
               </ul>
             </>

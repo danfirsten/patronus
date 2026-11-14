@@ -22,6 +22,8 @@ from pipeline import kariba_data as K
 HORIZONS = list(range(1, 19))
 QS = (0.1, 0.5, 0.9)
 CLIM_BASE = ("1981-01-01", "2000-12-01")  # anomaly baseline, entirely before the first test year
+PRECIP_BASELINE = "fixed"   # "fixed" (1981-2000) or "trailing" (prior 15 years)
+RES_BY_PHASE = False        # condition the residual pool on the issue-time ONI phase
 
 FEATURES_ALL = ["usable_now", "level_now", "d1", "d3", "d6", "obs_age_days",
                 "precip_1m_anom", "precip_3m_anom", "precip_6m_anom", "precip_std_anom",
@@ -45,9 +47,16 @@ def build_table():
 
     # --- precipitation anomalies (mm) against the 1981-2000 calendar-month mean
     p = pw["precip_mm"]
-    base = p.loc[CLIM_BASE[0]:CLIM_BASE[1]]
-    pclim = base.groupby(base.index.month).mean()
-    panom = p - pclim.reindex(p.index.month).values
+    if PRECIP_BASELINE == "trailing":
+        # trailing 15-year mean of the same calendar month (prior years only): removes slow
+        # drift / breaks in the reanalysis precipitation and never looks ahead
+        pclim_t = p.groupby(p.index.month).transform(
+            lambda x: x.shift(1).rolling(15, min_periods=8).mean())
+        panom = p - pclim_t
+    else:
+        base = p.loc[CLIM_BASE[0]:CLIM_BASE[1]]
+        pclim = base.groupby(base.index.month).mean()
+        panom = p - pclim.reindex(p.index.month).values
     r = pw["GWETROOT"]
     rb = r.loc[CLIM_BASE[0]:CLIM_BASE[1]]
     rz = (r - rb.groupby(rb.index.month).mean().reindex(r.index.month).values) / \
@@ -157,9 +166,17 @@ def predictive_ensemble(med_level, res_pool):
     return np.clip(K.level_to_pct(lv), -5, 102)
 
 
-def _res_pool(train_h, res, issue_month, min_n=40):
+def _res_pool(train_h, res, issue_month, min_n=40, oni=None):
     """Residuals from training issues within +-1 calendar month of the test issue month
-    (uncertainty is strongly seasonal); widen to +-2 if too few."""
+    (uncertainty is strongly seasonal); widen to +-2 if too few. With RES_BY_PHASE, first try
+    residuals from issues in the same ONI phase."""
+    if RES_BY_PHASE and oni is not None:
+        ph = np.array([oni_phase(v) for v in train_h["oni"].values])
+        for w in (1, 2):
+            dm = np.abs(((train_h["month"].values - issue_month + 6) % 12) - 6)
+            sel = (dm <= w) & ~np.isnan(res) & (ph == oni_phase(oni))
+            if sel.sum() >= 25:
+                return res[sel]
     for w in (1, 2, 3, 6):
         dm = np.abs(((train_h["month"].values - issue_month + 6) % 12) - 6)
         sel = (dm <= w) & ~np.isnan(res)
@@ -221,7 +238,7 @@ def _backtest_year(S, mon, feats, Y, horizons, with_baselines):
         res = _oof_residuals(train, feats)
         med = test["level_now"].values + m.predict(test[feats])
         for i, row in test.iterrows():
-            ens = predictive_ensemble(med[i], _res_pool(train, res, row["month"]))
+            ens = predictive_ensemble(med[i], _res_pool(train, res, row["month"], oni=row["oni"]))
             sm = summarize(ens)
             rec = {"issue": row["issue"], "h": h, "target_month": row["target_month"],
                    "obs_pct": row["target_pct"], "usable_now": row["usable_now"],
@@ -327,7 +344,7 @@ def live_forecast(S, X, feats, issue="2026-11-01", horizons=range(1, 14)):
         m = _fit(train, feats)
         res = _oof_residuals(train, feats)
         med = row["level_now"] + m.predict(row[feats].to_frame().T.astype(float))[0]
-        ens = predictive_ensemble(med, _res_pool(train, res, t.month))
+        ens = predictive_ensemble(med, _res_pool(train, res, t.month, oni=row["oni"]))
         sm = summarize(ens)
         out.append({"month": (t + pd.DateOffset(months=h)).strftime("%Y-%m"), "horizon": h,
                     "usable_p10": sm["p10"], "usable_p50": sm["p50"], "usable_p90": sm["p90"],
