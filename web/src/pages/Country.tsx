@@ -80,6 +80,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
   }
 
   const hist = d.history ?? [];
+  const fcDomain: [string, string] | undefined = fc.length ? [`${fc[0].month}-01`, `${nextMonth(fc[fc.length - 1].month)}-01`] : undefined;
   const histPeriod = periodOf([hist[0]?.month, hist[hist.length - 1]?.month]);
   const shortSpans: Layer[] = hist.filter((x) => x.shortfall).map((x) => ({ kind: 'span', from: `${x.month}-01`, to: `${nextMonth(x.month)}-01`, color: 'var(--shortfall-shade)' }));
   const cost = d.costs?.expected_cost_next_6m_musd;
@@ -135,6 +136,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
             <TimeChart
               ariaLabel="Monthly chance of a shortfall"
               height={190}
+              xDomain={fcDomain}
               y={{ domain: [0, 1], label: 'Chance of a shortfall', fmt: (v) => `${Math.round(v * 100)}%`, ticks: 4 }}
               layers={[
                 { kind: 'bars', data: fc.map((m) => ({ x: m.month, y: m.p_shortfall, color: riskVar(riskOf(m.p_shortfall)) })), color: 'var(--risk-warning)', label: 'Chance of shortfall', fmt: (v) => fmtProb(v), widthDays: 16 },
@@ -146,6 +148,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
             <TimeChart
               ariaLabel="Forecast hydro output vs normal"
               height={200}
+              xDomain={fcDomain}
               y={{ label: 'Output vs normal (%)', fmt: (v) => `${v}%` }}
               legend={<><LegendItem kind="box" color="var(--series-band)" label="Likely range, P10–P90" /><LegendItem color="var(--series-1)" label="Median" /></>}
               layers={[

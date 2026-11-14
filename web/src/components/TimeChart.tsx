@@ -52,6 +52,11 @@ export function TimeChart({
     const xd: [Date, Date] = xDomain
       ? [toDate(xDomain[0])!, toDate(xDomain[1])!]
       : allX.length ? [new Date(Math.min(...allX)), new Date(Math.max(...allX))] : [new Date(), new Date()];
+    const bars = layers.find((l) => l.kind === 'bars') as any;
+    if (bars && !xDomain) {
+      const pad = ((bars.widthDays ?? 24) / 2 + 4) * DAY;
+      xd[0] = new Date(+xd[0] - pad); xd[1] = new Date(+xd[1] + pad);
+    }
     const x = scaleUtc().domain(xd).range([0, iw]);
     const ext = (v: number[]): [number, number] => (v.length ? [Math.min(0, ...v), Math.max(...v)] : [0, 1]);
     const yl = scaleLinear().domain(y.domain ?? ext(valsL)).range([ih, 0]);
@@ -66,10 +71,24 @@ export function TimeChart({
   const px = (s: string) => { const d = toDate(s); return d ? x(d) : NaN; };
   const span0 = +x.domain()[1] - +x.domain()[0];
   const short = span0 <= 3 * 365 * DAY;
-  // Short spans: month-start ticks only, one label per month, thinned to fit.
-  const rawTicks = x.ticks(Math.max(2, Math.floor(iw / 90))).filter((t) => !short || t.getUTCDate() === 1);
-  const seen = new Set<string>();
-  const xTicks = rawTicks.filter((t) => { const k = t.toISOString().slice(0, 7); if (seen.has(k)) return false; seen.add(k); return true; });
+  let xTicks: Date[];
+  if (short) {
+    // Short spans: one tick per month (at mid-month, where monthly values sit), thinned to fit.
+    const [d0, d1] = x.domain();
+    const months: Date[] = [];
+    let y0 = d0.getUTCFullYear(), m0 = d0.getUTCMonth();
+    for (;;) {
+      const t = new Date(Date.UTC(y0, m0, 15));
+      if (t > d1) break;
+      if (t >= d0) months.push(t);
+      m0++; if (m0 > 11) { m0 = 0; y0++; }
+    }
+    const maxN = Math.max(2, Math.floor(iw / 80));
+    const step = Math.max(1, Math.ceil(months.length / maxN));
+    xTicks = months.filter((_, i) => i % step === 0);
+  } else {
+    xTicks = x.ticks(Math.max(2, Math.floor(iw / 90)));
+  }
   const span = +x.domain()[1] - +x.domain()[0];
   const tickFmt = (d: Date) => (span > 3 * 365 * DAY ? String(d.getUTCFullYear()) : fmtMonth(d.toISOString().slice(0, 7)));
 
