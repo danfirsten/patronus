@@ -338,17 +338,20 @@ def drivers_text(row: pd.Series, info: dict, iso3: str, lab: pd.DataFrame, enso_
         cand.append((t2 / 1.0, f"Unusually hot over the basins ({t2:+.1f} SD, 3-month mean)"))
     pa = row.get("persist_anom_pct")
     if pd.notna(pa) and abs(pa) >= 10:
-        cand.append((abs(pa) / 10, f"Hydro output {abs(pa):.0f}% {'below' if pa < 0 else 'above'} normal in {str(ISSUE - 2)} (latest Ember month used)"))
+        cand.append((abs(pa) / 10, f"Hydro output {abs(pa):.0f}% {'below' if pa < 0 else 'above'} normal in the latest Ember month used ({row.get('persist_month', str(ISSUE - 2))})"))
     oni = row.get("oni")
     if pd.notna(oni) and abs(oni) >= 0.5:
         phase = "El Nino" if oni > 0 else "La Nina"
         txt = f"{phase} conditions (ONI {oni:+.1f})"
+        score = abs(oni) / 2.5  # the same global signal for every grid; ranked below local anomalies by default
         if enso_row:
             key = "el_nino_effect_pct" if oni > 0 else "la_nina_effect_pct"
             eff = enso_row.get(key)
-            if eff is not None:
-                txt += f": this grid's hydro output has historically changed {eff:+.0f}% in this phase"
-        cand.append((abs(oni) / 0.75, txt))
+            if eff is not None and abs(eff) >= 5:
+                txt += f": this grid's {enso_row.get('variable', 'hydro').replace('_', ' ')} has historically changed {eff:+.0f}% in this phase"
+                if eff <= -5:
+                    score = abs(oni) / 0.75
+        cand.append((score, txt))
     cand.sort(key=lambda x: -x[0])
     return [t for _, t in cand[:4]]
 
@@ -470,6 +473,8 @@ def main():
     D1 = D[D["horizon"] == 1]
     for iso in countries:
         base_row = bases[iso].loc[ISSUE].copy()
+        Lp = lab[lab["iso3"] == iso].set_index("month")["anom_pct"]
+        base_row["persist_month"] = str(ISSUE - 2) if pd.notna(Lp.get(ISSUE - 2)) else str(ISSUE - 3)
         months = live_forecast(iso, D, models, lab, info)
         ra = D1[(D1["iso3"] == iso) & (D1["issue"] == ISSUE)]
         p_any = float(alarm_iso.predict(alarm_clf.predict_proba(ra[G.FEATURES])[:, 1], alarm_clim.predict(ra))[0])
@@ -514,7 +519,7 @@ def main():
               "soil_root_anom_sd": _r(base_row["soil_root_anom_sd"], 2), "soil_top_anom_sd": _r(base_row["soil_top_anom_sd"], 2),
               "t2m_3m_anom_sd": _r(base_row["t2m_3m_anom_sd"], 2), "power_month": str(ISSUE - 1),
               "oni": _r(base_row["oni"], 2), "oni_season": "ASO " + str((ISSUE - 1).year),
-              "persist_anom_pct": _r(base_row["persist_anom_pct"]), "persist_month": str(ISSUE - 2)}
+              "persist_anom_pct": _r(base_row["persist_anom_pct"]), "persist_month": base_row["persist_month"]}
         pts = points_for(iso)
         page = {"generated_at": gen_at, "sources": ["ember_monthly", "ember_yearly"] + (["ember_china"] if iso == "CHN-SC" else [])
                 + ["gravis", "gpcp", "power", "oni", "gppd"],
@@ -597,7 +602,7 @@ def main():
         "NASA POWER root-zone/surface wetness and temperature inherit the same MERRA-2 breaks (e.g. Colombia 2021 root-zone -2.4 SD, Viet Nam +2 SD from 2017). They are standardized against a trailing 10-year same-month baseline, which absorbs step changes after a few years but not one-off artefacts like Colombia 2021. They stand in for SMAP, which needs an Earthdata login.",
         "Blocked leave-one-year-out CV trains on years after the test year too; expanding normals for those later years include the test year's labels (mild leakage). The strictly forward 2024+ test avoids this but is small.",
         "The alarm threshold and crisis lead times are chosen and measured on the same out-of-fold predictions, so they are optimistic. The five crises are illustrations; the skill table is the main test.",
-        "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a uniform 2-month lag; in the live forecast Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data.",
+        "Ember's publication lag varies by country (some are 1 month behind, some 3+). The backtest assumes a 2-month lag (falling back to 3 when t-2 is unpublished, as for Brazil, Canada, Ecuador and Nigeria now); Kyrgyzstan, Sri Lanka, El Salvador and Switzerland have older data, so their live forecasts have no persistence input.",
         "Cost estimates are rough and labelled as such: fixed 20 c/kWh replacement, VoLL $1.00/kWh on 10% of the deficit, no import or demand response modelling.",
     ]
     thr_table = [{"threshold": t, "calm_alarm_months": f, "calm_months": nc, "hit_rate_any6": _r(hr, 3),
@@ -629,7 +634,7 @@ def main():
         "ablation_note": "Each NASA input group is removed in turn and the h=3 classifier is refit in the same blocked CV (uncalibrated probabilities). Negative delta = the input helps. CI from 500 country-year bootstrap resamples.",
         "feature_importance": fi, "feature_importance_by_group": fig,
         "feature_importance_note": "Gain share in the final (all-data) shortfall classifiers, averaged over horizons 1-6.",
-        "alarm": {"definition": "P(any shortfall in t+1..t+6), separate LightGBM classifier, out-of-fold by issue year with a +/-1 year gap, isotonic-calibrated (cross-fitted)",
+        "alarm": {"definition": "P(any shortfall in t+1..t+6), separate LightGBM classifier, out-of-fold by issue year with a +/-1 year gap, blended with the country x month climatology prior by a cross-fitted logistic stack. Note the event is common (base rate ~45%), because monthly anomalies are noisy and 6 chances to cross -15% is a lot",
                   "threshold": thr,
                   "threshold_rule": f"Lowest threshold (grid 0.05-0.95) giving <= {ALARM_MAX_FALSE_PER_5Y:g} false alarm per country per 5 calm years. Calm issue months have no observed shortfall in the next 6 months. An alarm covers a 6-month window, so 6 alarm-months in calm periods count as one false alarm: rate = (calm alarm-months / 6) / (calm months / 60). Equivalent to a false-positive rate of <= 10% on calm months.",
                   "false_alarms_per_country_5yr": _r(chosen[4], 3), "calm_alarm_months": chosen[1], "calm_months": chosen[2],

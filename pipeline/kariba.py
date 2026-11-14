@@ -23,6 +23,7 @@ import pandas as pd
 
 from pipeline import kariba_cost as C
 from pipeline import kariba_data as K
+from pipeline import kariba_ensemble as E
 from pipeline import kariba_model as M
 from pipeline.paths import ISSUE_DATE, OUT
 
@@ -256,9 +257,41 @@ def main():
     fc_ng, _ = M.live_forecast(S, X, M.FEATURES_NO_GRACE)
     fc_en, _ = M.live_forecast(S, X, M.FEATURES_ALL, res_by_phase=True)
     print(f"[kariba] live forecast done ({time.time()-t0:.0f}s)")
+
+    # ---------------- "next" model: ENSO-conditioned water-balance ensemble
+    ens_res, fc_next = E.live(lv)
+    ens_strong, fc_next_strong = E.live(lv, pool_override=[y for y in ens_res["pool"] if K.oni_djf().get(y, 0) >= 1.0])
+    ens_all, fc_next_all = E.live(lv, pool_override=ens_res["candidates"])
+    ens_bt = E.backtest(lv, mon, X)
+    ens_score = E.score(ens_bt, P_full)
+    ens_crisis = E.crisis_2024(lv, X)
+    print(f"[kariba] ensemble done ({time.time()-t0:.0f}s)")
+
+    # ---------------- headline = blend. Strong El Nino outlook (ONI ASO 2026 +2.46, GEOS-S2S NDJ +3.99,
+    # NOAA: strong-to-very-strong El Nino likely through JFM 2027), so the ensemble takes over:
+    # mixture weight on the ensemble w_h = min(1, h/6) -> ML dominates month 1, ensemble from month 6.
+    blend = []
+    ens_members = np.array([ens_res["paths"][y] for y in ens_res["pool"]])
+    for j, f in enumerate(fc):
+        w = min(1.0, f["horizon"] / 6.0)
+        ml = np.asarray(f["_ens"])
+        en = ens_members[:, j]
+        vals = np.concatenate([ml, en])
+        wts = np.concatenate([np.full(len(ml), (1 - w) / len(ml)), np.full(len(en), w / len(en))])
+        o = np.argsort(vals)
+        cw = np.cumsum(wts[o])
+        qf = lambda q: float(vals[o][np.searchsorted(cw, q * cw[-1])])
+        blend.append({"month": f["month"], "horizon": f["horizon"], "weight_next_model": round(w, 3),
+                      "usable_p10": qf(.1), "usable_p50": qf(.5), "usable_p90": qf(.9),
+                      "p_below_warning": float((1 - w) * f["p_below_warning"] + w * np.mean(en < K.WARNING_PCT)),
+                      "p_below_danger": float((1 - w) * f["p_below_danger"] + w * np.mean(en < K.DANGER_PCT))})
+        blend[-1]["level_p50_m"] = float(K.pct_to_level(max(blend[-1]["usable_p50"], 0)))
     for f in fc + fc_ng + fc_en:
         f.pop("_ens", None)
-    dec27 = [f for f in fc if f["month"] == "2027-12"][0]
+    dec27 = [f for f in blend if f["month"] == "2027-12"][0]
+    dec27_ml = [f for f in fc if f["month"] == "2027-12"][0]
+    dec27_next = [f for f in fc_next if f["month"] == "2027-12"][0]
+    zra_rank = float(np.mean(ens_members[:, -1] < 9.0))
 
     # ---------------- ENSO stats, analogs
     enso = enso_stats(mon)
@@ -374,23 +407,52 @@ def main():
             "reliability": [{"horizon": h, "event": "warning", "bins": M.reliability(P_full, h)} for h in (1, 3, 6, 9, 12)],
             "alarm_years_warning": alarm_years(P_full, "m_pw", K.WARNING_PCT),
             "alarm_years_danger": alarm_years(P_full, "m_pd", K.DANGER_PCT),
-            "crisis_2024": crisis,
+            "crisis_2024": dict({k: v for k, v in ens_crisis.items() if k != "series"},
+                                headline_model="next (ENSO-conditioned water-balance ensemble)",
+                                now_model=crisis, next_model=ens_crisis, now_model_no_grace=crisis_ng,
+                                summary=None),
             "crisis_2024_no_grace": crisis_ng,
+            "next_model": {"design": E.__doc__.strip(),
+                           "backtest_design": ("Issued in Oct, Nov and Dec of every year 1995-2025 using only seasons "
+                                               "observed before the issue, the ONI then known as the ENSO outlook, the "
+                                               "storage then and a 30 BCM/yr release. Event: month-end usable storage "
+                                               "below 20 % (warning) / 10 % (danger) at any point Apr-Dec of the following "
+                                               "year. Alarm: any of the three issues with p > 0.5. ML ('now' model) "
+                                               "alarms on the same issues and windows are shown for 2006 onward."),
+                           "score": {k: v for k, v in ens_score.items() if k != "seasons"},
+                           "seasons": ens_score["seasons"],
+                           "issues": ens_bt.to_dict("records")},
         },
         "feature_importance": [{"feature": f, "gain_share": v} for f, v in imp.items()],
-        "forecast": {"issued": ISSUE_DATE, "model": "full (with GRACE)",
+        "forecast": {"issued": ISSUE_DATE,
+                     "model": "headline = blend of the 'now' ML model and the 'next' ENSO-conditioned water-balance ensemble",
+                     "blend_rule": ("Strong El Nino outlook (ONI ASO 2026 +2.46; GEOS-S2S Nino-3.4 NDJ +3.99; NOAA: strong-to-"
+                                    "very-strong El Nino likely through JFM 2027), so the headline is a probability mixture "
+                                    "with weight min(1, h/6) on the ensemble: month 1 is mostly the ML model, months 6+ are "
+                                    "the ensemble only."),
                      "state": {"date": latest.date.strftime("%Y-%m-%d"), "level_m": latest.level_m,
                                "usable_pct": round(float(latest.usable_pct), 2)},
-                     "months": [{k: v for k, v in f.items() if k != "n_train"} for f in fc],
+                     "months": blend,
+                     "now_model": {"name": "LightGBM + out-of-fold residuals (0-6 months)",
+                                   "months": [{k: v for k, v in f.items() if k != "n_train"} for f in fc]},
+                     "next_model": {"name": "ENSO-conditioned water-balance ensemble (6-18 months)",
+                                    "analog_years": ens_res["pool"], "start_usable_bcm": ens_res["s0_bcm"],
+                                    "releases": "36 BCM/yr for the rest of 2026, 23 BCM in 2027 (ZRA allocation, 11.5 BCM each for ZESCO and ZPC)",
+                                    "months": fc_next,
+                                    "members_dec_2027_pct": {str(y): ens_res["paths"][y][-1] for y in ens_res["pool"]},
+                                    "sensitivity_strong_el_nino_only": {"years": ens_strong["pool"], "months": fc_next_strong},
+                                    "sensitivity_all_years": {"years": ens_all["pool"], "months": fc_next_all}},
                      "months_no_grace": [{k: v for k, v in f.items() if k != "n_train"} for f in fc_ng],
                      "months_el_nino_spread": [{k: v for k, v in f.items() if k != "n_train"} for f in fc_en],
                      "el_nino_spread_note": ("Sensitivity: same median model, but the uncertainty is drawn only from past "
                                              "forecast errors made when ONI was >= 0.5. In the backtest this variant scored "
                                              "about the same as the default (not better), so it is shown as a sensitivity, "
                                              "not the headline."),
-                     "max_p_below_warning": max(f["p_below_warning"] for f in fc),
-                     "max_p_below_danger": max(f["p_below_danger"] for f in fc),
-                     "skill_caveat": f"Backtest skill over all baselines holds to about {max_skill_h} months; later months lean on climatology of the residuals."},
+                     "max_p_below_warning": max(f["p_below_warning"] for f in blend),
+                     "max_p_below_danger": max(f["p_below_danger"] for f in blend),
+                     "skill_caveat": (f"The ML model beats all baselines to about {max_skill_h} months but learned historical releases and a weak "
+                                      "El Nino signal (few strong events), so beyond a few months it is overruled by the ensemble. "
+                                      "The ensemble has only 11 El Nino analog years, so its probabilities move in steps of ~9 %.")},
         "zra_projection": {"end_2027_usable_pct": 9, "end_2027_level_m": 476.80, "end_2027_usable_bcm": 5.83,
                            "allocation_2027_bcm": 23, "allocation_2026_bcm": 36, "cut_pct": 36,
                            "split": "11.5 BCM each for ZESCO and ZPC",
@@ -398,6 +460,9 @@ def main():
                            "patronus_dec_2027": {"usable_p10": dec27["usable_p10"], "usable_p50": dec27["usable_p50"],
                                                  "usable_p90": dec27["usable_p90"],
                                                  "p_below_9pct_approx": None},
+                           "patronus_dec_2027_now_model": {k: dec27_ml[k] for k in ("usable_p10", "usable_p50", "usable_p90", "p_below_warning", "p_below_danger")},
+                           "patronus_dec_2027_next_model": {k: dec27_next[k] for k in ("usable_p10", "usable_p50", "usable_p90", "p_below_warning", "p_below_danger")},
+                           "share_of_el_nino_members_below_9pct": zra_rank,
                            "comparison": None},
         "enso": enso,
         "enso_outlook": {"oni_latest": {"season": "ASO 2026", "value": 2.46},
@@ -431,6 +496,7 @@ def main():
                               "imf": {"text": "IMF cut Zambia's 2024 growth forecast from 4.7% to 1.2%", "url": IMF_URL}},
         "other_reservoirs": others,
         "limitations": [
+            "The 'next' ensemble uses the ONI known at issue as its ENSO outlook in the backtest (no archived ENSO forecasts), assumes a 30 BCM/yr release in backtests and 30 BCM/yr in historical years to back out inflows (16 BCM in 2024), and has few analog years (11 El Nino seasons since 1994; fewer early in the backtest, when it falls back to all years).",
             "Levels are G-REALM satellite altimetry (m above the EGM2008 geoid), not ZRA's gauge datum. They agree within ~0.06 m on 10 Nov 2026 (479.92 vs 479.98 m) but at the 2024 low the altimetry read ~0.2-0.4 m below the gauge (475.46-475.73 m vs 475.91 m), so near the floor usable % can be understated by a few points.",
             "Usable storage comes from a quadratic level-storage curve fitted to five ZRA points; it is an approximation of ZRA's bathymetric table (fit error < 0.12 points at the ZRA pairs).",
             "Satellite passes are every ~10 days with gaps of up to 60 days (marked in history_monthly as gap); monthly means use linear interpolation between passes.",
@@ -462,8 +528,10 @@ def main():
         cmp_txt += "ZRA's projection is drier than our P10."
     else:
         cmp_txt += "ZRA's projection is wetter than our P90."
-    cmp_txt += (" Note that our statistical model learns historical release behaviour, while ZRA's figure assumes the "
-                "full 2027 allocation is drawn.")
+    cmp_txt += (f" With the 23 BCM release and the {len(ens_res['pool'])} El Nino analog years, {zra_rank*100:.0f}% of "
+                "ensemble members end 2027 below ZRA's 9%: ZRA's figure is a dry-side but plausible scenario, not the "
+                "median. The ML model alone (which learned historical releases) gives a median of "
+                f"{dec27_ml['usable_p50']:.0f}% for Dec 2027.")
     out["zra_projection"]["comparison"] = cmp_txt
     out["zra_projection"]["patronus_dec_2027"]["p_below_warning"] = dec27["p_below_warning"]
     out["zra_projection"]["patronus_dec_2027"]["p_below_danger"] = dec27["p_below_danger"]
@@ -473,6 +541,17 @@ def main():
         "p90": float(np.quantile(list(end_pcts.values()), .9)),
         "note": "Water-balance check: 23 BCM release in 2027 with historical El Nino-year net inflows (cost model, no action)."}
 
+    c_now, c_next = crisis, ens_crisis
+    oct_dec = [r for r in ens_crisis["series"] if r["issue"] in ("2023-10", "2023-11", "2023-12")]
+    out["backtest"]["crisis_2024"]["summary"] = (
+        f"Next model (ensemble): first P(warning) > 0.5 in {c_next['first_warning_p_gt_0_5']} "
+        f"({c_next['lead_months_vs_zra']} months before ZRA's 28 Dec 2023 cut, {c_next['lead_months_vs_load_shedding']} before "
+        f"load-shedding on 11 Mar 2024); first P(danger) > 0.5 in {c_next['first_danger_p_gt_0_5']}. Issued Oct-Dec 2023 it "
+        f"gave P(warning) {', '.join(f'{r['p_warning']:.1f}' for r in oct_dec)} and P(danger) "
+        f"{', '.join(f'{r['p_danger']:.1f}' for r in oct_dec)}. "
+        f"The Jul 2023 alarm came from low storage under a neutral ONI; from Aug 2023 the El Nino analog set was used. "
+        f"Now model (ML): first P(warning) > 0.5 only in {c_now['first_warning_p_gt_0_5']} (lead {c_now['lead_months_vs_load_shedding']} "
+        f"months vs load-shedding, {c_now['lead_months_vs_zra']} vs ZRA); its Oct-Dec 2023 median expected the lake to recover.")
     out = clean(out)
     f = OUT / "kariba.json"
     f.write_text(json.dumps(out, indent=1, allow_nan=False))

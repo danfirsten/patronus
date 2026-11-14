@@ -264,17 +264,17 @@ def _precip_anoms(p_mmday: pd.Series, idx: pd.PeriodIndex, prefix: str) -> pd.Da
 
 
 def trailing_month_z(s: pd.Series, years: int = 10, min_years: int = 5) -> pd.Series:
-    """z vs the same calendar month in the previous `years` years (causal). A trailing baseline absorbs step
-    changes in the MERRA-2 land record after a few years (it does not remove one-off artefacts)."""
-    out = pd.Series(np.nan, index=s.index)
+    """Causal standardized anomaly: deviation from the same calendar month's mean over the previous `years`
+    years, divided by the spread of all monthly deviations over the previous `years` years (>= 5 years).
+    A trailing baseline absorbs step changes in the MERRA-2 land record after a few years (it does not remove
+    one-off artefacts)."""
+    dev = pd.Series(np.nan, index=s.index)
     for m in range(1, 13):
-        g = s[s.index.month == m].dropna()
-        v = g.values
-        for i in range(len(g)):
-            prev = v[max(0, i - years):i]
-            if len(prev) >= min_years and prev.std(ddof=1) > 0:
-                out[g.index[i]] = (v[i] - prev.mean()) / prev.std(ddof=1)
-    return out
+        g = s[s.index.month == m]
+        base = g.shift(1).rolling(years, min_periods=min_years).mean()
+        dev[g.index] = (g - base).values
+    sd = dev.shift(1).rolling(12 * years, min_periods=12 * min_years).std()
+    return dev / sd
 
 
 def driver_table(iso3: str, oni: pd.Series) -> pd.DataFrame:
@@ -330,7 +330,9 @@ def issue_features(drv: pd.DataFrame, lab: pd.Series, issue_months: pd.PeriodInd
     out["oni"] = oni.reindex(t - LAGS["oni"]).values
     out["oni_change_3m"] = oni.reindex(t - LAGS["oni"]).values - oni.reindex(t - LAGS["oni"] - 3).values
     lab = lab.copy()
-    out["persist_anom_pct"] = lab.reindex(t - LAGS["ember"]).values
+    # last observed anomaly at t-2; if that month is not yet published, fall back to t-3 (live: BRA/CAN/ECU/NGA)
+    out["persist_anom_pct"] = np.where(np.isnan(lab.reindex(t - LAGS["ember"]).values),
+                                       lab.reindex(t - LAGS["ember"] - 1).values, lab.reindex(t - LAGS["ember"]).values)
     out["persist_3m_anom_pct"] = pd.concat([lab.reindex(t - LAGS["ember"] - k).reset_index(drop=True)
                                             for k in range(3)], axis=1).mean(axis=1, skipna=False).values
     # causal grid history: shortfall rate and anomaly spread from labels observed by t-2
