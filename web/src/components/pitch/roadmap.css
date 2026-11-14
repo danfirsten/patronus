@@ -1,0 +1,70 @@
+/*
+ * "Where this goes" (Roadmap.tsx). Drawdown tokens only. Measured columns are plain;
+ * the projected column is marked three ways so it can never read as a result:
+ * a dashed outline, a light diagonal hatch, and a "projected" tag in its header.
+ */
+.rm-answer { padding: 20px 0 24px; border-top: 1px solid var(--border-strong); margin-bottom: 40px; display: grid; gap: 4px; }
+@media (min-width: 900px) { .rm-answer { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 40px; } }
+.rm-answer-k { margin: 0; font-weight: 700; }
+.rm-answer-t { margin: 0; font-size: var(--fs-lg); max-width: 62ch; }
+
+.rm-ref { font-size: 0.68em; line-height: 0; margin-left: 2px; }
+.rm-ref button { background: none; border: 0; padding: 0 2px; color: var(--link); cursor: pointer; font: inherit; }
+.rm-ref button:hover { text-decoration: underline; }
+
+.rm-table-wrap { margin-bottom: clamp(48px, 6vw, 80px); }
+.rm-table { table-layout: fixed; }
+.rm-cap { caption-side: bottom; text-align: left; font-size: var(--fs-sm); color: var(--text-muted); padding-top: 12px; max-width: 80ch; }
+.rm-table thead th { vertical-align: bottom; }
+.rm-table thead th:first-child { width: 18%; }
+.rm-table tbody th { font-family: var(--font-sans); text-transform: none; letter-spacing: 0; color: var(--text); text-align: left; font-weight: 700; padding: 14px 0; border-bottom: 1px solid var(--border); vertical-align: top; font-size: var(--fs-md); }
+.rm-table td { padding: 14px 16px !important; }
+.rm-v { display: block; font-weight: 700; color: var(--text); }
+.rm-d { display: block; margin-top: 4px; font-size: var(--fs-sm); color: var(--text-muted); }
+.rm-tag { display: block; margin-top: 4px; font-size: var(--fs-label); color: var(--text-faint); }
+.rm-tag-proj { color: var(--rock); font-weight: 700; }
+
+.rm-proj, .rm-table th.rm-proj-h {
+  background-color: var(--bg-elev);
+  background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--rock) 9%, transparent) 0 1px, transparent 1px 9px);
+  border-left: 1.5px dashed var(--rock); border-right: 1.5px dashed var(--rock);
+}
+.rm-table th.rm-proj-h { border-top: 1.5px dashed var(--rock); padding: 12px 16px 10px !important; }
+.rm-table tbody tr:last-child .rm-proj { border-bottom: 1.5px dashed var(--rock); }
+.rm-proj .rm-v { color: var(--text-muted); font-style: italic; }
+
+/* Phones: one card per measure, the three columns stacked and labelled */
+@media (max-width: 760px) {
+  .rm-table, .rm-table tbody, .rm-table tr, .rm-table td, .rm-table tbody th { display: block; width: 100%; }
+  .rm-table thead { display: none; }
+  .rm-table caption { display: block; width: 100%; max-width: none; padding: 0 0 12px; }
+  .rm-table tr { padding: 16px 0; border-bottom: 1px solid var(--border-strong); }
+  .rm-table tbody th { border: 0; padding: 0 0 8px; }
+  .rm-table td { padding: 8px 0 8px !important; border: 0; }
+  .rm-table td::before { content: attr(data-col); display: block; font-family: var(--font-mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-muted); margin-bottom: 2px; }
+  .rm-table td.rm-proj { padding: 10px 12px !important; border: 1.5px dashed var(--rock) !important; border-radius: var(--radius-sm); margin-top: 4px; }
+  .rm-table td.rm-proj::before { content: 'Projected from Brazil, not tested globally'; color: var(--rock); font-weight: 700; }
+}
+
+.rm-grid { display: grid; gap: 48px; margin-bottom: clamp(48px, 6vw, 80px); }
+@media (min-width: 1000px) { .rm-grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
+.rm-list { list-style: none; margin: 16px 0 0; padding: 0; }
+.rm-list li { display: grid; gap: 4px; padding: 16px 0; border-top: 1px solid var(--border-strong); }
+.rm-list li:last-child { border-bottom: 1px solid var(--border-strong); }
+.rm-k { font-weight: 700; color: var(--water); }
+.rm-ranked .rm-k { color: var(--text); }
+.rm-n { display: inline-block; min-width: 1.6em; font-family: var(--font-mono); color: var(--rock); }
+.rm-t { font-size: var(--fs-md); color: var(--text-muted); max-width: 60ch; }
+.rm-magic { margin-top: 20px; max-width: 64ch; }
+
+.rm-why { margin-bottom: 40px; }
+.rm-why-list { margin: 16px 0 0; display: grid; gap: 0; }
+@media (min-width: 900px) { .rm-why-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; } }
+.rm-why-list div { padding: 16px 0; border-top: 1px solid var(--border-strong); }
+.rm-why-list dt { font-weight: 700; margin-bottom: 4px; }
+.rm-why-list dd { margin: 0; font-size: var(--fs-md); color: var(--text-muted); }
+
+.rm-refs { margin: 0; padding-left: 1.5em; font-size: var(--fs-sm); color: var(--text-muted); }
+@media (min-width: 900px) { .rm-refs { columns: 2; column-gap: 48px; } }
+.rm-refs li { margin-bottom: 6px; break-inside: avoid; overflow-wrap: anywhere; }
+.rm-refs li:target { color: var(--text); }

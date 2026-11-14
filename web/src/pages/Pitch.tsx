@@ -4,6 +4,7 @@ import { RISK_ORDER } from '../lib/risk';
 import '../components/pitch/pitch.css';
 import { Sources } from '../components/pitch/sources';
 import { DataSources, type MetaSource } from '../components/pitch/DataSources';
+import { Roadmap } from '../components/pitch/Roadmap';
 import {
   Audience, CalledIt, Cost, Hero, Next, Proof,
   type Crisis, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
@@ -67,6 +68,7 @@ export default function Pitch() {
       <DataSources sources={sources} missions={meta.data?.nasa_data_summary ?? null} nCountries={enso.data?.summary?.n_countries ?? null} loading={meta.loading} />
       <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} exposure={exposure} loading={kariba.loading || enso.loading || watch.loading} />
       <Proof skill={skill} ens={ens} ledger={led} rows={rows} />
+      <Roadmap />
       <Audience />
       <Sources />
     </div>
