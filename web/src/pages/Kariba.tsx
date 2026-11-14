@@ -5,6 +5,7 @@ import { Figure, Loading, Stat, Empty, SourceNote, MiniMarkdown } from '../compo
 import { Gauge } from '../components/small';
 import { useWaterline } from '../lib/motion';
 import { TimeChart, LegendItem } from '../components/TimeChart';
+import { KaribaSim } from '../components/KaribaSim';
 import { fmtDate, fmtMonth, fmtMusd, fmtNum, fmtProb, isNum, monthsBetween, periodOf } from '../lib/format';
 
 const LOWEST_2024 = { date: '2024-12-11', usable_pct: 2.89, level_m: 475.91 }; // DESIGN.md 11.7 (ZRA)
@@ -241,6 +242,8 @@ export default function KaribaPage() {
         </div>
         {zra?.comparison && <p className="small" style={{ marginTop: 12 }}>{zra.comparison}</p>}
       </Figure>
+
+      <KaribaSim />
 
       <Figure
         title="The cost of waiting (illustrative)"

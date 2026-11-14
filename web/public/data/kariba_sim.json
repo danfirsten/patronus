@@ -1,0 +1,1160 @@
+{
+ "generated_at": "2026-11-14T21:36:48+00:00",
+ "about": "Inputs for the Kariba release simulator. The browser replays each analog year's net inflow through the same monthly water balance as the 'next' (El Niño) model and lets the user cut releases. Illustrative, not an operating plan.",
+ "model": "Inputs for the in-browser Kariba release simulator -> web/public/data/kariba_sim.json\n\nRun from the repo root:   python3 -m pipeline.kariba_sim\n\nThe browser replays the 'next' model's water balance (pipeline/kariba_ensemble.py) month by\nmonth, Nov 2026 (remainder) .. Dec 2027:\n\n    S[m+1] = min(S[m] + Q[Y, m] - R[m], capacity),   R[m] = min(target[m], max(S[m] + Q[Y, m], 0))\n\nwith Q[Y, m] the net inflow (inflow minus lake evaporation) of historical analog year Y\n(kariba_ensemble.monthly_qnet: observed month-end storage change + the release assumed for\nthat year), target[m] = the announced allocation (36 BCM/yr in 2026, 23 BCM in 2027) times\n(1 - cut) from the chosen month, and the first month pro-rated for the days left after the\nlatest satellite pass. Energy and cost follow pipeline/kariba_cost.py.\n\nThis file exports everything that maths needs, and checks that a pure-Python copy of the\nbrowser maths (`browser_sim`, written exactly as KaribaSim.tsx does it) reproduces the\nensemble's end-2027 numbers in kariba.json with default settings.",
+ "issue_date": "2026-11-15",
+ "start": {
+  "date": "2026-11-09",
+  "level_m": 479.92,
+  "usable_bcm": 20.2563,
+  "usable_pct": 31.26,
+  "first_month_fraction": 0.7,
+  "note": "Latest G-REALM satellite level 479.92 m on 09 Nov 2026; the first step covers the remaining 21 days of November, pro-rated."
+ },
+ "months": [
+  "2026-11",
+  "2026-12",
+  "2027-01",
+  "2027-02",
+  "2027-03",
+  "2027-04",
+  "2027-05",
+  "2027-06",
+  "2027-07",
+  "2027-08",
+  "2027-09",
+  "2027-10",
+  "2027-11",
+  "2027-12"
+ ],
+ "months_note": "Index 0 = rest of Nov 2026 (pro-rated by first_month_fraction); 1..13 = Dec 2026 .. Dec 2027.",
+ "capacity_bcm": 64.8037,
+ "storage_curve": {
+  "a": 6.75236,
+  "b": 0.072304,
+  "min_operating_m": 475.5,
+  "max_operating_m": 488.5,
+  "usable_capacity_bcm": 64.8037,
+  "formula": "usable_pct = a*x + b*x^2, x = level_m - min_operating_m; usable_bcm = usable_pct/100 * capacity",
+  "points": [
+   {
+    "level_m": 475.0,
+    "usable_pct": -3.36,
+    "usable_bcm": -2.18
+   },
+   {
+    "level_m": 475.5,
+    "usable_pct": 0.0,
+    "usable_bcm": 0.0
+   },
+   {
+    "level_m": 476.0,
+    "usable_pct": 3.39,
+    "usable_bcm": 2.2
+   },
+   {
+    "level_m": 476.5,
+    "usable_pct": 6.82,
+    "usable_bcm": 4.42
+   },
+   {
+    "level_m": 477.0,
+    "usable_pct": 10.29,
+    "usable_bcm": 6.67
+   },
+   {
+    "level_m": 477.5,
+    "usable_pct": 13.79,
+    "usable_bcm": 8.94
+   },
+   {
+    "level_m": 478.0,
+    "usable_pct": 17.33,
+    "usable_bcm": 11.23
+   },
+   {
+    "level_m": 478.5,
+    "usable_pct": 20.91,
+    "usable_bcm": 13.55
+   },
+   {
+    "level_m": 479.0,
+    "usable_pct": 24.52,
+    "usable_bcm": 15.89
+   },
+   {
+    "level_m": 479.5,
+    "usable_pct": 28.17,
+    "usable_bcm": 18.25
+   },
+   {
+    "level_m": 480.0,
+    "usable_pct": 31.85,
+    "usable_bcm": 20.64
+   },
+   {
+    "level_m": 480.5,
+    "usable_pct": 35.57,
+    "usable_bcm": 23.05
+   },
+   {
+    "level_m": 481.0,
+    "usable_pct": 39.33,
+    "usable_bcm": 25.48
+   },
+   {
+    "level_m": 481.5,
+    "usable_pct": 43.12,
+    "usable_bcm": 27.94
+   },
+   {
+    "level_m": 482.0,
+    "usable_pct": 46.95,
+    "usable_bcm": 30.42
+   },
+   {
+    "level_m": 482.5,
+    "usable_pct": 50.81,
+    "usable_bcm": 32.93
+   },
+   {
+    "level_m": 483.0,
+    "usable_pct": 54.71,
+    "usable_bcm": 35.45
+   },
+   {
+    "level_m": 483.5,
+    "usable_pct": 58.65,
+    "usable_bcm": 38.0
+   },
+   {
+    "level_m": 484.0,
+    "usable_pct": 62.62,
+    "usable_bcm": 40.58
+   },
+   {
+    "level_m": 484.5,
+    "usable_pct": 66.63,
+    "usable_bcm": 43.18
+   },
+   {
+    "level_m": 485.0,
+    "usable_pct": 70.67,
+    "usable_bcm": 45.8
+   },
+   {
+    "level_m": 485.5,
+    "usable_pct": 74.75,
+    "usable_bcm": 48.44
+   },
+   {
+    "level_m": 486.0,
+    "usable_pct": 78.87,
+    "usable_bcm": 51.11
+   },
+   {
+    "level_m": 486.5,
+    "usable_pct": 83.02,
+    "usable_bcm": 53.8
+   },
+   {
+    "level_m": 487.0,
+    "usable_pct": 87.21,
+    "usable_bcm": 56.52
+   },
+   {
+    "level_m": 487.5,
+    "usable_pct": 91.44,
+    "usable_bcm": 59.26
+   },
+   {
+    "level_m": 488.0,
+    "usable_pct": 95.7,
+    "usable_bcm": 62.02
+   },
+   {
+    "level_m": 488.5,
+    "usable_pct": 100.0,
+    "usable_bcm": 64.8
+   },
+   {
+    "level_m": 489.0,
+    "usable_pct": 104.33,
+    "usable_bcm": 67.61
+   }
+  ]
+ },
+ "thresholds": {
+  "warning_usable_pct": 20.0,
+  "danger_usable_pct": 10.0,
+  "warning_level_m": 478.37,
+  "danger_level_m": 476.96
+ },
+ "releases": {
+  "allocation_2026_bcm": 36.0,
+  "allocation_2027_bcm": 23.0,
+  "remaining_2026_bcm": 5.1,
+  "monthly_plan_bcm": [
+   3.0,
+   3.0,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667,
+   1.91667
+  ],
+  "spread": "Evenly by month (ZRA publishes annual allocations, not monthly schedules).",
+  "source": "ZRA allocation for 2027: 23 BCM (11.5 BCM each for ZESCO and ZPC), cut from 36 BCM in 2026",
+  "source_url": "https://www.greenbuildingafrica.co.za/zambezi-river-authority-cuts-kariba-water-allocation-for-2027-power-generation/"
+ },
+ "cut": {
+  "min_pct": 0,
+  "max_pct": 40,
+  "step_pct": 5,
+  "start_months": [
+   "2026-12",
+   "2027-01",
+   "2027-02",
+   "2027-03",
+   "2027-04",
+   "2027-05",
+   "2027-06"
+  ],
+  "default_start": "2027-01"
+ },
+ "years": [
+  {
+   "year": 1994,
+   "season": "Nov 1993 – Dec 1994",
+   "oni_djf": 0.07,
+   "phase": "neutral",
+   "qnet_bcm": [
+    1.14435,
+    1.35972,
+    1.75594,
+    4.2707,
+    6.07195,
+    4.81017,
+    4.82668,
+    -0.03849,
+    1.18459,
+    1.24605,
+    1.04273,
+    0.48037,
+    1.40131,
+    -0.70523
+   ],
+   "qnet_total_bcm": 27.71
+  },
+  {
+   "year": 1995,
+   "season": "Nov 1994 – Dec 1995",
+   "oni_djf": 0.88,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    1.40131,
+    -0.70523,
+    4.18682,
+    2.63266,
+    0.62011,
+    4.54856,
+    2.11026,
+    0.25423,
+    1.70203,
+    3.04093,
+    -0.66243,
+    -0.44702,
+    0.21842,
+    1.88305
+   ],
+   "qnet_total_bcm": 19.38
+  },
+  {
+   "year": 1996,
+   "season": "Nov 1995 – Dec 1996",
+   "oni_djf": -0.88,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    0.21842,
+    1.88305,
+    5.43457,
+    5.53882,
+    2.62563,
+    2.91956,
+    3.04652,
+    2.51165,
+    0.94042,
+    3.13441,
+    -2.33243,
+    1.19419,
+    1.65089,
+    1.8748
+   ],
+   "qnet_total_bcm": 30.42
+  },
+  {
+   "year": 1997,
+   "season": "Nov 1996 – Dec 1997",
+   "oni_djf": -0.41,
+   "phase": "neutral",
+   "qnet_bcm": [
+    1.65089,
+    1.8748,
+    5.64702,
+    11.08446,
+    6.4758,
+    4.94897,
+    6.45101,
+    1.27186,
+    3.2069,
+    -0.73812,
+    3.79654,
+    -0.43865,
+    2.60222,
+    1.46081
+   ],
+   "qnet_total_bcm": 47.64
+  },
+  {
+   "year": 1998,
+   "season": "Nov 1997 – Dec 1998",
+   "oni_djf": 2.22,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    2.60222,
+    1.46081,
+    5.80857,
+    4.22921,
+    4.47258,
+    9.04942,
+    6.88229,
+    5.58909,
+    1.47502,
+    2.5254,
+    1.02557,
+    0.55782,
+    -2.61278,
+    5.89514
+   ],
+   "qnet_total_bcm": 46.36
+  },
+  {
+   "year": 1999,
+   "season": "Nov 1998 – Dec 1999",
+   "oni_djf": -1.51,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -2.61278,
+    5.89514,
+    8.71599,
+    6.54483,
+    3.94127,
+    4.33499,
+    7.05717,
+    8.60321,
+    -2.39875,
+    5.07135,
+    0.53721,
+    0.84212,
+    1.4717,
+    -0.28945
+   ],
+   "qnet_total_bcm": 50.33
+  },
+  {
+   "year": 2000,
+   "season": "Nov 1999 – Dec 2000",
+   "oni_djf": -1.47,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    1.4717,
+    -0.28945,
+    5.02026,
+    4.58507,
+    0.6671,
+    6.08674,
+    6.52901,
+    -0.00385,
+    0.49863,
+    1.6384,
+    1.63902,
+    -0.05163,
+    -2.37701,
+    2.24407
+   ],
+   "qnet_total_bcm": 26.19
+  },
+  {
+   "year": 2001,
+   "season": "Nov 2000 – Dec 2001",
+   "oni_djf": -0.76,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -2.37701,
+    2.24407,
+    1.22375,
+    1.94957,
+    8.59677,
+    3.89629,
+    6.49046,
+    -2.06463,
+    4.4021,
+    5.10143,
+    -0.13884,
+    -0.33788,
+    -2.15626,
+    1.0
+   ],
+   "qnet_total_bcm": 30.21
+  },
+  {
+   "year": 2002,
+   "season": "Nov 2001 – Dec 2002",
+   "oni_djf": -0.15,
+   "phase": "neutral",
+   "qnet_bcm": [
+    -2.15626,
+    1.0,
+    0.84902,
+    1.59407,
+    3.17409,
+    5.50266,
+    3.63674,
+    4.28704,
+    1.67587,
+    -2.7928,
+    2.28394,
+    0.21835,
+    -0.72424,
+    0.91336
+   ],
+   "qnet_total_bcm": 21.62
+  },
+  {
+   "year": 2003,
+   "season": "Nov 2002 – Dec 2003",
+   "oni_djf": 0.9,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -0.72424,
+    0.91336,
+    1.73933,
+    2.9201,
+    5.24678,
+    5.76717,
+    6.23236,
+    4.65829,
+    -0.60031,
+    2.7378,
+    0.02327,
+    -0.51725,
+    -0.18709,
+    -0.3357
+   ],
+   "qnet_total_bcm": 28.6
+  },
+  {
+   "year": 2004,
+   "season": "Nov 2003 – Dec 2004",
+   "oni_djf": 0.34,
+   "phase": "neutral",
+   "qnet_bcm": [
+    -0.18709,
+    -0.3357,
+    2.15247,
+    5.35831,
+    6.31316,
+    9.2013,
+    6.7703,
+    5.76217,
+    1.13381,
+    -0.33509,
+    -0.43348,
+    -0.31651,
+    0.83171,
+    -0.12185
+   ],
+   "qnet_total_bcm": 35.98
+  },
+  {
+   "year": 2005,
+   "season": "Nov 2004 – Dec 2005",
+   "oni_djf": 0.62,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    0.83171,
+    -0.12185,
+    1.01035,
+    1.76451,
+    1.40652,
+    1.74742,
+    2.16953,
+    1.03287,
+    -0.45917,
+    -0.6882,
+    -0.39873,
+    -0.915,
+    -0.24985,
+    1.87355
+   ],
+   "qnet_total_bcm": 8.17
+  },
+  {
+   "year": 2006,
+   "season": "Nov 2005 – Dec 2006",
+   "oni_djf": -0.86,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -0.24985,
+    1.87355,
+    5.77213,
+    5.60645,
+    4.36753,
+    3.83704,
+    4.46019,
+    0.98707,
+    2.50973,
+    -0.61432,
+    -0.71066,
+    -0.68934,
+    -0.65331,
+    0.37756
+   ],
+   "qnet_total_bcm": 27.12
+  },
+  {
+   "year": 2007,
+   "season": "Nov 2006 – Dec 2007",
+   "oni_djf": 0.62,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -0.65331,
+    0.37756,
+    2.59147,
+    3.81667,
+    11.24413,
+    7.9371,
+    5.91029,
+    0.39149,
+    2.56624,
+    -0.18932,
+    -0.46688,
+    0.76911,
+    -1.48785,
+    5.32811
+   ],
+   "qnet_total_bcm": 38.79
+  },
+  {
+   "year": 2008,
+   "season": "Nov 2007 – Dec 2008",
+   "oni_djf": -1.76,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -1.48785,
+    5.32811,
+    13.3613,
+    6.50637,
+    7.48158,
+    5.81601,
+    3.32988,
+    5.06691,
+    -0.75059,
+    0.93819,
+    -3.81839,
+    0.95293,
+    -4.16634,
+    6.00482
+   ],
+   "qnet_total_bcm": 46.05
+  },
+  {
+   "year": 2009,
+   "season": "Nov 2008 – Dec 2009",
+   "oni_djf": -0.89,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -4.16634,
+    6.00482,
+    3.06976,
+    3.51375,
+    9.78724,
+    11.86798,
+    8.68065,
+    3.09364,
+    -1.02349,
+    1.65738,
+    0.1975,
+    -0.60705,
+    -0.93628,
+    2.78953
+   ],
+   "qnet_total_bcm": 48.1
+  },
+  {
+   "year": 2010,
+   "season": "Nov 2009 – Dec 2010",
+   "oni_djf": 1.47,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -0.93628,
+    2.78953,
+    1.77671,
+    4.90422,
+    10.31412,
+    5.6142,
+    6.90189,
+    -1.35096,
+    0.80712,
+    -1.39996,
+    2.97812,
+    -2.30515,
+    0.58702,
+    0.22245
+   ],
+   "qnet_total_bcm": 31.84
+  },
+  {
+   "year": 2011,
+   "season": "Nov 2010 – Dec 2011",
+   "oni_djf": -1.29,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    0.58702,
+    0.22245,
+    7.06277,
+    0.20439,
+    6.00281,
+    10.65668,
+    7.07694,
+    -1.40626,
+    2.4621,
+    1.05785,
+    -0.02238,
+    -2.1925,
+    1.19181,
+    0.62542
+   ],
+   "qnet_total_bcm": 32.94
+  },
+  {
+   "year": 2012,
+   "season": "Nov 2011 – Dec 2012",
+   "oni_djf": -0.71,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    1.19181,
+    0.62542,
+    1.78782,
+    2.20939,
+    6.22723,
+    5.81778,
+    2.94658,
+    6.02648,
+    1.29139,
+    0.3684,
+    -0.84058,
+    -0.40217,
+    -0.68804,
+    0.61443
+   ],
+   "qnet_total_bcm": 25.98
+  },
+  {
+   "year": 2013,
+   "season": "Nov 2012 – Dec 2013",
+   "oni_djf": -0.24,
+   "phase": "neutral",
+   "qnet_bcm": [
+    -0.68804,
+    0.61443,
+    4.9331,
+    7.18056,
+    6.92638,
+    5.85883,
+    2.56823,
+    3.11659,
+    -0.29977,
+    -0.31144,
+    -0.73651,
+    -1.16226,
+    -1.01372,
+    0.09732
+   ],
+   "qnet_total_bcm": 27.77
+  },
+  {
+   "year": 2014,
+   "season": "Nov 2013 – Dec 2014",
+   "oni_djf": -0.24,
+   "phase": "neutral",
+   "qnet_bcm": [
+    -1.01372,
+    0.09732,
+    4.23884,
+    6.27924,
+    4.06541,
+    4.87462,
+    7.08385,
+    4.55576,
+    1.03551,
+    -1.3674,
+    -3.46023,
+    -0.12268,
+    -1.57192,
+    1.79626
+   ],
+   "qnet_total_bcm": 27.5
+  },
+  {
+   "year": 2015,
+   "season": "Nov 2014 – Dec 2015",
+   "oni_djf": 0.73,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -1.57192,
+    1.79626,
+    2.56025,
+    1.67777,
+    1.04227,
+    1.51278,
+    1.44402,
+    0.7277,
+    -0.47534,
+    -1.66729,
+    -2.18044,
+    1.23654,
+    -0.46567,
+    0.08989
+   ],
+   "qnet_total_bcm": 7.3
+  },
+  {
+   "year": 2016,
+   "season": "Nov 2015 – Dec 2016",
+   "oni_djf": 2.5,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -0.46567,
+    0.08989,
+    0.57002,
+    4.0263,
+    6.21971,
+    7.06065,
+    6.3088,
+    3.10239,
+    1.3491,
+    0.46005,
+    1.35015,
+    -0.61475,
+    -0.34873,
+    1.0572
+   ],
+   "qnet_total_bcm": 30.63
+  },
+  {
+   "year": 2017,
+   "season": "Nov 2016 – Dec 2017",
+   "oni_djf": -0.08,
+   "phase": "neutral",
+   "qnet_bcm": [
+    -0.34873,
+    1.0572,
+    8.25265,
+    7.86328,
+    6.37863,
+    9.34193,
+    6.60532,
+    3.5539,
+    -0.05003,
+    0.97877,
+    0.64369,
+    -0.33255,
+    -0.33654,
+    1.25304
+   ],
+   "qnet_total_bcm": 45.21
+  },
+  {
+   "year": 2018,
+   "season": "Nov 2017 – Dec 2018",
+   "oni_djf": -0.71,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -0.33654,
+    1.25304,
+    1.74227,
+    9.49185,
+    8.91102,
+    10.50743,
+    10.35311,
+    6.16502,
+    0.12357,
+    1.43653,
+    -1.84403,
+    -3.15351,
+    -2.71871,
+    -2.45214
+   ],
+   "qnet_total_bcm": 39.82
+  },
+  {
+   "year": 2019,
+   "season": "Nov 2018 – Dec 2019",
+   "oni_djf": 0.99,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -2.71871,
+    -2.45214,
+    -0.65414,
+    0.3709,
+    -0.59058,
+    0.72622,
+    0.59113,
+    -0.20107,
+    -1.60103,
+    2.66673,
+    0.40623,
+    -0.10543,
+    0.50777,
+    1.00365
+   ],
+   "qnet_total_bcm": 0.67
+  },
+  {
+   "year": 2020,
+   "season": "Nov 2019 – Dec 2020",
+   "oni_djf": 0.71,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    0.50777,
+    1.00365,
+    3.05431,
+    3.89708,
+    5.54358,
+    9.69309,
+    9.9814,
+    3.57413,
+    2.23876,
+    0.06433,
+    -0.95216,
+    -1.02558,
+    -1.33359,
+    3.05433
+   ],
+   "qnet_total_bcm": 38.79
+  },
+  {
+   "year": 2021,
+   "season": "Nov 2020 – Dec 2021",
+   "oni_djf": -0.99,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -1.33359,
+    3.05433,
+    7.17191,
+    6.96102,
+    9.48563,
+    5.38146,
+    4.78252,
+    1.24625,
+    -0.39539,
+    0.48901,
+    -0.46548,
+    -2.28011,
+    -2.2721,
+    -0.12322
+   ],
+   "qnet_total_bcm": 33.04
+  },
+  {
+   "year": 2022,
+   "season": "Nov 2021 – Dec 2022",
+   "oni_djf": -0.76,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -2.2721,
+    -0.12322,
+    4.11196,
+    2.03784,
+    3.75835,
+    5.47219,
+    5.21272,
+    2.17478,
+    0.77122,
+    -0.96261,
+    -1.77199,
+    -2.67192,
+    -1.32103,
+    1.15277
+   ],
+   "qnet_total_bcm": 17.84
+  },
+  {
+   "year": 2023,
+   "season": "Nov 2022 – Dec 2023",
+   "oni_djf": -0.55,
+   "phase": "la_nina",
+   "qnet_bcm": [
+    -1.32103,
+    1.15277,
+    6.2473,
+    5.8032,
+    8.33775,
+    4.73892,
+    4.66063,
+    4.65279,
+    0.56068,
+    -0.09896,
+    0.09945,
+    0.86233,
+    -0.743,
+    2.02894
+   ],
+   "qnet_total_bcm": 38.3
+  },
+  {
+   "year": 2024,
+   "season": "Nov 2023 – Dec 2024",
+   "oni_djf": 1.84,
+   "phase": "el_nino",
+   "qnet_bcm": [
+    -0.743,
+    2.02894,
+    3.65764,
+    0.84461,
+    0.28191,
+    0.4768,
+    1.31976,
+    1.2429,
+    0.65174,
+    -0.60932,
+    0.77579,
+    -0.57344,
+    0.65026,
+    0.64374
+   ],
+   "qnet_total_bcm": 11.39
+  },
+  {
+   "year": 2025,
+   "season": "Nov 2024 – Dec 2025",
+   "oni_djf": -0.46,
+   "phase": "neutral",
+   "qnet_bcm": [
+    0.65026,
+    0.64374,
+    4.82832,
+    4.89032,
+    2.56279,
+    5.43569,
+    4.92761,
+    6.81542,
+    1.90591,
+    -0.17855,
+    0.0596,
+    -1.17389,
+    0.10571,
+    0.74789
+   ],
+   "qnet_total_bcm": 31.57
+  }
+ ],
+ "pools": {
+  "el_nino": [
+   1995,
+   1998,
+   2003,
+   2005,
+   2007,
+   2010,
+   2015,
+   2016,
+   2019,
+   2020,
+   2024
+  ],
+  "la_nina": [
+   1996,
+   1999,
+   2000,
+   2001,
+   2006,
+   2008,
+   2009,
+   2011,
+   2012,
+   2018,
+   2021,
+   2022,
+   2023
+  ],
+  "all": [
+   1994,
+   1995,
+   1996,
+   1997,
+   1998,
+   1999,
+   2000,
+   2001,
+   2002,
+   2003,
+   2004,
+   2005,
+   2006,
+   2007,
+   2008,
+   2009,
+   2010,
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ]
+ },
+ "pool_labels": {
+  "el_nino": "El Niño years (forecast)",
+  "all": "All years",
+  "la_nina": "La Niña years"
+ },
+ "pool_rule": "Rainy season tagged by its DJF ONI: El Niño >= +0.5, La Niña <= -0.5, otherwise neutral (NOAA CPC).",
+ "enso_outlook": {
+  "oni_latest": {
+   "season": "ASO 2026",
+   "value": 2.46
+  },
+  "geos_nino34_forecast": [
+   {
+    "season": "NDJ",
+    "value": 3.99
+   },
+   {
+    "season": "DJF",
+    "value": 3.97
+   }
+  ],
+  "noaa": "Strong-to-very-strong El Nino likely through JFM 2027",
+  "sarcof": "Below-normal rain Jan-Mar 2027 for Zambia and Zimbabwe"
+ },
+ "energy": {
+  "twh_per_bcm": 0.22,
+  "twh_per_bcm_range": [
+   0.19,
+   0.25
+  ],
+  "note": "Physics: E = rho*g*H*eta*V = 2.45 GWh per BCM per metre of head at eta=0.9; Kariba's net head is roughly 80-100 m depending on lake level -> 0.19-0.25 TWh/BCM, central 0.22. Cross-check: ~10 TWh/yr reported for both stations at the pre-drought allocations of ~45 BCM gives ~0.22 TWh/BCM. We could not source the 0.4-0.5 TWh/BCM figure and it is physically implausible at Kariba's head, so it is not used. Both banks combined; head loss as the lake falls is ignored."
+ },
+ "costs": {
+  "contracted_usd_per_kwh": 0.17,
+  "emergency_usd_per_kwh": 0.26,
+  "voll_usd_per_kwh": 1.0,
+  "voll_range_usd_per_kwh": [
+   0.5,
+   1.5
+  ],
+  "emergency_cap_gwh_per_month": 218.0,
+  "rules": "Energy deliberately cut is replaced by imports contracted in advance (contracted price) if the imports toggle is on, otherwise bought as emergency power up to the monthly cap; energy lost because the lake hits the minimum operating level is bought as emergency power within whatever cap is left; anything beyond the cap is unserved and priced at the value of lost load.",
+  "source": "ZESCO ERB tariff application Jul 2024 (https://www.erb.org.zm/wp-content/uploads/files/ZESCO-Tarrif-Application-Submission.pdf); VoLL from developing-country literature (Vietnam 2023 implies $1.56/kWh)",
+  "cap_note": "Emergency procurement capped at 300 MW (218 GWh/month), the replacement block costed in ZESCO's 2024 filing ($51M/month)."
+ },
+ "sources": [
+  {
+   "what": "Lake level",
+   "text": "G-REALM satellite altimetry (NASA/USDA), 10-day Kariba series, 1992-2026"
+  },
+  {
+   "what": "Storage curve",
+   "text": "Quadratic fitted to ZRA level/storage pairs",
+   "url": "https://www.zambezira.org/hydrology/lake-levels"
+  },
+  {
+   "what": "ENSO",
+   "text": "NOAA CPC Oceanic Niño Index (DJF)",
+   "url": "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php"
+  },
+  {
+   "what": "Releases",
+   "text": "ZRA 2027 allocation (23 BCM)",
+   "url": "https://www.greenbuildingafrica.co.za/zambezi-river-authority-cuts-kariba-water-allocation-for-2027-power-generation/"
+  },
+  {
+   "what": "Prices",
+   "text": "ZESCO ERB tariff application, Jul 2024; VoLL from developing-country literature",
+   "url": "https://www.erb.org.zm/wp-content/uploads/files/ZESCO-Tarrif-Application-Submission.pdf"
+  }
+ ],
+ "honesty": [
+  "Analog years are history: each line replays the net inflow of a real past year, not a forecast of the exact rain in 2027.",
+  "Past releases are not published monthly; inflows are backed out assuming 30 BCM/yr (16 BCM in 2024).",
+  "Cutting releases means less hydropower now; the simulator shows that trade-off in TWh and in illustrative dollars.",
+  "Illustrative, not an operating plan. ZRA and the utilities decide releases with information we do not have."
+ ],
+ "validation": {
+  "passed": true,
+  "settings": "El Niño analog years, no release cut, 36 BCM/yr for the rest of 2026, 23 BCM in 2027",
+  "reference": "kariba.json -> forecast.next_model (months 2027-12 and members_dec_2027_pct)",
+  "n_years": 11,
+  "sim_median_dec_2027_pct": 31.24,
+  "ref_median_dec_2027_pct": 31.24,
+  "sim_n_below_10_dec_2027": 4,
+  "ref_p_below_10_dec_2027": 0.3636,
+  "ref_n_below_10_dec_2027": 4,
+  "sim_n_below_10_any_month_to_dec_2027": 4,
+  "sim_n_below_20_dec_2027": 5,
+  "ref_p_below_20_dec_2027": 0.4545,
+  "max_abs_diff_member_dec_2027_pct_vs_kariba_json": 0.0001,
+  "max_abs_diff_any_month_pct_vs_ensemble_rerun": 3.3e-05,
+  "sim_members_dec_2027_pct": {
+   "1995": 19.32,
+   "1998": 62.24,
+   "2003": 31.24,
+   "2005": 1.4,
+   "2007": 47.05,
+   "2010": 36.02,
+   "2015": 0.0,
+   "2016": 34.66,
+   "2019": 0.0,
+   "2020": 48.31,
+   "2024": 4.67
+  }
+ },
+ "examples": {
+  "cut_0pct_from_2027_01": {
+   "n_below_10_dec_2027": 4,
+   "n_years": 11,
+   "median_dec_2027_pct": 31.2,
+   "mean_generation_dec26_dec27_twh": 5.51
+  },
+  "cut_15pct_from_2027_01": {
+   "n_below_10_dec_2027": 4,
+   "n_years": 11,
+   "median_dec_2027_pct": 36.6,
+   "mean_generation_dec26_dec27_twh": 4.85
+  },
+  "cut_30pct_from_2027_01": {
+   "n_below_10_dec_2027": 2,
+   "n_years": 11,
+   "median_dec_2027_pct": 41.9,
+   "mean_generation_dec26_dec27_twh": 4.16
+  }
+ }
+}
