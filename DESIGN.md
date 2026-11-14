@@ -1,7 +1,7 @@
 # Patronus — "Months to Darkness"
 
 NASA Space Apps 2026 · Challenge: **Be An Earth System Trend Detective!** (Advanced)
-Status: **v3, build decisions settled** (Nov 14, 2026). Submissions close **Sun Nov 15, 11:59 PM local time**.
+Status: **v4, built; results in section 12** (Nov 14, 2026). Submissions close **Sun Nov 15, 11:59 PM local time**.
 Team pages: `site/patronus-brief.html` (concept, v1), `site/team-vote.html` (vote on direction).
 
 > Branding: "Patronus" is used only as a word. No Harry Potter or NASA logos. Use distinct repo/URL names (e.g. `patronus-blackout-watch`); Patronus AI is an unrelated company.
@@ -268,3 +268,42 @@ The official site returned errors during research, so these rules are **unconfir
 - v1 — Global story with Kariba as the close-up; trend layer; scoreboard and watchlist; cost layer; validation rules; technology options including Jev.
 - v3 — Build decisions (section 11): targets and thresholds, unit of analysis, backtest, 48 countries in 3 tiers, verified no-login data stack, cost model with sourced inputs, crisis scoreboard dates, live forecast and ledger, tech in/stretch/out, submission rules (unconfirmed). Reference data in `data/reference/`.
 - v2 — Problem statement with verified costs; audience changed to finance ministries, regulators and lenders; watchdog positioning after the landscape check; three time horizons with ENSO fingerprints (no in-house ENSO forecaster); shared-exposure feature from HarvestShield; Future Detector engine as recommended base; corrected Ecuador timeline.
+
+## 12. Results (Nov 14 build) and what they mean for the pitch
+All numbers come from `web/public/data/*.json` and were produced by `pipeline/`. Rerun the whole pipeline with `python3 -m pipeline.run_all`.
+
+**Global trend map (GRACE/GRACE-FO, 2002-04..2026-08, GPCP rainfall)**
+- 392 GW of hydropower (37% of 1,053 GW mapped) sits in 221 basins with a significant drying trend in water storage. 343 GW sits in 108 wetting basins.
+- **Caveat that must go next to the headline:** only 61 GW of the drying total is in basins where rainfall also declined significantly. The rest is likely groundwater pumping (north India), glacier and snow loss (Alps, Norway) or reservoir operations.
+- **Kariba:** the whole upper Zambezi catchment shows no water-storage trend. GPCP shows catchment rainfall down about 5% per decade (p = 0.0001), but MERRA-2 disagrees, so we present this as a warning sign, not a settled trend.
+
+**ENSO fingerprints (GPCP 1981–2025, permutation tests)**
+- 56 GW of hydropower sits in 11 grids that lose under El Niño. That is far more than the ~2.4 expected by chance. The 11 are Zambia, Zimbabwe, Mozambique, Malawi, Honduras, Laos, Nepal, Vietnam, Bhutan, Peru and Myanmar.
+- 7 GW sits in 2 La Niña losers (Tajikistan, Guinea). That is not above chance.
+- The known regional patterns come out as expected: Zambezi dry, southern Brazil wet and Southeast Asia dry under El Niño. Colombia has the right sign but is not significant.
+- **Kariba:** the lake rises 2.1 m less from October to June in El Niño years (p = 0.01, 11 years).
+
+**Kariba (the showpiece)**
+- **"Now" ML model:** beats climatology, persistence and ENSO-only at 1–12 months, with Brier skill 0.84 at 1 month, 0.46 at 6 months and 0.03 at 12 months. It **missed 2024**: its first alarm came in Mar 2024, because it expected the usual rainy-season recovery.
+- **"Next" El Niño water-balance ensemble:** first alarm **Jul 2023**, 5 months before ZRA's cut and 8 months before load-shedding. It gave P(below 20%) = 0.8 in Oct–Dec 2023. Its record across El Niño seasons since 1995 is 3 hits, 2 misses and 2 false alarms.
+- **Live forecast** (blend): Dec 2027 median 31% usable, **P(below 10%) = 0.36, P(below 20%) = 0.45**. ZRA's 9% is a plausible dry-side outcome.
+- **Cost of waiting:** illustrative only. Its sign is usually "act early", but its size ranges from $8M to $144M depending on the assumed release rate.
+
+**Country monthly model (23 grids + Sichuan, Ember 2015/2019–2026)**
+- **Weak.** Brier skill is 0.03–0.07, small but positive against all baselines. AUC-PR beats climatology only at 1 month. No single NASA input adds significant ranking skill, and GRACE slightly hurts at the country-month level.
+- It caught 1 of 6 crises (Vietnam 2023, 6 months ahead) and missed Brazil 2021, Sichuan 2022 and all three Ecuador waves.
+- **Label:** "experimental" in the app. A pre-registered seasonal-target robustness test is in `generation_backtest.json` → `seasonal_target`.
+
+**Night lights:** Zambia's cities dimmed 23% (Jun 2024) and 36% (Sep–Oct 2024) against Feb 2023; Lusaka dimmed 52%. Ecuador shows no detectable dip because city cores saturate the scale and the satellite passes over at about 01:30.
+
+**Data-quality findings worth mentioning to judges**
+- NASA POWER (MERRA-2) rainfall has artificial breaks: Colombia in 2008 and 2021, Vietnam from 2016–17. We switched to GPCP for rainfall.
+- POWER soil wetness shows a step change on 1 Oct 2026.
+- GPCP looks suspicious over the Zambezi after 2020, so the Kariba model keeps POWER with trailing anomalies.
+- Finding and documenting these is part of the Validity story.
+
+**What this means for the pitch**
+1. **Lead with Kariba and El Niño, not the monthly country model.** The honest claim is: "Reservoir storage plus the El Niño signal gave a 5-month head start on Kariba 2024, and today it says there is about a 1-in-3 chance Kariba falls into the danger zone by end-2027."
+2. **The global layers** give the reach: 56 GW of El Niño losers, and 392 GW in basins with drying water storage, with the cause stated.
+3. **Show the misses.** Short-range monthly country forecasts have little skill. The scoreboard shows that, and judges reward it under Validity.
+4. **Scoreboard summary:** 2 of 5 crises caught with lead time (Kariba by the "next" model, Vietnam by the country model). Brazil, Sichuan and Ecuador were missed.
