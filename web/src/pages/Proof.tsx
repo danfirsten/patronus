@@ -142,11 +142,19 @@ export default function ProofPage() {
       <div className="panel">
         <h3>Notes and limits reported by the pipeline</h3>
         {limits === null ? <Loading /> : limits.length === 0 ? <Empty>No notes reported in the data files.</Empty> : (
-          <ul className="plain limits">
-            {limits.map((l, i) => (
-              <li key={i}>{l.sample && <span className="sample-tag">Sample</span>} {l.text} <span className="muted">({l.file})</span></li>
-            ))}
-          </ul>
+          <>
+            {[...new Set(limits.map((l) => l.file))].map((f) => {
+              const items = limits.filter((l) => l.file === f);
+              return (
+                <details key={f} className="more limits-group">
+                  <summary>{f}: {items.length} note{items.length === 1 ? '' : 's'}{items[0]?.sample ? ' (sample)' : ''}</summary>
+                  <ul className="plain limits">
+                    {items.map((l, i) => <li key={i}>{l.sample && <span className="sample-tag">Sample</span>} {l.text}</li>)}
+                  </ul>
+                </details>
+              );
+            })}
+          </>
         )}
       </div>
 

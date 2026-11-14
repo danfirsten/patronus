@@ -293,3 +293,6 @@ ul.plain li { margin-bottom: 0.5em; }
   .watch-table .cell-drivers ul { font-size: var(--fs-xs); }
 }
 @media (max-width: 640px) { .site-header { position: static; } }
+.limits-group { margin: 6px 0; }
+.limits-group summary { font-size: var(--fs-sm); }
+.limits-group ul { margin-top: 8px; }
