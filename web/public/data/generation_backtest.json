@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:14:47+00:00",
+ "generated_at": "2026-11-14T20:19:11+00:00",
  "sources": [
   "ember_monthly",
   "ember_yearly",
@@ -179,43 +179,43 @@
    "n": 2564,
    "n_shortfalls": 414,
    "base_rate": 0.161,
-   "brier": 0.1276,
+   "brier": 0.1291,
    "brier_climatology": 0.1391,
-   "bss_vs_climatology": 0.082,
+   "bss_vs_climatology": 0.072,
    "brier_persistence": 0.1339,
-   "bss_vs_persistence": 0.047,
+   "bss_vs_persistence": 0.036,
    "brier_enso_only": 0.1388,
-   "bss_vs_enso_only": 0.081,
-   "auc_pr": 0.271,
+   "bss_vs_enso_only": 0.07,
+   "auc_pr": 0.268,
    "auc_pr_climatology": 0.226,
    "auc_pr_persistence": 0.239,
    "auc_pr_enso_only": 0.209,
    "auc_pr_ci90": [
-    0.234,
-    0.319
+    0.232,
+    0.312
    ],
    "auc_pr_climatology_ci90": [
     0.196,
     0.261
    ],
    "auc_pr_minus_climatology_ci90": [
-    0.012,
-    0.079
+    0.014,
+    0.073
    ],
    "bss_vs_climatology_ci90": [
-    0.049,
-    0.114
+    0.043,
+    0.1
    ],
    "bss_vs_persistence_ci90": [
-    0.025,
-    0.068
+    0.013,
+    0.058
    ],
    "bss_vs_enso_only_ci90": [
-    0.049,
-    0.114
+    0.04,
+    0.102
    ],
    "horizon": 1,
-   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
    "quantile_p10_p90_coverage": 0.722,
    "p50_mae_pct": 16.73,
    "zero_anomaly_mae_pct": 17.71
@@ -224,43 +224,43 @@
    "n": 2564,
    "n_shortfalls": 414,
    "base_rate": 0.161,
-   "brier": 0.1306,
+   "brier": 0.1325,
    "brier_climatology": 0.1391,
-   "bss_vs_climatology": 0.061,
+   "bss_vs_climatology": 0.047,
    "brier_persistence": 0.1371,
-   "bss_vs_persistence": 0.048,
+   "bss_vs_persistence": 0.033,
    "brier_enso_only": 0.1383,
-   "bss_vs_enso_only": 0.056,
-   "auc_pr": 0.221,
+   "bss_vs_enso_only": 0.042,
+   "auc_pr": 0.22,
    "auc_pr_climatology": 0.226,
    "auc_pr_persistence": 0.172,
    "auc_pr_enso_only": 0.21,
    "auc_pr_ci90": [
     0.191,
-    0.261
+    0.257
    ],
    "auc_pr_climatology_ci90": [
     0.196,
     0.261
    ],
    "auc_pr_minus_climatology_ci90": [
-    -0.033,
-    0.024
+    -0.029,
+    0.016
    ],
    "bss_vs_climatology_ci90": [
-    0.031,
-    0.09
+    0.022,
+    0.071
    ],
    "bss_vs_persistence_ci90": [
-    0.029,
-    0.066
+    0.013,
+    0.053
    ],
    "bss_vs_enso_only_ci90": [
-    0.023,
-    0.088
+    0.014,
+    0.071
    ],
    "horizon": 2,
-   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
    "quantile_p10_p90_coverage": 0.715,
    "p50_mae_pct": 17.19,
    "zero_anomaly_mae_pct": 17.71
@@ -269,43 +269,43 @@
    "n": 2564,
    "n_shortfalls": 414,
    "base_rate": 0.161,
-   "brier": 0.1326,
+   "brier": 0.1337,
    "brier_climatology": 0.1391,
-   "bss_vs_climatology": 0.047,
+   "bss_vs_climatology": 0.039,
    "brier_persistence": 0.1382,
-   "bss_vs_persistence": 0.041,
+   "bss_vs_persistence": 0.033,
    "brier_enso_only": 0.1383,
-   "bss_vs_enso_only": 0.041,
-   "auc_pr": 0.208,
+   "bss_vs_enso_only": 0.034,
+   "auc_pr": 0.214,
    "auc_pr_climatology": 0.226,
    "auc_pr_persistence": 0.132,
    "auc_pr_enso_only": 0.211,
    "auc_pr_ci90": [
-    0.178,
-    0.246
+    0.186,
+    0.248
    ],
    "auc_pr_climatology_ci90": [
     0.196,
     0.261
    ],
    "auc_pr_minus_climatology_ci90": [
-    -0.047,
-    0.007
+    -0.03,
+    0.006
    ],
    "bss_vs_climatology_ci90": [
-    0.018,
-    0.075
+    0.016,
+    0.061
    ],
    "bss_vs_persistence_ci90": [
-    0.024,
-    0.056
+    0.012,
+    0.052
    ],
    "bss_vs_enso_only_ci90": [
-    0.01,
-    0.075
+    0.007,
+    0.061
    ],
    "horizon": 3,
-   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
    "quantile_p10_p90_coverage": 0.702,
    "p50_mae_pct": 17.46,
    "zero_anomaly_mae_pct": 17.71
@@ -314,43 +314,43 @@
    "n": 2564,
    "n_shortfalls": 414,
    "base_rate": 0.161,
-   "brier": 0.1336,
+   "brier": 0.1342,
    "brier_climatology": 0.1391,
-   "bss_vs_climatology": 0.039,
+   "bss_vs_climatology": 0.036,
    "brier_persistence": 0.1381,
-   "bss_vs_persistence": 0.032,
+   "bss_vs_persistence": 0.029,
    "brier_enso_only": 0.1385,
-   "bss_vs_enso_only": 0.035,
-   "auc_pr": 0.198,
+   "bss_vs_enso_only": 0.031,
+   "auc_pr": 0.208,
    "auc_pr_climatology": 0.226,
    "auc_pr_persistence": 0.134,
    "auc_pr_enso_only": 0.209,
    "auc_pr_ci90": [
-    0.17,
-    0.23
+    0.18,
+    0.242
    ],
    "auc_pr_climatology_ci90": [
     0.196,
     0.261
    ],
    "auc_pr_minus_climatology_ci90": [
-    -0.054,
-    -0.006
+    -0.034,
+    -0.003
    ],
    "bss_vs_climatology_ci90": [
-    0.01,
-    0.068
+    0.012,
+    0.057
    ],
    "bss_vs_persistence_ci90": [
-    0.017,
-    0.048
+    0.01,
+    0.046
    ],
    "bss_vs_enso_only_ci90": [
     0.003,
-    0.068
+    0.059
    ],
    "horizon": 4,
-   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
    "quantile_p10_p90_coverage": 0.7,
    "p50_mae_pct": 17.5,
    "zero_anomaly_mae_pct": 17.71
@@ -359,43 +359,43 @@
    "n": 2564,
    "n_shortfalls": 414,
    "base_rate": 0.161,
-   "brier": 0.1356,
+   "brier": 0.1345,
    "brier_climatology": 0.1391,
-   "bss_vs_climatology": 0.025,
+   "bss_vs_climatology": 0.033,
    "brier_persistence": 0.138,
-   "bss_vs_persistence": 0.017,
+   "bss_vs_persistence": 0.025,
    "brier_enso_only": 0.1391,
-   "bss_vs_enso_only": 0.025,
-   "auc_pr": 0.187,
+   "bss_vs_enso_only": 0.033,
+   "auc_pr": 0.213,
    "auc_pr_climatology": 0.226,
    "auc_pr_persistence": 0.128,
    "auc_pr_enso_only": 0.207,
    "auc_pr_ci90": [
-    0.161,
-    0.22
+    0.183,
+    0.249
    ],
    "auc_pr_climatology_ci90": [
     0.196,
     0.261
    ],
    "auc_pr_minus_climatology_ci90": [
-    -0.064,
-    -0.016
+    -0.029,
+    0.002
    ],
    "bss_vs_climatology_ci90": [
-    -0.004,
+    0.011,
     0.055
    ],
    "bss_vs_persistence_ci90": [
-    0.002,
-    0.032
+    0.007,
+    0.042
    ],
    "bss_vs_enso_only_ci90": [
-    -0.01,
-    0.057
+    0.004,
+    0.062
    ],
    "horizon": 5,
-   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
    "quantile_p10_p90_coverage": 0.696,
    "p50_mae_pct": 17.51,
    "zero_anomaly_mae_pct": 17.71
@@ -404,43 +404,43 @@
    "n": 2564,
    "n_shortfalls": 414,
    "base_rate": 0.161,
-   "brier": 0.1351,
+   "brier": 0.1342,
    "brier_climatology": 0.1391,
-   "bss_vs_climatology": 0.029,
+   "bss_vs_climatology": 0.035,
    "brier_persistence": 0.138,
-   "bss_vs_persistence": 0.021,
+   "bss_vs_persistence": 0.028,
    "brier_enso_only": 0.14,
-   "bss_vs_enso_only": 0.035,
-   "auc_pr": 0.19,
+   "bss_vs_enso_only": 0.041,
+   "auc_pr": 0.216,
    "auc_pr_climatology": 0.226,
    "auc_pr_persistence": 0.128,
    "auc_pr_enso_only": 0.201,
    "auc_pr_ci90": [
-    0.163,
-    0.222
+    0.184,
+    0.253
    ],
    "auc_pr_climatology_ci90": [
     0.196,
     0.261
    ],
    "auc_pr_minus_climatology_ci90": [
-    -0.06,
-    -0.017
+    -0.025,
+    0.003
    ],
    "bss_vs_climatology_ci90": [
-    0.001,
-    0.056
+    0.014,
+    0.057
    ],
    "bss_vs_persistence_ci90": [
-    0.008,
-    0.034
+    0.009,
+    0.045
    ],
    "bss_vs_enso_only_ci90": [
-    0.006,
-    0.065
+    0.016,
+    0.069
    ],
    "horizon": 6,
-   "calibration": "isotonic, cross-fitted on out-of-fold predictions of other years",
+   "calibration": "logistic stack of LightGBM and climatology logits, cross-fitted on out-of-fold predictions of other (gapped) years",
    "quantile_p10_p90_coverage": 0.695,
    "p50_mae_pct": 17.39,
    "zero_anomaly_mae_pct": 17.71
@@ -694,6 +694,255 @@
    "horizon": 6
   }
  ],
+ "by_horizon_isotonic": [
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1276,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.082,
+   "brier_persistence": 0.1339,
+   "bss_vs_persistence": 0.047,
+   "brier_enso_only": 0.1388,
+   "bss_vs_enso_only": 0.081,
+   "auc_pr": 0.271,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.239,
+   "auc_pr_enso_only": 0.209,
+   "auc_pr_ci90": [
+    0.231,
+    0.314
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    0.014,
+    0.078
+   ],
+   "bss_vs_climatology_ci90": [
+    0.051,
+    0.111
+   ],
+   "bss_vs_persistence_ci90": [
+    0.023,
+    0.069
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.051,
+    0.115
+   ],
+   "horizon": 1
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1306,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.061,
+   "brier_persistence": 0.1371,
+   "bss_vs_persistence": 0.048,
+   "brier_enso_only": 0.1383,
+   "bss_vs_enso_only": 0.056,
+   "auc_pr": 0.221,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.172,
+   "auc_pr_enso_only": 0.21,
+   "auc_pr_ci90": [
+    0.189,
+    0.26
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.035,
+    0.023
+   ],
+   "bss_vs_climatology_ci90": [
+    0.033,
+    0.088
+   ],
+   "bss_vs_persistence_ci90": [
+    0.028,
+    0.067
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.024,
+    0.089
+   ],
+   "horizon": 2
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1326,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.047,
+   "brier_persistence": 0.1382,
+   "bss_vs_persistence": 0.041,
+   "brier_enso_only": 0.1383,
+   "bss_vs_enso_only": 0.041,
+   "auc_pr": 0.208,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.132,
+   "auc_pr_enso_only": 0.211,
+   "auc_pr_ci90": [
+    0.176,
+    0.243
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.047,
+    0.006
+   ],
+   "bss_vs_climatology_ci90": [
+    0.019,
+    0.074
+   ],
+   "bss_vs_persistence_ci90": [
+    0.023,
+    0.055
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.012,
+    0.075
+   ],
+   "horizon": 3
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1336,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.039,
+   "brier_persistence": 0.1381,
+   "bss_vs_persistence": 0.032,
+   "brier_enso_only": 0.1385,
+   "bss_vs_enso_only": 0.035,
+   "auc_pr": 0.198,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.134,
+   "auc_pr_enso_only": 0.209,
+   "auc_pr_ci90": [
+    0.17,
+    0.228
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.055,
+    -0.007
+   ],
+   "bss_vs_climatology_ci90": [
+    0.011,
+    0.066
+   ],
+   "bss_vs_persistence_ci90": [
+    0.015,
+    0.046
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.004,
+    0.068
+   ],
+   "horizon": 4
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1356,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.025,
+   "brier_persistence": 0.138,
+   "bss_vs_persistence": 0.017,
+   "brier_enso_only": 0.1391,
+   "bss_vs_enso_only": 0.025,
+   "auc_pr": 0.187,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.128,
+   "auc_pr_enso_only": 0.207,
+   "auc_pr_ci90": [
+    0.162,
+    0.219
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.065,
+    -0.015
+   ],
+   "bss_vs_climatology_ci90": [
+    -0.004,
+    0.055
+   ],
+   "bss_vs_persistence_ci90": [
+    0.001,
+    0.031
+   ],
+   "bss_vs_enso_only_ci90": [
+    -0.009,
+    0.06
+   ],
+   "horizon": 5
+  },
+  {
+   "n": 2564,
+   "n_shortfalls": 414,
+   "base_rate": 0.161,
+   "brier": 0.1351,
+   "brier_climatology": 0.1391,
+   "bss_vs_climatology": 0.029,
+   "brier_persistence": 0.138,
+   "bss_vs_persistence": 0.021,
+   "brier_enso_only": 0.14,
+   "bss_vs_enso_only": 0.035,
+   "auc_pr": 0.19,
+   "auc_pr_climatology": 0.226,
+   "auc_pr_persistence": 0.128,
+   "auc_pr_enso_only": 0.201,
+   "auc_pr_ci90": [
+    0.163,
+    0.222
+   ],
+   "auc_pr_climatology_ci90": [
+    0.197,
+    0.261
+   ],
+   "auc_pr_minus_climatology_ci90": [
+    -0.062,
+    -0.017
+   ],
+   "bss_vs_climatology_ci90": [
+    0.001,
+    0.055
+   ],
+   "bss_vs_persistence_ci90": [
+    0.008,
+    0.033
+   ],
+   "bss_vs_enso_only_ci90": [
+    0.007,
+    0.066
+   ],
+   "horizon": 6
+  }
+ ],
+ "calibration_note": "Primary probabilities (by_horizon) blend the LightGBM probability with the climatology prior in a logistic stack, cross-fitted on out-of-fold predictions. We added this after a first run showed LightGBM alone (isotonic-calibrated) ranked shortfalls slightly worse than climatology beyond 1 month; both versions are reported.",
  "severe_by_horizon": [
   {
    "horizon": 1,
@@ -752,40 +1001,40 @@
     "n": 763,
     "n_shortfalls": 151,
     "base_rate": 0.198,
-    "brier": 0.1528,
+    "brier": 0.1527,
     "brier_climatology": 0.1619,
-    "bss_vs_climatology": 0.056,
+    "bss_vs_climatology": 0.057,
     "brier_persistence": 0.159,
-    "bss_vs_persistence": 0.039,
+    "bss_vs_persistence": 0.04,
     "brier_enso_only": 0.1628,
-    "bss_vs_enso_only": 0.061,
-    "auc_pr": 0.287,
+    "bss_vs_enso_only": 0.062,
+    "auc_pr": 0.307,
     "auc_pr_climatology": 0.271,
     "auc_pr_persistence": 0.283,
     "auc_pr_enso_only": 0.254,
     "auc_pr_ci90": [
-     0.237,
-     0.346
+     0.254,
+     0.377
     ],
     "auc_pr_climatology_ci90": [
      0.215,
      0.335
     ],
     "auc_pr_minus_climatology_ci90": [
-     -0.051,
-     0.065
+     -0.024,
+     0.091
     ],
     "bss_vs_climatology_ci90": [
-     -0.014,
-     0.104
+     -0.008,
+     0.103
     ],
     "bss_vs_persistence_ci90": [
-     0.003,
-     0.069
+     0.005,
+     0.07
     ],
     "bss_vs_enso_only_ci90": [
-     -0.009,
-     0.117
+     -0.004,
+     0.116
     ],
     "horizon": 1,
     "brier_uncalibrated": 0.1563,
@@ -795,40 +1044,40 @@
     "n": 763,
     "n_shortfalls": 151,
     "base_rate": 0.198,
-    "brier": 0.1543,
+    "brier": 0.1556,
     "brier_climatology": 0.1619,
-    "bss_vs_climatology": 0.047,
+    "bss_vs_climatology": 0.039,
     "brier_persistence": 0.1613,
-    "bss_vs_persistence": 0.044,
+    "bss_vs_persistence": 0.035,
     "brier_enso_only": 0.1624,
-    "bss_vs_enso_only": 0.05,
-    "auc_pr": 0.249,
+    "bss_vs_enso_only": 0.042,
+    "auc_pr": 0.26,
     "auc_pr_climatology": 0.271,
     "auc_pr_persistence": 0.252,
     "auc_pr_enso_only": 0.266,
     "auc_pr_ci90": [
-     0.203,
-     0.305
+     0.215,
+     0.323
     ],
     "auc_pr_climatology_ci90": [
      0.215,
      0.335
     ],
     "auc_pr_minus_climatology_ci90": [
-     -0.076,
-     0.022
+     -0.058,
+     0.035
     ],
     "bss_vs_climatology_ci90": [
      -0.012,
-     0.093
+     0.079
     ],
     "bss_vs_persistence_ci90": [
-     0.009,
-     0.07
+     0.005,
+     0.058
     ],
     "bss_vs_enso_only_ci90": [
-     -0.015,
-     0.106
+     -0.019,
+     0.093
     ],
     "horizon": 2,
     "brier_uncalibrated": 0.1596,
@@ -838,40 +1087,40 @@
     "n": 763,
     "n_shortfalls": 151,
     "base_rate": 0.198,
-    "brier": 0.1554,
+    "brier": 0.1546,
     "brier_climatology": 0.1619,
-    "bss_vs_climatology": 0.04,
+    "bss_vs_climatology": 0.045,
     "brier_persistence": 0.1621,
-    "bss_vs_persistence": 0.042,
+    "bss_vs_persistence": 0.046,
     "brier_enso_only": 0.1612,
-    "bss_vs_enso_only": 0.036,
-    "auc_pr": 0.255,
+    "bss_vs_enso_only": 0.041,
+    "auc_pr": 0.298,
     "auc_pr_climatology": 0.271,
     "auc_pr_persistence": 0.198,
     "auc_pr_enso_only": 0.262,
     "auc_pr_ci90": [
-     0.2,
-     0.315
+     0.24,
+     0.369
     ],
     "auc_pr_climatology_ci90": [
      0.215,
      0.335
     ],
     "auc_pr_minus_climatology_ci90": [
-     -0.07,
-     0.026
+     -0.013,
+     0.067
     ],
     "bss_vs_climatology_ci90": [
-     -0.01,
-     0.083
+     0.005,
+     0.078
     ],
     "bss_vs_persistence_ci90": [
-     0.015,
-     0.061
+     0.023,
+     0.067
     ],
     "bss_vs_enso_only_ci90": [
-     -0.023,
-     0.09
+     -0.01,
+     0.089
     ],
     "horizon": 3,
     "brier_uncalibrated": 0.1576,
@@ -881,40 +1130,40 @@
     "n": 763,
     "n_shortfalls": 151,
     "base_rate": 0.198,
-    "brier": 0.1575,
+    "brier": 0.1564,
     "brier_climatology": 0.1619,
-    "bss_vs_climatology": 0.027,
+    "bss_vs_climatology": 0.034,
     "brier_persistence": 0.1621,
-    "bss_vs_persistence": 0.028,
+    "bss_vs_persistence": 0.035,
     "brier_enso_only": 0.1613,
-    "bss_vs_enso_only": 0.023,
-    "auc_pr": 0.24,
+    "bss_vs_enso_only": 0.03,
+    "auc_pr": 0.283,
     "auc_pr_climatology": 0.271,
     "auc_pr_persistence": 0.21,
     "auc_pr_enso_only": 0.258,
     "auc_pr_ci90": [
-     0.192,
-     0.291
+     0.23,
+     0.348
     ],
     "auc_pr_climatology_ci90": [
      0.215,
      0.335
     ],
     "auc_pr_minus_climatology_ci90": [
-     -0.084,
-     0.011
+     -0.009,
+     0.036
     ],
     "bss_vs_climatology_ci90": [
-     -0.027,
-     0.074
+     -0.005,
+     0.069
     ],
     "bss_vs_persistence_ci90": [
-     0.012,
-     0.041
+     0.016,
+     0.053
     ],
     "bss_vs_enso_only_ci90": [
-     -0.037,
-     0.072
+     -0.014,
+     0.071
     ],
     "horizon": 4,
     "brier_uncalibrated": 0.1595,
@@ -924,40 +1173,40 @@
     "n": 763,
     "n_shortfalls": 151,
     "base_rate": 0.198,
-    "brier": 0.1576,
+    "brier": 0.1565,
     "brier_climatology": 0.1619,
-    "bss_vs_climatology": 0.026,
+    "bss_vs_climatology": 0.033,
     "brier_persistence": 0.1621,
-    "bss_vs_persistence": 0.028,
+    "bss_vs_persistence": 0.034,
     "brier_enso_only": 0.1649,
-    "bss_vs_enso_only": 0.044,
-    "auc_pr": 0.228,
+    "bss_vs_enso_only": 0.05,
+    "auc_pr": 0.283,
     "auc_pr_climatology": 0.271,
     "auc_pr_persistence": 0.217,
     "auc_pr_enso_only": 0.245,
     "auc_pr_ci90": [
-     0.181,
-     0.273
+     0.228,
+     0.351
     ],
     "auc_pr_climatology_ci90": [
      0.215,
      0.335
     ],
     "auc_pr_minus_climatology_ci90": [
-     -0.093,
-     -0.008
+     -0.005,
+     0.035
     ],
     "bss_vs_climatology_ci90": [
-     -0.026,
-     0.069
+     -0.004,
+     0.068
     ],
     "bss_vs_persistence_ci90": [
-     0.011,
-     0.04
+     0.014,
+     0.053
     ],
     "bss_vs_enso_only_ci90": [
-     -0.005,
-     0.085
+     0.013,
+     0.082
     ],
     "horizon": 5,
     "brier_uncalibrated": 0.1604,
@@ -967,40 +1216,40 @@
     "n": 763,
     "n_shortfalls": 151,
     "base_rate": 0.198,
-    "brier": 0.1568,
+    "brier": 0.1557,
     "brier_climatology": 0.1619,
-    "bss_vs_climatology": 0.031,
+    "bss_vs_climatology": 0.038,
     "brier_persistence": 0.1621,
-    "bss_vs_persistence": 0.032,
+    "bss_vs_persistence": 0.039,
     "brier_enso_only": 0.1691,
-    "bss_vs_enso_only": 0.073,
-    "auc_pr": 0.23,
+    "bss_vs_enso_only": 0.079,
+    "auc_pr": 0.296,
     "auc_pr_climatology": 0.271,
     "auc_pr_persistence": 0.232,
     "auc_pr_enso_only": 0.225,
     "auc_pr_ci90": [
-     0.189,
-     0.276
+     0.237,
+     0.37
     ],
     "auc_pr_climatology_ci90": [
      0.215,
      0.335
     ],
     "auc_pr_minus_climatology_ci90": [
-     -0.092,
-     -0.0
+     0.003,
+     0.055
     ],
     "bss_vs_climatology_ci90": [
-     -0.023,
-     0.078
+     0.001,
+     0.074
     ],
     "bss_vs_persistence_ci90": [
      0.018,
-     0.042
+     0.06
     ],
     "bss_vs_enso_only_ci90": [
-     0.022,
-     0.113
+     0.043,
+     0.11
     ],
     "horizon": 6,
     "brier_uncalibrated": 0.1582,
@@ -1016,30 +1265,37 @@
     {
      "p_lo": 0,
      "p_hi": 0.1,
-     "p_mean": 0.039,
-     "observed_rate": 0.066,
-     "n": 442
+     "p_mean": 0.073,
+     "observed_rate": 0.105,
+     "n": 571
     },
     {
      "p_lo": 0.1,
      "p_hi": 0.2,
-     "p_mean": 0.141,
-     "observed_rate": 0.149,
-     "n": 1085
+     "p_mean": 0.149,
+     "observed_rate": 0.15,
+     "n": 1326
     },
     {
      "p_lo": 0.2,
      "p_hi": 0.3,
-     "p_mean": 0.227,
-     "observed_rate": 0.217,
-     "n": 1025
+     "p_mean": 0.239,
+     "observed_rate": 0.234,
+     "n": 577
     },
     {
      "p_lo": 0.3,
      "p_hi": 0.4,
-     "p_mean": 0.3,
-     "observed_rate": 0.083,
-     "n": 12
+     "p_mean": 0.333,
+     "observed_rate": 0.238,
+     "n": 84
+    },
+    {
+     "p_lo": 0.4,
+     "p_hi": 0.5,
+     "p_mean": 0.409,
+     "observed_rate": 0.0,
+     "n": 6
     }
    ]
   },
@@ -1382,69 +1638,69 @@
  "feature_importance_note": "Gain share in the final (all-data) shortfall classifiers, averaged over horizons 1-6.",
  "alarm": {
   "definition": "P(any shortfall in t+1..t+6), separate LightGBM classifier, out-of-fold by issue year with a +/-1 year gap, isotonic-calibrated (cross-fitted)",
-  "threshold": 0.64,
+  "threshold": 0.66,
   "threshold_rule": "Lowest threshold (grid 0.05-0.95) giving <= 1 false alarm per country per 5 calm years. Calm issue months have no observed shortfall in the next 6 months. An alarm covers a 6-month window, so 6 alarm-months in calm periods count as one false alarm: rate = (calm alarm-months / 6) / (calm months / 60). Equivalent to a false-positive rate of <= 10% on calm months.",
-  "false_alarms_per_country_5yr": 0.952,
-  "calm_alarm_months": 132,
+  "false_alarms_per_country_5yr": 0.908,
+  "calm_alarm_months": 126,
   "calm_months": 1387,
-  "hit_rate_any6": 0.187,
+  "hit_rate_any6": 0.208,
   "threshold_table": [
    {
     "threshold": 0.2,
-    "calm_alarm_months": 1090,
+    "calm_alarm_months": 1134,
     "calm_months": 1387,
-    "hit_rate_any6": 0.938,
-    "false_alarms_per_country_5yr": 7.859
+    "hit_rate_any6": 0.926,
+    "false_alarms_per_country_5yr": 8.176
    },
    {
     "threshold": 0.3,
-    "calm_alarm_months": 820,
+    "calm_alarm_months": 879,
     "calm_months": 1387,
-    "hit_rate_any6": 0.85,
-    "false_alarms_per_country_5yr": 5.912
+    "hit_rate_any6": 0.855,
+    "false_alarms_per_country_5yr": 6.337
    },
    {
     "threshold": 0.4,
-    "calm_alarm_months": 709,
+    "calm_alarm_months": 615,
     "calm_months": 1387,
-    "hit_rate_any6": 0.826,
-    "false_alarms_per_country_5yr": 5.112
+    "hit_rate_any6": 0.763,
+    "false_alarms_per_country_5yr": 4.434
    },
    {
     "threshold": 0.5,
-    "calm_alarm_months": 538,
+    "calm_alarm_months": 411,
     "calm_months": 1387,
-    "hit_rate_any6": 0.693,
-    "false_alarms_per_country_5yr": 3.879
+    "hit_rate_any6": 0.598,
+    "false_alarms_per_country_5yr": 2.963
    },
    {
     "threshold": 0.6,
-    "calm_alarm_months": 247,
+    "calm_alarm_months": 226,
     "calm_months": 1387,
-    "hit_rate_any6": 0.321,
-    "false_alarms_per_country_5yr": 1.781
+    "hit_rate_any6": 0.337,
+    "false_alarms_per_country_5yr": 1.629
    },
    {
-    "threshold": 0.64,
-    "calm_alarm_months": 132,
+    "threshold": 0.66,
+    "calm_alarm_months": 126,
     "calm_months": 1387,
-    "hit_rate_any6": 0.187,
-    "false_alarms_per_country_5yr": 0.952
+    "hit_rate_any6": 0.208,
+    "false_alarms_per_country_5yr": 0.908
    },
    {
     "threshold": 0.7,
-    "calm_alarm_months": 21,
+    "calm_alarm_months": 76,
     "calm_months": 1387,
-    "hit_rate_any6": 0.033,
-    "false_alarms_per_country_5yr": 0.151
+    "hit_rate_any6": 0.139,
+    "false_alarms_per_country_5yr": 0.548
    }
   ],
   "n": 2517,
   "base_rate": 0.449,
-  "auc_pr": 0.583,
+  "auc_pr": 0.616,
   "auc_pr_climatology": 0.638,
-  "brier": 0.2232,
-  "bss_vs_climatology": 0.0
+  "brier": 0.2235,
+  "bss_vs_climatology": -0.001
  },
  "crisis_leads": [
   {
@@ -1454,39 +1710,39 @@
    "official_warning": "2021-05-27",
    "onset": "2021-05-28",
    "enso": "La Nina",
-   "alarm_month": "2021-01",
-   "lead_months": 4,
-   "lead_vs_official_months": 4,
-   "caught": true,
-   "status": "caught",
+   "alarm_month": null,
+   "lead_months": null,
+   "lead_vs_official_months": null,
+   "caught": false,
+   "status": "missed",
    "p_series": [
     {
      "issue": "2020-11",
-     "p_any_shortfall_6m": 0.546
+     "p_any_shortfall_6m": 0.436
     },
     {
      "issue": "2020-12",
-     "p_any_shortfall_6m": 0.616
+     "p_any_shortfall_6m": 0.461
     },
     {
      "issue": "2021-01",
-     "p_any_shortfall_6m": 0.658
+     "p_any_shortfall_6m": 0.571
     },
     {
      "issue": "2021-02",
-     "p_any_shortfall_6m": 0.627
+     "p_any_shortfall_6m": 0.51
     },
     {
      "issue": "2021-03",
-     "p_any_shortfall_6m": 0.658
+     "p_any_shortfall_6m": 0.605
     },
     {
      "issue": "2021-04",
-     "p_any_shortfall_6m": 0.556
+     "p_any_shortfall_6m": 0.486
     },
     {
      "issue": "2021-05",
-     "p_any_shortfall_6m": 0.556
+     "p_any_shortfall_6m": 0.486
     }
    ],
    "observed_anomaly_around_onset": [
@@ -1527,31 +1783,31 @@
    "p_series": [
     {
      "issue": "2022-02",
-     "p_any_shortfall_6m": 0.167
+     "p_any_shortfall_6m": 0.196
     },
     {
      "issue": "2022-03",
-     "p_any_shortfall_6m": 0.144
+     "p_any_shortfall_6m": 0.162
     },
     {
      "issue": "2022-04",
-     "p_any_shortfall_6m": 0.167
+     "p_any_shortfall_6m": 0.254
     },
     {
      "issue": "2022-05",
-     "p_any_shortfall_6m": 0.167
+     "p_any_shortfall_6m": 0.266
     },
     {
      "issue": "2022-06",
-     "p_any_shortfall_6m": 0.144
+     "p_any_shortfall_6m": 0.233
     },
     {
      "issue": "2022-07",
-     "p_any_shortfall_6m": 0.169
+     "p_any_shortfall_6m": 0.288
     },
     {
      "issue": "2022-08",
-     "p_any_shortfall_6m": 0.249
+     "p_any_shortfall_6m": 0.404
     }
    ],
    "observed_anomaly_around_onset": [
@@ -1592,31 +1848,31 @@
    "p_series": [
     {
      "issue": "2022-11",
-     "p_any_shortfall_6m": 0.651
+     "p_any_shortfall_6m": 0.708
     },
     {
      "issue": "2022-12",
-     "p_any_shortfall_6m": 0.628
+     "p_any_shortfall_6m": 0.62
     },
     {
      "issue": "2023-01",
-     "p_any_shortfall_6m": 0.52
+     "p_any_shortfall_6m": 0.496
     },
     {
      "issue": "2023-02",
-     "p_any_shortfall_6m": 0.52
+     "p_any_shortfall_6m": 0.355
     },
     {
      "issue": "2023-03",
-     "p_any_shortfall_6m": 0.52
+     "p_any_shortfall_6m": 0.372
     },
     {
      "issue": "2023-04",
-     "p_any_shortfall_6m": 0.545
+     "p_any_shortfall_6m": 0.398
     },
     {
      "issue": "2023-05",
-     "p_any_shortfall_6m": 0.673
+     "p_any_shortfall_6m": 0.543
     }
    ],
    "observed_anomaly_around_onset": [
@@ -1657,31 +1913,31 @@
    "p_series": [
     {
      "issue": "2023-04",
-     "p_any_shortfall_6m": 0.5
+     "p_any_shortfall_6m": 0.16
     },
     {
      "issue": "2023-05",
-     "p_any_shortfall_6m": 0.277
+     "p_any_shortfall_6m": 0.124
     },
     {
      "issue": "2023-06",
-     "p_any_shortfall_6m": 0.136
+     "p_any_shortfall_6m": 0.083
     },
     {
      "issue": "2023-07",
-     "p_any_shortfall_6m": 0.203
+     "p_any_shortfall_6m": 0.106
     },
     {
      "issue": "2023-08",
-     "p_any_shortfall_6m": 0.136
+     "p_any_shortfall_6m": 0.088
     },
     {
      "issue": "2023-09",
-     "p_any_shortfall_6m": 0.203
+     "p_any_shortfall_6m": 0.112
     },
     {
      "issue": "2023-10",
-     "p_any_shortfall_6m": 0.203
+     "p_any_shortfall_6m": 0.101
     }
    ],
    "observed_anomaly_around_onset": [
@@ -1722,31 +1978,31 @@
    "p_series": [
     {
      "issue": "2023-10",
-     "p_any_shortfall_6m": 0.203
+     "p_any_shortfall_6m": 0.101
     },
     {
      "issue": "2023-11",
-     "p_any_shortfall_6m": 0.424
+     "p_any_shortfall_6m": 0.139
     },
     {
      "issue": "2023-12",
-     "p_any_shortfall_6m": 0.424
+     "p_any_shortfall_6m": 0.139
     },
     {
      "issue": "2024-01",
-     "p_any_shortfall_6m": 0.532
+     "p_any_shortfall_6m": 0.303
     },
     {
      "issue": "2024-02",
-     "p_any_shortfall_6m": 0.532
+     "p_any_shortfall_6m": 0.305
     },
     {
      "issue": "2024-03",
-     "p_any_shortfall_6m": 0.21
+     "p_any_shortfall_6m": 0.188
     },
     {
      "issue": "2024-04",
-     "p_any_shortfall_6m": 0.273
+     "p_any_shortfall_6m": 0.241
     }
    ],
    "observed_anomaly_around_onset": [
@@ -1787,31 +2043,31 @@
    "p_series": [
     {
      "issue": "2024-03",
-     "p_any_shortfall_6m": 0.21
+     "p_any_shortfall_6m": 0.188
     },
     {
      "issue": "2024-04",
-     "p_any_shortfall_6m": 0.273
+     "p_any_shortfall_6m": 0.241
     },
     {
      "issue": "2024-05",
-     "p_any_shortfall_6m": 0.412
+     "p_any_shortfall_6m": 0.332
     },
     {
      "issue": "2024-06",
-     "p_any_shortfall_6m": 0.532
+     "p_any_shortfall_6m": 0.385
     },
     {
      "issue": "2024-07",
-     "p_any_shortfall_6m": 0.21
+     "p_any_shortfall_6m": 0.281
     },
     {
      "issue": "2024-08",
-     "p_any_shortfall_6m": 0.21
+     "p_any_shortfall_6m": 0.255
     },
     {
      "issue": "2024-09",
-     "p_any_shortfall_6m": 0.21
+     "p_any_shortfall_6m": 0.276
     }
    ],
    "observed_anomaly_around_onset": [
@@ -1853,5 +2109,5 @@
   "Cost estimates are rough and labelled as such: fixed 20 c/kWh replacement, VoLL $1.00/kWh on 10% of the deficit, no import or demand response modelling."
  ],
  "notes": [],
- "runtime_s": 227.2
+ "runtime_s": 286.6
 }
