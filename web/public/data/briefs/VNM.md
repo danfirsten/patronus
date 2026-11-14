@@ -1,7 +1,7 @@
 # Viet Nam: brief for decision-makers
 *Issued 15 Nov 2026. AI-written brief, checked against the Patronus data files (country/VNM.json, enso.json). Not official advice.*
 
-**Bottom line.** Patronus rates Viet Nam at **watch**. The highest monthly chance of a hydro shortfall from December 2026 to May 2027 is 25%. The main reason for concern is El Niño, not today's water levels.
+**Bottom line.** Patronus rates Viet Nam at **watch**. The highest monthly chance of a hydro shortfall from December 2026 to May 2027 is 26%. The main reason for concern is El Niño, not today's water levels.
 
 **What the data show**
 - Viet Nam's hydro basins have historically received **9% less rain** in El Niño water years (GPCP, 1981–2025, 16 El Niño years, p < 0.01). A strong El Niño is forecast through early 2027, so the window to watch is October 2026 to September 2027.

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:35:31+00:00",
+ "generated_at": "2026-11-14T21:10:45+00:00",
  "sources": [
   "ember_monthly",
   "ember_china",
@@ -135,10 +135,10 @@
  },
  "false_alarms": {
   "country_model": {
-   "threshold": 0.66,
+   "threshold": 0.65,
    "threshold_rule": "Lowest threshold (grid 0.05-0.95) giving <= 1 false alarm per country per 5 calm years. Calm issue months have no observed shortfall in the next 6 months. An alarm covers a 6-month window, so 6 alarm-months in calm periods count as one false alarm: rate = (calm alarm-months / 6) / (calm months / 60). Equivalent to a false-positive rate of <= 10% on calm months.",
-   "false_alarms_per_country_5yr": 0.908,
-   "hit_rate_any6": 0.21
+   "false_alarms_per_country_5yr": 0.973,
+   "hit_rate_any6": 0.223
   },
   "kariba_next_model_warning": {
    "el_nino_seasons": {

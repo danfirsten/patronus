@@ -523,6 +523,7 @@ def main():
         sanity.append({"iso3": iso, "period": f"{a}..{b}", "months": vals, "n_shortfall": n_hit, "n_months": len(ms)})
         log(f"sanity {iso} {a}..{b}: " + " ".join(f"{v['month']}:{v['cf_anom_pct']}" for v in vals))
 
+    notes.append("Data-quality correction (after the primary analysis, no tuning): GPCP rain anomalies now use a trailing 10-year same-calendar-month normal instead of 1981-2010, because GPCP drifts dry after 2019 (basin-median GPCP/MERRA-2 ratio ~0.95 from 2020).")
     log("Brazil ONS test...")
     ons_block, ons_keep = brazil_ons_test(D, countries, log)
     if ons_keep:
