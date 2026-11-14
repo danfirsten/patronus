@@ -207,3 +207,16 @@
 @media (min-width: 900px) { .pt-sources ol { columns: 2; column-gap: 48px; } }
 .pt-sources li { margin-bottom: 8px; break-inside: avoid; overflow-wrap: anywhere; }
 .pt-sources li:target, .pt-sources li:focus-within { color: var(--text); }
+
+/* One person: the human cost, right after the hero. Text only, quiet band, no photo. */
+.pt-person { padding: clamp(48px, 6vw, 88px) 0; border-top: 1px solid var(--border-strong); background: var(--bg-elev); }
+.pt-person-grid { display: grid; gap: 24px 64px; }
+@media (min-width: 900px) { .pt-person-grid { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: start; } }
+.pt-person-name { font-size: var(--fs-xl); font-weight: 800; letter-spacing: var(--tracking-head); line-height: 1.05; margin: 0 0 8px; }
+.pt-person-role { margin: 0; font-size: var(--fs-md); color: var(--text-muted); max-width: 32ch; }
+.pt-person-fact { margin: 0 0 28px; max-width: 58ch; }
+.pt-person-n { font-weight: 800; color: var(--drying-strong); }
+.pt-person-q { margin: 0 0 28px; padding: 0 0 0 20px; border-left: 3px solid var(--water); }
+.pt-person-q p { margin: 0 0 8px; font-size: var(--fs-xl); font-weight: 700; letter-spacing: var(--tracking-head); line-height: 1.2; max-width: 26ch; }
+.pt-person-q footer { font-size: var(--fs-sm); color: var(--text-muted); }
+.pt-person-link { margin: 0; padding-top: 20px; border-top: 1px solid var(--border-strong); font-size: var(--fs-md); max-width: 58ch; }

@@ -28,6 +28,8 @@ export const SOURCES: Source[] = [
   { key: 'eia', label: 'U.S. EIA, How much electricity does an American home use? 10,791 kWh per residential customer in 2022', url: 'https://www.eia.gov/tools/faqs/faq.php?id=97&t=3' },
   { key: 'watchlist', label: 'Patronus watchlist, experimental country model (data/watchlist.json)', url: 'data/watchlist.json' },
   { key: 'ledger', label: 'Patronus public ledger: SHA-256 of each data file, stamped with OpenTimestamps (data/ledger.json)', url: 'data/ledger.json' },
+  { key: 'e360', label: 'Kennedy Phiri and Freddie Clayton, Yale Environment 360, Nov 21, 2024: As drought shrivels hydro, this African nation pivots to solar (Emmanuel Simukoko, Lusaka)', url: 'https://e360.yale.edu/features/zambia-drought-hydro-solar-power' },
+  { key: 'lusakatimes', label: 'Lusaka Times, Mar 8, 2024: ZESCO announces 8-hour daily load-shedding starting March 11, 2024', url: 'https://www.lusakatimes.com/2024/03/08/zesco-announces-8-hour-daily-load-shedding-starting-march-11-2024/' },
 ];
 
 export const fnNum = (key: string) => SOURCES.findIndex((s) => s.key === key) + 1;

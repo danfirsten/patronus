@@ -5,6 +5,7 @@ import '../components/pitch/pitch.css';
 import { Sources } from '../components/pitch/sources';
 import { DataSources, type MetaSource } from '../components/pitch/DataSources';
 import { Roadmap } from '../components/pitch/Roadmap';
+import { Person } from '../components/pitch/Person';
 import {
   Audience, CalledIt, Cost, Hero, Next, Proof,
   type Crisis, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
@@ -63,6 +64,7 @@ export default function Pitch() {
   return (
     <div className="pt">
       <Hero kariba={karibaRow} />
+      <Person />
       <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} />
       <Cost />
       <DataSources sources={sources} missions={meta.data?.nasa_data_summary ?? null} nCountries={enso.data?.summary?.n_countries ?? null} loading={meta.loading} />
