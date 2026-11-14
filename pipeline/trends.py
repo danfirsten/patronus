@@ -7,8 +7,8 @@ For each HydroBASINS level-4 basin that contains WRI GPPD hydro plants:
      stay missing; nothing is interpolated.
   3. Mann-Kendall with Hamed-Rao autocorrelation correction (pymannkendall) for significance; Sen's slope computed on
      the real time axis (so gaps don't compress time), in cm/decade.
-  4. Same test on NASA POWER (MERRA-2) PRECTOTCORR monthly anomalies at up to 3 points per basin, slope in % of mean
-     per decade.
+  4. Same test on GPCP v2.3 monthly precipitation (overlap-area x cos-lat weighted 2.5-degree cells), slope in % of mean
+     per decade. NASA POWER (MERRA-2) point rainfall is kept as *_merra2 for comparison only (it has breaks).
   5. Benjamini-Hochberg FDR across basins, separately for TWS and precipitation. trend_class uses TWS q < 0.05.
 
 Writes web/public/data/trends.json and web/public/data/basins.geojson.
@@ -168,7 +168,56 @@ def bh_fdr(p: list[float | None]) -> list[float | None]:
     return q
 
 
-# ---------------------------------------------------------------- precipitation (NASA POWER)
+# ---------------------------------------------------------------- precipitation (GPCP primary)
+GPCP = RAW / "gpcp" / "precip.mon.mean.nc"
+
+
+def load_gpcp() -> tuple[np.ndarray, np.ndarray, np.ndarray] | None:
+    """GPCP v2.3 monthly precip (mm/day) on the 2002-04..2026-08 axis: (pr[month, lat, lon], lat, lon(-180..180))."""
+    if not GPCP.exists():
+        return None
+    d = xr.open_dataset(GPCP, decode_times=False, drop_variables=["time_bnds"])
+    per = (pd.Timestamp("1800-01-01") + pd.to_timedelta(d["time"].values, "D")).to_period("M")
+    pr = d["precip"].values.astype(float)
+    pr[(pr < 0) | (pr > 1e3)] = np.nan
+    pos = {p: i for i, p in enumerate(per)}
+    out = np.full((len(MONTHS), pr.shape[1], pr.shape[2]), np.nan)
+    for k, m in enumerate(MONTHS):
+        if m in pos:
+            out[k] = pr[pos[m]]
+    lon = d["lon"].values.astype(float)
+    return out, d["lat"].values.astype(float), np.where(lon > 180, lon - 360, lon)
+
+
+def gpcp_weights(geom, lat: np.ndarray, lon: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """2.5-degree cells overlapping geom; weight = overlap area (deg2) x cos(lat). Small basins get their 1-2 cells."""
+    minx, miny, maxx, maxy = geom.bounds
+    ii, jj, ww = [], [], []
+    for i, y in enumerate(lat):
+        if y + 1.25 < miny or y - 1.25 > maxy:
+            continue
+        for j, x in enumerate(lon):
+            if x + 1.25 < minx or x - 1.25 > maxx:
+                continue
+            a = geom.intersection(shapely.box(x - 1.25, y - 1.25, x + 1.25, y + 1.25)).area
+            if a > 0:
+                ii.append(i), jj.append(j), ww.append(a * np.cos(np.deg2rad(y)))
+    if not ii:  # fallback: nearest cell to the representative point
+        rp = geom.representative_point()
+        ii, jj, ww = [int(np.abs(lat - rp.y).argmin())], [int(np.abs(lon - rp.x).argmin())], [1.0]
+    return np.array(ii), np.array(jj), np.array(ww)
+
+
+def gpcp_series(g, geom) -> np.ndarray:
+    pr, lat, lon = g
+    ii, jj, ww = gpcp_weights(geom, lat, lon)
+    v = pr[:, ii, jj]
+    w = ww[None, :] * ~np.isnan(v)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(w.sum(1) > 0, np.nansum(v * w, 1) / w.sum(1), np.nan)
+
+
+# ---------------------------------------------------------------- precipitation (NASA POWER, cross-check)
 def precip_series(points: list[tuple[float, float]]) -> np.ndarray | None:
     frames = []
     for lon, lat in points:
@@ -302,8 +351,12 @@ def main() -> None:
             notes.append(f"TWS trend test failed for basin {r.basin_id}: {e}")
     print(f"[trends] TWS tests done ({time.time() - t0:.1f}s)")
 
-    # --- precipitation per basin (all basins; POWER is cached)
+    # --- precipitation per basin: GPCP v2.3 (primary), NASA POWER MERRA-2 (cross-check; has breaks at some points)
     geoms = dict(zip(basins["basin_id"], basins.geometry))
+    gp = load_gpcp()
+    if gp is None:
+        notes.append("GPCP file missing (data/raw/gpcp/precip.mon.mean.nc); precip fields fall back to null.")
+    gp_res = {bid: (precip_test(gpcp_series(gp, geoms[bid])) if gp is not None else None) for bid in geoms}
 
     def _pr(bid):
         try:  # same sampling as pipeline.basins.basin_sample_points(bid, 3), without reloading the basin file per call
@@ -314,13 +367,18 @@ def main() -> None:
         pr_res = dict(ex.map(_pr, basins["basin_id"].tolist()))
     n_pr_fail = sum(v is None for v in pr_res.values())
     if n_pr_fail:
-        notes.append(f"Precipitation trend unavailable for {n_pr_fail} basins (POWER request failed, data incomplete, "
-                     f"or mean rainfall < 0.05 mm/day); their precip fields are null.")
+        notes.append(f"MERRA-2 precipitation trend unavailable for {n_pr_fail} basins (POWER request failed, data incomplete, "
+                     f"or mean rainfall < 0.05 mm/day); their *_merra2 fields are null.")
+    n_gp_fail = sum(v is None for v in gp_res.values())
+    if n_gp_fail:
+        notes.append(f"GPCP precipitation trend unavailable for {n_gp_fail} basins (mean rainfall < 0.05 mm/day or "
+                     f"incomplete data); their precip fields are null.")
     print(f"[trends] precip tests done ({time.time() - t0:.1f}s)")
 
     ids = basins["basin_id"].tolist()
     tws_q = dict(zip(ids, bh_fdr([tws_res[b]["p"] if tws_res[b] else None for b in ids])))
-    pr_q = dict(zip(ids, bh_fdr([pr_res[b]["p"] if pr_res[b] else None for b in ids])))
+    pr_q = dict(zip(ids, bh_fdr([gp_res[b]["p"] if gp_res[b] else None for b in ids])))
+    pr_q_m2 = dict(zip(ids, bh_fdr([pr_res[b]["p"] if pr_res[b] else None for b in ids])))
 
     # --- plants per basin
     pl = plants.groupby(["basin_id", "name", "country_name"], as_index=False)["capacity_mw"].sum()
@@ -336,7 +394,7 @@ def main() -> None:
     out_basins = []
     for r in basins.itertuples():
         bid = r.basin_id
-        t, p = tws_res[bid], pr_res[bid]
+        t, p, pm = tws_res[bid], gp_res[bid], pr_res[bid]
         q = tws_q[bid]
         slope = t["slope_per_month"] * 120 if t else None
         if t is None or q is None:
@@ -377,6 +435,9 @@ def main() -> None:
             "precip_p": r_(p["p"], 5) if p else None,
             "precip_q": r_(pr_q[bid], 5),
             "precip_mean_mm_day": r_(p["mean_mm_day"], 3) if p else None,
+            "precip_slope_merra2_pct_per_decade": r_(pm["slope_pct_per_decade"], 2) if pm else None,
+            "precip_p_merra2": r_(pm["p"], 5) if pm else None,
+            "precip_q_merra2": r_(pr_q_m2[bid], 5),
             "trend_class": cls,
             "precip_decline_significant": precip_decline,
             "possible_groundwater_signal": gw_flag,
@@ -399,7 +460,8 @@ def main() -> None:
         ux = area_mean(tws, lat, ii, jj)
         ua = deseasonalize(ux)
         ut = trend_test(ua)
-        up_pr = precip_test(precip_series(grid_points(up_geom, 6)))
+        up_pr = precip_test(gpcp_series(gp, up_geom)) if gp is not None else None
+        up_pm = precip_test(precip_series(grid_points(up_geom, 6)))
         kariba = {
             "description": "Lake Kariba (Zambia/Zimbabwe). 'basin' is the HydroBASINS level-4 basin holding the Kariba "
                            "and Victoria Falls plants; 'upstream_catchment' is the whole Zambezi catchment draining into "
@@ -412,6 +474,8 @@ def main() -> None:
                 "significant": bool(ut and ut["p"] < ALPHA),
                 "precip_slope_pct_per_decade": r_(up_pr["slope_pct_per_decade"], 2) if up_pr else None,
                 "precip_p": r_(up_pr["p"], 5) if up_pr else None,
+                "precip_slope_merra2_pct_per_decade": r_(up_pm["slope_pct_per_decade"], 2) if up_pm else None,
+                "precip_p_merra2": r_(up_pm["p"], 5) if up_pm else None,
                 "series": series_block(ux, ua) | ({"sen_intercept_cm": r_(ut["intercept"], 3),
                                                     "sen_slope_cm_per_month": r_(ut["slope_per_month"], 5)} if ut else {}),
                 "note": "Single pre-specified test, so p is not FDR-adjusted.",
@@ -434,7 +498,8 @@ def main() -> None:
                             + " (a rough comparison: GRACE smears the lake's mass beyond the basin edge).")
             kariba["interpretation"] = (
                 f"The Kariba level-4 basin shows significant TWS drying ({kb['tws_slope_cm_per_decade']:+.1f} cm/decade, "
-                f"q={kb['tws_q']:.3f}) with no significant rainfall trend, while the whole catchment draining into Kariba "
+                f"q={kb['tws_q']:.3f}) with " + ("no significant" if not kb["precip_decline_significant"] else "a significant")
+                + f" rainfall decline (GPCP {kb['precip_slope_pct_per_decade']:+.1f}%/decade), while the whole catchment draining into Kariba "
                 f"(upper Zambezi, {up['area_km2']:,.0f} km2) shows none ({up['tws_slope_cm_per_decade']:+.1f} cm/decade, "
                 f"p={up['tws_p']:.2f}).{lake_txt} The decline is mostly the reservoir drawing down, not a long-term drying "
                 f"of the upper Zambezi: Kariba's risk comes from year-to-year (ENSO-driven) rainfall swings and release "
@@ -480,21 +545,22 @@ def main() -> None:
                             f"glacier and snow loss (Alps, Norway) or reservoir drawdown rather than less rain."),
         "top_drying": [{k: b[k] for k in ("basin_id", "name", "countries", "hydro_gw", "major_plants",
                                           "tws_slope_cm_per_decade", "tws_q", "precip_slope_pct_per_decade",
-                                          "precip_q", "precip_decline_significant", "possible_groundwater_signal",
+                                          "precip_q", "precip_slope_merra2_pct_per_decade", "precip_decline_significant", "possible_groundwater_signal",
                                           "tws_p_annual", "low_resolution")}
                        for b in drying[:10]],
     }
 
     doc = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "sources": ["gravis", "power", "gppd", "hydrobasins", "grealm"],
+        "sources": ["gravis", "gpcp", "power", "gppd", "hydrobasins", "grealm"],
         "method": ("Mann-Kendall (Hamed-Rao autocorrelation correction) + Sen slope on deseasonalized monthly GRACE/GRACE-FO "
                    "TWS (GFZ GravIS, 1-degree), 2002-04..2026-08; Benjamini-Hochberg FDR q<0.05 across basins. Basin value = "
                    "cos(latitude)-weighted mean of grid cells whose centres lie in the basin (nearest land cell if none). "
                    "Deseasonalized by subtracting each calendar month's mean; missing months (incl. the 2017-18 mission gap) "
-                   "are not interpolated; Sen slope is computed on the real time axis. Precipitation: NASA POWER (MERRA-2) "
-                   "PRECTOTCORR monthly at up to 3 points per basin, same test on deseasonalized anomalies, slope as % of "
-                   "mean per decade, separate BH-FDR."),
+                   "are not interpolated; Sen slope is computed on the real time axis. Precipitation: GPCP v2.3 monthly "
+                   "(NASA GSFC/GEWEX, 2.5-degree), mean of cells overlapping the basin weighted by overlap area x cos(lat), "
+                   "same test on deseasonalized anomalies, slope as % of mean per decade, separate BH-FDR. NASA POWER "
+                   "(MERRA-2) PRECTOTCORR at up to 3 points per basin is kept as *_merra2 for comparison."),
         "period": {"from": START, "to": END},
         "definitions": {
             "trend_class": "drying / wetting if TWS BH-FDR q < 0.05 with negative / positive Sen slope, else no_significant_trend",
@@ -523,8 +589,11 @@ def main() -> None:
             "variability (e.g. ENSO); a significant trend is not proof of a permanent change.",
             "The 2017-07..2018-05 GRACE/GRACE-FO gap and other missing months are left missing; the inter-mission bias is "
             "handled by GFZ's processing, not by us.",
-            "Precipitation is MERRA-2 reanalysis (NASA POWER) at a few points per basin, standing in for GPM IMERG (which needs "
-            "an Earthdata login); it is less accurate than gauge-corrected products in data-sparse regions.",
+            "Precipitation trends use GPCP v2.3 (satellite-gauge merge, 2.5 degrees), standing in for GPM IMERG (which needs "
+            "an Earthdata login). An earlier version used NASA POWER (MERRA-2) point rainfall, which has artificial breaks at "
+            "some points (e.g. Colombia drops to ~30% of normal in 2007-08 and 2021; Vietnam roughly doubles from the 1980s "
+            "to the 2010s) and could create false rainfall trends; it is kept only as *_merra2 for comparison. GPCP's 2.5-degree "
+            "cells smooth small, steep basins (Andes, Alps, Himalaya), and its data after 2021-11 are interim.",
             "Basins are weighted by installed capacity in WRI GPPD v1.3 (2021); plants built since then are missing.",
             "Glacier and ice-sheet mass loss (e.g. Alaska, Patagonia, High Mountain Asia) appears as TWS decline and may leak "
             "into neighbouring basins at GRACE resolution.",

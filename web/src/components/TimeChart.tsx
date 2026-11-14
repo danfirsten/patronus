@@ -81,7 +81,7 @@ export function TimeChart({
   if (hover !== null) {
     for (const l of layers) {
       if (!('label' in l) || !l.label) continue;
-      const fmt = ('fmt' in l && l.fmt) || ((l.axis === 'right' ? y2?.fmt : y.fmt) ?? ((v: number) => String(Math.round(v * 10) / 10)));
+      const fmt = ('fmt' in l && l.fmt) || ((('axis' in l && l.axis === 'right') ? y2?.fmt : y.fmt) ?? ((v: number) => String(Math.round(v * 10) / 10)));
       if (l.kind === 'line' || l.kind === 'bars' || l.kind === 'points') {
         const d = l.data.find((d) => +(toDate(d.x) ?? 0) === hover);
         if (d && isNum(d.y)) hoverRows.push({ label: l.label, value: fmt(d.y), color: l.color });
