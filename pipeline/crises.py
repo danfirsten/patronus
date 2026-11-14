@@ -1,0 +1,157 @@
+"""Hand-curated crisis timelines (with sources) -> web/public/data/crises.json.
+
+Every fact here was checked on Nov 14, 2026. [P] = primary source, [N] = news.
+"""
+from __future__ import annotations
+
+import json
+from datetime import datetime, timezone
+
+from pipeline.paths import OUT
+
+CRISES = [
+    {
+        "id": "brazil-2021",
+        "name": "Brazil 2021",
+        "countries": ["BRA"],
+        "enso": "La Nina",
+        "summary": "Worst inflows in the 91-year record (1931-2021). Handled with costly thermal power, imports and a new tariff surcharge, not rationing.",
+        "official_warning": {"date": "2021-05-27", "what": "National weather system issues a water-emergency alert for the Parana basin, June to September"},
+        "onset": {"date": "2021-05-28", "what": "Regulator Aneel sets the red level 2 tariff flag"},
+        "peak": "Southeast/Centre-West reservoirs bottom at 16.5% on 6 Oct 2021",
+        "costs": [
+            "New 'water scarcity' tariff flag R$14.20 per 100 kWh, 49.6% above the previous top flag; average bill up about 6.8% [P]",
+            "Crisis cost estimated at R$13.8 billion [N, Agencia Brasil]",
+        ],
+        "events": [
+            {"date": "2021-05-27", "type": "warning", "text": "Water-emergency alert for five states"},
+            {"date": "2021-05-28", "type": "action", "text": "Red level 2 tariff flag for June"},
+            {"date": "2021-09-01", "type": "action", "text": "'Water scarcity' tariff flag starts, valid to Apr 2022"},
+            {"date": "2021-10-06", "type": "peak", "text": "Southeast reservoirs at 16.5%"},
+        ],
+        "sources": [
+            {"title": "MME/CREG release, 31 Aug 2021", "url": "https://www.gov.br/mme/pt-br/assuntos/noticias/anexo-1-release-5a-reuniao-da-creg_31-08-2021.pdf"},
+            {"title": "Agencia Brasil, Aug 2021", "url": "https://agenciabrasil.ebc.com.br/economia/noticia/2021-08/aneel-cria-nova-bandeira-tarifaria-e-conta-de-luz-fica-mais-cara"},
+            {"title": "NOAA ONI table", "url": "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt"},
+        ],
+    },
+    {
+        "id": "sichuan-2022",
+        "name": "Sichuan 2022",
+        "countries": ["CHN-SC"],
+        "enso": "La Nina year; record heatwave and drought",
+        "summary": "A record heatwave and drought more than halved hydro output in a province that gets about 82% of its power from hydro. Factories were ordered to stop.",
+        "official_warning": None,
+        "onset": {"date": "2022-08-14", "what": "Industrial power cut in 19 of 21 cities from 15 Aug, extended to 25 Aug"},
+        "peak": "Hydro output down by more than half (State Grid Sichuan); rainfall 60% below normal in August",
+        "costs": [
+            "Toyota and CATL plants shut [N, Bloomberg]",
+            "No official provincial cost estimate found",
+        ],
+        "events": [
+            {"date": "2022-08-14", "type": "action", "text": "Industrial power cuts announced"},
+            {"date": "2022-08-15", "type": "peak", "text": "Factories in 19 of 21 cities stop"},
+            {"date": "2022-08-25", "type": "action", "text": "Cuts extended to 25 Aug"},
+        ],
+        "sources": [
+            {"title": "Caixin, 17 Aug 2022", "url": "https://www.caixinglobal.com/2022-08-17/"},
+            {"title": "Yicai Global", "url": "https://www.yicaiglobal.com/news/china-sichuan-province-rations-power-as-record-heat-drought-halves-hydropower-output"},
+            {"title": "Insurance Journal, 22 Aug 2022", "url": "https://www.insurancejournal.com/news/international/2022/08/22/681399.htm"},
+        ],
+    },
+    {
+        "id": "vietnam-2023",
+        "name": "Northern Vietnam 2023",
+        "countries": ["VNM"],
+        "enso": "El Nino developing",
+        "summary": "Heat and drought cut northern hydro while demand peaked. Rolling cuts hit factories for about a month.",
+        "official_warning": {"date": "2023-05-10", "what": "EVN tells the industry ministry of a 'high risk of serious shortage'"},
+        "onset": {"date": "2023-05-25", "what": "Rolling power cuts in the north (late May; exact first day not published)"},
+        "peak": "5.4 GW peak deficit; about 900 GWh unserved, May to June",
+        "costs": [
+            "About $1.4 billion, roughly 0.3% of GDP (World Bank preliminary estimate) [P]",
+            "Firms reported revenue losses of up to 10% [P]",
+        ],
+        "events": [
+            {"date": "2023-05-10", "type": "warning", "text": "EVN warns of serious shortage"},
+            {"date": "2023-05-25", "type": "action", "text": "Rolling cuts begin (approx.)"},
+            {"date": "2023-06-22", "type": "peak", "text": "Supply restored around 22-23 June"},
+        ],
+        "sources": [
+            {"title": "World Bank, Taking Stock, Aug 2023", "url": "https://openknowledge.worldbank.org/bitstreams/824de743-3c02-4123-8f30-35f1e6236b78/download"},
+            {"title": "EVN, May 2023", "url": "https://en.evn.com.vn/d6/news/Northern-region-faces-high-risk-of-serious-electricity-shortage-66-163-3461.aspx"},
+        ],
+    },
+    {
+        "id": "ecuador-2023-24",
+        "name": "Ecuador 2023-24",
+        "countries": ["ECU"],
+        "enso": "Wave 1 El Nino; late-2024 wave ENSO-neutral",
+        "summary": "Three waves of cuts. The grid operator warned repeatedly; the worst came in late 2024 with 14 hours a day without power.",
+        "official_warning": {"date": "2023-10-24", "what": "Grid operator CENACE asks for rationing; in Dec 2023 it warns of blackouts in the 2024-25 dry seasons"},
+        "onset": {"date": "2023-10-27", "what": "Cuts of 3-4 hours a day begin"},
+        "peak": "14 hours a day from 24 Oct 2024; deficit up to about 1,700 MW",
+        "costs": [
+            "About 1-1.5% of GDP (Finance Minister Juan Carlos Vega) [N reporting official]",
+            "About $12 million per hour of national blackout (Guayaquil Chamber of Commerce) [N]",
+        ],
+        "events": [
+            {"date": "2023-10-24", "type": "warning", "text": "CENACE asks for rationing"},
+            {"date": "2023-10-27", "type": "action", "text": "Wave 1: cuts of 3-4 h/day"},
+            {"date": "2023-12-15", "type": "warning", "text": "CENACE warns of blackouts in 2024-25 dry seasons (Dec 2023)"},
+            {"date": "2024-04-14", "type": "action", "text": "Wave 2 of cuts (approx.)"},
+            {"date": "2024-09-22", "type": "action", "text": "Wave 3 of cuts (approx.)"},
+            {"date": "2024-10-24", "type": "peak", "text": "Cuts raised to 14 hours a day"},
+        ],
+        "sources": [
+            {"title": "Primicias: start of rationing, Oct 2023", "url": "https://primicias.ec/noticias/economia/inicio-periodo-racionamiento-electricidad-cortes-luz"},
+            {"title": "RNZ: 14-hour cuts, Oct 2024", "url": "https://www.rnz.co.nz/news/top/531977/ecuador-extends-drought-induced-power-cuts-to-14-hours-a-day"},
+            {"title": "Prensa Latina: GDP impact", "url": "https://www.plenglish.com/?p=248853"},
+            {"title": "Primicias: $12M per hour", "url": "https://primicias.ec/economia/camara-comercio-guayaquil-dice-hora-apagon-le-costo-ecuador-usd-12-millones-78276"},
+        ],
+    },
+    {
+        "id": "kariba-2024",
+        "name": "Lake Kariba 2024",
+        "countries": ["ZMB", "ZWE"],
+        "enso": "El Nino 2023/24",
+        "summary": "El Nino drained the world's largest man-made reservoir. Zambia, which gets about 86% of its power from hydro, cut power for most of the day.",
+        "official_warning": {"date": "2023-12-28", "what": "Zambezi River Authority cuts the 2024 water allocation from 30 to 16 billion m3"},
+        "onset": {"date": "2024-03-11", "what": "Zambia begins 8 hours a day of load-shedding"},
+        "peak": "Lake at 475.91 m, 2.89% usable, on 11 Dec 2024; Kariba North generation halted about 14 Sep 2024",
+        "costs": [
+            "IMF cut Zambia's 2024 growth forecast from 4.7% to 1.2%, citing power shortfalls [P]",
+            "Emergency imports and diesel at 17-26 US cents/kWh: about $51M a month for 300 MW (ZESCO filing) [P]",
+            "Load-shedding reported up to 21 hours a day [N]",
+        ],
+        "events": [
+            {"date": "2023-12-28", "type": "warning", "text": "ZRA cuts 2024 allocation to 16 BCM"},
+            {"date": "2024-03-11", "type": "action", "text": "Zambia: 8 h/day load-shedding"},
+            {"date": "2024-05-20", "type": "action", "text": "Zambia: 12 h/day"},
+            {"date": "2024-09-14", "type": "peak", "text": "Kariba North generation halted (approx.)"},
+            {"date": "2024-12-11", "type": "peak", "text": "Lake at 2.89% usable storage"},
+        ],
+        "sources": [
+            {"title": "ZRA press statement, 28 Dec 2023", "url": "https://www.zambezira.org/sites/default/files/Press%20Statement%20-%20Water%20allocation%20at%20Kariba%20Dam_28%20December%202023_Final.pdf"},
+            {"title": "Lusaka Times, 11 Mar 2024", "url": "https://www.lusakatimes.com/2024/03/11/8-hour-load-shedding-in-zambia-begins/"},
+            {"title": "IMF, 11 Nov 2024", "url": "https://www.imf.org/en/news/articles/2024/11/11/pr-24413-zambia-imf-reaches-agreement-on-4th-review-of-ecf"},
+            {"title": "ZESCO tariff application to ERB, Jul 2024", "url": "https://www.erb.org.zm/wp-content/uploads/files/ZESCO-Tarrif-Application-Submission.pdf"},
+            {"title": "Pindula, Dec 2024", "url": "https://pindula.co.zw/2024/12/16/kariba-lake-usable-storage-plummets-to-2-89"},
+        ],
+    },
+]
+
+
+def main() -> None:
+    out = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "sources": ["news", "world_bank", "imf", "zra", "zesco_erb", "oni"],
+        "crises": CRISES,
+        "notes": ["Dates marked approx. are from news reports without an exact official date."],
+    }
+    (OUT / "crises.json").write_text(json.dumps(out, indent=1, ensure_ascii=False))
+    print("wrote crises.json")
+
+
+if __name__ == "__main__":
+    main()
