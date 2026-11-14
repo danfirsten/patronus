@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T20:19:11+00:00",
+ "generated_at": "2026-11-14T20:24:54+00:00",
  "sources": [
   "ember_monthly",
   "ember_yearly",
@@ -20,8 +20,8 @@
    "name": "Croatia",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.389,
-   "p_any_shortfall_6m": 0.679,
+   "max_p_shortfall": 0.391,
+   "p_any_shortfall_6m": 0.672,
    "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -35,31 +35,31 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.389,
-     "p_severe": 0.286,
-     "anomaly_p10_pct": -41.6,
-     "anomaly_p50_pct": -10.7,
-     "anomaly_p90_pct": 30.2,
+     "p_shortfall": 0.391,
+     "p_severe": 0.308,
+     "anomaly_p10_pct": -43.9,
+     "anomaly_p50_pct": -9.5,
+     "anomaly_p90_pct": 22.7,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.316,
-     "p_severe": 0.152,
+     "p_shortfall": 0.338,
+     "p_severe": 0.197,
      "anomaly_p10_pct": -35.3,
-     "anomaly_p50_pct": -6.6,
-     "anomaly_p90_pct": 21.6,
+     "anomaly_p50_pct": -5.8,
+     "anomaly_p90_pct": 20.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.291,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -35.7,
-     "anomaly_p50_pct": -4.7,
-     "anomaly_p90_pct": 37.4,
+     "p_shortfall": 0.28,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -34.1,
+     "anomaly_p50_pct": -3.5,
+     "anomaly_p90_pct": 33.9,
      "risk_level": "watch"
     },
     {
@@ -67,43 +67,228 @@
      "horizon": 4,
      "p_shortfall": 0.232,
      "p_severe": 0.12,
-     "anomaly_p10_pct": -31.1,
-     "anomaly_p50_pct": -4.8,
-     "anomaly_p90_pct": 48.0,
+     "anomaly_p10_pct": -29.0,
+     "anomaly_p50_pct": -2.0,
+     "anomaly_p90_pct": 33.9,
      "risk_level": "watch"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.207,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -30.5,
-     "anomaly_p50_pct": -1.6,
-     "anomaly_p90_pct": 40.2,
+     "p_shortfall": 0.215,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -29.3,
+     "anomaly_p50_pct": -1.4,
+     "anomaly_p90_pct": 38.3,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.258,
-     "p_severe": 0.108,
-     "anomaly_p10_pct": -22.6,
-     "anomaly_p50_pct": -0.6,
-     "anomaly_p90_pct": 48.4,
+     "p_shortfall": 0.26,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -20.9,
+     "anomaly_p50_pct": 0.9,
+     "anomaly_p90_pct": 46.3,
      "risk_level": "watch"
     }
    ],
    "drivers": [
+    "Root-zone soil drier than normal (-3.3 SD)",
     "Basin water storage (GRACE-FO, 2026-08) 2.6 SD below normal",
-    "Root-zone soil drier than normal (-2.5 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -5% in this phase",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -5% in this phase",
     "Rain (GPCP) near the hydro plants 39% below normal for the last 3 months"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 16.3,
-    "p90": 91.8
+    "p50": 13.5,
+    "p90": 92.9
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "AUT",
+   "name": "Austria",
+   "tier": 1,
+   "risk_level": "watch",
+   "max_p_shortfall": 0.363,
+   "p_any_shortfall_6m": 0.679,
+   "alarm": true,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-10",
+   "unforecast_gap_months": [
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-10. Months 2026-11..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": -41.1,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.363,
+     "p_severe": 0.308,
+     "anomaly_p10_pct": -39.3,
+     "anomaly_p50_pct": -9.4,
+     "anomaly_p90_pct": 25.3,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.314,
+     "p_severe": 0.197,
+     "anomaly_p10_pct": -40.1,
+     "anomaly_p50_pct": -5.8,
+     "anomaly_p90_pct": 15.9,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.311,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -33.6,
+     "anomaly_p50_pct": -1.7,
+     "anomaly_p90_pct": 25.9,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.226,
+     "p_severe": 0.12,
+     "anomaly_p10_pct": -27.7,
+     "anomaly_p50_pct": 2.0,
+     "anomaly_p90_pct": 41.3,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.218,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -25.8,
+     "anomaly_p50_pct": -1.3,
+     "anomaly_p90_pct": 56.6,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.2,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -22.7,
+     "anomaly_p50_pct": 2.3,
+     "anomaly_p90_pct": 70.6,
+     "risk_level": "watch"
+    }
+   ],
+   "drivers": [
+    "Hydro output 41% below normal in the latest Ember month used (2026-09)",
+    "Basin water storage (GRACE-FO, 2026-08) 2.6 SD below normal",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -6% in this phase",
+    "12-month rainfall 32% below normal"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 47.2,
+    "p90": 446.5
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "MNE",
+   "name": "Montenegro",
+   "tier": 1,
+   "risk_level": "watch",
+   "max_p_shortfall": 0.354,
+   "p_any_shortfall_6m": 0.669,
+   "alarm": true,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-09",
+   "unforecast_gap_months": [
+    "2026-10",
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": -13.8,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.354,
+     "p_severe": 0.308,
+     "anomaly_p10_pct": -46.9,
+     "anomaly_p50_pct": -7.3,
+     "anomaly_p90_pct": 35.5,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.246,
+     "p_severe": 0.154,
+     "anomaly_p10_pct": -34.8,
+     "anomaly_p50_pct": 10.6,
+     "anomaly_p90_pct": 62.4,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.179,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -29.4,
+     "anomaly_p50_pct": 17.9,
+     "anomaly_p90_pct": 56.1,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.182,
+     "p_severe": 0.12,
+     "anomaly_p10_pct": -31.5,
+     "anomaly_p50_pct": 3.2,
+     "anomaly_p90_pct": 43.3,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.191,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -28.5,
+     "anomaly_p50_pct": -1.2,
+     "anomaly_p90_pct": 49.2,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.243,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -26.5,
+     "anomaly_p50_pct": 1.2,
+     "anomaly_p90_pct": 58.9,
+     "risk_level": "watch"
+    }
+   ],
+   "drivers": [
+    "Root-zone soil drier than normal (-4.8 SD)",
+    "Rain (GPCP) near the hydro plants 49% below normal for the last 3 months",
+    "Basin water storage (GRACE-FO, 2026-08) 2.3 SD below normal",
+    "Hydro output 14% below normal in the latest Ember month used (2026-09)"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 1.5,
+    "p90": 20.1
    },
    "label_basis": "capacity_factor"
   },
@@ -112,8 +297,8 @@
    "name": "El Salvador",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.342,
-   "p_any_shortfall_6m": 0.777,
+   "max_p_shortfall": 0.332,
+   "p_any_shortfall_6m": 0.783,
    "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -137,447 +322,75 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.309,
-     "p_severe": 0.3,
-     "anomaly_p10_pct": -58.1,
-     "anomaly_p50_pct": -8.3,
-     "anomaly_p90_pct": 35.2,
+     "p_shortfall": 0.293,
+     "p_severe": 0.293,
+     "anomaly_p10_pct": -52.7,
+     "anomaly_p50_pct": -6.7,
+     "anomaly_p90_pct": 36.5,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.342,
-     "p_severe": 0.259,
-     "anomaly_p10_pct": -49.8,
-     "anomaly_p50_pct": -3.8,
-     "anomaly_p90_pct": 41.1,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.316,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -49.8,
-     "anomaly_p50_pct": -3.9,
-     "anomaly_p90_pct": 37.2,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.262,
-     "p_severe": 0.12,
-     "anomaly_p10_pct": -37.9,
-     "anomaly_p50_pct": -5.2,
-     "anomaly_p90_pct": 44.0,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.198,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -29.8,
-     "anomaly_p50_pct": -1.9,
-     "anomaly_p90_pct": 50.3,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.168,
-     "p_severe": 0.108,
-     "anomaly_p10_pct": -26.4,
-     "anomaly_p50_pct": -2.4,
-     "anomaly_p90_pct": 54.5,
-     "risk_level": "low"
-    }
-   ],
-   "drivers": [
-    "Root-zone soil drier than normal (-5.8 SD)",
-    "Unusually hot over the basins (+3.4 SD, 3-month mean)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -9% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 2.2 SD below normal"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 2.2,
-    "p90": 20.9
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "AUT",
-   "name": "Austria",
-   "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.337,
-   "p_any_shortfall_6m": 0.668,
-   "alarm": true,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-10",
-   "unforecast_gap_months": [
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-10. Months 2026-11..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -41.1,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.337,
-     "p_severe": 0.288,
-     "anomaly_p10_pct": -39.1,
-     "anomaly_p50_pct": -9.0,
-     "anomaly_p90_pct": 17.9,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.316,
-     "p_severe": 0.259,
-     "anomaly_p10_pct": -39.8,
-     "anomaly_p50_pct": -4.5,
-     "anomaly_p90_pct": 24.9,
+     "p_shortfall": 0.332,
+     "p_severe": 0.332,
+     "anomaly_p10_pct": -50.7,
+     "anomaly_p50_pct": -4.9,
+     "anomaly_p90_pct": 36.7,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
      "p_shortfall": 0.306,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -32.7,
-     "anomaly_p50_pct": -0.2,
-     "anomaly_p90_pct": 22.9,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.226,
-     "p_severe": 0.12,
-     "anomaly_p10_pct": -27.8,
-     "anomaly_p50_pct": -0.6,
-     "anomaly_p90_pct": 48.3,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.209,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -26.4,
-     "anomaly_p50_pct": 1.7,
-     "anomaly_p90_pct": 63.1,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.201,
-     "p_severe": 0.108,
-     "anomaly_p10_pct": -20.6,
-     "anomaly_p50_pct": 0.5,
-     "anomaly_p90_pct": 79.0,
-     "risk_level": "watch"
-    }
-   ],
-   "drivers": [
-    "Hydro output 41% below normal in 2026-09 (latest Ember month used)",
-    "Basin water storage (GRACE-FO, 2026-08) 2.6 SD below normal",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -6% in this phase",
-    "12-month rainfall 32% below normal"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 36.0,
-    "p90": 429.2
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "MNE",
-   "name": "Montenegro",
-   "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.335,
-   "p_any_shortfall_6m": 0.683,
-   "alarm": true,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-09",
-   "unforecast_gap_months": [
-    "2026-10",
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -13.8,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.335,
-     "p_severe": 0.3,
-     "anomaly_p10_pct": -43.6,
-     "anomaly_p50_pct": -5.4,
-     "anomaly_p90_pct": 46.5,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.252,
-     "p_severe": 0.152,
-     "anomaly_p10_pct": -34.5,
-     "anomaly_p50_pct": 10.2,
-     "anomaly_p90_pct": 52.5,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.178,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -34.5,
-     "anomaly_p50_pct": 10.9,
-     "anomaly_p90_pct": 61.9,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.18,
-     "p_severe": 0.12,
-     "anomaly_p10_pct": -29.3,
-     "anomaly_p50_pct": 3.1,
-     "anomaly_p90_pct": 57.6,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.182,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -26.6,
-     "anomaly_p50_pct": -2.3,
-     "anomaly_p90_pct": 47.7,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.237,
-     "p_severe": 0.116,
-     "anomaly_p10_pct": -25.1,
-     "anomaly_p50_pct": 0.8,
-     "anomaly_p90_pct": 60.7,
-     "risk_level": "watch"
-    }
-   ],
-   "drivers": [
-    "Root-zone soil drier than normal (-3.1 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +2% in this phase",
-    "Rain (GPCP) near the hydro plants 49% below normal for the last 3 months",
-    "Basin water storage (GRACE-FO, 2026-08) 2.3 SD below normal"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 1.1,
-    "p90": 19.0
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "BIH",
-   "name": "Bosnia Herzegovina",
-   "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.318,
-   "p_any_shortfall_6m": 0.816,
-   "alarm": true,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-09",
-   "unforecast_gap_months": [
-    "2026-10",
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -5.3,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.318,
-     "p_severe": 0.241,
-     "anomaly_p10_pct": -33.2,
-     "anomaly_p50_pct": -7.6,
-     "anomaly_p90_pct": 22.7,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.288,
      "p_severe": 0.134,
-     "anomaly_p10_pct": -34.5,
-     "anomaly_p50_pct": -4.5,
-     "anomaly_p90_pct": 22.8,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.225,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -31.5,
-     "anomaly_p50_pct": -4.1,
-     "anomaly_p90_pct": 32.9,
+     "anomaly_p10_pct": -46.4,
+     "anomaly_p50_pct": -5.6,
+     "anomaly_p90_pct": 37.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.205,
+     "p_shortfall": 0.252,
      "p_severe": 0.12,
-     "anomaly_p10_pct": -23.8,
-     "anomaly_p50_pct": -3.8,
-     "anomaly_p90_pct": 48.3,
+     "anomaly_p10_pct": -37.3,
+     "anomaly_p50_pct": -4.7,
+     "anomaly_p90_pct": 40.6,
      "risk_level": "watch"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.211,
-     "p_severe": 0.091,
-     "anomaly_p10_pct": -24.1,
-     "anomaly_p50_pct": -3.9,
-     "anomaly_p90_pct": 38.6,
+     "p_shortfall": 0.207,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -28.5,
+     "anomaly_p50_pct": -4.0,
+     "anomaly_p90_pct": 45.1,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.242,
-     "p_severe": 0.06,
-     "anomaly_p10_pct": -18.4,
-     "anomaly_p50_pct": -1.9,
-     "anomaly_p90_pct": 43.9,
-     "risk_level": "watch"
-    }
-   ],
-   "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +2% in this phase",
-    "Rain (GPCP) near the hydro plants 49% below normal for the last 3 months",
-    "Basin water storage (GRACE-FO, 2026-08) 2.4 SD below normal",
-    "Root-zone soil drier than normal (-1.9 SD)"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 9.5,
-    "p90": 57.9
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "NGA",
-   "name": "Nigeria",
-   "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.316,
-   "p_any_shortfall_6m": 0.575,
-   "alarm": false,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-08",
-   "unforecast_gap_months": [
-    "2026-09",
-    "2026-10",
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-08. Months 2026-09..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month). Ember data is older than the 2-month lag the model was trained with, so the persistence input is missing and the forecast leans on NASA water and ENSO inputs.",
-   "latest_cf_anom_pct": 52.2,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.316,
-     "p_severe": 0.23,
-     "anomaly_p10_pct": -46.5,
-     "anomaly_p50_pct": 0.6,
-     "anomaly_p90_pct": 52.8,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.227,
-     "p_severe": 0.152,
-     "anomaly_p10_pct": -30.5,
-     "anomaly_p50_pct": 2.2,
-     "anomaly_p90_pct": 48.9,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.218,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -38.2,
-     "anomaly_p50_pct": 0.2,
-     "anomaly_p90_pct": 40.0,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.169,
-     "p_severe": 0.12,
-     "anomaly_p10_pct": -27.9,
-     "anomaly_p50_pct": 3.3,
-     "anomaly_p90_pct": 48.2,
+     "p_shortfall": 0.17,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -25.7,
+     "anomaly_p50_pct": -0.7,
+     "anomaly_p90_pct": 50.8,
      "risk_level": "low"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.2,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -32.3,
-     "anomaly_p50_pct": 3.7,
-     "anomaly_p90_pct": 49.4,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.205,
-     "p_severe": 0.116,
-     "anomaly_p10_pct": -30.2,
-     "anomaly_p50_pct": 4.2,
-     "anomaly_p90_pct": 52.8,
-     "risk_level": "watch"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +4% in this phase",
-    "Unusually hot over the basins (+2.7 SD, 3-month mean)",
-    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD above normal",
-    "Root-zone soil drier than normal (-1.5 SD)"
+    "Root-zone soil drier than normal (-5.0 SD)",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -9% in this phase",
+    "Basin water storage (GRACE-FO, 2026-08) 2.2 SD below normal",
+    "Unusually hot over the basins (+2.8 SD, 3-month mean)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 0.0,
-    "p90": 113.5
+    "p50": 2.2,
+    "p90": 19.5
    },
    "label_basis": "capacity_factor"
   },
@@ -586,8 +399,8 @@
    "name": "Kyrgyzstan",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.308,
-   "p_any_shortfall_6m": 0.736,
+   "max_p_shortfall": 0.327,
+   "p_any_shortfall_6m": 0.752,
    "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -608,75 +421,75 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.308,
-     "p_severe": 0.23,
-     "anomaly_p10_pct": -39.8,
-     "anomaly_p50_pct": -2.3,
-     "anomaly_p90_pct": 17.6,
+     "p_shortfall": 0.307,
+     "p_severe": 0.167,
+     "anomaly_p10_pct": -42.5,
+     "anomaly_p50_pct": -3.9,
+     "anomaly_p90_pct": 20.2,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.299,
-     "p_severe": 0.152,
-     "anomaly_p10_pct": -41.1,
-     "anomaly_p50_pct": -4.0,
-     "anomaly_p90_pct": 16.0,
+     "p_shortfall": 0.327,
+     "p_severe": 0.197,
+     "anomaly_p10_pct": -42.5,
+     "anomaly_p50_pct": -6.1,
+     "anomaly_p90_pct": 18.9,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.29,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -40.5,
-     "anomaly_p50_pct": -4.4,
-     "anomaly_p90_pct": 15.8,
+     "p_shortfall": 0.276,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -40.7,
+     "anomaly_p50_pct": -2.8,
+     "anomaly_p90_pct": 20.5,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.265,
+     "p_shortfall": 0.263,
      "p_severe": 0.12,
-     "anomaly_p10_pct": -34.1,
-     "anomaly_p50_pct": -1.0,
-     "anomaly_p90_pct": 21.0,
+     "anomaly_p10_pct": -31.7,
+     "anomaly_p50_pct": 0.1,
+     "anomaly_p90_pct": 20.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.274,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -28.1,
+     "p_shortfall": 0.273,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -25.7,
      "anomaly_p50_pct": -2.4,
-     "anomaly_p90_pct": 23.7,
+     "anomaly_p90_pct": 25.0,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.207,
-     "p_severe": 0.116,
-     "anomaly_p10_pct": -28.5,
-     "anomaly_p50_pct": -1.2,
-     "anomaly_p90_pct": 30.9,
+     "p_shortfall": 0.206,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -23.9,
+     "anomaly_p50_pct": -2.1,
+     "anomaly_p90_pct": 29.3,
      "risk_level": "watch"
     }
    ],
    "drivers": [
-    "Root-zone soil drier than normal (-5.1 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +11% in this phase",
+    "Root-zone soil drier than normal (-3.0 SD)",
     "Basin water storage (GRACE-FO, 2026-08) 1.7 SD below normal",
-    "Unusually hot over the basins (+1.9 SD, 3-month mean)"
+    "Rain (GPCP) near the hydro plants 17% below normal for the last 3 months",
+    "Unusually hot over the basins (+1.1 SD, 3-month mean)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 16.1,
-    "p90": 214.1
+    "p50": 19.7,
+    "p90": 217.2
    },
    "label_basis": "capacity_factor"
   },
@@ -685,8 +498,8 @@
    "name": "Latvia",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.294,
-   "p_any_shortfall_6m": 0.721,
+   "max_p_shortfall": 0.313,
+   "p_any_shortfall_6m": 0.711,
    "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -700,172 +513,262 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.294,
-     "p_severe": 0.23,
-     "anomaly_p10_pct": -39.9,
-     "anomaly_p50_pct": 21.7,
-     "anomaly_p90_pct": 74.1,
+     "p_shortfall": 0.313,
+     "p_severe": 0.167,
+     "anomaly_p10_pct": -38.0,
+     "anomaly_p50_pct": 21.9,
+     "anomaly_p90_pct": 72.1,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.272,
-     "p_severe": 0.102,
-     "anomaly_p10_pct": -37.3,
-     "anomaly_p50_pct": 5.1,
-     "anomaly_p90_pct": 57.2,
+     "p_shortfall": 0.257,
+     "p_severe": 0.103,
+     "anomaly_p10_pct": -38.2,
+     "anomaly_p50_pct": 5.6,
+     "anomaly_p90_pct": 67.6,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.246,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -42.3,
-     "anomaly_p50_pct": 6.9,
-     "anomaly_p90_pct": 55.4,
+     "p_shortfall": 0.25,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -41.6,
+     "anomaly_p50_pct": 8.8,
+     "anomaly_p90_pct": 58.6,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.188,
+     "p_shortfall": 0.196,
      "p_severe": 0.12,
-     "anomaly_p10_pct": -33.5,
-     "anomaly_p50_pct": 9.7,
-     "anomaly_p90_pct": 68.4,
+     "anomaly_p10_pct": -36.1,
+     "anomaly_p50_pct": 10.5,
+     "anomaly_p90_pct": 61.0,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.206,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -30.6,
-     "anomaly_p50_pct": 10.1,
-     "anomaly_p90_pct": 56.7,
+     "p_shortfall": 0.217,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -29.9,
+     "anomaly_p50_pct": 10.3,
+     "anomaly_p90_pct": 58.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.197,
-     "p_severe": 0.116,
-     "anomaly_p10_pct": -28.0,
-     "anomaly_p50_pct": 11.8,
-     "anomaly_p90_pct": 73.9,
+     "p_shortfall": 0.198,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -28.7,
+     "anomaly_p50_pct": 12.3,
+     "anomaly_p90_pct": 71.8,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "Hydro output 87% above normal in 2026-09 (latest Ember month used)",
-    "Root-zone soil drier than normal (-2.5 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -8% in this phase",
+    "Hydro output 87% above normal in the latest Ember month used (2026-09)",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -8% in this phase",
+    "Root-zone soil drier than normal (-2.0 SD)",
     "12-month rainfall 17% below normal"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
     "p50": 0.0,
-    "p90": 41.6
+    "p90": 42.7
    },
    "label_basis": "capacity_factor"
   },
   {
-   "iso3": "CHE",
-   "name": "Switzerland",
+   "iso3": "BIH",
+   "name": "Bosnia Herzegovina",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.269,
-   "p_any_shortfall_6m": 0.65,
-   "alarm": false,
+   "max_p_shortfall": 0.305,
+   "p_any_shortfall_6m": 0.809,
+   "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
-   "last_observed_month": "2026-05",
+   "last_observed_month": "2026-09",
    "unforecast_gap_months": [
-    "2026-06",
-    "2026-07",
-    "2026-08",
-    "2026-09",
     "2026-10",
     "2026-11"
    ],
-   "gap_note": "Ember data ends 2026-05. Months 2026-06..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month). Ember data is older than the 2-month lag the model was trained with, so the persistence input is missing and the forecast leans on NASA water and ENSO inputs.",
-   "latest_cf_anom_pct": -22.1,
+   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": -5.3,
    "months": [
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.233,
-     "p_severe": 0.233,
-     "anomaly_p10_pct": -45.6,
-     "anomaly_p50_pct": -6.5,
-     "anomaly_p90_pct": 9.6,
+     "p_shortfall": 0.305,
+     "p_severe": 0.296,
+     "anomaly_p10_pct": -36.9,
+     "anomaly_p50_pct": -7.5,
+     "anomaly_p90_pct": 25.7,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.269,
-     "p_severe": 0.259,
-     "anomaly_p10_pct": -41.3,
-     "anomaly_p50_pct": -5.8,
-     "anomaly_p90_pct": 7.6,
+     "p_shortfall": 0.295,
+     "p_severe": 0.139,
+     "anomaly_p10_pct": -34.4,
+     "anomaly_p50_pct": -5.6,
+     "anomaly_p90_pct": 24.0,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.247,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -39.6,
-     "anomaly_p50_pct": -4.4,
-     "anomaly_p90_pct": 13.7,
+     "p_shortfall": 0.226,
+     "p_severe": 0.126,
+     "anomaly_p10_pct": -29.4,
+     "anomaly_p50_pct": -3.7,
+     "anomaly_p90_pct": 41.1,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.22,
+     "p_shortfall": 0.21,
      "p_severe": 0.12,
-     "anomaly_p10_pct": -33.3,
-     "anomaly_p50_pct": -1.0,
-     "anomaly_p90_pct": 17.1,
+     "anomaly_p10_pct": -23.6,
+     "anomaly_p50_pct": -1.2,
+     "anomaly_p90_pct": 36.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.2,
-     "p_severe": 0.127,
-     "anomaly_p10_pct": -25.1,
-     "anomaly_p50_pct": -1.3,
-     "anomaly_p90_pct": 18.6,
+     "p_shortfall": 0.219,
+     "p_severe": 0.097,
+     "anomaly_p10_pct": -23.4,
+     "anomaly_p50_pct": -0.9,
+     "anomaly_p90_pct": 33.1,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.186,
-     "p_severe": 0.108,
-     "anomaly_p10_pct": -20.1,
-     "anomaly_p50_pct": -3.8,
-     "anomaly_p90_pct": 33.3,
-     "risk_level": "low"
+     "p_shortfall": 0.24,
+     "p_severe": 0.068,
+     "anomaly_p10_pct": -18.7,
+     "anomaly_p50_pct": -1.7,
+     "anomaly_p90_pct": 39.6,
+     "risk_level": "watch"
     }
    ],
    "drivers": [
-    "Root-zone soil drier than normal (-5.2 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -2% in this phase",
-    "12-month rainfall 32% below normal",
-    "Basin water storage (GRACE-FO, 2026-08) 2.0 SD below normal"
+    "Root-zone soil drier than normal (-2.5 SD)",
+    "Rain (GPCP) near the hydro plants 49% below normal for the last 3 months",
+    "Basin water storage (GRACE-FO, 2026-08) 2.4 SD below normal",
+    "El Nino conditions (ONI +2.5)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 46.4,
-    "p90": 399.1
+    "p50": 8.2,
+    "p90": 59.0
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "CAN",
+   "name": "Canada",
+   "tier": 1,
+   "risk_level": "watch",
+   "max_p_shortfall": 0.279,
+   "p_any_shortfall_6m": 0.448,
+   "alarm": false,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-08",
+   "unforecast_gap_months": [
+    "2026-09",
+    "2026-10",
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-08. Months 2026-09..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month). Ember data is older than the 2-month lag the model was trained with, so the persistence input is missing and the forecast leans on NASA water and ENSO inputs.",
+   "latest_cf_anom_pct": -7.5,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.279,
+     "p_severe": 0.121,
+     "anomaly_p10_pct": -31.8,
+     "anomaly_p50_pct": -6.3,
+     "anomaly_p90_pct": 12.8,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.249,
+     "p_severe": 0.139,
+     "anomaly_p10_pct": -33.7,
+     "anomaly_p50_pct": -5.4,
+     "anomaly_p90_pct": 10.3,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.187,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -31.0,
+     "anomaly_p50_pct": -2.7,
+     "anomaly_p90_pct": 17.5,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.18,
+     "p_severe": 0.12,
+     "anomaly_p10_pct": -20.9,
+     "anomaly_p50_pct": -1.1,
+     "anomaly_p90_pct": 18.6,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.175,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -19.5,
+     "anomaly_p50_pct": -0.4,
+     "anomaly_p90_pct": 20.5,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.155,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -18.3,
+     "anomaly_p50_pct": -1.5,
+     "anomaly_p90_pct": 26.7,
+     "risk_level": "low"
+    }
+   ],
+   "drivers": [
+    "Root-zone soil drier than normal (-2.9 SD)",
+    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD below normal",
+    "Rain (GPCP) near the hydro plants 19% below normal for the last 3 months",
+    "El Nino conditions (ONI +2.5)"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 445.5,
+    "p90": 3454.3
    },
    "label_basis": "capacity_factor"
   },
@@ -874,8 +777,8 @@
    "name": "Norway",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.267,
-   "p_any_shortfall_6m": 0.73,
+   "max_p_shortfall": 0.27,
+   "p_any_shortfall_6m": 0.713,
    "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -889,86 +792,86 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.261,
-     "p_severe": 0.032,
-     "anomaly_p10_pct": -21.9,
-     "anomaly_p50_pct": -10.2,
-     "anomaly_p90_pct": 0.8,
+     "p_shortfall": 0.268,
+     "p_severe": 0.043,
+     "anomaly_p10_pct": -22.9,
+     "anomaly_p50_pct": -10.1,
+     "anomaly_p90_pct": 2.2,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.265,
-     "p_severe": 0.03,
-     "anomaly_p10_pct": -21.7,
-     "anomaly_p50_pct": -10.7,
-     "anomaly_p90_pct": 1.7,
+     "p_shortfall": 0.27,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -21.5,
+     "anomaly_p50_pct": -10.6,
+     "anomaly_p90_pct": 2.7,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.259,
-     "p_severe": 0.064,
-     "anomaly_p10_pct": -21.6,
-     "anomaly_p50_pct": -9.9,
-     "anomaly_p90_pct": 2.8,
+     "p_shortfall": 0.252,
+     "p_severe": 0.059,
+     "anomaly_p10_pct": -20.5,
+     "anomaly_p50_pct": -9.7,
+     "anomaly_p90_pct": 2.7,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.267,
-     "p_severe": 0.084,
-     "anomaly_p10_pct": -22.8,
-     "anomaly_p50_pct": -9.2,
-     "anomaly_p90_pct": 3.7,
+     "p_shortfall": 0.254,
+     "p_severe": 0.08,
+     "anomaly_p10_pct": -23.9,
+     "anomaly_p50_pct": -9.1,
+     "anomaly_p90_pct": 4.8,
      "risk_level": "watch"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.23,
-     "p_severe": 0.068,
-     "anomaly_p10_pct": -20.7,
-     "anomaly_p50_pct": -9.2,
-     "anomaly_p90_pct": 5.0,
+     "p_shortfall": 0.252,
+     "p_severe": 0.077,
+     "anomaly_p10_pct": -21.9,
+     "anomaly_p50_pct": -10.1,
+     "anomaly_p90_pct": 3.9,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.248,
-     "p_severe": 0.014,
+     "p_shortfall": 0.241,
+     "p_severe": 0.051,
      "anomaly_p10_pct": -16.2,
-     "anomaly_p50_pct": -8.9,
-     "anomaly_p90_pct": 7.4,
+     "anomaly_p50_pct": -8.7,
+     "anomaly_p90_pct": 5.8,
      "risk_level": "watch"
     }
    ],
    "drivers": [
-    "Root-zone soil drier than normal (-8.3 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +8% in this phase",
+    "Root-zone soil drier than normal (-7.5 SD)",
     "Basin water storage (GRACE-FO, 2026-08) 1.9 SD below normal",
-    "Hydro output 15% below normal in 2026-09 (latest Ember month used)"
+    "Hydro output 15% below normal in the latest Ember month used (2026-09)",
+    "12-month rainfall 14% below normal"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 531.3,
-    "p90": 1144.6
+    "p50": 534.7,
+    "p90": 1167.7
    },
    "label_basis": "capacity_factor"
   },
   {
-   "iso3": "COL",
-   "name": "Colombia",
+   "iso3": "VNM",
+   "name": "Viet Nam",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.265,
-   "p_any_shortfall_6m": 0.543,
-   "alarm": false,
+   "max_p_shortfall": 0.269,
+   "p_any_shortfall_6m": 0.719,
+   "alarm": true,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
    "last_observed_month": "2026-09",
@@ -977,171 +880,78 @@
     "2026-11"
    ],
    "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -15.4,
+   "latest_cf_anom_pct": -1.8,
    "months": [
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.265,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -20.5,
-     "anomaly_p50_pct": -7.5,
-     "anomaly_p90_pct": 9.3,
+     "p_shortfall": 0.269,
+     "p_severe": 0.121,
+     "anomaly_p10_pct": -27.3,
+     "anomaly_p50_pct": -1.9,
+     "anomaly_p90_pct": 20.3,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.219,
-     "p_severe": 0.047,
-     "anomaly_p10_pct": -19.4,
-     "anomaly_p50_pct": -5.6,
-     "anomaly_p90_pct": 6.6,
-     "risk_level": "watch"
+     "p_shortfall": 0.196,
+     "p_severe": 0.07,
+     "anomaly_p10_pct": -23.7,
+     "anomaly_p50_pct": -1.3,
+     "anomaly_p90_pct": 22.0,
+     "risk_level": "low"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.203,
-     "p_severe": 0.083,
-     "anomaly_p10_pct": -20.8,
-     "anomaly_p50_pct": -2.2,
-     "anomaly_p90_pct": 13.6,
+     "p_shortfall": 0.248,
+     "p_severe": 0.126,
+     "anomaly_p10_pct": -26.6,
+     "anomaly_p50_pct": -3.1,
+     "anomaly_p90_pct": 22.9,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.218,
-     "p_severe": 0.084,
-     "anomaly_p10_pct": -22.2,
-     "anomaly_p50_pct": -0.2,
-     "anomaly_p90_pct": 8.9,
-     "risk_level": "watch"
+     "p_shortfall": 0.161,
+     "p_severe": 0.097,
+     "anomaly_p10_pct": -21.4,
+     "anomaly_p50_pct": 3.9,
+     "anomaly_p90_pct": 21.4,
+     "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.206,
+     "p_shortfall": 0.204,
+     "p_severe": 0.077,
+     "anomaly_p10_pct": -19.1,
+     "anomaly_p50_pct": 2.5,
+     "anomaly_p90_pct": 25.4,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.2,
      "p_severe": 0.068,
-     "anomaly_p10_pct": -19.7,
-     "anomaly_p50_pct": -0.7,
-     "anomaly_p90_pct": 7.7,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.186,
-     "p_severe": 0.06,
-     "anomaly_p10_pct": -18.6,
-     "anomaly_p50_pct": -0.8,
-     "anomaly_p90_pct": 11.0,
+     "anomaly_p10_pct": -16.4,
+     "anomaly_p50_pct": 1.0,
+     "anomaly_p90_pct": 29.9,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -4% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 2.2 SD below normal",
-    "Hydro output 15% below normal in 2026-09 (latest Ember month used)",
-    "Root-zone soil drier than normal (-0.9 SD)"
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -9% in this phase",
+    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD above normal"
    ],
-   "enso_exposure": "neutral",
+   "enso_exposure": "el_nino_loser",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 57.1,
-    "p90": 376.4
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "SWE",
-   "name": "Sweden",
-   "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.264,
-   "p_any_shortfall_6m": 0.501,
-   "alarm": false,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-10",
-   "unforecast_gap_months": [
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-10. Months 2026-11..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -19.9,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.186,
-     "p_severe": 0.032,
-     "anomaly_p10_pct": -16.9,
-     "anomaly_p50_pct": -3.4,
-     "anomaly_p90_pct": 11.9,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.13,
-     "p_severe": 0.046,
-     "anomaly_p10_pct": -16.5,
-     "anomaly_p50_pct": 0.6,
-     "anomaly_p90_pct": 16.4,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.157,
-     "p_severe": 0.019,
-     "anomaly_p10_pct": -16.0,
-     "anomaly_p50_pct": -1.8,
-     "anomaly_p90_pct": 20.7,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.226,
-     "p_severe": 0.042,
-     "anomaly_p10_pct": -23.3,
-     "anomaly_p50_pct": -1.5,
-     "anomaly_p90_pct": 20.6,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.188,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -19.2,
-     "anomaly_p50_pct": -1.0,
-     "anomaly_p90_pct": 17.1,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.264,
-     "p_severe": 0.014,
-     "anomaly_p10_pct": -22.2,
-     "anomaly_p50_pct": -3.2,
-     "anomaly_p90_pct": 21.9,
-     "risk_level": "watch"
-    }
-   ],
-   "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -9% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD below normal",
-    "Rain (GPCP) near the hydro plants 22% above normal for the last 3 months"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 38.0,
-    "p90": 378.4
+    "p50": 24.6,
+    "p90": 466.1
    },
    "label_basis": "capacity_factor"
   },
@@ -1150,8 +960,8 @@
    "name": "Sri Lanka",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.257,
-   "p_any_shortfall_6m": 0.627,
+   "max_p_shortfall": 0.267,
+   "p_any_shortfall_6m": 0.631,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -1175,84 +985,175 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.257,
-     "p_severe": 0.111,
+     "p_shortfall": 0.267,
+     "p_severe": 0.121,
      "anomaly_p10_pct": -24.3,
-     "anomaly_p50_pct": 2.0,
-     "anomaly_p90_pct": 48.5,
+     "anomaly_p50_pct": 3.0,
+     "anomaly_p90_pct": 54.3,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.22,
-     "p_severe": 0.102,
-     "anomaly_p10_pct": -26.1,
-     "anomaly_p50_pct": 1.7,
-     "anomaly_p90_pct": 50.6,
+     "p_shortfall": 0.219,
+     "p_severe": 0.07,
+     "anomaly_p10_pct": -24.1,
+     "anomaly_p50_pct": 2.9,
+     "anomaly_p90_pct": 48.7,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.229,
-     "p_severe": 0.099,
-     "anomaly_p10_pct": -23.0,
-     "anomaly_p50_pct": -0.0,
-     "anomaly_p90_pct": 39.8,
+     "p_shortfall": 0.226,
+     "p_severe": 0.107,
+     "anomaly_p10_pct": -20.7,
+     "anomaly_p50_pct": 1.3,
+     "anomaly_p90_pct": 45.0,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.203,
-     "p_severe": 0.084,
-     "anomaly_p10_pct": -18.4,
+     "p_shortfall": 0.195,
+     "p_severe": 0.097,
+     "anomaly_p10_pct": -20.2,
      "anomaly_p50_pct": 1.2,
-     "anomaly_p90_pct": 48.6,
-     "risk_level": "watch"
+     "anomaly_p90_pct": 50.6,
+     "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.235,
-     "p_severe": 0.127,
-     "anomaly_p10_pct": -30.8,
-     "anomaly_p50_pct": 2.0,
-     "anomaly_p90_pct": 46.5,
+     "p_shortfall": 0.234,
+     "p_severe": 0.097,
+     "anomaly_p10_pct": -28.9,
+     "anomaly_p50_pct": 1.1,
+     "anomaly_p90_pct": 44.6,
      "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.245,
-     "p_severe": 0.108,
-     "anomaly_p10_pct": -29.1,
-     "anomaly_p50_pct": -1.0,
-     "anomaly_p90_pct": 42.4,
+     "p_shortfall": 0.236,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -30.5,
+     "anomaly_p50_pct": -0.9,
+     "anomaly_p90_pct": 43.0,
      "risk_level": "watch"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +14% in this phase",
-    "Root-zone soil wetter than normal (+1.4 SD)"
+    "Root-zone soil wetter than normal (+1.5 SD)",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed +14% in this phase"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 0.3,
-    "p90": 36.3
+    "p50": 0.2,
+    "p90": 35.6
    },
    "label_basis": "capacity_factor"
   },
   {
-   "iso3": "VNM",
-   "name": "Viet Nam",
+   "iso3": "SWE",
+   "name": "Sweden",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.254,
-   "p_any_shortfall_6m": 0.693,
-   "alarm": true,
+   "max_p_shortfall": 0.264,
+   "p_any_shortfall_6m": 0.559,
+   "alarm": false,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-10",
+   "unforecast_gap_months": [
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-10. Months 2026-11..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": -19.9,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.197,
+     "p_severe": 0.059,
+     "anomaly_p10_pct": -18.3,
+     "anomaly_p50_pct": -4.8,
+     "anomaly_p90_pct": 14.2,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.125,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -19.5,
+     "anomaly_p50_pct": -0.5,
+     "anomaly_p90_pct": 16.6,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.195,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -17.6,
+     "anomaly_p50_pct": -1.9,
+     "anomaly_p90_pct": 21.4,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.245,
+     "p_severe": 0.064,
+     "anomaly_p10_pct": -24.4,
+     "anomaly_p50_pct": -1.1,
+     "anomaly_p90_pct": 17.9,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.213,
+     "p_severe": 0.007,
+     "anomaly_p10_pct": -21.2,
+     "anomaly_p50_pct": -3.0,
+     "anomaly_p90_pct": 17.9,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.264,
+     "p_severe": 0.051,
+     "anomaly_p10_pct": -24.3,
+     "anomaly_p50_pct": -3.4,
+     "anomaly_p90_pct": 23.3,
+     "risk_level": "watch"
+    }
+   ],
+   "drivers": [
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -9% in this phase",
+    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD below normal",
+    "Rain (GPCP) near the hydro plants 22% above normal for the last 3 months"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 52.6,
+    "p90": 443.2
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "COL",
+   "name": "Colombia",
+   "tier": 1,
+   "risk_level": "watch",
+   "max_p_shortfall": 0.262,
+   "p_any_shortfall_6m": 0.554,
+   "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
    "last_observed_month": "2026-09",
@@ -1261,80 +1162,80 @@
     "2026-11"
    ],
    "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -1.8,
+   "latest_cf_anom_pct": -15.4,
    "months": [
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.254,
-     "p_severe": 0.126,
-     "anomaly_p10_pct": -29.6,
-     "anomaly_p50_pct": -2.9,
-     "anomaly_p90_pct": 18.6,
+     "p_shortfall": 0.262,
+     "p_severe": 0.043,
+     "anomaly_p10_pct": -21.5,
+     "anomaly_p50_pct": -9.3,
+     "anomaly_p90_pct": 9.9,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.181,
-     "p_severe": 0.095,
-     "anomaly_p10_pct": -22.8,
-     "anomaly_p50_pct": -4.1,
-     "anomaly_p90_pct": 20.8,
-     "risk_level": "low"
+     "p_shortfall": 0.24,
+     "p_severe": 0.061,
+     "anomaly_p10_pct": -21.8,
+     "anomaly_p50_pct": -6.1,
+     "anomaly_p90_pct": 7.0,
+     "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.245,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -28.0,
-     "anomaly_p50_pct": -5.2,
-     "anomaly_p90_pct": 22.3,
+     "p_shortfall": 0.208,
+     "p_severe": 0.075,
+     "anomaly_p10_pct": -21.2,
+     "anomaly_p50_pct": -1.0,
+     "anomaly_p90_pct": 15.1,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.178,
-     "p_severe": 0.084,
-     "anomaly_p10_pct": -21.8,
-     "anomaly_p50_pct": 2.2,
-     "anomaly_p90_pct": 26.7,
-     "risk_level": "low"
+     "p_shortfall": 0.222,
+     "p_severe": 0.097,
+     "anomaly_p10_pct": -23.1,
+     "anomaly_p50_pct": -0.6,
+     "anomaly_p90_pct": 9.5,
+     "risk_level": "watch"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.199,
-     "p_severe": 0.068,
+     "p_shortfall": 0.21,
+     "p_severe": 0.077,
      "anomaly_p10_pct": -20.0,
-     "anomaly_p50_pct": 0.9,
-     "anomaly_p90_pct": 24.3,
-     "risk_level": "low"
+     "anomaly_p50_pct": -1.7,
+     "anomaly_p90_pct": 9.3,
+     "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.21,
-     "p_severe": 0.06,
-     "anomaly_p10_pct": -16.6,
-     "anomaly_p50_pct": 1.4,
-     "anomaly_p90_pct": 30.1,
-     "risk_level": "watch"
+     "p_shortfall": 0.181,
+     "p_severe": 0.068,
+     "anomaly_p10_pct": -19.6,
+     "anomaly_p50_pct": -1.3,
+     "anomaly_p90_pct": 10.8,
+     "risk_level": "low"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -9% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD above normal",
-    "Unusually hot over the basins (+1.4 SD, 3-month mean)",
-    "Root-zone soil drier than normal (-1.0 SD)"
+    "Basin water storage (GRACE-FO, 2026-08) 2.2 SD below normal",
+    "Hydro output 15% below normal in the latest Ember month used (2026-09)",
+    "Root-zone soil drier than normal (-0.8 SD)",
+    "El Nino conditions (ONI +2.5)"
    ],
-   "enso_exposure": "el_nino_loser",
+   "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 42.8,
-    "p90": 477.0
+    "p50": 69.9,
+    "p90": 403.3
    },
    "label_basis": "capacity_factor"
   },
@@ -1343,8 +1244,8 @@
    "name": "Tajikistan",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.249,
-   "p_any_shortfall_6m": 0.435,
+   "max_p_shortfall": 0.255,
+   "p_any_shortfall_6m": 0.469,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -1362,85 +1263,182 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.241,
-     "p_severe": 0.126,
-     "anomaly_p10_pct": -31.7,
-     "anomaly_p50_pct": -2.9,
-     "anomaly_p90_pct": 18.7,
+     "p_shortfall": 0.253,
+     "p_severe": 0.121,
+     "anomaly_p10_pct": -35.8,
+     "anomaly_p50_pct": -3.2,
+     "anomaly_p90_pct": 22.5,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.21,
-     "p_severe": 0.152,
-     "anomaly_p10_pct": -27.6,
-     "anomaly_p50_pct": -2.6,
-     "anomaly_p90_pct": 15.1,
+     "p_shortfall": 0.228,
+     "p_severe": 0.139,
+     "anomaly_p10_pct": -31.9,
+     "anomaly_p50_pct": -4.6,
+     "anomaly_p90_pct": 17.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.249,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -33.5,
-     "anomaly_p50_pct": -4.0,
-     "anomaly_p90_pct": 19.6,
+     "p_shortfall": 0.255,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -36.0,
+     "anomaly_p50_pct": -3.0,
+     "anomaly_p90_pct": 24.9,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.16,
+     "p_shortfall": 0.161,
      "p_severe": 0.12,
-     "anomaly_p10_pct": -31.7,
-     "anomaly_p50_pct": 1.7,
-     "anomaly_p90_pct": 20.2,
+     "anomaly_p10_pct": -30.3,
+     "anomaly_p50_pct": 1.9,
+     "anomaly_p90_pct": 20.8,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.128,
-     "p_severe": 0.127,
-     "anomaly_p10_pct": -21.7,
-     "anomaly_p50_pct": 1.7,
-     "anomaly_p90_pct": 22.9,
+     "p_shortfall": 0.131,
+     "p_severe": 0.131,
+     "anomaly_p10_pct": -20.8,
+     "anomaly_p50_pct": 1.1,
+     "anomaly_p90_pct": 18.6,
      "risk_level": "low"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.115,
-     "p_severe": 0.115,
-     "anomaly_p10_pct": -21.1,
-     "anomaly_p50_pct": 0.1,
-     "anomaly_p90_pct": 30.6,
+     "p_shortfall": 0.112,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -15.8,
+     "anomaly_p50_pct": 1.1,
+     "anomaly_p90_pct": 23.6,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "Root-zone soil drier than normal (-8.5 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +10% in this phase",
     "Rain (GPCP) near the hydro plants 49% below normal for the last 3 months",
-    "Basin water storage (GRACE-FO, 2026-08) 1.8 SD below normal"
+    "Root-zone soil drier than normal (-2.3 SD)",
+    "Basin water storage (GRACE-FO, 2026-08) 1.8 SD below normal",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed +10% in this phase"
    ],
    "enso_exposure": "la_nina_loser",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 10.3,
-    "p90": 143.8
+    "p50": 12.3,
+    "p90": 157.2
    },
    "label_basis": "capacity_factor"
   },
   {
-   "iso3": "CAN",
-   "name": "Canada",
+   "iso3": "CHE",
+   "name": "Switzerland",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.244,
-   "p_any_shortfall_6m": 0.468,
+   "max_p_shortfall": 0.247,
+   "p_any_shortfall_6m": 0.67,
+   "alarm": true,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-05",
+   "unforecast_gap_months": [
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-05. Months 2026-06..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month). Ember data is older than the 2-month lag the model was trained with, so the persistence input is missing and the forecast leans on NASA water and ENSO inputs.",
+   "latest_cf_anom_pct": -22.1,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.238,
+     "p_severe": 0.238,
+     "anomaly_p10_pct": -44.6,
+     "anomaly_p50_pct": -6.0,
+     "anomaly_p90_pct": 10.6,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.243,
+     "p_severe": 0.197,
+     "anomaly_p10_pct": -41.1,
+     "anomaly_p50_pct": -5.5,
+     "anomaly_p90_pct": 8.0,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.247,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -39.6,
+     "anomaly_p50_pct": -3.9,
+     "anomaly_p90_pct": 17.4,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.216,
+     "p_severe": 0.12,
+     "anomaly_p10_pct": -32.1,
+     "anomaly_p50_pct": -2.9,
+     "anomaly_p90_pct": 13.8,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.208,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -26.0,
+     "anomaly_p50_pct": -4.3,
+     "anomaly_p90_pct": 16.6,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.191,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -18.8,
+     "anomaly_p50_pct": -1.4,
+     "anomaly_p90_pct": 27.9,
+     "risk_level": "low"
+    }
+   ],
+   "drivers": [
+    "Root-zone soil drier than normal (-6.8 SD)",
+    "12-month rainfall 32% below normal",
+    "Basin water storage (GRACE-FO, 2026-08) 2.0 SD below normal",
+    "Rain (GPCP) near the hydro plants 33% below normal for the last 3 months"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 46.2,
+    "p90": 387.3
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "NGA",
+   "name": "Nigeria",
+   "tier": 1,
+   "risk_level": "watch",
+   "max_p_shortfall": 0.221,
+   "p_any_shortfall_6m": 0.518,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -1451,173 +1449,80 @@
     "2026-11"
    ],
    "gap_note": "Ember data ends 2026-08. Months 2026-09..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month). Ember data is older than the 2-month lag the model was trained with, so the persistence input is missing and the forecast leans on NASA water and ENSO inputs.",
-   "latest_cf_anom_pct": -7.5,
+   "latest_cf_anom_pct": 52.2,
    "months": [
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.244,
-     "p_severe": 0.23,
-     "anomaly_p10_pct": -40.9,
-     "anomaly_p50_pct": -4.3,
-     "anomaly_p90_pct": 15.0,
+     "p_shortfall": 0.221,
+     "p_severe": 0.167,
+     "anomaly_p10_pct": -34.1,
+     "anomaly_p50_pct": 9.4,
+     "anomaly_p90_pct": 75.2,
      "risk_level": "watch"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.232,
-     "p_severe": 0.152,
-     "anomaly_p10_pct": -36.1,
-     "anomaly_p50_pct": -5.0,
-     "anomaly_p90_pct": 9.8,
-     "risk_level": "watch"
+     "p_shortfall": 0.184,
+     "p_severe": 0.139,
+     "anomaly_p10_pct": -32.4,
+     "anomaly_p50_pct": 5.4,
+     "anomaly_p90_pct": 39.7,
+     "risk_level": "low"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.21,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -31.6,
-     "anomaly_p50_pct": -3.3,
-     "anomaly_p90_pct": 18.1,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.18,
-     "p_severe": 0.12,
-     "anomaly_p10_pct": -27.1,
-     "anomaly_p50_pct": 1.1,
-     "anomaly_p90_pct": 20.3,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.163,
-     "p_severe": 0.154,
-     "anomaly_p10_pct": -23.3,
+     "p_shortfall": 0.215,
+     "p_severe": 0.134,
+     "anomaly_p10_pct": -39.6,
      "anomaly_p50_pct": 0.9,
-     "anomaly_p90_pct": 23.5,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.157,
-     "p_severe": 0.108,
-     "anomaly_p10_pct": -18.6,
-     "anomaly_p50_pct": -2.7,
-     "anomaly_p90_pct": 36.8,
-     "risk_level": "low"
-    }
-   ],
-   "drivers": [
-    "Root-zone soil drier than normal (-3.4 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -1% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD below normal",
-    "Rain (GPCP) near the hydro plants 19% below normal for the last 3 months"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 355.0,
-    "p90": 3814.4
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "GEO",
-   "name": "Georgia",
-   "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.224,
-   "p_any_shortfall_6m": 0.447,
-   "alarm": false,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-09",
-   "unforecast_gap_months": [
-    "2026-10",
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": 14.1,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.189,
-     "p_severe": 0.032,
-     "anomaly_p10_pct": -16.4,
-     "anomaly_p50_pct": 3.2,
-     "anomaly_p90_pct": 17.9,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.224,
-     "p_severe": 0.046,
-     "anomaly_p10_pct": -16.4,
-     "anomaly_p50_pct": 1.4,
-     "anomaly_p90_pct": 17.2,
-     "risk_level": "watch"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.214,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -14.9,
-     "anomaly_p50_pct": 2.1,
-     "anomaly_p90_pct": 16.5,
+     "anomaly_p90_pct": 47.5,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.197,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -14.2,
-     "anomaly_p50_pct": 2.5,
-     "anomaly_p90_pct": 17.0,
+     "p_shortfall": 0.167,
+     "p_severe": 0.12,
+     "anomaly_p10_pct": -25.1,
+     "anomaly_p50_pct": 6.0,
+     "anomaly_p90_pct": 48.1,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.131,
-     "p_severe": 0.063,
-     "anomaly_p10_pct": -10.3,
-     "anomaly_p50_pct": 7.1,
-     "anomaly_p90_pct": 16.0,
-     "risk_level": "low"
+     "p_shortfall": 0.203,
+     "p_severe": 0.143,
+     "anomaly_p10_pct": -27.5,
+     "anomaly_p50_pct": 2.3,
+     "anomaly_p90_pct": 54.3,
+     "risk_level": "watch"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.136,
-     "p_severe": 0.014,
-     "anomaly_p10_pct": -11.6,
-     "anomaly_p50_pct": 5.1,
-     "anomaly_p90_pct": 21.1,
-     "risk_level": "low"
+     "p_shortfall": 0.2,
+     "p_severe": 0.112,
+     "anomaly_p10_pct": -28.0,
+     "anomaly_p50_pct": 7.1,
+     "anomaly_p90_pct": 51.6,
+     "risk_level": "watch"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -0% in this phase",
-    "Root-zone soil wetter than normal (+1.8 SD)",
-    "Hydro output 14% above normal in 2026-09 (latest Ember month used)",
-    "12-month rainfall 11% above normal"
+    "Hydro output 52% above normal in the latest Ember month used (2026-08)",
+    "Root-zone soil drier than normal (-1.9 SD)",
+    "Basin water storage (GRACE-FO, 2026-08) 1.7 SD above normal",
+    "Unusually hot over the basins (+1.1 SD, 3-month mean)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
     "p50": 0.0,
-    "p90": 33.1
+    "p90": 87.7
    },
    "label_basis": "capacity_factor"
   },
@@ -1626,8 +1531,8 @@
    "name": "Sichuan (China)",
    "tier": 1,
    "risk_level": "watch",
-   "max_p_shortfall": 0.207,
-   "p_any_shortfall_6m": 0.407,
+   "max_p_shortfall": 0.204,
+   "p_any_shortfall_6m": 0.411,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -1642,84 +1547,360 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.105,
-     "p_severe": 0.032,
-     "anomaly_p10_pct": -14.2,
-     "anomaly_p50_pct": 5.8,
-     "anomaly_p90_pct": 9.6,
+     "p_shortfall": 0.093,
+     "p_severe": 0.059,
+     "anomaly_p10_pct": -15.4,
+     "anomaly_p50_pct": 5.7,
+     "anomaly_p90_pct": 9.5,
      "risk_level": "low"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.111,
-     "p_severe": 0.051,
-     "anomaly_p10_pct": -12.7,
-     "anomaly_p50_pct": 3.7,
-     "anomaly_p90_pct": 10.4,
+     "p_shortfall": 0.107,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -12.9,
+     "anomaly_p50_pct": 2.5,
+     "anomaly_p90_pct": 9.6,
      "risk_level": "low"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.207,
-     "p_severe": 0.019,
-     "anomaly_p10_pct": -21.2,
-     "anomaly_p50_pct": 2.9,
-     "anomaly_p90_pct": 10.3,
+     "p_shortfall": 0.204,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -18.8,
+     "anomaly_p50_pct": 3.6,
+     "anomaly_p90_pct": 11.4,
      "risk_level": "watch"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.134,
+     "p_shortfall": 0.128,
      "p_severe": 0.012,
-     "anomaly_p10_pct": -12.8,
-     "anomaly_p50_pct": 5.2,
-     "anomaly_p90_pct": 11.9,
+     "anomaly_p10_pct": -12.6,
+     "anomaly_p50_pct": 5.3,
+     "anomaly_p90_pct": 11.5,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.1,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -5.8,
-     "anomaly_p50_pct": 4.8,
-     "anomaly_p90_pct": 13.4,
+     "p_shortfall": 0.099,
+     "p_severe": 0.032,
+     "anomaly_p10_pct": -5.0,
+     "anomaly_p50_pct": 3.0,
+     "anomaly_p90_pct": 10.9,
      "risk_level": "low"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.152,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -7.6,
-     "anomaly_p50_pct": 4.0,
-     "anomaly_p90_pct": 13.4,
+     "p_shortfall": 0.157,
+     "p_severe": 0.009,
+     "anomaly_p10_pct": -8.8,
+     "anomaly_p50_pct": 4.3,
+     "anomaly_p90_pct": 14.8,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -4% in this phase",
     "Basin water storage (GRACE-FO, 2026-08) 2.3 SD above normal",
-    "Rain (GPCP) near the hydro plants 29% below normal for the last 3 months"
+    "Rain (GPCP) near the hydro plants 29% below normal for the last 3 months",
+    "El Nino conditions (ONI +2.5)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
     "p50": 0.0,
-    "p90": 605.5
+    "p90": 575.0
    },
    "label_basis": "generation_scaled_by_last_full_year"
+  },
+  {
+   "iso3": "GEO",
+   "name": "Georgia",
+   "tier": 1,
+   "risk_level": "watch",
+   "max_p_shortfall": 0.2,
+   "p_any_shortfall_6m": 0.453,
+   "alarm": false,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-09",
+   "unforecast_gap_months": [
+    "2026-10",
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": 14.1,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.198,
+     "p_severe": 0.059,
+     "anomaly_p10_pct": -20.9,
+     "anomaly_p50_pct": 2.3,
+     "anomaly_p90_pct": 18.8,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.198,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -17.0,
+     "anomaly_p50_pct": 2.1,
+     "anomaly_p90_pct": 20.2,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.2,
+     "p_severe": 0.014,
+     "anomaly_p10_pct": -13.1,
+     "anomaly_p50_pct": 2.5,
+     "anomaly_p90_pct": 20.9,
+     "risk_level": "watch"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.191,
+     "p_severe": 0.012,
+     "anomaly_p10_pct": -12.9,
+     "anomaly_p50_pct": 2.3,
+     "anomaly_p90_pct": 18.7,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.128,
+     "p_severe": 0.032,
+     "anomaly_p10_pct": -10.2,
+     "anomaly_p50_pct": 4.8,
+     "anomaly_p90_pct": 17.1,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.142,
+     "p_severe": 0.023,
+     "anomaly_p10_pct": -11.1,
+     "anomaly_p50_pct": 4.5,
+     "anomaly_p90_pct": 21.7,
+     "risk_level": "low"
+    }
+   ],
+   "drivers": [
+    "Root-zone soil wetter than normal (+2.6 SD)",
+    "Hydro output 14% above normal in the latest Ember month used (2026-09)",
+    "12-month rainfall 11% above normal",
+    "El Nino conditions (ONI +2.5)"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 32.8
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "NZL",
+   "name": "New Zealand",
+   "tier": 1,
+   "risk_level": "low",
+   "max_p_shortfall": 0.182,
+   "p_any_shortfall_6m": 0.313,
+   "alarm": false,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-09",
+   "unforecast_gap_months": [
+    "2026-10",
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": 5.6,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.072,
+     "p_severe": 0.012,
+     "anomaly_p10_pct": -8.7,
+     "anomaly_p50_pct": 3.1,
+     "anomaly_p90_pct": 12.3,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.076,
+     "p_severe": 0.013,
+     "anomaly_p10_pct": -11.3,
+     "anomaly_p50_pct": 1.7,
+     "anomaly_p90_pct": 8.5,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.127,
+     "p_severe": 0.014,
+     "anomaly_p10_pct": -13.7,
+     "anomaly_p50_pct": 1.9,
+     "anomaly_p90_pct": 10.2,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.107,
+     "p_severe": 0.012,
+     "anomaly_p10_pct": -6.1,
+     "anomaly_p50_pct": 3.7,
+     "anomaly_p90_pct": 12.2,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.139,
+     "p_severe": 0.032,
+     "anomaly_p10_pct": -7.6,
+     "anomaly_p50_pct": 2.1,
+     "anomaly_p90_pct": 9.9,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.182,
+     "p_severe": 0.009,
+     "anomaly_p10_pct": -10.6,
+     "anomaly_p50_pct": -1.5,
+     "anomaly_p90_pct": 9.4,
+     "risk_level": "low"
+    }
+   ],
+   "drivers": [
+    "Basin water storage (GRACE-FO, 2026-08) 1.1 SD below normal",
+    "El Nino conditions (ONI +2.5)"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 1.6,
+    "p90": 36.8
+   },
+   "label_basis": "capacity_factor"
+  },
+  {
+   "iso3": "CRI",
+   "name": "Costa Rica",
+   "tier": 1,
+   "risk_level": "low",
+   "max_p_shortfall": 0.174,
+   "p_any_shortfall_6m": 0.409,
+   "alarm": false,
+   "alarm_threshold": 0.66,
+   "first_month": "2026-12",
+   "last_observed_month": "2026-10",
+   "unforecast_gap_months": [
+    "2026-11"
+   ],
+   "gap_note": "Ember data ends 2026-10. Months 2026-11..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
+   "latest_cf_anom_pct": 12.3,
+   "months": [
+    {
+     "month": "2026-12",
+     "horizon": 1,
+     "p_shortfall": 0.118,
+     "p_severe": 0.059,
+     "anomaly_p10_pct": -14.4,
+     "anomaly_p50_pct": 6.4,
+     "anomaly_p90_pct": 14.7,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-01",
+     "horizon": 2,
+     "p_shortfall": 0.131,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -16.6,
+     "anomaly_p50_pct": 5.0,
+     "anomaly_p90_pct": 12.0,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.097,
+     "p_severe": 0.014,
+     "anomaly_p10_pct": -10.1,
+     "anomaly_p50_pct": 11.4,
+     "anomaly_p90_pct": 18.6,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-03",
+     "horizon": 4,
+     "p_shortfall": 0.099,
+     "p_severe": 0.012,
+     "anomaly_p10_pct": -8.8,
+     "anomaly_p50_pct": 9.0,
+     "anomaly_p90_pct": 15.8,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-04",
+     "horizon": 5,
+     "p_shortfall": 0.138,
+     "p_severe": 0.032,
+     "anomaly_p10_pct": -8.4,
+     "anomaly_p50_pct": 7.4,
+     "anomaly_p90_pct": 17.2,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-05",
+     "horizon": 6,
+     "p_shortfall": 0.174,
+     "p_severe": 0.009,
+     "anomaly_p10_pct": -10.7,
+     "anomaly_p50_pct": 3.5,
+     "anomaly_p90_pct": 22.4,
+     "risk_level": "low"
+    }
+   ],
+   "drivers": [
+    "Unusually hot over the basins (+2.5 SD, 3-month mean)",
+    "12-month rainfall 19% below normal",
+    "Hydro output 13% above normal in the latest Ember month used (2026-09)",
+    "Root-zone soil drier than normal (-0.9 SD)"
+   ],
+   "enso_exposure": "neutral",
+   "expected_cost_next_6m_musd": {
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 16.7
+   },
+   "label_basis": "capacity_factor"
   },
   {
    "iso3": "ECU",
    "name": "Ecuador",
    "tier": 1,
-   "risk_level": "watch",
-   "max_p_shortfall": 0.2,
-   "p_any_shortfall_6m": 0.451,
+   "risk_level": "low",
+   "max_p_shortfall": 0.142,
+   "p_any_shortfall_6m": 0.345,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -1735,85 +1916,85 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.2,
-     "p_severe": 0.126,
-     "anomaly_p10_pct": -27.5,
-     "anomaly_p50_pct": 1.0,
-     "anomaly_p90_pct": 14.8,
-     "risk_level": "watch"
+     "p_shortfall": 0.116,
+     "p_severe": 0.063,
+     "anomaly_p10_pct": -17.4,
+     "anomaly_p50_pct": 5.2,
+     "anomaly_p90_pct": 21.5,
+     "risk_level": "low"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.143,
-     "p_severe": 0.102,
-     "anomaly_p10_pct": -27.4,
-     "anomaly_p50_pct": 1.8,
-     "anomaly_p90_pct": 14.8,
+     "p_shortfall": 0.108,
+     "p_severe": 0.07,
+     "anomaly_p10_pct": -17.7,
+     "anomaly_p50_pct": 3.1,
+     "anomaly_p90_pct": 14.2,
      "risk_level": "low"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.156,
-     "p_severe": 0.083,
-     "anomaly_p10_pct": -23.2,
-     "anomaly_p50_pct": 1.8,
-     "anomaly_p90_pct": 17.5,
+     "p_shortfall": 0.142,
+     "p_severe": 0.075,
+     "anomaly_p10_pct": -15.7,
+     "anomaly_p50_pct": 2.6,
+     "anomaly_p90_pct": 28.3,
      "risk_level": "low"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.131,
-     "p_severe": 0.082,
-     "anomaly_p10_pct": -17.2,
-     "anomaly_p50_pct": 6.8,
-     "anomaly_p90_pct": 27.6,
+     "p_shortfall": 0.118,
+     "p_severe": 0.064,
+     "anomaly_p10_pct": -9.6,
+     "anomaly_p50_pct": 4.1,
+     "anomaly_p90_pct": 22.8,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.136,
-     "p_severe": 0.068,
-     "anomaly_p10_pct": -12.2,
-     "anomaly_p50_pct": 5.2,
-     "anomaly_p90_pct": 22.8,
+     "p_shortfall": 0.118,
+     "p_severe": 0.058,
+     "anomaly_p10_pct": -12.8,
+     "anomaly_p50_pct": 4.7,
+     "anomaly_p90_pct": 18.4,
      "risk_level": "low"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.121,
-     "p_severe": 0.06,
-     "anomaly_p10_pct": -14.2,
-     "anomaly_p50_pct": 5.6,
-     "anomaly_p90_pct": 26.4,
+     "p_shortfall": 0.114,
+     "p_severe": 0.051,
+     "anomaly_p10_pct": -12.4,
+     "anomaly_p50_pct": 7.2,
+     "anomaly_p90_pct": 24.9,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +0% in this phase",
-    "Unusually hot over the basins (+2.3 SD, 3-month mean)",
-    "Root-zone soil wetter than normal (+1.3 SD)",
-    "Basin water storage (GRACE-FO, 2026-08) 1.1 SD below normal"
+    "Unusually hot over the basins (+2.4 SD, 3-month mean)",
+    "Root-zone soil wetter than normal (+1.2 SD)",
+    "Basin water storage (GRACE-FO, 2026-08) 1.1 SD below normal",
+    "Hydro output 14% above normal in the latest Ember month used (2026-08)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
     "p50": 0.0,
-    "p90": 112.9
+    "p90": 62.8
    },
    "label_basis": "capacity_factor"
   },
   {
-   "iso3": "NZL",
-   "name": "New Zealand",
+   "iso3": "ISL",
+   "name": "Iceland",
    "tier": 1,
    "risk_level": "low",
-   "max_p_shortfall": 0.175,
-   "p_any_shortfall_6m": 0.305,
+   "max_p_shortfall": 0.129,
+   "p_any_shortfall_6m": 0.282,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -1823,170 +2004,80 @@
     "2026-11"
    ],
    "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": 5.6,
+   "latest_cf_anom_pct": -4.2,
    "months": [
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.07,
-     "p_severe": 0.008,
-     "anomaly_p10_pct": -9.8,
-     "anomaly_p50_pct": 3.0,
-     "anomaly_p90_pct": 9.9,
+     "p_shortfall": 0.088,
+     "p_severe": 0.043,
+     "anomaly_p10_pct": -13.9,
+     "anomaly_p50_pct": -6.3,
+     "anomaly_p90_pct": 0.4,
      "risk_level": "low"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.078,
+     "p_shortfall": 0.099,
+     "p_severe": 0.042,
+     "anomaly_p10_pct": -14.0,
+     "anomaly_p50_pct": -6.6,
+     "anomaly_p90_pct": -0.9,
+     "risk_level": "low"
+    },
+    {
+     "month": "2027-02",
+     "horizon": 3,
+     "p_shortfall": 0.123,
      "p_severe": 0.014,
-     "anomaly_p10_pct": -9.9,
-     "anomaly_p50_pct": 1.6,
-     "anomaly_p90_pct": 8.1,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.116,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -10.1,
-     "anomaly_p50_pct": 2.1,
-     "anomaly_p90_pct": 10.5,
+     "anomaly_p10_pct": -12.8,
+     "anomaly_p50_pct": -7.1,
+     "anomaly_p90_pct": 0.8,
      "risk_level": "low"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.1,
+     "p_shortfall": 0.129,
      "p_severe": 0.012,
-     "anomaly_p10_pct": -5.5,
-     "anomaly_p50_pct": 6.8,
-     "anomaly_p90_pct": 12.8,
+     "anomaly_p10_pct": -15.2,
+     "anomaly_p50_pct": -6.5,
+     "anomaly_p90_pct": 2.5,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.135,
-     "p_severe": 0.027,
-     "anomaly_p10_pct": -6.4,
-     "anomaly_p50_pct": 2.2,
-     "anomaly_p90_pct": 9.9,
+     "p_shortfall": 0.125,
+     "p_severe": 0.006,
+     "anomaly_p10_pct": -13.1,
+     "anomaly_p50_pct": -5.4,
+     "anomaly_p90_pct": -0.3,
      "risk_level": "low"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.175,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -10.8,
-     "anomaly_p50_pct": -0.5,
-     "anomaly_p90_pct": 9.3,
+     "p_shortfall": 0.126,
+     "p_severe": 0.009,
+     "anomaly_p10_pct": -12.5,
+     "anomaly_p50_pct": -6.9,
+     "anomaly_p90_pct": -0.9,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed +1% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 1.1 SD below normal"
+    "Root-zone soil drier than normal (-2.0 SD)",
+    "Basin water storage (GRACE-FO, 2026-08) 1.9 SD below normal",
+    "12-month rainfall 24% below normal",
+    "Rain (GPCP) near the hydro plants 27% below normal for the last 3 months"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 0.5,
-    "p90": 32.1
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "CRI",
-   "name": "Costa Rica",
-   "tier": 1,
-   "risk_level": "low",
-   "max_p_shortfall": 0.173,
-   "p_any_shortfall_6m": 0.429,
-   "alarm": false,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-10",
-   "unforecast_gap_months": [
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-10. Months 2026-11..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": 12.3,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.122,
-     "p_severe": 0.055,
-     "anomaly_p10_pct": -13.6,
-     "anomaly_p50_pct": 6.3,
-     "anomaly_p90_pct": 13.2,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.135,
-     "p_severe": 0.046,
-     "anomaly_p10_pct": -15.7,
-     "anomaly_p50_pct": 5.2,
-     "anomaly_p90_pct": 13.3,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.096,
-     "p_severe": 0.019,
-     "anomaly_p10_pct": -10.0,
-     "anomaly_p50_pct": 7.9,
-     "anomaly_p90_pct": 16.8,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.098,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -9.5,
-     "anomaly_p50_pct": 10.0,
-     "anomaly_p90_pct": 16.5,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.145,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -10.6,
-     "anomaly_p50_pct": 5.4,
-     "anomaly_p90_pct": 15.0,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.173,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -12.1,
-     "anomaly_p50_pct": 3.4,
-     "anomaly_p90_pct": 17.5,
-     "risk_level": "low"
-    }
-   ],
-   "drivers": [
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -5% in this phase",
-    "Unusually hot over the basins (+3.0 SD, 3-month mean)",
-    "Root-zone soil drier than normal (-1.6 SD)",
-    "12-month rainfall 19% below normal"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 0.0,
-    "p50": 0.0,
-    "p90": 17.7
+    "p10": 0.8,
+    "p50": 14.4,
+    "p90": 30.2
    },
    "label_basis": "capacity_factor"
   },
@@ -1995,8 +2086,8 @@
    "name": "Brazil",
    "tier": 1,
    "risk_level": "low",
-   "max_p_shortfall": 0.163,
-   "p_any_shortfall_6m": 0.409,
+   "max_p_shortfall": 0.125,
+   "p_any_shortfall_6m": 0.292,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -2012,168 +2103,75 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.161,
-     "p_severe": 0.126,
-     "anomaly_p10_pct": -34.7,
-     "anomaly_p50_pct": -1.6,
-     "anomaly_p90_pct": 23.1,
+     "p_shortfall": 0.076,
+     "p_severe": 0.063,
+     "anomaly_p10_pct": -24.0,
+     "anomaly_p50_pct": 4.2,
+     "anomaly_p90_pct": 28.7,
      "risk_level": "low"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.14,
-     "p_severe": 0.095,
-     "anomaly_p10_pct": -26.1,
-     "anomaly_p50_pct": 2.7,
-     "anomaly_p90_pct": 22.4,
+     "p_shortfall": 0.084,
+     "p_severe": 0.07,
+     "anomaly_p10_pct": -25.5,
+     "anomaly_p50_pct": 4.2,
+     "anomaly_p90_pct": 14.9,
      "risk_level": "low"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.163,
-     "p_severe": 0.129,
-     "anomaly_p10_pct": -27.0,
-     "anomaly_p50_pct": 0.8,
-     "anomaly_p90_pct": 24.0,
+     "p_shortfall": 0.125,
+     "p_severe": 0.107,
+     "anomaly_p10_pct": -24.9,
+     "anomaly_p50_pct": 4.2,
+     "anomaly_p90_pct": 25.9,
      "risk_level": "low"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.137,
-     "p_severe": 0.12,
-     "anomaly_p10_pct": -25.2,
-     "anomaly_p50_pct": 3.3,
-     "anomaly_p90_pct": 24.6,
+     "p_shortfall": 0.122,
+     "p_severe": 0.097,
+     "anomaly_p10_pct": -16.8,
+     "anomaly_p50_pct": 2.2,
+     "anomaly_p90_pct": 19.6,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.115,
-     "p_severe": 0.115,
-     "anomaly_p10_pct": -21.1,
-     "anomaly_p50_pct": 3.4,
-     "anomaly_p90_pct": 22.2,
+     "p_shortfall": 0.112,
+     "p_severe": 0.077,
+     "anomaly_p10_pct": -16.5,
+     "anomaly_p50_pct": 2.3,
+     "anomaly_p90_pct": 19.2,
      "risk_level": "low"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.114,
-     "p_severe": 0.065,
-     "anomaly_p10_pct": -15.2,
-     "anomaly_p50_pct": 0.4,
-     "anomaly_p90_pct": 40.4,
+     "p_shortfall": 0.104,
+     "p_severe": 0.057,
+     "anomaly_p10_pct": -14.0,
+     "anomaly_p50_pct": 5.2,
+     "anomaly_p90_pct": 27.3,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "Root-zone soil drier than normal (-6.0 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -3% in this phase",
+    "Root-zone soil drier than normal (-4.0 SD)",
     "Basin water storage (GRACE-FO, 2026-08) 1.5 SD above normal",
-    "12-month rainfall 14% below normal"
+    "12-month rainfall 14% below normal",
+    "El Nino conditions (ONI +2.5)"
    ],
    "enso_exposure": "neutral",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 25.7,
-    "p90": 2263.9
-   },
-   "label_basis": "capacity_factor"
-  },
-  {
-   "iso3": "ISL",
-   "name": "Iceland",
-   "tier": 1,
-   "risk_level": "low",
-   "max_p_shortfall": 0.132,
-   "p_any_shortfall_6m": 0.28,
-   "alarm": false,
-   "alarm_threshold": 0.66,
-   "first_month": "2026-12",
-   "last_observed_month": "2026-09",
-   "unforecast_gap_months": [
-    "2026-10",
-    "2026-11"
-   ],
-   "gap_note": "Ember data ends 2026-09. Months 2026-10..2026-11 have no published data yet and are not forecast; the forecast covers 2026-12..2027-05 (horizons 1-6 from the 2026-11 issue month).",
-   "latest_cf_anom_pct": -4.2,
-   "months": [
-    {
-     "month": "2026-12",
-     "horizon": 1,
-     "p_shortfall": 0.099,
-     "p_severe": 0.032,
-     "anomaly_p10_pct": -15.7,
-     "anomaly_p50_pct": -7.5,
-     "anomaly_p90_pct": -1.6,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-01",
-     "horizon": 2,
-     "p_shortfall": 0.105,
-     "p_severe": 0.041,
-     "anomaly_p10_pct": -13.1,
-     "anomaly_p50_pct": -6.8,
-     "anomaly_p90_pct": -1.0,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-02",
-     "horizon": 3,
-     "p_shortfall": 0.113,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -11.8,
-     "anomaly_p50_pct": -7.2,
-     "anomaly_p90_pct": 0.7,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-03",
-     "horizon": 4,
-     "p_shortfall": 0.132,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -14.7,
-     "anomaly_p50_pct": -6.8,
-     "anomaly_p90_pct": 0.9,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-04",
-     "horizon": 5,
-     "p_shortfall": 0.123,
-     "p_severe": 0.009,
-     "anomaly_p10_pct": -13.7,
-     "anomaly_p50_pct": -7.6,
-     "anomaly_p90_pct": -1.1,
-     "risk_level": "low"
-    },
-    {
-     "month": "2027-05",
-     "horizon": 6,
-     "p_shortfall": 0.125,
-     "p_severe": 0.012,
-     "anomaly_p10_pct": -11.7,
-     "anomaly_p50_pct": -7.8,
-     "anomaly_p90_pct": -0.5,
-     "risk_level": "low"
-    }
-   ],
-   "drivers": [
-    "Root-zone soil drier than normal (-3.2 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -0% in this phase",
-    "Basin water storage (GRACE-FO, 2026-08) 1.9 SD below normal",
-    "12-month rainfall 24% below normal"
-   ],
-   "enso_exposure": "neutral",
-   "expected_cost_next_6m_musd": {
-    "p10": 1.5,
-    "p50": 16.4,
-    "p90": 30.3
+    "p50": 0.0,
+    "p90": 1329.9
    },
    "label_basis": "capacity_factor"
   },
@@ -2182,8 +2180,8 @@
    "name": "Peru",
    "tier": 1,
    "risk_level": "low",
-   "max_p_shortfall": 0.105,
-   "p_any_shortfall_6m": 0.241,
+   "max_p_shortfall": 0.11,
+   "p_any_shortfall_6m": 0.242,
    "alarm": false,
    "alarm_threshold": 0.66,
    "first_month": "2026-12",
@@ -2198,75 +2196,75 @@
     {
      "month": "2026-12",
      "horizon": 1,
-     "p_shortfall": 0.105,
-     "p_severe": 0.016,
-     "anomaly_p10_pct": -10.7,
-     "anomaly_p50_pct": 0.6,
-     "anomaly_p90_pct": 9.3,
+     "p_shortfall": 0.11,
+     "p_severe": 0.012,
+     "anomaly_p10_pct": -12.1,
+     "anomaly_p50_pct": -0.1,
+     "anomaly_p90_pct": 10.8,
      "risk_level": "low"
     },
     {
      "month": "2027-01",
      "horizon": 2,
-     "p_shortfall": 0.065,
-     "p_severe": 0.014,
-     "anomaly_p10_pct": -7.8,
-     "anomaly_p50_pct": 2.9,
-     "anomaly_p90_pct": 9.0,
+     "p_shortfall": 0.058,
+     "p_severe": 0.013,
+     "anomaly_p10_pct": -6.9,
+     "anomaly_p50_pct": 3.2,
+     "anomaly_p90_pct": 11.1,
      "risk_level": "low"
     },
     {
      "month": "2027-02",
      "horizon": 3,
-     "p_shortfall": 0.072,
-     "p_severe": 0.01,
-     "anomaly_p10_pct": -7.6,
-     "anomaly_p50_pct": 1.9,
-     "anomaly_p90_pct": 11.4,
+     "p_shortfall": 0.08,
+     "p_severe": 0.002,
+     "anomaly_p10_pct": -7.1,
+     "anomaly_p50_pct": 2.3,
+     "anomaly_p90_pct": 14.0,
      "risk_level": "low"
     },
     {
      "month": "2027-03",
      "horizon": 4,
-     "p_shortfall": 0.084,
-     "p_severe": 0.002,
-     "anomaly_p10_pct": -6.5,
-     "anomaly_p50_pct": 1.7,
-     "anomaly_p90_pct": 16.3,
+     "p_shortfall": 0.088,
+     "p_severe": 0.006,
+     "anomaly_p10_pct": -7.0,
+     "anomaly_p50_pct": 1.6,
+     "anomaly_p90_pct": 13.5,
      "risk_level": "low"
     },
     {
      "month": "2027-04",
      "horizon": 5,
-     "p_shortfall": 0.084,
-     "p_severe": 0.009,
+     "p_shortfall": 0.081,
+     "p_severe": 0.006,
      "anomaly_p10_pct": -3.9,
-     "anomaly_p50_pct": 2.0,
-     "anomaly_p90_pct": 9.7,
+     "anomaly_p50_pct": 1.8,
+     "anomaly_p90_pct": 12.9,
      "risk_level": "low"
     },
     {
      "month": "2027-05",
      "horizon": 6,
-     "p_shortfall": 0.079,
-     "p_severe": 0.007,
-     "anomaly_p10_pct": -5.1,
+     "p_shortfall": 0.087,
+     "p_severe": 0.002,
+     "anomaly_p10_pct": -5.4,
      "anomaly_p50_pct": 2.8,
-     "anomaly_p90_pct": 9.2,
+     "anomaly_p90_pct": 9.4,
      "risk_level": "low"
     }
    ],
    "drivers": [
-    "Root-zone soil wetter than normal (+6.5 SD)",
-    "El Nino conditions (ONI +2.5): this grid's hydro output has historically changed -7% in this phase",
+    "Root-zone soil wetter than normal (+3.7 SD)",
+    "El Nino conditions (ONI +2.5): this grid's basin precip has historically changed -7% in this phase",
     "12-month rainfall 19% below normal",
-    "Unusually hot over the basins (+1.6 SD, 3-month mean)"
+    "Rain (GPCP) near the hydro plants 22% below normal for the last 3 months"
    ],
    "enso_exposure": "el_nino_loser",
    "expected_cost_next_6m_musd": {
     "p10": 0.0,
-    "p50": 0.0,
-    "p90": 30.3
+    "p50": 0.1,
+    "p90": 32.3
    },
    "label_basis": "capacity_factor"
   }
