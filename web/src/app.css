@@ -447,3 +447,34 @@ ul.plain li { margin-bottom: 0.5em; }
 @media (max-width: 640px) { .split-op { display: none; } }
 .lg-outline { width: 12px; height: 12px; border: 1.5px dashed var(--map-highlight); border-radius: 2px; }
 .tip-flag { font-size: var(--fs-xs); color: var(--sample-text); background: var(--sample-bg); border-radius: var(--radius-sm); padding: 2px 6px; margin-bottom: 4px; display: inline-block; }
+
+/* KaribaSim */
+.ksim h3 { margin-bottom: 6px; }
+.ksim .eyebrow { margin-bottom: 0.5em; color: var(--water); }
+.ksim-intro { max-width: 75ch; }
+.ksim-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 12px 24px; margin: 16px 0 8px; padding: 16px; background: var(--bg-elev-2); border-radius: var(--radius-md); }
+.ksim-control { min-width: 0; }
+.ksim-control .toggle { margin: 6px 0 0; background: var(--bg-elev); }
+.ksim-label { display: block; font-family: var(--font-mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-muted); }
+.ksim-val { font-family: var(--font-sans); font-size: var(--fs-md); text-transform: none; letter-spacing: 0; color: var(--text); font-weight: 800; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.ksim-range { display: block; width: 100%; min-height: 44px; margin: 0; outline-offset: 0; accent-color: var(--accent); cursor: pointer; background: transparent; }
+.ksim-scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+.ksim-sentence { margin: 16px 0 8px; }
+.ksim-chart { margin-top: 8px; }
+.ksim-line { transition: stroke var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out); }
+.ksim-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 20px 0 8px; }
+.ksim-stat { background: var(--bg-elev-2); padding: 14px 16px; }
+.ksim-stat .stat-label { margin: 0 0 4px; font-family: var(--font-mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+.ksim-stat .stat-value { font-variant-numeric: tabular-nums; }
+.ksim-was { color: var(--text-faint); font-weight: 700; }
+.ksim-arrow { color: var(--text-faint); font-weight: 400; }
+.ksim-bad { color: var(--drying-strong); }
+.ksim-good { color: var(--wetting-strong); }
+.ksim-note { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 6px; line-height: 1.45; }
+.ksim-honesty { margin: 12px 0 0; padding-left: 1.1em; font-size: var(--fs-sm); color: var(--text-muted); max-width: 90ch; }
+.ksim-honesty li { margin-bottom: 0.35em; }
+@media (max-width: 640px) {
+  .ksim-controls { padding: 12px; }
+  .ksim-control .toggle { display: flex; }
+  .ksim-control .toggle button { flex: 1 1 auto; }
+}

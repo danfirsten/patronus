@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-14T21:10:46+00:00",
+ "generated_at": "2026-11-14T21:24:54+00:00",
  "issue_date": "2026-11-15",
  "sources": [
   {
@@ -81,7 +81,7 @@
    "url": "https://psl.noaa.gov/data/gridded/data.gpcp.html",
    "coverage": "1979-01..2026-10, 2.5 degree grid (months after 2021-11 are interim)",
    "license": "Public domain (US Government work)",
-   "use": "Main rainfall record for the ENSO fingerprints and basin rainfall trends; chosen because it has no artificial breaks."
+   "use": "Main rainfall record for the ENSO fingerprints and basin rainfall trends. It drifts dry after 2019 in many regions, so rain trends use 2002-2019 and the ENSO result is checked on 1981-2019."
   },
   {
    "id": "cpc_enso",

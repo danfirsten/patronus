@@ -5,7 +5,7 @@ Order matters: basins -> (trends, enso, generation, kariba) -> crises -> scorebo
 import importlib
 import time
 
-STEPS = ["basins", "trends", "enso", "generation", "kariba", "crises", "scoreboard", "nightlights", "meta", "ledger"]
+STEPS = ["basins", "trends", "enso", "generation", "kariba", "kariba_sim", "crises", "scoreboard", "nightlights", "meta", "ledger"]
 
 if __name__ == "__main__":
     for s in STEPS:

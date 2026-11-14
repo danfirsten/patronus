@@ -315,3 +315,9 @@ All numbers come from `web/public/data/*.json` and were produced by `pipeline/`.
 2. **The global layers** give the reach: 54 GW in robust El Niño-loser grids, and 392 GW in basins with drying water storage (19 GW with less rain, 373 GW without).
 3. **Show the misses.** Short-range monthly country forecasts have little skill. The scoreboard shows that, and judges reward it under Validity.
 4. **Scoreboard summary:** 2 of 5 crises caught with lead time (Kariba by the "next" model, Vietnam by the country model). Brazil, Sichuan and Ecuador were missed.
+
+**Tested and rejected, kept to show rigour (Nov 14, evening)**
+- **Brazil ONS reservoir storage (EAR/ENA)** was suggested by Sean's Future Detector back-test. Under our pre-set rule (blocked leave-one-year-out, publication lag) it made Brazil's own AUC-PR slightly worse at 5 of 6 horizons, so it was not adopted. Brazil has only 3 shortfall months under our label.
+- **Heatwave features** (NASA POWER daily Tmax, heatwave days, cooling degree days), from Sean's `fd/heatwave` back-test, add no pooled skill: ×1.006 at 1 month, ×0.98–0.99 at 3–6. They do not catch Sichuan 2022 either, because the heat and the generation drop fall in the same 4–6 weeks. Not adopted. A flash heat-drought needs sub-monthly data and heat *forecasts*.
+- **GPCP rainfall** drifts dry after 2019. It was detected independently by three agents, with Kariba's satellite lake level as the tie-breaker. Rain trends use 2002–2019, and the ENSO results are checked on 1981–2019.
+- **For the pitch:** "we tested ideas that sounded good and dropped the ones that failed a pre-set test" is a Validity strength.
