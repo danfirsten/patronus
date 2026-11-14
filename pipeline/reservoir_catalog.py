@@ -9,6 +9,7 @@ plants whose output depends on this lake's storage:
 GPPD matching is by country and an exact plant name, so it is reproducible.
 
 Lakes from G-REALM that were considered and left out (see docs/RESERVOIRS.md):
+  Garafiri (003683, the wet-season months are missing almost every year, so no analog paths),
   Nam Ngum (G-REALM 001739, series ends Sep 2016), Kafue (000415, target is the Kafue Flats, not
   Itezhi-Tezhi), Kpong (003765, run-of-river headpond), Gilgel Gibe III and GERD/Millennium (still
   filling, so a same-month percentile is meaningless), Jirau and Xayaburi (run-of-river).
@@ -40,7 +41,6 @@ LAKES = [
      [("UGA", "Kiira"), ("UGA", "Narubale")], [("UGA", "Bujagali Falls")],
      "Outflow through Nalubaale/Kiira follows the Agreed Curve; the lake level sets the flow."),
     ("mtera", "001458", "Mtera", ["TZA"], [("TZA", "Mtera")], [("TZA", "Kidatu")], None),
-    ("garafiri", "003683", "Garafiri", ["GIN"], [("GIN", "Garafiri")], [], None),
     ("guri", "000432", "Guri", ["VEN"], [("VEN", "Simon Bolivar (Guri)")],
      [("VEN", "Antonio Jose de Sucre (Macagua)"), ("VEN", "Fransisco de Miranda (Caruachi)"),
       ("VEN", "Manuel Piar (Tocoma) Hydroelectric Power Plant Venezuela")], None),
@@ -80,6 +80,16 @@ LAKES = [
       ("KGZ", "Uch-Kurgan Hydroelectric Power Plant Kyrgyzstan")], None),
     ("mosul", "001534", "Mosul", ["IRQ"], [("IRQ", "Mosul Dam"), ("IRQ", "Mosul Dam Regulator")], [], None),
 ]
+
+
+# Use the record only after the reservoir was first filled (earlier passes see the river or a
+# filling lake, which would distort the same-month percentiles).
+VALID_FROM = {
+    "xiaowan": ("2010-07", "Xiaowan dam reached normal pool in 2010; earlier passes see the river/filling"),
+    "tehri": ("2008-01", "Tehri reservoir impounded 2005-06; earlier passes see the river/filling"),
+    "indravati": ("2008-01", "Upper Indravati record before 2008 is sparse and pre-dates stable operation"),
+    "three_gorges": ("2010-11", "Three Gorges first reached its 175 m normal pool in Oct 2010"),
+}
 
 
 @lru_cache(maxsize=1)
