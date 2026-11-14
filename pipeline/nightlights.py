@@ -72,7 +72,7 @@ FRAMES = [
     dict(id="zambia-2024-06", region="zambia", start="2024-06-08", end="2024-06-22",
          caption="Jun 2024: Kariba low, long daily load-shedding"),
     dict(id="zambia-2024-10", region="zambia", start="2024-09-20", end="2024-10-10",
-         caption="Late Sep to early Oct 2024: peak load-shedding; Kariba North Bank generation largely halted from about 14 Sep 2024, households got about 3 h of power a day"),
+         caption="Late Sep to early Oct 2024: peak load-shedding; Kariba hydro generation halted around 14 Sep 2024; households got about 3 h of power a day"),
     dict(id="zambia-2026-11", region="zambia", start="2026-10-22", end="2026-11-02",
          caption="Late Oct to early Nov 2026: now (latest nights available on GIBS)"),
     dict(id="ecuador-2024-09", region="ecuador", start="2024-09-05", end="2024-09-19", baseline=True,
@@ -80,7 +80,7 @@ FRAMES = [
     dict(id="ecuador-2024-10", region="ecuador", start="2024-10-25", end="2024-11-15",
          caption="Late Oct to mid Nov 2024: cuts of up to 14 h/day from 24 Oct 2024"),
     dict(id="ecuador-2025-02", region="ecuador", start="2025-02-05", end="2025-02-20",
-         caption="Feb 2025: after the cuts ended (Dec 2024)"),
+         caption="Feb 2025: after residential cuts ended (20 Dec 2024)"),
 ]
 
 
@@ -190,12 +190,19 @@ def main() -> None:
         if not nights:
             notes.append(f"{fr['id']}: no GIBS nights available in {fr['start']}..{fr['end']}; frame skipped.")
             continue
-        stack = []
+        stack, used = [], []
         for d in nights:
             try:
-                stack.append(fetch_night(s, fr["region"], bbox, d))
+                g = fetch_night(s, fr["region"], bbox, d)
             except RuntimeError as e:
                 notes.append(f"{fr['id']}: night {d} not fetched ({e}).")
+                continue
+            if np.isnan(g).mean() > 0.5:
+                notes.append(f"{fr['id']}: night {d} is mostly no-data on GIBS; left out of the composite.")
+                continue
+            stack.append(g)
+            used.append(d)
+        nights = used
         if not stack:
             continue
         comp = np.nanmedian(np.stack(stack), axis=0)
@@ -315,7 +322,15 @@ def frame_note(rec: dict) -> str | None:
         verdict = "No clear change against the baseline in this display imagery."
     else:
         verdict = "Brighter than the baseline in this display imagery; no dip visible."
-    return f"{verdict} By city box: {city_bits}."
+    out = f"{verdict} By city box: {city_bits}."
+    sat = max(v["saturated_px_pct"] for v in rec["cities"].values())
+    if sat >= 10:
+        out += (f" Up to {sat:.0f}% of pixels in a city box are saturated in the display colormap, which hides"
+                " dimming in the brightest areas.")
+    rng = rec.get("single_night_range_vs_baseline_pct")
+    if rng:
+        out += f" Single nights range from {rng[0]:+.0f}% to {rng[1]:+.0f}%."
+    return out
 
 
 def summary_notes(frames: list[dict]) -> list[str]:

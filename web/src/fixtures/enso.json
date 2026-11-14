@@ -1,0 +1,434 @@
+{
+ "generated_at": "2026-11-15T00:00:00Z",
+ "sources": [
+  "oni",
+  "power",
+  "ember_monthly",
+  "grealm",
+  "cpc_enso",
+  "geos_s2s"
+ ],
+ "_fixture": true,
+ "notes": [
+  "ILLUSTRATIVE SAMPLE DATA from web/src/fixtures. Not pipeline output. Do not cite."
+ ],
+ "method": "SAMPLE. Composites of hydro output / basin rain in El Niño and La Niña years vs other years, with permutation tests.",
+ "summary": {
+  "gw_el_nino_losers": 176,
+  "gw_la_nina_losers": 124,
+  "n_el_nino_losers": 17,
+  "n_la_nina_losers": 3,
+  "headline": "Sample: 176 GW of hydropower is in grids that usually lose output under El Niño"
+ },
+ "countries": [
+  {
+   "iso3": "ZMB",
+   "name": "Zambia",
+   "variable": "reservoir_level",
+   "el_nino_effect_pct": -20,
+   "el_nino_p": 0.01,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.6,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": "Effect is strongest in the Dec-Mar rainy season"
+  },
+  {
+   "iso3": "ZWE",
+   "name": "Zimbabwe",
+   "variable": "reservoir_level",
+   "el_nino_effect_pct": -20,
+   "el_nino_p": 0.01,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.6,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": "Shares Lake Kariba with Zambia"
+  },
+  {
+   "iso3": "MOZ",
+   "name": "Mozambique",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 5,
+   "la_nina_p": 0.4,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "MWI",
+   "name": "Malawi",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.7,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "VNM",
+   "name": "Viet Nam",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -15,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 5,
+   "la_nina_p": 0.3,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": "Dry-season (Mar-Jun) output falls most"
+  },
+  {
+   "iso3": "COL",
+   "name": "Colombia",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -15,
+   "el_nino_p": 0.02,
+   "la_nina_effect_pct": 10,
+   "la_nina_p": 0.1,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "ECU",
+   "name": "Ecuador",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -5,
+   "el_nino_p": 0.3,
+   "la_nina_effect_pct": -10,
+   "la_nina_p": 0.05,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "la_nina_loser",
+   "season_note": "Amazon-side basins dry under La Niña"
+  },
+  {
+   "iso3": "BRA",
+   "name": "Brazil",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -5,
+   "el_nino_p": 0.08,
+   "la_nina_effect_pct": -10,
+   "la_nina_p": 0.05,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "both",
+   "season_note": "North and south of Brazil respond in opposite ways"
+  },
+  {
+   "iso3": "PER",
+   "name": "Peru",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 0,
+   "el_nino_p": 0.7,
+   "la_nina_effect_pct": -5,
+   "la_nina_p": 0.2,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "CRI",
+   "name": "Costa Rica",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.8,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "PAN",
+   "name": "Panama",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 5,
+   "la_nina_p": 0.3,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "GTM",
+   "name": "Guatemala",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.6,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "HND",
+   "name": "Honduras",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.6,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "SLV",
+   "name": "El Salvador",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.08,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.6,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "VEN",
+   "name": "Venezuela",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 5,
+   "la_nina_p": 0.3,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "PRY",
+   "name": "Paraguay",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 5,
+   "el_nino_p": 0.3,
+   "la_nina_effect_pct": -10,
+   "la_nina_p": 0.05,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "la_nina_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "LKA",
+   "name": "Sri Lanka",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 0,
+   "el_nino_p": 0.6,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.7,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "ETH",
+   "name": "Ethiopia",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -5,
+   "el_nino_p": 0.09,
+   "la_nina_effect_pct": 5,
+   "la_nina_p": 0.3,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "LAO",
+   "name": "Lao PDR",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.5,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "NOR",
+   "name": "Norway",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 0,
+   "el_nino_p": 0.8,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.8,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "CAN",
+   "name": "Canada",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 0,
+   "el_nino_p": 0.6,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.6,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "NZL",
+   "name": "New Zealand",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -5,
+   "el_nino_p": 0.2,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.5,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "TJK",
+   "name": "Tajikistan",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 0,
+   "el_nino_p": 0.5,
+   "la_nina_effect_pct": -5,
+   "la_nina_p": 0.2,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "GHA",
+   "name": "Ghana",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -5,
+   "el_nino_p": 0.1,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.5,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "neutral",
+   "season_note": null
+  },
+  {
+   "iso3": "AGO",
+   "name": "Angola",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 0,
+   "la_nina_p": 0.5,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  },
+  {
+   "iso3": "NAM",
+   "name": "Namibia",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10,
+   "el_nino_p": 0.05,
+   "la_nina_effect_pct": 5,
+   "la_nina_p": 0.3,
+   "n_el_nino": 10,
+   "n_la_nina": 10,
+   "record": "1981-2025",
+   "exposure": "el_nino_loser",
+   "season_note": null
+  }
+ ],
+ "outlook": {
+  "source": "NOAA CPC + NASA GEOS-S2S",
+  "issued": "2026-11",
+  "oni_latest": {
+   "season": "ASO 2026",
+   "value": 2
+  },
+  "status": "El Nino Advisory (sample)",
+  "summary": "Sample text: a strong El Niño is expected to last through early 2027.",
+  "geos_nino34_forecast": [
+   {
+    "season": "NDJ",
+    "value": 2.5
+   },
+   {
+    "season": "DJF",
+    "value": 2.5
+   },
+   {
+    "season": "JFM",
+    "value": 2
+   },
+   {
+    "season": "FMA",
+    "value": 1.5
+   },
+   {
+    "season": "MAM",
+    "value": 1
+   }
+  ]
+ },
+ "projections": {
+  "text": "Extreme El Niño events are projected to roughly double, from about once every 20 years to about once a decade, and keep rising after warming stabilizes.",
+  "refs": [
+   {
+    "title": "Cai et al. 2014, Nature Climate Change",
+    "url": "https://doi.org/10.1038/nclimate2100"
+   },
+   {
+    "title": "Wang et al. 2020, Nature Climate Change",
+    "url": "https://doi.org/10.1038/s41558-019-0675-2"
+   }
+  ]
+ }
+}

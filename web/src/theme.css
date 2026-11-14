@@ -1,0 +1,105 @@
+/*
+ * Patronus theme tokens. This is the ONLY file that defines colours, fonts and radii.
+ * Swap the identity by editing values here; components only use var(--...).
+ *
+ * Data palettes use the Okabe-Ito colour-blind-safe set:
+ *   drying = warm (vermillion / orange), wetting = cool (blue / sky blue).
+ */
+:root {
+  color-scheme: dark;
+
+  /* Type */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: clamp(2rem, 5vw, 3.25rem);
+  --lh: 1.55;
+
+  /* Shape */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+  --maxw: 1180px;
+  --gutter: 16px;
+
+  /* Surfaces */
+  --bg: #0d1117;
+  --bg-elev: #151b24;
+  --bg-elev-2: #1c2430;
+  --border: #2a3442;
+  --border-strong: #3b4757;
+
+  /* Text */
+  --text: #e8edf3;
+  --text-muted: #9aa7b6;
+  --text-faint: #6b7889;
+  --link: #7cc4f2;
+  --focus: #f0e442;
+
+  /* Accent (UI, not data) */
+  --accent: #e69f00;
+  --accent-text: #111111;
+
+  /* Map */
+  --map-ocean: #0b1420;
+  --map-land: #222c38;
+  --map-land-stroke: #36414f;
+  --map-graticule: #16202c;
+  --map-highlight: #ffffff;
+
+  /* Data: trend (diverging, colour-blind safe) */
+  --drying-strong: #d55e00;
+  --drying-mild: #f0a35e;
+  --neutral-data: #5f6b7a;
+  --wetting-mild: #7fbfe8;
+  --wetting-strong: #0072b2;
+
+  /* Data: ENSO exposure */
+  --enso-el-nino: #d55e00;
+  --enso-la-nina: #56b4e9;
+  --enso-both: #cc79a7;
+  --enso-neutral: #5f6b7a;
+  --enso-nodata: #222c38;
+
+  /* Data: risk levels */
+  --risk-low: #4f6b5c;
+  --risk-watch: #f0e442;
+  --risk-warning: #e69f00;
+  --risk-danger: #d55e00;
+  --risk-text-dark: #111111;
+  --risk-text-light: #ffffff;
+
+  /* Data: series */
+  --series-1: #56b4e9;
+  --series-2: #e69f00;
+  --series-3: #cc79a7;
+  --series-4: #009e73;
+  --series-band: rgba(86, 180, 233, 0.22);
+  --series-band-2: rgba(230, 159, 0, 0.22);
+  --threshold-warning: #e69f00;
+  --threshold-danger: #d55e00;
+  --event-mark: #f0e442;
+  --shortfall-shade: rgba(213, 94, 0, 0.28);
+  --grid-line: #232d3a;
+  --axis-text: #8794a4;
+
+  /* Sample-data banner */
+  --sample-bg: #3a2a00;
+  --sample-border: #e69f00;
+  --sample-text: #ffd27a;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 400ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+  }
+}

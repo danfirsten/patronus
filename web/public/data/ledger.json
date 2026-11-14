@@ -1,0 +1,109 @@
+{
+ "generated_at": "2026-11-14T20:05:27Z",
+ "sources": [],
+ "method": "SHA-256 of each published data file. New or changed hashes are listed in a manifest (web/public/ledger/manifest-<UTC>.txt, sha256sum format) that is stamped with OpenTimestamps, which anchors it in the Bitcoin blockchain via public calendar servers. Unchanged files keep their original entry; replaced entries move to history. See docs/VERIFY.md.",
+ "fallback_proof": "The public git commit that adds each file and manifest.",
+ "notes": [
+  "Not yet present when the ledger ran (not hashed): countries.json, basins.geojson, trends.json, watchlist.json, generation_backtest.json, kariba.json, scoreboard.json."
+ ],
+ "entries": [
+  {
+   "file": "crises.json",
+   "path": "web/public/data/crises.json",
+   "sha256": "8bae0cb15018f3d58b961127de4e1154d09c766135deacbac20b787b9ce4d416",
+   "bytes": 9559,
+   "logged_at": "2026-11-14T20:04:30Z",
+   "manifest": "ledger/manifest-20261114T200430Z.txt",
+   "ots": "ledger/manifest-20261114T200430Z.txt.ots",
+   "verify": "sha256sum web/public/data/crises.json"
+  },
+  {
+   "file": "enso.json",
+   "path": "web/public/data/enso.json",
+   "sha256": "4f54b48335e9501d237d431d39cb615f1fcfaea7eef73f5d41401abc46a2a827",
+   "bytes": 99571,
+   "logged_at": "2026-11-14T20:05:27Z",
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "verify": "sha256sum web/public/data/enso.json"
+  },
+  {
+   "file": "meta.json",
+   "path": "web/public/data/meta.json",
+   "sha256": "b6debba3243c74c87a0e98426dce8087728f52487baaf3699ad7e6c6275408a9",
+   "bytes": 9685,
+   "logged_at": "2026-11-14T20:05:27Z",
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "verify": "sha256sum web/public/data/meta.json"
+  },
+  {
+   "file": "nightlights.json",
+   "path": "web/public/data/nightlights.json",
+   "sha256": "f0698343865ba503bf28c9fcf7549fe3bda67d84d7ad18a698008bb711a1d85f",
+   "bytes": 16485,
+   "logged_at": "2026-11-14T20:05:27Z",
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "verify": "sha256sum web/public/data/nightlights.json"
+  }
+ ],
+ "manifests": [
+  {
+   "manifest": "ledger/manifest-20261114T200430Z.txt",
+   "sha256": "c8b9b51a8be0d5912bc17466438070813c37b08677ca75d32dabdc33dd042c9e",
+   "created_at": "2026-11-14T20:04:30Z",
+   "n_files": 3,
+   "ots": "ledger/manifest-20261114T200430Z.txt.ots",
+   "ots_status": "pending",
+   "verify": "sha256sum -c web/public/ledger/manifest-20261114T200430Z.txt",
+   "ots_calendars": [
+    "https://a.pool.opentimestamps.org",
+    "https://b.pool.opentimestamps.org",
+    "https://a.pool.eternitywall.com",
+    "https://ots.btc.catallaxy.com"
+   ],
+   "ots_verify": "ots verify web/public/ledger/manifest-20261114T200430Z.txt.ots"
+  },
+  {
+   "manifest": "ledger/manifest-20261114T200527Z.txt",
+   "sha256": "19cfcca74da50234ffddd30db247841fd44981133c3aec56f2f056e96a31a8f6",
+   "created_at": "2026-11-14T20:05:27Z",
+   "n_files": 3,
+   "ots": "ledger/manifest-20261114T200527Z.txt.ots",
+   "ots_status": "pending",
+   "verify": "sha256sum -c web/public/ledger/manifest-20261114T200527Z.txt",
+   "ots_calendars": [
+    "https://a.pool.opentimestamps.org",
+    "https://b.pool.opentimestamps.org",
+    "https://a.pool.eternitywall.com",
+    "https://ots.btc.catallaxy.com"
+   ],
+   "ots_verify": "ots verify web/public/ledger/manifest-20261114T200527Z.txt.ots"
+  }
+ ],
+ "history": [
+  {
+   "file": "meta.json",
+   "path": "web/public/data/meta.json",
+   "sha256": "738878b561785ab4e1110fd6420976e4ad9a4482287287766f7ab70ec88ae27c",
+   "bytes": 9685,
+   "logged_at": "2026-11-14T20:04:30Z",
+   "manifest": "ledger/manifest-20261114T200430Z.txt",
+   "ots": "ledger/manifest-20261114T200430Z.txt.ots",
+   "verify": "sha256sum web/public/data/meta.json",
+   "superseded_at": "2026-11-14T20:05:27Z"
+  },
+  {
+   "file": "nightlights.json",
+   "path": "web/public/data/nightlights.json",
+   "sha256": "c3c0fa4b5a0c2a035a16b1320ba17b6c4fd9e205bc9d0b74fd422b02e77ac6cc",
+   "bytes": 16502,
+   "logged_at": "2026-11-14T20:04:30Z",
+   "manifest": "ledger/manifest-20261114T200430Z.txt",
+   "ots": "ledger/manifest-20261114T200430Z.txt.ots",
+   "verify": "sha256sum web/public/data/nightlights.json",
+   "superseded_at": "2026-11-14T20:05:27Z"
+  }
+ ]
+}

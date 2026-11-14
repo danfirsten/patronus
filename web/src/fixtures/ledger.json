@@ -1,0 +1,31 @@
+{
+ "generated_at": "2026-11-15T00:00:00Z",
+ "sources": [],
+ "_fixture": true,
+ "notes": [
+  "ILLUSTRATIVE SAMPLE DATA from web/src/fixtures. Not pipeline output. Do not cite."
+ ],
+ "entries": [
+  {
+   "file": "kariba.json",
+   "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+   "logged_at": "2026-11-15T00:00:00Z",
+   "ots": null,
+   "verify": "sha256sum web/public/data/kariba.json"
+  },
+  {
+   "file": "watchlist.json",
+   "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+   "logged_at": "2026-11-15T00:00:00Z",
+   "ots": null,
+   "verify": "sha256sum web/public/data/watchlist.json"
+  },
+  {
+   "file": "scoreboard.json",
+   "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+   "logged_at": "2026-11-15T00:00:00Z",
+   "ots": null,
+   "verify": "sha256sum web/public/data/scoreboard.json"
+  }
+ ]
+}

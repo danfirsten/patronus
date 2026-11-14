@@ -1,0 +1,38 @@
+{
+ "generated_at": "2026-11-15T00:00:00Z",
+ "sources": [
+  "gibs_blackmarble"
+ ],
+ "_fixture": true,
+ "notes": [
+  "ILLUSTRATIVE SAMPLE DATA from web/src/fixtures. Not pipeline output. Do not cite."
+ ],
+ "frames": [
+  {
+   "id": "sample-before",
+   "place": "Lusaka and Copperbelt",
+   "date": "2024-02-15",
+   "src": "img/nightlights/sample-before.png",
+   "bbox": [
+    25,
+    -17,
+    30,
+    -12
+   ],
+   "caption": "Sample frame: before load-shedding"
+  },
+  {
+   "id": "sample-after",
+   "place": "Lusaka and Copperbelt",
+   "date": "2024-10-15",
+   "src": "img/nightlights/sample-after.png",
+   "bbox": [
+    25,
+    -17,
+    30,
+    -12
+   ],
+   "caption": "Sample frame: during 12 h/day cuts"
+  }
+ ]
+}

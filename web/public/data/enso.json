@@ -1,0 +1,3457 @@
+{
+ "generated_at": "2026-11-14T20:05:19+00:00",
+ "sources": [
+  "oni",
+  "cpc_enso",
+  "geos_s2s",
+  "power",
+  "gppd",
+  "ember_monthly",
+  "ember_yearly",
+  "ember_china",
+  "grealm"
+ ],
+ "method": "ENSO fingerprint per grid. ENSO year y = event peaking Nov(y)-Jan(y+1); El Nino if ONI NDJ(y) >= +0.5, La Nina if <= -0.5, otherwise neutral (NOAA ONI). basin_precip: NASA POWER (MERRA-2) PRECTOTCORR at capacity-weighted points near each grid's hydro plants (WRI GPPD), water years 1981/82 onward. Two windows are tested: the Oct-Sep water year and the climatologically wettest 6 months; effect = % difference of mean precipitation in El Nino (La Nina) years vs neutral years; the window with the larger |effect| is kept per phase and the 5,000-shuffle permutation test repeats that choice in every shuffle (corrects for cherry-picking). hydro_generation: Ember monthly hydro TWh per water year, linearly detrended, same composite (low confidence; primary only with >= 10 water years and >= 3 events per phase). reservoir_level (Zambia, Zimbabwe): G-REALM Kariba level rise from Oct-Nov(y) to Jun-Jul(y+1). Loser in a phase if effect <= -5% with permutation p < 0.1 on the primary variable. Two-sided p-values.",
+ "summary": {
+  "gw_el_nino_losers": 15.4,
+  "gw_la_nina_losers": 43.5,
+  "n_el_nino_losers": 2,
+  "n_la_nina_losers": 2,
+  "n_both": 0,
+  "n_neutral": 44,
+  "n_countries": 48,
+  "gw_total": 448.2,
+  "el_nino_losers": [
+   "MOZ",
+   "COL"
+  ],
+  "la_nina_losers": [
+   "PRY",
+   "NOR"
+  ],
+  "sichuan_exposure": "neutral",
+  "scope_note": "Totals cover the 48 hydro-dependent countries; Sichuan is reported separately (part of China). GW is installed hydro capacity from Ember (latest year; GPPD where Ember has none).",
+  "headline": "15 GW of hydropower sits in 2 grids that lose output under El Nino (43 GW in 2 grids lose under La Nina), and extreme El Ninos are projected to come about twice as often."
+ },
+ "countries": [
+  {
+   "iso3": "BRA",
+   "name": "Brazil",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -6.2,
+   "el_nino_p": 0.2791,
+   "la_nina_effect_pct": 2.7,
+   "la_nina_p": 0.6579,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Dec-May. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Dec-May wet season.",
+   "hydro_gw": 110.27,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "South America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -6.2,
+     "el_nino_p": 0.2791,
+     "la_nina_effect_pct": 2.7,
+     "la_nina_p": 0.6579,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Dec-May wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -6.2,
+      "Dec-May wet season": -4.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 0.4,
+      "Dec-May wet season": 2.7
+     },
+     "strong_el_nino_effect_pct": -8.1,
+     "strong_el_nino_p": 0.2412,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "CAN",
+   "name": "Canada",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -0.7,
+   "el_nino_p": 0.77,
+   "la_nina_effect_pct": 0.8,
+   "la_nina_p": 0.7213,
+   "n_el_nino": 5,
+   "n_la_nina": 6,
+   "record": "WY 2010/11-2024/25",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Jun-Nov. Rainfall El Nino signal strongest in the Jun-Nov wet season; same window for La Nina.",
+   "hydro_gw": 84.13,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "North America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 1.4,
+     "el_nino_p": 0.8902,
+     "la_nina_effect_pct": 5.6,
+     "la_nina_p": 0.15,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Jun-Nov wet season",
+     "la_nina_window": "Jun-Nov wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 0.4,
+      "Jun-Nov wet season": 1.4
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 1.5,
+      "Jun-Nov wet season": 5.6
+     },
+     "strong_el_nino_effect_pct": -2.0,
+     "strong_el_nino_p": 0.6745,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": -0.7,
+     "el_nino_p": 0.77,
+     "la_nina_effect_pct": 0.8,
+     "la_nina_p": 0.7213,
+     "n_el_nino": 5,
+     "n_la_nina": 6,
+     "n_neutral": 4,
+     "record": "WY 2010/11-2024/25",
+     "el_nino_years": [
+      2014,
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2010,
+      2011,
+      2017,
+      2020,
+      2021,
+      2022
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Jun 2026-Nov 2026",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "NOR",
+   "name": "Norway",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -4.9,
+   "el_nino_p": 0.0912,
+   "la_nina_effect_pct": -5.0,
+   "la_nina_p": 0.068,
+   "n_el_nino": 4,
+   "n_la_nina": 5,
+   "record": "WY 2015/16-2025/26",
+   "exposure": "la_nina_loser",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Sep-Feb. Rainfall El Nino signal strongest in the Sep-Feb wet season; same window for La Nina.",
+   "hydro_gw": 34.65,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 11.4,
+     "el_nino_p": 0.093,
+     "la_nina_effect_pct": 8.4,
+     "la_nina_p": 0.2096,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Sep-Feb wet season",
+     "la_nina_window": "Sep-Feb wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 5.5,
+      "Sep-Feb wet season": 11.4
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 0.8,
+      "Sep-Feb wet season": 8.4
+     },
+     "strong_el_nino_effect_pct": 6.1,
+     "strong_el_nino_p": 0.5243,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": -4.9,
+     "el_nino_p": 0.0912,
+     "la_nina_effect_pct": -5.0,
+     "la_nina_p": 0.068,
+     "n_el_nino": 4,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2025/26",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Sep 2026-Feb 2027",
+   "current_implication": "Loses under La Nina, which is not forecast for the next 6 months; La Nina often follows strong El Ninos, so watch late 2027."
+  },
+  {
+   "iso3": "VNM",
+   "name": "Viet Nam",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -10.5,
+   "el_nino_p": 0.5033,
+   "la_nina_effect_pct": 9.7,
+   "la_nina_p": 0.5371,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 23.71,
+   "gw_source": "ember_yearly_2024",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -10.5,
+     "el_nino_p": 0.5033,
+     "la_nina_effect_pct": 9.7,
+     "la_nina_p": 0.5371,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -10.5,
+      "May-Oct wet season": -3.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 9.1,
+      "May-Oct wet season": 9.7
+     },
+     "strong_el_nino_effect_pct": -4.8,
+     "strong_el_nino_p": 0.777,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "VEN",
+   "name": "Venezuela",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -15.5,
+   "el_nino_p": 0.2274,
+   "la_nina_effect_pct": 4.8,
+   "la_nina_p": 0.844,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 16.91,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "South America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -15.5,
+     "el_nino_p": 0.2274,
+     "la_nina_effect_pct": 4.8,
+     "la_nina_p": 0.844,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "May-Oct wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -1.8,
+      "May-Oct wet season": -15.5
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 4.8,
+      "May-Oct wet season": -0.6
+     },
+     "strong_el_nino_effect_pct": -29.0,
+     "strong_el_nino_p": 0.0548,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "May 2026-Oct 2026",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "SWE",
+   "name": "Sweden",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 6.5,
+   "el_nino_p": 0.2262,
+   "la_nina_effect_pct": 6.6,
+   "la_nina_p": 0.1898,
+   "n_el_nino": 4,
+   "n_la_nina": 5,
+   "record": "WY 2015/16-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 16.31,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 9.3,
+     "el_nino_p": 0.0894,
+     "la_nina_effect_pct": 8.5,
+     "la_nina_p": 0.1182,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 9.3,
+      "May-Oct wet season": -8.1
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 8.5,
+      "May-Oct wet season": 2.6
+     },
+     "strong_el_nino_effect_pct": 9.8,
+     "strong_el_nino_p": 0.0672,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 6.5,
+     "el_nino_p": 0.2262,
+     "la_nina_effect_pct": 6.6,
+     "la_nina_p": 0.1898,
+     "n_el_nino": 4,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2025/26",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "CHE",
+   "name": "Switzerland",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 10.8,
+   "el_nino_p": 0.1528,
+   "la_nina_effect_pct": 1.1,
+   "la_nina_p": 0.8912,
+   "n_el_nino": 4,
+   "n_la_nina": 4,
+   "record": "WY 2015/16-2024/25",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 16.05,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 4.5,
+     "el_nino_p": 0.6407,
+     "la_nina_effect_pct": 5.3,
+     "la_nina_p": 0.5161,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 4.5,
+      "May-Oct wet season": -1.2
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -2.5,
+      "May-Oct wet season": 5.3
+     },
+     "strong_el_nino_effect_pct": 10.8,
+     "strong_el_nino_p": 0.1148,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 10.8,
+     "el_nino_p": 0.1528,
+     "la_nina_effect_pct": 1.1,
+     "la_nina_p": 0.8912,
+     "n_el_nino": 4,
+     "n_la_nina": 4,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2024/25",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "AUT",
+   "name": "Austria",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 6.3,
+   "el_nino_p": 0.4251,
+   "la_nina_effect_pct": -2.5,
+   "la_nina_p": 0.7219,
+   "n_el_nino": 4,
+   "n_la_nina": 5,
+   "record": "WY 2015/16-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 15.75,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 6.0,
+     "el_nino_p": 0.2801,
+     "la_nina_effect_pct": 1.8,
+     "la_nina_p": 0.8796,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 6.0,
+      "May-Oct wet season": -4.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 1.7,
+      "May-Oct wet season": 1.8
+     },
+     "strong_el_nino_effect_pct": 12.6,
+     "strong_el_nino_p": 0.0168,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 6.3,
+     "el_nino_p": 0.4251,
+     "la_nina_effect_pct": -2.5,
+     "la_nina_p": 0.7219,
+     "n_el_nino": 4,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2025/26",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "COL",
+   "name": "Colombia",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -11.3,
+   "el_nino_p": 0.0486,
+   "la_nina_effect_pct": 0.8,
+   "la_nina_p": 0.9292,
+   "n_el_nino": 3,
+   "n_la_nina": 5,
+   "record": "WY 2016/17-2025/26",
+   "exposure": "el_nino_loser",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 13.22,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "South America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -14.2,
+     "el_nino_p": 0.1998,
+     "la_nina_effect_pct": -8.8,
+     "la_nina_p": 0.4971,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "May-Oct wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -10.4,
+      "May-Oct wet season": -14.2
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -8.8,
+      "May-Oct wet season": -5.3
+     },
+     "strong_el_nino_effect_pct": -20.8,
+     "strong_el_nino_p": 0.1184,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 5,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": -11.3,
+     "el_nino_p": 0.0486,
+     "la_nina_effect_pct": 0.8,
+     "la_nina_p": 0.9292,
+     "n_el_nino": 3,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2016/17-2025/26",
+     "el_nino_years": [
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "May 2026-Oct 2026",
+   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; hydro output was -11% vs trend in past El Nino water years (p=0.05); -21% in the 5 strong El Ninos. Window to watch: May 2026-Oct 2026."
+  },
+  {
+   "iso3": "LAO",
+   "name": "Lao PDR",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -11.3,
+   "el_nino_p": 0.5063,
+   "la_nina_effect_pct": 5.6,
+   "la_nina_p": 0.8182,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 10.19,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -11.3,
+     "el_nino_p": 0.5063,
+     "la_nina_effect_pct": 5.6,
+     "la_nina_p": 0.8182,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "May-Oct wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -9.4,
+      "May-Oct wet season": -11.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 5.6,
+      "May-Oct wet season": 2.9
+     },
+     "strong_el_nino_effect_pct": -28.4,
+     "strong_el_nino_p": 0.0838,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 5,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "May 2026-Oct 2026",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "ETH",
+   "name": "Ethiopia",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 10.4,
+   "el_nino_p": 0.3689,
+   "la_nina_effect_pct": -3.9,
+   "la_nina_p": 0.852,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Apr-Sep. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Apr-Sep wet season.",
+   "hydro_gw": 9.21,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 10.4,
+     "el_nino_p": 0.3689,
+     "la_nina_effect_pct": -3.9,
+     "la_nina_p": 0.852,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Apr-Sep wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 10.4,
+      "Apr-Sep wet season": -7.0
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -3.9,
+      "Apr-Sep wet season": -3.9
+     },
+     "strong_el_nino_effect_pct": 26.6,
+     "strong_el_nino_p": 0.0224,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 6,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "PRY",
+   "name": "Paraguay",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 14.2,
+   "el_nino_p": 0.1354,
+   "la_nina_effect_pct": -16.7,
+   "la_nina_p": 0.061,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "la_nina_loser",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Sep-Feb. Rainfall El Nino signal strongest in the Sep-Feb wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 8.82,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "South America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 14.2,
+     "el_nino_p": 0.1354,
+     "la_nina_effect_pct": -16.7,
+     "la_nina_p": 0.061,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Sep-Feb wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 0.5,
+      "Sep-Feb wet season": 14.2
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -16.7,
+      "Sep-Feb wet season": -7.6
+     },
+     "strong_el_nino_effect_pct": 33.2,
+     "strong_el_nino_p": 0.005,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Sep 2026-Feb 2027",
+   "current_implication": "Loses under La Nina, which is not forecast for the next 6 months; La Nina often follows strong El Ninos, so watch late 2027."
+  },
+  {
+   "iso3": "TJK",
+   "name": "Tajikistan",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 15.0,
+   "el_nino_p": 0.2975,
+   "la_nina_effect_pct": -19.1,
+   "la_nina_p": 0.16,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Dec-May. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 5.84,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 15.0,
+     "el_nino_p": 0.2975,
+     "la_nina_effect_pct": -19.1,
+     "la_nina_p": 0.16,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 15.0,
+      "Dec-May wet season": 13.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -19.1,
+      "Dec-May wet season": -18.5
+     },
+     "strong_el_nino_effect_pct": 6.0,
+     "strong_el_nino_p": 0.7471,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "PER",
+   "name": "Peru",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -12.2,
+   "el_nino_p": 0.2509,
+   "la_nina_effect_pct": 10.3,
+   "la_nina_p": 0.3359,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Oct-Mar. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Oct-Mar wet season.",
+   "hydro_gw": 5.77,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "South America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -12.2,
+     "el_nino_p": 0.2509,
+     "la_nina_effect_pct": 10.3,
+     "la_nina_p": 0.3359,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Mar wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -12.2,
+      "Oct-Mar wet season": -9.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 6.0,
+      "Oct-Mar wet season": 10.3
+     },
+     "strong_el_nino_effect_pct": -14.9,
+     "strong_el_nino_p": 0.2629,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "NZL",
+   "name": "New Zealand",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 1.3,
+   "el_nino_p": 0.7143,
+   "la_nina_effect_pct": 3.5,
+   "la_nina_p": 0.2474,
+   "n_el_nino": 5,
+   "n_la_nina": 7,
+   "record": "WY 2010/11-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Sep-Feb. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 5.5,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Oceania",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -0.5,
+     "el_nino_p": 0.9928,
+     "la_nina_effect_pct": -7.2,
+     "la_nina_p": 0.2951,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -0.5,
+      "Sep-Feb wet season": -0.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -7.2,
+      "Sep-Feb wet season": -1.8
+     },
+     "strong_el_nino_effect_pct": 1.0,
+     "strong_el_nino_p": 0.884,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 6,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 1.3,
+     "el_nino_p": 0.7143,
+     "la_nina_effect_pct": 3.5,
+     "la_nina_p": 0.2474,
+     "n_el_nino": 5,
+     "n_la_nina": 7,
+     "n_neutral": 4,
+     "record": "WY 2010/11-2025/26",
+     "el_nino_years": [
+      2014,
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2010,
+      2011,
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "ECU",
+   "name": "Ecuador",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -11.7,
+   "el_nino_p": 0.2579,
+   "la_nina_effect_pct": 7.6,
+   "la_nina_p": 0.4771,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Dec-May. Rainfall El Nino signal strongest in the Dec-May wet season; same window for La Nina.",
+   "hydro_gw": 5.39,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "South America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -11.7,
+     "el_nino_p": 0.2579,
+     "la_nina_effect_pct": 7.6,
+     "la_nina_p": 0.4771,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Dec-May wet season",
+     "la_nina_window": "Dec-May wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -11.1,
+      "Dec-May wet season": -11.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.8,
+      "Dec-May wet season": 7.6
+     },
+     "strong_el_nino_effect_pct": 0.2,
+     "strong_el_nino_p": 0.985,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Dec 2026-May 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "PRK",
+   "name": "North Korea",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 12.4,
+   "el_nino_p": 0.2699,
+   "la_nina_effect_pct": 3.2,
+   "la_nina_p": 0.9044,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Apr-Sep. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Apr-Sep wet season.",
+   "hydro_gw": 4.97,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 12.4,
+     "el_nino_p": 0.2699,
+     "la_nina_effect_pct": 3.2,
+     "la_nina_p": 0.9044,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Apr-Sep wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 12.4,
+      "Apr-Sep wet season": -10.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.1,
+      "Apr-Sep wet season": 3.2
+     },
+     "strong_el_nino_effect_pct": 21.5,
+     "strong_el_nino_p": 0.0668,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "AGO",
+   "name": "Angola",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -9.1,
+   "el_nino_p": 0.5279,
+   "la_nina_effect_pct": -12.2,
+   "la_nina_p": 0.3535,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Nov-Apr wet season.",
+   "hydro_gw": 3.73,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -9.1,
+     "el_nino_p": 0.5279,
+     "la_nina_effect_pct": -12.2,
+     "la_nina_p": 0.3535,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Nov-Apr wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -9.1,
+      "Nov-Apr wet season": -8.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -8.6,
+      "Nov-Apr wet season": -12.2
+     },
+     "strong_el_nino_effect_pct": -10.1,
+     "strong_el_nino_p": 0.5599,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "GEO",
+   "name": "Georgia",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -0.5,
+   "el_nino_p": 0.9086,
+   "la_nina_effect_pct": 2.6,
+   "la_nina_p": 0.5487,
+   "n_el_nino": 5,
+   "n_la_nina": 7,
+   "record": "WY 2010/11-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Sep-Feb. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Sep-Feb wet season.",
+   "hydro_gw": 3.52,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 5.3,
+     "el_nino_p": 0.7722,
+     "la_nina_effect_pct": 6.4,
+     "la_nina_p": 0.6889,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Sep-Feb wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 5.3,
+      "Sep-Feb wet season": 3.5
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.5,
+      "Sep-Feb wet season": 6.4
+     },
+     "strong_el_nino_effect_pct": 1.3,
+     "strong_el_nino_p": 0.9196,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 4,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": -0.5,
+     "el_nino_p": 0.9086,
+     "la_nina_effect_pct": 2.6,
+     "la_nina_p": 0.5487,
+     "n_el_nino": 5,
+     "n_la_nina": 7,
+     "n_neutral": 4,
+     "record": "WY 2010/11-2025/26",
+     "el_nino_years": [
+      2014,
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2010,
+      2011,
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "KGZ",
+   "name": "Kyrgyzstan",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 14.8,
+   "el_nino_p": 0.2022,
+   "la_nina_effect_pct": -7.9,
+   "la_nina_p": 0.5625,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 3.31,
+   "gw_source": "ember_yearly_2024",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 14.8,
+     "el_nino_p": 0.2022,
+     "la_nina_effect_pct": -7.9,
+     "la_nina_p": 0.5625,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 14.8,
+      "Nov-Apr wet season": 10.1
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -7.9,
+      "Nov-Apr wet season": -6.4
+     },
+     "strong_el_nino_effect_pct": 25.1,
+     "strong_el_nino_p": 0.0564,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "NPL",
+   "name": "Nepal",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 13.2,
+   "el_nino_p": 0.5373,
+   "la_nina_effect_pct": 19.1,
+   "la_nina_p": 0.2947,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 3.29,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 13.2,
+     "el_nino_p": 0.5373,
+     "la_nina_effect_pct": 19.1,
+     "la_nina_p": 0.2947,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 13.2,
+      "May-Oct wet season": -1.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 19.1,
+      "May-Oct wet season": 18.0
+     },
+     "strong_el_nino_effect_pct": 17.4,
+     "strong_el_nino_p": 0.4361,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 5,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "MMR",
+   "name": "Myanmar",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -0.6,
+   "el_nino_p": 0.9978,
+   "la_nina_effect_pct": 11.9,
+   "la_nina_p": 0.5533,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 3.27,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -0.6,
+     "el_nino_p": 0.9978,
+     "la_nina_effect_pct": 11.9,
+     "la_nina_p": 0.5533,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -0.6,
+      "May-Oct wet season": -0.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 11.9,
+      "May-Oct wet season": 3.8
+     },
+     "strong_el_nino_effect_pct": 17.0,
+     "strong_el_nino_p": 0.4359,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "COD",
+   "name": "Congo (DRC)",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -3.1,
+   "el_nino_p": 0.783,
+   "la_nina_effect_pct": -1.8,
+   "la_nina_p": 0.9104,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Nov-Apr wet season.",
+   "hydro_gw": 3.25,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -3.1,
+     "el_nino_p": 0.783,
+     "la_nina_effect_pct": -1.8,
+     "la_nina_p": 0.9104,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Nov-Apr wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -3.1,
+      "Nov-Apr wet season": -1.9
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -1.1,
+      "Nov-Apr wet season": -1.8
+     },
+     "strong_el_nino_effect_pct": -7.3,
+     "strong_el_nino_p": 0.5113,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 6,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "ZMB",
+   "name": "Zambia",
+   "variable": "reservoir_level",
+   "el_nino_effect_pct": -86.7,
+   "el_nino_p": 0.1702,
+   "la_nina_effect_pct": 5.2,
+   "la_nina_p": 0.931,
+   "n_el_nino": 11,
+   "n_la_nina": 14,
+   "record": "WY 1992/93-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Kariba fills Dec-Jul from the Nov-Apr rains; Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Nov-Apr wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 3.17,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -16.7,
+     "el_nino_p": 0.0912,
+     "la_nina_effect_pct": 6.9,
+     "la_nina_p": 0.4919,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Nov-Apr wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -14.3,
+      "Nov-Apr wet season": -16.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 6.9,
+      "Nov-Apr wet season": 6.0
+     },
+     "strong_el_nino_effect_pct": -5.9,
+     "strong_el_nino_p": 0.6675,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    },
+    "reservoir_level": {
+     "el_nino_effect_pct": -86.7,
+     "el_nino_p": 0.1702,
+     "la_nina_effect_pct": 5.2,
+     "la_nina_p": 0.931,
+     "n_el_nino": 11,
+     "n_la_nina": 14,
+     "n_neutral": 9,
+     "record": "WY 1992/93-2025/26",
+     "confidence": "medium",
+     "el_nino_effect_m": -2.17,
+     "la_nina_effect_m": 0.13,
+     "mean_rise_neutral_m": 2.5,
+     "note": "Lake Kariba (G-REALM) level rise from Oct-Nov(y) to Jun-Jul(y+1); effect = % difference in that rise vs neutral years."
+    }
+   },
+   "impact_window_current_event": "Nov 2026-Apr 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "NGA",
+   "name": "Nigeria",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 7.4,
+   "el_nino_p": 0.4297,
+   "la_nina_effect_pct": 6.2,
+   "la_nina_p": 0.5151,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 2.9,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 7.4,
+     "el_nino_p": 0.4297,
+     "la_nina_effect_pct": 6.2,
+     "la_nina_p": 0.5151,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 7.4,
+      "May-Oct wet season": -2.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 6.2,
+      "May-Oct wet season": 3.0
+     },
+     "strong_el_nino_effect_pct": 9.1,
+     "strong_el_nino_p": 0.2651,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "ALB",
+   "name": "Albania",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 7.1,
+   "el_nino_p": 0.5949,
+   "la_nina_effect_pct": 16.3,
+   "la_nina_p": 0.1654,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Oct-Mar. Rainfall El Nino signal strongest in the Oct-Mar wet season; same window for La Nina.",
+   "hydro_gw": 2.56,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 7.1,
+     "el_nino_p": 0.5949,
+     "la_nina_effect_pct": 16.3,
+     "la_nina_p": 0.1654,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Mar wet season",
+     "la_nina_window": "Oct-Mar wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 6.7,
+      "Oct-Mar wet season": 7.1
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 9.8,
+      "Oct-Mar wet season": 16.3
+     },
+     "strong_el_nino_effect_pct": 21.6,
+     "strong_el_nino_p": 0.1816,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Mar 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "BTN",
+   "name": "Bhutan",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 21.3,
+   "el_nino_p": 0.1796,
+   "la_nina_effect_pct": 25.0,
+   "la_nina_p": 0.093,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Apr-Sep. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 2.45,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 21.3,
+     "el_nino_p": 0.1796,
+     "la_nina_effect_pct": 25.0,
+     "la_nina_p": 0.093,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 21.3,
+      "Apr-Sep wet season": -4.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 25.0,
+      "Apr-Sep wet season": 10.8
+     },
+     "strong_el_nino_effect_pct": 42.7,
+     "strong_el_nino_p": 0.0282,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "CRI",
+   "name": "Costa Rica",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 11.6,
+   "el_nino_p": 0.6269,
+   "la_nina_effect_pct": 35.5,
+   "la_nina_p": 0.0466,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 2.34,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "North America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 11.6,
+     "el_nino_p": 0.6269,
+     "la_nina_effect_pct": 35.5,
+     "la_nina_p": 0.0466,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 11.6,
+      "May-Oct wet season": 7.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 19.3,
+      "May-Oct wet season": 35.5
+     },
+     "strong_el_nino_effect_pct": 28.7,
+     "strong_el_nino_p": 0.2246,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 4,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "MOZ",
+   "name": "Mozambique",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -19.6,
+   "el_nino_p": 0.0386,
+   "la_nina_effect_pct": 9.5,
+   "la_nina_p": 0.3233,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "el_nino_loser",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Nov-Apr wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 2.19,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -19.6,
+     "el_nino_p": 0.0386,
+     "la_nina_effect_pct": 9.5,
+     "la_nina_p": 0.3233,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Nov-Apr wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -15.6,
+      "Nov-Apr wet season": -19.6
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 9.5,
+      "Nov-Apr wet season": 7.9
+     },
+     "strong_el_nino_effect_pct": -30.7,
+     "strong_el_nino_p": 0.0166,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Nov 2026-Apr 2027",
+   "current_implication": "El Niño Advisory: El Nino is forecast through early 2027; this grid's hydro basins historically get 20% less rain in the Nov-Apr wet season of El Nino years (p=0.04, n=15); -31% in the 5 strong El Ninos. Window to watch: Nov 2026-Apr 2027."
+  },
+  {
+   "iso3": "HRV",
+   "name": "Croatia",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 3.6,
+   "el_nino_p": 0.8428,
+   "la_nina_effect_pct": 5.1,
+   "la_nina_p": 0.7135,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Sep-Feb. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Sep-Feb wet season.",
+   "hydro_gw": 2.19,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 3.6,
+     "el_nino_p": 0.8428,
+     "la_nina_effect_pct": 5.1,
+     "la_nina_p": 0.7135,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Sep-Feb wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 3.6,
+      "Sep-Feb wet season": 2.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.2,
+      "Sep-Feb wet season": 5.1
+     },
+     "strong_el_nino_effect_pct": 16.8,
+     "strong_el_nino_p": 0.0788,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 5,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "ISL",
+   "name": "Iceland",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -0.4,
+   "el_nino_p": 0.9554,
+   "la_nina_effect_pct": 3.2,
+   "la_nina_p": 0.6641,
+   "n_el_nino": 9,
+   "n_la_nina": 11,
+   "record": "WY 2000/01-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Sep-Feb. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 2.13,
+   "gw_source": "ember_yearly_2024",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -3.1,
+     "el_nino_p": 0.5807,
+     "la_nina_effect_pct": -2.3,
+     "la_nina_p": 0.7091,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -3.1,
+      "Sep-Feb wet season": 0.2
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -2.3,
+      "Sep-Feb wet season": 0.7
+     },
+     "strong_el_nino_effect_pct": -11.3,
+     "strong_el_nino_p": 0.031,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": -0.4,
+     "el_nino_p": 0.9554,
+     "la_nina_effect_pct": 3.2,
+     "la_nina_p": 0.6641,
+     "n_el_nino": 9,
+     "n_la_nina": 11,
+     "n_neutral": 6,
+     "record": "WY 2000/01-2025/26",
+     "el_nino_years": [
+      2002,
+      2004,
+      2006,
+      2009,
+      2014,
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2000,
+      2005,
+      2007,
+      2008,
+      2010,
+      2011,
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "BIH",
+   "name": "Bosnia Herzegovina",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 6.3,
+   "el_nino_p": 0.5623,
+   "la_nina_effect_pct": 9.3,
+   "la_nina_p": 0.3079,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Oct-Mar. Rainfall El Nino signal strongest in the Oct-Mar wet season; same window for La Nina.",
+   "hydro_gw": 1.88,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 6.3,
+     "el_nino_p": 0.5623,
+     "la_nina_effect_pct": 9.3,
+     "la_nina_p": 0.3079,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Mar wet season",
+     "la_nina_window": "Oct-Mar wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 3.2,
+      "Oct-Mar wet season": 6.3
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.5,
+      "Oct-Mar wet season": 9.3
+     },
+     "strong_el_nino_effect_pct": 17.2,
+     "strong_el_nino_p": 0.1828,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 4,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Mar 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "LKA",
+   "name": "Sri Lanka",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 19.3,
+   "el_nino_p": 0.2404,
+   "la_nina_effect_pct": 15.5,
+   "la_nina_p": 0.3485,
+   "n_el_nino": 4,
+   "n_la_nina": 4,
+   "record": "WY 2015/16-2024/25",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Aug-Jan. Rainfall El Nino signal strongest in the Aug-Jan wet season; same window for La Nina.",
+   "hydro_gw": 1.85,
+   "gw_source": "ember_yearly_2023",
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 40.2,
+     "el_nino_p": 0.02,
+     "la_nina_effect_pct": 25.9,
+     "la_nina_p": 0.1052,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Aug-Jan wet season",
+     "la_nina_window": "Aug-Jan wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 15.8,
+      "Aug-Jan wet season": 40.2
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 22.8,
+      "Aug-Jan wet season": 25.9
+     },
+     "strong_el_nino_effect_pct": 66.6,
+     "strong_el_nino_p": 0.0092,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 19.3,
+     "el_nino_p": 0.2404,
+     "la_nina_effect_pct": 15.5,
+     "la_nina_p": 0.3485,
+     "n_el_nino": 4,
+     "n_la_nina": 4,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2024/25",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Aug 2026-Jan 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "PAN",
+   "name": "Panama",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 13.2,
+   "el_nino_p": 0.2458,
+   "la_nina_effect_pct": 25.2,
+   "la_nina_p": 0.0138,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Jun-Nov. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Jun-Nov wet season.",
+   "hydro_gw": 1.85,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "North America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 13.2,
+     "el_nino_p": 0.2458,
+     "la_nina_effect_pct": 25.2,
+     "la_nina_p": 0.0138,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Jun-Nov wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 13.2,
+      "Jun-Nov wet season": 6.9
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 21.5,
+      "Jun-Nov wet season": 25.2
+     },
+     "strong_el_nino_effect_pct": 25.1,
+     "strong_el_nino_p": 0.061,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "UGA",
+   "name": "Uganda",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 8.1,
+   "el_nino_p": 0.5087,
+   "la_nina_effect_pct": -12.4,
+   "la_nina_p": 0.2036,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Mar-Aug. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Mar-Aug wet season.",
+   "hydro_gw": 1.71,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 8.1,
+     "el_nino_p": 0.5087,
+     "la_nina_effect_pct": -12.4,
+     "la_nina_p": 0.2036,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Mar-Aug wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 8.1,
+      "Mar-Aug wet season": 0.1
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -2.4,
+      "Mar-Aug wet season": -12.4
+     },
+     "strong_el_nino_effect_pct": 5.7,
+     "strong_el_nino_p": 0.5743,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "LVA",
+   "name": "Latvia",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": -23.3,
+   "el_nino_p": 0.2649,
+   "la_nina_effect_pct": -7.4,
+   "la_nina_p": 0.7307,
+   "n_el_nino": 4,
+   "n_la_nina": 5,
+   "record": "WY 2015/16-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 1.59,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -1.0,
+     "el_nino_p": 0.9804,
+     "la_nina_effect_pct": -8.6,
+     "la_nina_p": 0.2262,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -1.0,
+      "May-Oct wet season": -0.2
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -8.6,
+      "May-Oct wet season": 5.2
+     },
+     "strong_el_nino_effect_pct": 6.8,
+     "strong_el_nino_p": 0.2659,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": -23.3,
+     "el_nino_p": 0.2649,
+     "la_nina_effect_pct": -7.4,
+     "la_nina_p": 0.7307,
+     "n_el_nino": 4,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2025/26",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "GHA",
+   "name": "Ghana",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 3.1,
+   "el_nino_p": 0.8318,
+   "la_nina_effect_pct": 8.7,
+   "la_nina_p": 0.2474,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; same window for La Nina.",
+   "hydro_gw": 1.58,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 3.1,
+     "el_nino_p": 0.8318,
+     "la_nina_effect_pct": 8.7,
+     "la_nina_p": 0.2474,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 3.1,
+      "May-Oct wet season": 2.0
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 8.7,
+      "May-Oct wet season": 3.6
+     },
+     "strong_el_nino_effect_pct": -4.3,
+     "strong_el_nino_p": 0.5925,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "GTM",
+   "name": "Guatemala",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 12.8,
+   "el_nino_p": 0.5923,
+   "la_nina_effect_pct": 16.6,
+   "la_nina_p": 0.4063,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 1.58,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "North America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 12.8,
+     "el_nino_p": 0.5923,
+     "la_nina_effect_pct": 16.6,
+     "la_nina_p": 0.4063,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 12.8,
+      "May-Oct wet season": -7.4
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 0.7,
+      "May-Oct wet season": 16.6
+     },
+     "strong_el_nino_effect_pct": 8.2,
+     "strong_el_nino_p": 0.6913,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 5,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "SDN",
+   "name": "Sudan",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 19.9,
+   "el_nino_p": 0.3089,
+   "la_nina_effect_pct": 2.4,
+   "la_nina_p": 0.9778,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 1.48,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 19.9,
+     "el_nino_p": 0.3089,
+     "la_nina_effect_pct": 2.4,
+     "la_nina_p": 0.9778,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 19.9,
+      "May-Oct wet season": 7.9
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -0.8,
+      "May-Oct wet season": 2.4
+     },
+     "strong_el_nino_effect_pct": 25.7,
+     "strong_el_nino_p": 0.2567,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "CMR",
+   "name": "Cameroon",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -3.0,
+   "el_nino_p": 0.897,
+   "la_nina_effect_pct": 7.7,
+   "la_nina_p": 0.4505,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the May-Oct wet season; same window for La Nina.",
+   "hydro_gw": 1.41,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -3.0,
+     "el_nino_p": 0.897,
+     "la_nina_effect_pct": 7.7,
+     "la_nina_p": 0.4505,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "May-Oct wet season",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 0.5,
+      "May-Oct wet season": -3.0
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.1,
+      "May-Oct wet season": 7.7
+     },
+     "strong_el_nino_effect_pct": 6.5,
+     "strong_el_nino_p": 0.5311,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "May 2026-Oct 2026",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "TZA",
+   "name": "Tanzania (the United Republic of)",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 11.1,
+   "el_nino_p": 0.2663,
+   "la_nina_effect_pct": 0.2,
+   "la_nina_p": 0.9982,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the Nov-Apr wet season.",
+   "hydro_gw": 1.39,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 11.1,
+     "el_nino_p": 0.2663,
+     "la_nina_effect_pct": 0.2,
+     "la_nina_p": 0.9982,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "Nov-Apr wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 11.1,
+      "Nov-Apr wet season": 10.5
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 0.2,
+      "Nov-Apr wet season": 0.2
+     },
+     "strong_el_nino_effect_pct": 15.8,
+     "strong_el_nino_p": 0.1984,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 4,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "ZWE",
+   "name": "Zimbabwe",
+   "variable": "reservoir_level",
+   "el_nino_effect_pct": -86.7,
+   "el_nino_p": 0.1702,
+   "la_nina_effect_pct": 5.2,
+   "la_nina_p": 0.931,
+   "n_el_nino": 11,
+   "n_la_nina": 14,
+   "record": "WY 1992/93-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Kariba fills Dec-Jul from the Nov-Apr rains; Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Nov-Apr wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 1.08,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -16.9,
+     "el_nino_p": 0.1108,
+     "la_nina_effect_pct": 3.5,
+     "la_nina_p": 0.769,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Nov-Apr wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -15.4,
+      "Nov-Apr wet season": -16.9
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 3.5,
+      "Nov-Apr wet season": 2.8
+     },
+     "strong_el_nino_effect_pct": -3.3,
+     "strong_el_nino_p": 0.8158,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    },
+    "reservoir_level": {
+     "el_nino_effect_pct": -86.7,
+     "el_nino_p": 0.1702,
+     "la_nina_effect_pct": 5.2,
+     "la_nina_p": 0.931,
+     "n_el_nino": 11,
+     "n_la_nina": 14,
+     "n_neutral": 9,
+     "record": "WY 1992/93-2025/26",
+     "confidence": "medium",
+     "el_nino_effect_m": -2.17,
+     "la_nina_effect_m": 0.13,
+     "mean_rise_neutral_m": 2.5,
+     "note": "Lake Kariba (G-REALM) level rise from Oct-Nov(y) to Jun-Jul(y+1); effect = % difference in that rise vs neutral years."
+    }
+   },
+   "impact_window_current_event": "Nov 2026-Apr 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "HND",
+   "name": "Honduras",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -12.5,
+   "el_nino_p": 0.6183,
+   "la_nina_effect_pct": 34.0,
+   "la_nina_p": 0.0818,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Jun-Nov. Rainfall El Nino signal strongest in the Jun-Nov wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 0.91,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "North America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -12.5,
+     "el_nino_p": 0.6183,
+     "la_nina_effect_pct": 34.0,
+     "la_nina_p": 0.0818,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Jun-Nov wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 0.2,
+      "Jun-Nov wet season": -12.5
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 34.0,
+      "Jun-Nov wet season": 31.6
+     },
+     "strong_el_nino_effect_pct": 5.4,
+     "strong_el_nino_p": 0.839,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 3,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Jun 2026-Nov 2026",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "GIN",
+   "name": "Guinea",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 9.2,
+   "el_nino_p": 0.6381,
+   "la_nina_effect_pct": -6.9,
+   "la_nina_p": 0.7606,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 0.81,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 9.2,
+     "el_nino_p": 0.6381,
+     "la_nina_effect_pct": -6.9,
+     "la_nina_p": 0.7606,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 9.2,
+      "May-Oct wet season": -1.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": -1.8,
+      "May-Oct wet season": -6.9
+     },
+     "strong_el_nino_effect_pct": 25.0,
+     "strong_el_nino_p": 0.1506,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 4,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "MNE",
+   "name": "Montenegro",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 37.3,
+   "el_nino_p": 0.0976,
+   "la_nina_effect_pct": 42.5,
+   "la_nina_p": 0.0446,
+   "n_el_nino": 4,
+   "n_la_nina": 5,
+   "record": "WY 2015/16-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: Oct-Mar. Rainfall El Nino signal strongest in the Oct-Mar wet season; same window for La Nina.",
+   "hydro_gw": 0.7,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Europe",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 8.7,
+     "el_nino_p": 0.4255,
+     "la_nina_effect_pct": 14.0,
+     "la_nina_p": 0.158,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Mar wet season",
+     "la_nina_window": "Oct-Mar wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 7.7,
+      "Oct-Mar wet season": 8.7
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 7.9,
+      "Oct-Mar wet season": 14.0
+     },
+     "strong_el_nino_effect_pct": 20.8,
+     "strong_el_nino_p": 0.1486,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 2,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 37.3,
+     "el_nino_p": 0.0976,
+     "la_nina_effect_pct": 42.5,
+     "la_nina_p": 0.0446,
+     "n_el_nino": 4,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2015/16-2025/26",
+     "el_nino_years": [
+      2015,
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Mar 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "SLV",
+   "name": "El Salvador",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": 18.8,
+   "el_nino_p": 0.4061,
+   "la_nina_effect_pct": 61.0,
+   "la_nina_p": 0.004,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": 0.64,
+   "gw_source": "ember_yearly_2024",
+   "continent": "North America",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 18.8,
+     "el_nino_p": 0.4061,
+     "la_nina_effect_pct": 61.0,
+     "la_nina_p": 0.004,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 18.8,
+      "May-Oct wet season": 13.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 26.0,
+      "May-Oct wet season": 61.0
+     },
+     "strong_el_nino_effect_pct": 53.4,
+     "strong_el_nino_p": 0.0416,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    },
+    "hydro_generation": null
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "MWI",
+   "name": "Malawi",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -15.4,
+   "el_nino_p": 0.1074,
+   "la_nina_effect_pct": 9.2,
+   "la_nina_p": 0.3375,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Nov-Apr wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 0.39,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -15.4,
+     "el_nino_p": 0.1074,
+     "la_nina_effect_pct": 9.2,
+     "la_nina_p": 0.3375,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Nov-Apr wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -11.1,
+      "Nov-Apr wet season": -15.4
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 9.2,
+      "Nov-Apr wet season": 8.5
+     },
+     "strong_el_nino_effect_pct": -28.9,
+     "strong_el_nino_p": 0.024,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Nov 2026-Apr 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "NAM",
+   "name": "Namibia",
+   "variable": "basin_precip",
+   "el_nino_effect_pct": -18.5,
+   "el_nino_p": 0.5333,
+   "la_nina_effect_pct": 20.4,
+   "la_nina_p": 0.4757,
+   "n_el_nino": 15,
+   "n_la_nina": 17,
+   "record": "WY 1981/82-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Hydro basins' wettest 6 months: Nov-Apr. Rainfall El Nino signal strongest in the Nov-Apr wet season; La Nina signal in the Oct-Sep water year.",
+   "hydro_gw": 0.35,
+   "gw_source": "ember_yearly_latest_year",
+   "continent": "Africa",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": -18.5,
+     "el_nino_p": 0.5333,
+     "la_nina_effect_pct": 20.4,
+     "la_nina_p": 0.4757,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Nov-Apr wet season",
+     "la_nina_window": "Oct-Sep water year",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": -17.7,
+      "Nov-Apr wet season": -18.5
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 20.4,
+      "Nov-Apr wet season": 18.7
+     },
+     "strong_el_nino_effect_pct": -16.7,
+     "strong_el_nino_p": 0.6519,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 1,
+     "confidence": "medium"
+    }
+   },
+   "impact_window_current_event": "Nov 2026-Apr 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  },
+  {
+   "iso3": "CHN-SC",
+   "name": "Sichuan (China)",
+   "variable": "hydro_generation",
+   "el_nino_effect_pct": 2.4,
+   "el_nino_p": 0.4223,
+   "la_nina_effect_pct": 1.2,
+   "la_nina_p": 0.6771,
+   "n_el_nino": 3,
+   "n_la_nina": 5,
+   "record": "WY 2016/17-2025/26",
+   "exposure": "neutral",
+   "confidence": "medium",
+   "season_note": "Primary: Ember generation (water years). Hydro basins' wettest 6 months: May-Oct. Rainfall El Nino signal strongest in the Oct-Sep water year; La Nina signal in the May-Oct wet season.",
+   "hydro_gw": null,
+   "gw_source": null,
+   "continent": "Asia",
+   "variables": {
+    "basin_precip": {
+     "el_nino_effect_pct": 4.8,
+     "el_nino_p": 0.6351,
+     "la_nina_effect_pct": 4.6,
+     "la_nina_p": 0.6585,
+     "n_el_nino": 15,
+     "n_la_nina": 17,
+     "n_neutral": 13,
+     "record": "WY 1981/82-2025/26",
+     "el_nino_window": "Oct-Sep water year",
+     "la_nina_window": "May-Oct wet season",
+     "effect_by_window_el_nino_pct": {
+      "Oct-Sep water year": 4.8,
+      "May-Oct wet season": -0.8
+     },
+     "effect_by_window_la_nina_pct": {
+      "Oct-Sep water year": 4.2,
+      "May-Oct wet season": 4.6
+     },
+     "strong_el_nino_effect_pct": 6.8,
+     "strong_el_nino_p": 0.4099,
+     "n_strong_el_nino": 5,
+     "strong_el_nino_years": [
+      1982,
+      1997,
+      2009,
+      2015,
+      2023
+     ],
+     "n_points": 8,
+     "confidence": "medium"
+    },
+    "hydro_generation": {
+     "el_nino_effect_pct": 2.4,
+     "el_nino_p": 0.4223,
+     "la_nina_effect_pct": 1.2,
+     "la_nina_p": 0.6771,
+     "n_el_nino": 3,
+     "n_la_nina": 5,
+     "n_neutral": 2,
+     "record": "WY 2016/17-2025/26",
+     "el_nino_years": [
+      2018,
+      2019,
+      2023
+     ],
+     "la_nina_years": [
+      2017,
+      2020,
+      2021,
+      2022,
+      2025
+     ],
+     "confidence": "medium",
+     "note": "Water-year (Oct-Sep) Ember hydro TWh, linearly detrended; effect in % of trend."
+    }
+   },
+   "impact_window_current_event": "Oct 2026-Sep 2027",
+   "current_implication": "No reliable ENSO signal in this grid's hydro record; rely on the 0-6 month water layer."
+  }
+ ],
+ "outlook": {
+  "source": "NOAA CPC + NASA GEOS-S2S",
+  "issued": "2026-11",
+  "oni_latest": {
+   "season": "ASO 2026",
+   "value": 2.46
+  },
+  "status": "El Niño Advisory",
+  "summary": "El Niño continues to strengthen, with a strong-to-very strong El Niño likely through January-March 2027 (remaining greater than a 79% chance).",
+  "geos_nino34_forecast": [
+   {
+    "season": "NDJ",
+    "value": 3.99
+   },
+   {
+    "season": "DJF",
+    "value": 3.96
+   },
+   {
+    "season": "JFM",
+    "value": 3.57
+   },
+   {
+    "season": "FMA",
+    "value": 2.96
+   },
+   {
+    "season": "MAM",
+    "value": 2.21
+   },
+   {
+    "season": "AMJ",
+    "value": 1.61
+   },
+   {
+    "season": "MJJ",
+    "value": 1.12
+   }
+  ],
+  "cpc": {
+   "issued_date": "2026-11-12",
+   "status": "El Niño Advisory",
+   "synopsis": "El Niño continues to strengthen, with a strong-to-very strong El Niño likely through January-March 2027 (remaining greater than a 79% chance).",
+   "probabilities_pct": [
+    79
+   ],
+   "nino34_weekly_c": 2.5,
+   "next_discussion": "2026-12-10",
+   "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
+   "retrieved": "live"
+  },
+  "geos": {
+   "init": "2026-11",
+   "url": "https://portal.nccs.nasa.gov/datashare/gmao/geos-s2s-3/NRT/IRI/IRI_202611.txt",
+   "retrieved": "live",
+   "note": "GEOS-S2S ensemble-mean Nino-3.4 SST anomaly (C), 3-month seasons from the init month"
+  },
+  "la_nina_after_strong_el_nino": {
+   "strong_el_nino_years": [
+    1957,
+    1965,
+    1972,
+    1982,
+    1997,
+    2009,
+    2015,
+    2023
+   ],
+   "followed_by_la_nina": [
+    1972,
+    1982,
+    1997,
+    2009
+   ],
+   "text": "Since 1950, 4 of 8 strong El Ninos (ONI NDJ >= 1.5) were followed by La Nina conditions the next winter (ONI NDJ <= -0.5)."
+  }
+ },
+ "projections": {
+  "text": "Extreme El Nino events are projected to roughly double in frequency under greenhouse warming, from about one every 20 years to about one every 10 years (Cai et al. 2014, 20 CMIP models). The increase continues for about a century even after global warming is stabilised at 1.5 C (Wang et al. 2017). Grids that lose hydropower under El Nino therefore face a structural, not only a seasonal, risk.",
+  "extreme_el_nino_per_20yr_now": 1,
+  "extreme_el_nino_per_20yr_future": 2,
+  "refs": [
+   {
+    "title": "Cai et al. 2014, Increasing frequency of extreme El Nino events due to greenhouse warming, Nature Climate Change 4, 111-116",
+    "url": "https://centaur.reading.ac.uk/51601",
+    "doi": "10.1038/nclimate2100"
+   },
+   {
+    "title": "NOAA PMEL: Frequency of extreme El Ninos to double in the 21st century",
+    "url": "https://www.pmel.noaa.gov/news-and-media/highlights/frequency-extreme-el-ninos-double-21st-century"
+   },
+   {
+    "title": "Wang et al. 2017, Continued increase of extreme El Nino frequency long after 1.5 C warming stabilization, Nature Climate Change 7, 568-572",
+    "url": "https://doi.org/10.1038/nclimate3351",
+    "doi": "10.1038/nclimate3351"
+   },
+   {
+    "title": "Ng, Turner & Galelli 2017, Influence of El Nino Southern Oscillation on global hydropower production, Environmental Research Letters 12, 034010",
+    "url": "https://doaj.org/article/d8f85ff82c534a1a93f2e3b15421c51e",
+    "doi": "10.1088/1748-9326/aa5ef8"
+   }
+  ]
+ },
+ "enso_years": {
+  "definition": "ONI NDJ(y) >= 0.5 El Nino, <= -0.5 La Nina",
+  "el_nino": [
+   1982,
+   1986,
+   1987,
+   1991,
+   1994,
+   1997,
+   2002,
+   2004,
+   2006,
+   2009,
+   2014,
+   2015,
+   2018,
+   2019,
+   2023
+  ],
+  "la_nina": [
+   1983,
+   1984,
+   1988,
+   1995,
+   1998,
+   1999,
+   2000,
+   2005,
+   2007,
+   2008,
+   2010,
+   2011,
+   2017,
+   2020,
+   2021,
+   2022,
+   2025
+  ],
+  "strong_el_nino": [
+   1982,
+   1997,
+   2009,
+   2015,
+   2023
+  ]
+ },
+ "kariba": {
+  "record": "WY 1992/93-2025/26",
+  "n_el_nino": 11,
+  "n_la_nina": 14,
+  "n_neutral": 9,
+  "el_nino_years": [
+   1994,
+   1997,
+   2002,
+   2004,
+   2006,
+   2009,
+   2014,
+   2015,
+   2018,
+   2019,
+   2023
+  ],
+  "mean_rise_neutral_m": 2.4991203703703806,
+  "mean_rise_el_nino_m": 0.3329166666666662,
+  "mean_rise_la_nina_m": 2.6280119047618973,
+  "mean_rise_other_m": 2.577576086956521,
+  "el_nino_vs_other_m": -2.244659420289855,
+  "el_nino_vs_other_p": 0.009398120375924815,
+  "rise_by_year_m": {
+   "1992": 4.23,
+   "1993": 0.98,
+   "1994": -0.99,
+   "1995": 1.02,
+   "1996": 4.38,
+   "1997": 3.86,
+   "1998": 3.77,
+   "1999": 0.68,
+   "2000": 0.69,
+   "2001": -0.25,
+   "2002": 1.31,
+   "2003": 2.48,
+   "2004": -2.36,
+   "2005": 1.46,
+   "2006": 2.79,
+   "2007": 5.32,
+   "2008": 4.28,
+   "2009": 1.86,
+   "2010": 1.87,
+   "2011": 1.0,
+   "2012": 1.85,
+   "2013": 1.88,
+   "2014": -2.1,
+   "2015": 1.54,
+   "2016": 4.43,
+   "2017": 5.23,
+   "2018": -4.96,
+   "2019": 3.55,
+   "2020": 3.63,
+   "2021": 0.03,
+   "2022": 2.69,
+   "2023": -0.83,
+   "2024": 2.53,
+   "2025": 5.12
+  }
+ },
+ "validation": [
+  {
+   "region": "Southern Africa / Zambezi",
+   "expected": "El Nino dry",
+   "units": [
+    {
+     "iso3": "ZMB",
+     "name": "Zambia",
+     "el_nino_precip_effect_pct": -16.7,
+     "p": 0.0912,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -14.3,
+      "Nov-Apr wet season": -16.7
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": true
+    },
+    {
+     "iso3": "ZWE",
+     "name": "Zimbabwe",
+     "el_nino_precip_effect_pct": -16.9,
+     "p": 0.1108,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -15.4,
+      "Nov-Apr wet season": -16.9
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    },
+    {
+     "iso3": "MOZ",
+     "name": "Mozambique",
+     "el_nino_precip_effect_pct": -19.6,
+     "p": 0.0386,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -15.6,
+      "Nov-Apr wet season": -19.6
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": true
+    },
+    {
+     "iso3": "MWI",
+     "name": "Malawi",
+     "el_nino_precip_effect_pct": -15.4,
+     "p": 0.1074,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -11.1,
+      "Nov-Apr wet season": -15.4
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    }
+   ],
+   "result": "4/4 with expected sign; 2 also p<0.1"
+  },
+  {
+   "region": "Northern South America / Colombia",
+   "expected": "El Nino dry",
+   "units": [
+    {
+     "iso3": "COL",
+     "name": "Colombia",
+     "el_nino_precip_effect_pct": -14.2,
+     "p": 0.1998,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -10.4,
+      "May-Oct wet season": -14.2
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    },
+    {
+     "iso3": "VEN",
+     "name": "Venezuela",
+     "el_nino_precip_effect_pct": -15.5,
+     "p": 0.2274,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -1.8,
+      "May-Oct wet season": -15.5
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    }
+   ],
+   "result": "2/2 with expected sign; 0 also p<0.1"
+  },
+  {
+   "region": "Southern Brazil and Uruguay",
+   "expected": "El Nino wet",
+   "units": [
+    {
+     "iso3": "BRA-S",
+     "name": "Southern Brazil (plants south of 23 S)",
+     "el_nino_precip_effect_pct": 14.2,
+     "p": 0.1208,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": 5.1,
+      "Sep-Feb wet season": 14.2
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    },
+    {
+     "iso3": "URY",
+     "name": "Uruguay",
+     "el_nino_precip_effect_pct": 18.7,
+     "p": 0.1476,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": 12.2,
+      "Nov-Apr wet season": 18.7
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    }
+   ],
+   "result": "2/2 with expected sign; 0 also p<0.1"
+  },
+  {
+   "region": "Southeast Asia incl. Vietnam",
+   "expected": "El Nino dry",
+   "units": [
+    {
+     "iso3": "VNM",
+     "name": "Viet Nam",
+     "el_nino_precip_effect_pct": -10.5,
+     "p": 0.5033,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -10.5,
+      "May-Oct wet season": -3.7
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    },
+    {
+     "iso3": "LAO",
+     "name": "Lao PDR",
+     "el_nino_precip_effect_pct": -11.3,
+     "p": 0.5063,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -9.4,
+      "May-Oct wet season": -11.3
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    },
+    {
+     "iso3": "MMR",
+     "name": "Myanmar",
+     "el_nino_precip_effect_pct": -0.6,
+     "p": 0.9978,
+     "effect_by_window_pct": {
+      "Oct-Sep water year": -0.6,
+      "May-Oct wet season": -0.3
+     },
+     "sign_matches": true,
+     "significant_p_lt_0_1": false
+    }
+   ],
+   "result": "3/3 with expected sign; 0 also p<0.1"
+  }
+ ],
+ "context": {
+  "literature": "Ng, Turner & Galelli 2017: more than a third of 1,593 simulated dams show significant annual production anomalies in at least one ENSO phase; effects are strong regionally and partly cancel globally; reservoirs dampen them.",
+  "both_phases": "Both phases matter: El Nino 2023/24 drained Lake Kariba; Brazil's 2021 hydro crisis happened under La Nina."
+ },
+ "limitations": [
+  "Few events: about 15 El Nino and 16 La Nina years since 1981 for rainfall, and only 2-5 per phase in the Ember generation records (mostly 2015/2019 onward). p-values are permutation-based but effect sizes are noisy.",
+  "Rainfall is a proxy for hydropower: reservoirs buffer one bad season (Ng et al. 2017 found production anomalies smaller than inflow anomalies), and snowmelt, glaciers and upstream catchments are not captured.",
+  "Rainfall is sampled at up to 8 grid points near the largest plants, not over the full upstream catchment (e.g. Namibia's Ruacana is fed from Angola; Tajikistan's Vakhsh from high-mountain snow).",
+  "MERRA-2 is a reanalysis: rainfall is a model estimate constrained by observations, not a gauge record.",
+  "Non-stationarity: ENSO teleconnections vary between decades and between El Nino flavours (Eastern vs Central Pacific); a historical fingerprint does not guarantee the response of the 2026/27 event.",
+  "Neutral-year baseline includes trends (climate change, land use); no detrending is applied to rainfall.",
+  "Power-plant locations come from WRI GPPD v1.3 (2021); newer plants are missing.",
+  "Kariba level is managed (releases, allocation rules), so it mixes climate and operating decisions."
+ ],
+ "notes": [
+  "Southern Brazil (GPPD plants south of 23 S) and Uruguay are computed for validation only; they are not in the 48-country list.",
+  "Sichuan rainfall points come from GPPD Chinese hydro plants in a bounding box around the province (lon 97.3-108.6, lat 26.0-34.4).",
+  "Ng, Turner & Galelli 2017 (ERL) is the 1,593-dam ENSO-hydropower study; 'more than one third' of dams show significant anomalies in at least one phase."
+ ],
+ "runtime_s": 18.1
+}

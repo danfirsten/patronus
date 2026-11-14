@@ -1,0 +1,100 @@
+{
+ "generated_at": "2026-11-15T00:00:00Z",
+ "sources": [
+  {
+   "id": "gravis",
+   "name": "GRACE/GRACE-FO terrestrial water storage (GFZ GravIS)",
+   "provider": "NASA/GFZ",
+   "nasa": true,
+   "url": "https://gravis.gfz-potsdam.de/",
+   "coverage": "2002-04..2026-08",
+   "license": "CC BY 4.0"
+  },
+  {
+   "id": "power",
+   "name": "NASA POWER (MERRA-2) precipitation and soil wetness",
+   "provider": "NASA LaRC",
+   "nasa": true,
+   "url": "https://power.larc.nasa.gov/",
+   "coverage": "1981..2026",
+   "license": "Public"
+  },
+  {
+   "id": "grealm",
+   "name": "G-REALM satellite lake levels",
+   "provider": "NASA/USDA",
+   "nasa": true,
+   "url": "https://ipad.fas.usda.gov/cropexplorer/global_reservoir/",
+   "coverage": "1992..2026",
+   "license": "Public"
+  },
+  {
+   "id": "geos_s2s",
+   "name": "GEOS-S2S seasonal forecasts",
+   "provider": "NASA GMAO",
+   "nasa": true,
+   "url": "https://gmao.gsfc.nasa.gov/cgi-bin/products/climateforecasts/index.php",
+   "coverage": "2026-10 issue",
+   "license": "Public"
+  },
+  {
+   "id": "gibs_blackmarble",
+   "name": "Black Marble night lights (VNP46) via GIBS",
+   "provider": "NASA",
+   "nasa": true,
+   "url": "https://earthdata.nasa.gov/gibs",
+   "coverage": "2012..2026",
+   "license": "Public"
+  },
+  {
+   "id": "ember_monthly",
+   "name": "Ember monthly electricity data",
+   "provider": "Ember",
+   "nasa": false,
+   "url": "https://ember-energy.org/data/",
+   "coverage": "2010..2026-10",
+   "license": "CC BY 4.0"
+  },
+  {
+   "id": "oni",
+   "name": "Oceanic Niño Index",
+   "provider": "NOAA CPC",
+   "nasa": false,
+   "url": "https://www.cpc.ncep.noaa.gov/",
+   "coverage": "1950..2026",
+   "license": "Public"
+  },
+  {
+   "id": "gppd",
+   "name": "Global Power Plant Database v1.3",
+   "provider": "WRI",
+   "nasa": false,
+   "url": "https://datasets.wri.org/dataset/globalpowerplantdatabase",
+   "coverage": "2021",
+   "license": "CC BY 4.0"
+  },
+  {
+   "id": "hydrobasins",
+   "name": "HydroBASINS level 4",
+   "provider": "HydroSHEDS",
+   "nasa": false,
+   "url": "https://www.hydrosheds.org/",
+   "coverage": "static",
+   "license": "Free"
+  },
+  {
+   "id": "zra",
+   "name": "Zambezi River Authority lake levels and allocations",
+   "provider": "ZRA",
+   "nasa": false,
+   "url": "https://www.zambezira.org/",
+   "coverage": "2023..2026",
+   "license": "Public"
+  }
+ ],
+ "_fixture": true,
+ "notes": [
+  "ILLUSTRATIVE SAMPLE DATA from web/src/fixtures. Not pipeline output. Do not cite."
+ ],
+ "issue_date": "2026-11-15"
+}

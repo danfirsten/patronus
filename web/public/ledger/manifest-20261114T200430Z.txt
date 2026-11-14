@@ -1,0 +1,3 @@
+8bae0cb15018f3d58b961127de4e1154d09c766135deacbac20b787b9ce4d416  web/public/data/crises.json
+738878b561785ab4e1110fd6420976e4ad9a4482287287766f7ab70ec88ae27c  web/public/data/meta.json
+c3c0fa4b5a0c2a035a16b1320ba17b6c4fd9e205bc9d0b74fd422b02e77ac6cc  web/public/data/nightlights.json

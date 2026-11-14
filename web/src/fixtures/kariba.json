@@ -1,0 +1,2432 @@
+{
+ "generated_at": "2026-11-15T00:00:00Z",
+ "sources": [
+  "grealm",
+  "gravis",
+  "power",
+  "oni",
+  "zra",
+  "zesco_erb"
+ ],
+ "_fixture": true,
+ "notes": [
+  "ILLUSTRATIVE SAMPLE DATA from web/src/fixtures. Not pipeline output. Do not cite."
+ ],
+ "thresholds": {
+  "min_operating_m": 475.5,
+  "max_operating_m": 488.5,
+  "warning_usable_pct": 20,
+  "danger_usable_pct": 10
+ },
+ "storage_curve": {
+  "method": "SAMPLE curve",
+  "points": [
+   {
+    "level_m": 475.5,
+    "usable_pct": 0
+   },
+   {
+    "level_m": 478,
+    "usable_pct": 10
+   },
+   {
+    "level_m": 479.5,
+    "usable_pct": 20
+   },
+   {
+    "level_m": 482,
+    "usable_pct": 40
+   },
+   {
+    "level_m": 484.5,
+    "usable_pct": 60
+   },
+   {
+    "level_m": 486.5,
+    "usable_pct": 80
+   },
+   {
+    "level_m": 488.5,
+    "usable_pct": 100
+   }
+  ]
+ },
+ "history": [
+  {
+   "date": "1992-11-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "1992-12-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "1993-01-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "1993-02-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "1993-03-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "1993-04-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "1993-05-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1993-06-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1993-07-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "1993-08-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "1993-09-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1993-10-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1993-11-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "1993-12-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "1994-01-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "1994-02-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "1994-03-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1994-04-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "1994-05-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "1994-06-15",
+   "level_m": 480.5,
+   "usable_pct": 29
+  },
+  {
+   "date": "1994-07-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "1994-08-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "1994-09-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "1994-10-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1994-11-15",
+   "level_m": 479,
+   "usable_pct": 19
+  },
+  {
+   "date": "1994-12-15",
+   "level_m": 479,
+   "usable_pct": 17
+  },
+  {
+   "date": "1995-01-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "1995-02-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "1995-03-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "1995-04-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "1995-05-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1995-06-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1995-07-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "1995-08-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1995-09-15",
+   "level_m": 479.5,
+   "usable_pct": 22
+  },
+  {
+   "date": "1995-10-15",
+   "level_m": 479,
+   "usable_pct": 19
+  },
+  {
+   "date": "1995-11-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "1995-12-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "1996-01-15",
+   "level_m": 478,
+   "usable_pct": 12
+  },
+  {
+   "date": "1996-02-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "1996-03-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "1996-04-15",
+   "level_m": 479,
+   "usable_pct": 17
+  },
+  {
+   "date": "1996-05-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "1996-06-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "1996-07-15",
+   "level_m": 479.5,
+   "usable_pct": 22
+  },
+  {
+   "date": "1996-08-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1996-09-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1996-10-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1996-11-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "1996-12-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "1997-01-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "1997-02-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "1997-03-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "1997-04-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "1997-05-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "1997-06-15",
+   "level_m": 481.5,
+   "usable_pct": 34
+  },
+  {
+   "date": "1997-07-15",
+   "level_m": 481.5,
+   "usable_pct": 35
+  },
+  {
+   "date": "1997-08-15",
+   "level_m": 481.5,
+   "usable_pct": 37
+  },
+  {
+   "date": "1997-09-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "1997-10-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "1997-11-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "1997-12-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "1998-01-15",
+   "level_m": 482,
+   "usable_pct": 40
+  },
+  {
+   "date": "1998-02-15",
+   "level_m": 482,
+   "usable_pct": 41
+  },
+  {
+   "date": "1998-03-15",
+   "level_m": 482.5,
+   "usable_pct": 43
+  },
+  {
+   "date": "1998-04-15",
+   "level_m": 482.5,
+   "usable_pct": 45
+  },
+  {
+   "date": "1998-05-15",
+   "level_m": 483,
+   "usable_pct": 48
+  },
+  {
+   "date": "1998-06-15",
+   "level_m": 483,
+   "usable_pct": 49
+  },
+  {
+   "date": "1998-07-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "1998-08-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "1998-09-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "1998-10-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "1998-11-15",
+   "level_m": 483,
+   "usable_pct": 49
+  },
+  {
+   "date": "1998-12-15",
+   "level_m": 483,
+   "usable_pct": 49
+  },
+  {
+   "date": "1999-01-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "1999-02-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "1999-03-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "1999-04-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "1999-05-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "1999-06-15",
+   "level_m": 484.5,
+   "usable_pct": 59
+  },
+  {
+   "date": "1999-07-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "1999-08-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "1999-09-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "1999-10-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "1999-11-15",
+   "level_m": 484.5,
+   "usable_pct": 59
+  },
+  {
+   "date": "1999-12-15",
+   "level_m": 484.5,
+   "usable_pct": 59
+  },
+  {
+   "date": "2000-01-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2000-02-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2000-03-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2000-04-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2000-05-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2000-06-15",
+   "level_m": 485.5,
+   "usable_pct": 69
+  },
+  {
+   "date": "2000-07-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2000-08-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2000-09-15",
+   "level_m": 485.5,
+   "usable_pct": 69
+  },
+  {
+   "date": "2000-10-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2000-11-15",
+   "level_m": 485,
+   "usable_pct": 66
+  },
+  {
+   "date": "2000-12-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2001-01-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2001-02-15",
+   "level_m": 485,
+   "usable_pct": 66
+  },
+  {
+   "date": "2001-03-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2001-04-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2001-05-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2001-06-15",
+   "level_m": 486,
+   "usable_pct": 74
+  },
+  {
+   "date": "2001-07-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2001-08-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2001-09-15",
+   "level_m": 485.5,
+   "usable_pct": 69
+  },
+  {
+   "date": "2001-10-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2001-11-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2001-12-15",
+   "level_m": 484,
+   "usable_pct": 57
+  },
+  {
+   "date": "2002-01-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2002-02-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2002-03-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2002-04-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2002-05-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2002-06-15",
+   "level_m": 485,
+   "usable_pct": 64
+  },
+  {
+   "date": "2002-07-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2002-08-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2002-09-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2002-10-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2002-11-15",
+   "level_m": 483.5,
+   "usable_pct": 54
+  },
+  {
+   "date": "2002-12-15",
+   "level_m": 483.5,
+   "usable_pct": 52
+  },
+  {
+   "date": "2003-01-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "2003-02-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "2003-03-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "2003-04-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2003-05-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2003-06-15",
+   "level_m": 484.5,
+   "usable_pct": 59
+  },
+  {
+   "date": "2003-07-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2003-08-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2003-09-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2003-10-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "2003-11-15",
+   "level_m": 483,
+   "usable_pct": 49
+  },
+  {
+   "date": "2003-12-15",
+   "level_m": 483,
+   "usable_pct": 47
+  },
+  {
+   "date": "2004-01-15",
+   "level_m": 482.5,
+   "usable_pct": 45
+  },
+  {
+   "date": "2004-02-15",
+   "level_m": 483,
+   "usable_pct": 46
+  },
+  {
+   "date": "2004-03-15",
+   "level_m": 483,
+   "usable_pct": 48
+  },
+  {
+   "date": "2004-04-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "2004-05-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "2004-06-15",
+   "level_m": 483.5,
+   "usable_pct": 54
+  },
+  {
+   "date": "2004-07-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2004-08-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "2004-09-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "2004-10-15",
+   "level_m": 483,
+   "usable_pct": 48
+  },
+  {
+   "date": "2004-11-15",
+   "level_m": 482.5,
+   "usable_pct": 44
+  },
+  {
+   "date": "2004-12-15",
+   "level_m": 482.5,
+   "usable_pct": 42
+  },
+  {
+   "date": "2005-01-15",
+   "level_m": 482,
+   "usable_pct": 40
+  },
+  {
+   "date": "2005-02-15",
+   "level_m": 482,
+   "usable_pct": 41
+  },
+  {
+   "date": "2005-03-15",
+   "level_m": 482.5,
+   "usable_pct": 43
+  },
+  {
+   "date": "2005-04-15",
+   "level_m": 482.5,
+   "usable_pct": 45
+  },
+  {
+   "date": "2005-05-15",
+   "level_m": 483,
+   "usable_pct": 48
+  },
+  {
+   "date": "2005-06-15",
+   "level_m": 483,
+   "usable_pct": 49
+  },
+  {
+   "date": "2005-07-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "2005-08-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "2005-09-15",
+   "level_m": 483,
+   "usable_pct": 49
+  },
+  {
+   "date": "2005-10-15",
+   "level_m": 483,
+   "usable_pct": 48
+  },
+  {
+   "date": "2005-11-15",
+   "level_m": 483,
+   "usable_pct": 46
+  },
+  {
+   "date": "2005-12-15",
+   "level_m": 482.5,
+   "usable_pct": 45
+  },
+  {
+   "date": "2006-01-15",
+   "level_m": 482.5,
+   "usable_pct": 45
+  },
+  {
+   "date": "2006-02-15",
+   "level_m": 483,
+   "usable_pct": 46
+  },
+  {
+   "date": "2006-03-15",
+   "level_m": 483,
+   "usable_pct": 48
+  },
+  {
+   "date": "2006-04-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "2006-05-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "2006-06-15",
+   "level_m": 483.5,
+   "usable_pct": 54
+  },
+  {
+   "date": "2006-07-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2006-08-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2006-09-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2006-10-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2006-11-15",
+   "level_m": 483.5,
+   "usable_pct": 54
+  },
+  {
+   "date": "2006-12-15",
+   "level_m": 483.5,
+   "usable_pct": 54
+  },
+  {
+   "date": "2007-01-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2007-02-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2007-03-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2007-04-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2007-05-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2007-06-15",
+   "level_m": 485,
+   "usable_pct": 64
+  },
+  {
+   "date": "2007-07-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2007-08-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2007-09-15",
+   "level_m": 485,
+   "usable_pct": 64
+  },
+  {
+   "date": "2007-10-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2007-11-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2007-12-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2008-01-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2008-02-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2008-03-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2008-04-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2008-05-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2008-06-15",
+   "level_m": 485.5,
+   "usable_pct": 69
+  },
+  {
+   "date": "2008-07-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2008-08-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2008-09-15",
+   "level_m": 485.5,
+   "usable_pct": 69
+  },
+  {
+   "date": "2008-10-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2008-11-15",
+   "level_m": 485,
+   "usable_pct": 66
+  },
+  {
+   "date": "2008-12-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2009-01-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2009-02-15",
+   "level_m": 485,
+   "usable_pct": 66
+  },
+  {
+   "date": "2009-03-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2009-04-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2009-05-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2009-06-15",
+   "level_m": 486,
+   "usable_pct": 74
+  },
+  {
+   "date": "2009-07-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2009-08-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2009-09-15",
+   "level_m": 486,
+   "usable_pct": 74
+  },
+  {
+   "date": "2009-10-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2009-11-15",
+   "level_m": 485.5,
+   "usable_pct": 71
+  },
+  {
+   "date": "2009-12-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2010-01-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2010-02-15",
+   "level_m": 485.5,
+   "usable_pct": 71
+  },
+  {
+   "date": "2010-03-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2010-04-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2010-05-15",
+   "level_m": 486.5,
+   "usable_pct": 78
+  },
+  {
+   "date": "2010-06-15",
+   "level_m": 486.5,
+   "usable_pct": 79
+  },
+  {
+   "date": "2010-07-15",
+   "level_m": 486.5,
+   "usable_pct": 80
+  },
+  {
+   "date": "2010-08-15",
+   "level_m": 486.5,
+   "usable_pct": 80
+  },
+  {
+   "date": "2010-09-15",
+   "level_m": 486.5,
+   "usable_pct": 79
+  },
+  {
+   "date": "2010-10-15",
+   "level_m": 486.5,
+   "usable_pct": 78
+  },
+  {
+   "date": "2010-11-15",
+   "level_m": 486,
+   "usable_pct": 76
+  },
+  {
+   "date": "2010-12-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2011-01-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2011-02-15",
+   "level_m": 486,
+   "usable_pct": 76
+  },
+  {
+   "date": "2011-03-15",
+   "level_m": 486.5,
+   "usable_pct": 78
+  },
+  {
+   "date": "2011-04-15",
+   "level_m": 486.5,
+   "usable_pct": 80
+  },
+  {
+   "date": "2011-05-15",
+   "level_m": 487,
+   "usable_pct": 83
+  },
+  {
+   "date": "2011-06-15",
+   "level_m": 487,
+   "usable_pct": 84
+  },
+  {
+   "date": "2011-07-15",
+   "level_m": 487,
+   "usable_pct": 85
+  },
+  {
+   "date": "2011-08-15",
+   "level_m": 487,
+   "usable_pct": 83
+  },
+  {
+   "date": "2011-09-15",
+   "level_m": 486.5,
+   "usable_pct": 79
+  },
+  {
+   "date": "2011-10-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2011-11-15",
+   "level_m": 485.5,
+   "usable_pct": 71
+  },
+  {
+   "date": "2011-12-15",
+   "level_m": 485,
+   "usable_pct": 67
+  },
+  {
+   "date": "2012-01-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2012-02-15",
+   "level_m": 485,
+   "usable_pct": 66
+  },
+  {
+   "date": "2012-03-15",
+   "level_m": 485,
+   "usable_pct": 68
+  },
+  {
+   "date": "2012-04-15",
+   "level_m": 485.5,
+   "usable_pct": 70
+  },
+  {
+   "date": "2012-05-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2012-06-15",
+   "level_m": 486,
+   "usable_pct": 74
+  },
+  {
+   "date": "2012-07-15",
+   "level_m": 486,
+   "usable_pct": 75
+  },
+  {
+   "date": "2012-08-15",
+   "level_m": 486,
+   "usable_pct": 73
+  },
+  {
+   "date": "2012-09-15",
+   "level_m": 485.5,
+   "usable_pct": 69
+  },
+  {
+   "date": "2012-10-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2012-11-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2012-12-15",
+   "level_m": 484,
+   "usable_pct": 57
+  },
+  {
+   "date": "2013-01-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2013-02-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2013-03-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2013-04-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2013-05-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2013-06-15",
+   "level_m": 485,
+   "usable_pct": 64
+  },
+  {
+   "date": "2013-07-15",
+   "level_m": 485,
+   "usable_pct": 65
+  },
+  {
+   "date": "2013-08-15",
+   "level_m": 484.5,
+   "usable_pct": 63
+  },
+  {
+   "date": "2013-09-15",
+   "level_m": 484.5,
+   "usable_pct": 61
+  },
+  {
+   "date": "2013-10-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2013-11-15",
+   "level_m": 483.5,
+   "usable_pct": 54
+  },
+  {
+   "date": "2013-12-15",
+   "level_m": 483.5,
+   "usable_pct": 52
+  },
+  {
+   "date": "2014-01-15",
+   "level_m": 483,
+   "usable_pct": 50
+  },
+  {
+   "date": "2014-02-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "2014-03-15",
+   "level_m": 483.5,
+   "usable_pct": 53
+  },
+  {
+   "date": "2014-04-15",
+   "level_m": 484,
+   "usable_pct": 55
+  },
+  {
+   "date": "2014-05-15",
+   "level_m": 484,
+   "usable_pct": 58
+  },
+  {
+   "date": "2014-06-15",
+   "level_m": 484.5,
+   "usable_pct": 59
+  },
+  {
+   "date": "2014-07-15",
+   "level_m": 484.5,
+   "usable_pct": 60
+  },
+  {
+   "date": "2014-08-15",
+   "level_m": 484,
+   "usable_pct": 56
+  },
+  {
+   "date": "2014-09-15",
+   "level_m": 483.5,
+   "usable_pct": 51
+  },
+  {
+   "date": "2014-10-15",
+   "level_m": 482.5,
+   "usable_pct": 45
+  },
+  {
+   "date": "2014-11-15",
+   "level_m": 482,
+   "usable_pct": 39
+  },
+  {
+   "date": "2014-12-15",
+   "level_m": 481.5,
+   "usable_pct": 34
+  },
+  {
+   "date": "2015-01-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2015-02-15",
+   "level_m": 481,
+   "usable_pct": 31
+  },
+  {
+   "date": "2015-03-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "2015-04-15",
+   "level_m": 481.5,
+   "usable_pct": 35
+  },
+  {
+   "date": "2015-05-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "2015-06-15",
+   "level_m": 482,
+   "usable_pct": 39
+  },
+  {
+   "date": "2015-07-15",
+   "level_m": 482,
+   "usable_pct": 40
+  },
+  {
+   "date": "2015-08-15",
+   "level_m": 481.5,
+   "usable_pct": 37
+  },
+  {
+   "date": "2015-09-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "2015-10-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2015-11-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2015-12-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "2016-01-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "2016-02-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "2016-03-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "2016-04-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2016-05-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2016-06-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2016-07-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2016-08-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2016-09-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2016-10-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2016-11-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "2016-12-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2017-01-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2017-02-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "2017-03-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2017-04-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2017-05-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2017-06-15",
+   "level_m": 480.5,
+   "usable_pct": 29
+  },
+  {
+   "date": "2017-07-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2017-08-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2017-09-15",
+   "level_m": 480.5,
+   "usable_pct": 29
+  },
+  {
+   "date": "2017-10-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2017-11-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "2017-12-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2018-01-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2018-02-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "2018-03-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2018-04-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2018-05-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "2018-06-15",
+   "level_m": 481.5,
+   "usable_pct": 34
+  },
+  {
+   "date": "2018-07-15",
+   "level_m": 481.5,
+   "usable_pct": 35
+  },
+  {
+   "date": "2018-08-15",
+   "level_m": 481,
+   "usable_pct": 32
+  },
+  {
+   "date": "2018-09-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2018-10-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2018-11-15",
+   "level_m": 479,
+   "usable_pct": 17
+  },
+  {
+   "date": "2018-12-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "2019-01-15",
+   "level_m": 478,
+   "usable_pct": 10
+  },
+  {
+   "date": "2019-02-15",
+   "level_m": 478,
+   "usable_pct": 11
+  },
+  {
+   "date": "2019-03-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "2019-04-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "2019-05-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "2019-06-15",
+   "level_m": 479,
+   "usable_pct": 19
+  },
+  {
+   "date": "2019-07-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2019-08-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2019-09-15",
+   "level_m": 479,
+   "usable_pct": 19
+  },
+  {
+   "date": "2019-10-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "2019-11-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "2019-12-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "2020-01-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "2020-02-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "2020-03-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "2020-04-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2020-05-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2020-06-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2020-07-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2020-08-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "2020-09-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "2020-10-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2020-11-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2020-12-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2021-01-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2021-02-15",
+   "level_m": 480,
+   "usable_pct": 26
+  },
+  {
+   "date": "2021-03-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2021-04-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2021-05-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "2021-06-15",
+   "level_m": 481.5,
+   "usable_pct": 34
+  },
+  {
+   "date": "2021-07-15",
+   "level_m": 481.5,
+   "usable_pct": 35
+  },
+  {
+   "date": "2021-08-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "2021-09-15",
+   "level_m": 481,
+   "usable_pct": 31
+  },
+  {
+   "date": "2021-10-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2021-11-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2021-12-15",
+   "level_m": 479.5,
+   "usable_pct": 22
+  },
+  {
+   "date": "2022-01-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2022-02-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "2022-03-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2022-04-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2022-05-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2022-06-15",
+   "level_m": 480.5,
+   "usable_pct": 29
+  },
+  {
+   "date": "2022-07-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2022-08-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2022-09-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2022-10-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "2022-11-15",
+   "level_m": 479,
+   "usable_pct": 17
+  },
+  {
+   "date": "2022-12-15",
+   "level_m": 478.5,
+   "usable_pct": 14
+  },
+  {
+   "date": "2023-01-15",
+   "level_m": 478,
+   "usable_pct": 12
+  },
+  {
+   "date": "2023-02-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "2023-03-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "2023-04-15",
+   "level_m": 479,
+   "usable_pct": 17
+  },
+  {
+   "date": "2023-05-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2023-06-15",
+   "level_m": 479.5,
+   "usable_pct": 21
+  },
+  {
+   "date": "2023-07-15",
+   "level_m": 479.5,
+   "usable_pct": 22
+  },
+  {
+   "date": "2023-08-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2023-09-15",
+   "level_m": 479,
+   "usable_pct": 17
+  },
+  {
+   "date": "2023-10-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "2023-11-15",
+   "level_m": 477.5,
+   "usable_pct": 8
+  },
+  {
+   "date": "2023-12-15",
+   "level_m": 477,
+   "usable_pct": 5
+  },
+  {
+   "date": "2024-01-15",
+   "level_m": 476.5,
+   "usable_pct": 3
+  },
+  {
+   "date": "2024-02-15",
+   "level_m": 476.5,
+   "usable_pct": 3
+  },
+  {
+   "date": "2024-03-15",
+   "level_m": 476.5,
+   "usable_pct": 4
+  },
+  {
+   "date": "2024-04-15",
+   "level_m": 477,
+   "usable_pct": 5
+  },
+  {
+   "date": "2024-05-15",
+   "level_m": 477,
+   "usable_pct": 5
+  },
+  {
+   "date": "2024-06-15",
+   "level_m": 477,
+   "usable_pct": 6
+  },
+  {
+   "date": "2024-07-15",
+   "level_m": 477,
+   "usable_pct": 6
+  },
+  {
+   "date": "2024-08-15",
+   "level_m": 477.5,
+   "usable_pct": 8
+  },
+  {
+   "date": "2024-09-15",
+   "level_m": 477.5,
+   "usable_pct": 9
+  },
+  {
+   "date": "2024-10-15",
+   "level_m": 478,
+   "usable_pct": 11
+  },
+  {
+   "date": "2024-11-15",
+   "level_m": 478,
+   "usable_pct": 12
+  },
+  {
+   "date": "2024-12-15",
+   "level_m": 478.5,
+   "usable_pct": 13
+  },
+  {
+   "date": "2025-01-15",
+   "level_m": 478.5,
+   "usable_pct": 15
+  },
+  {
+   "date": "2025-02-15",
+   "level_m": 479,
+   "usable_pct": 16
+  },
+  {
+   "date": "2025-03-15",
+   "level_m": 479,
+   "usable_pct": 18
+  },
+  {
+   "date": "2025-04-15",
+   "level_m": 479.5,
+   "usable_pct": 20
+  },
+  {
+   "date": "2025-05-15",
+   "level_m": 480,
+   "usable_pct": 23
+  },
+  {
+   "date": "2025-06-15",
+   "level_m": 480,
+   "usable_pct": 24
+  },
+  {
+   "date": "2025-07-15",
+   "level_m": 480,
+   "usable_pct": 25
+  },
+  {
+   "date": "2025-08-15",
+   "level_m": 480.5,
+   "usable_pct": 27
+  },
+  {
+   "date": "2025-09-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2025-10-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2025-11-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2025-12-15",
+   "level_m": 480.5,
+   "usable_pct": 28
+  },
+  {
+   "date": "2026-01-15",
+   "level_m": 481,
+   "usable_pct": 30
+  },
+  {
+   "date": "2026-02-15",
+   "level_m": 481,
+   "usable_pct": 31
+  },
+  {
+   "date": "2026-03-15",
+   "level_m": 481,
+   "usable_pct": 33
+  },
+  {
+   "date": "2026-04-15",
+   "level_m": 481.5,
+   "usable_pct": 35
+  },
+  {
+   "date": "2026-05-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "2026-06-15",
+   "level_m": 482,
+   "usable_pct": 39
+  },
+  {
+   "date": "2026-07-15",
+   "level_m": 482,
+   "usable_pct": 40
+  },
+  {
+   "date": "2026-08-15",
+   "level_m": 482,
+   "usable_pct": 39
+  },
+  {
+   "date": "2026-09-15",
+   "level_m": 482,
+   "usable_pct": 38
+  },
+  {
+   "date": "2026-10-15",
+   "level_m": 481.5,
+   "usable_pct": 35
+  },
+  {
+   "date": "2026-11-15",
+   "level_m": 481,
+   "usable_pct": 33
+  }
+ ],
+ "latest": {
+  "date": "2026-11-15",
+  "level_m": 481,
+  "usable_pct": 30,
+  "zra_gauge": {
+   "date": "2026-11-15",
+   "level_m": 481,
+   "usable_pct": 30
+  }
+ },
+ "backtest": {
+  "design": "SAMPLE. Strictly forward rolling forecast from 2003",
+  "by_horizon": [
+   {
+    "horizon": 1,
+    "brier": 0.1,
+    "bss_vs_climatology": 0.5,
+    "bss_vs_persistence": 0.3,
+    "bss_vs_enso_only": 0.3,
+    "auc_pr": 0.8,
+    "auc_pr_climatology": 0.2,
+    "auc_pr_ci90": [
+     0.6,
+     0.9
+    ]
+   },
+   {
+    "horizon": 3,
+    "brier": 0.1,
+    "bss_vs_climatology": 0.4,
+    "bss_vs_persistence": 0.2,
+    "bss_vs_enso_only": 0.2,
+    "auc_pr": 0.7,
+    "auc_pr_climatology": 0.2,
+    "auc_pr_ci90": [
+     0.5,
+     0.8
+    ]
+   },
+   {
+    "horizon": 6,
+    "brier": 0.2,
+    "bss_vs_climatology": 0.2,
+    "bss_vs_persistence": 0.1,
+    "bss_vs_enso_only": 0.1,
+    "auc_pr": 0.5,
+    "auc_pr_climatology": 0.2,
+    "auc_pr_ci90": [
+     0.4,
+     0.6
+    ]
+   }
+  ],
+  "ablation_no_grace": [
+   {
+    "horizon": 1,
+    "brier": 0.1,
+    "bss_vs_climatology": 0.5,
+    "bss_vs_persistence": 0.3,
+    "bss_vs_enso_only": 0.3,
+    "auc_pr": 0.7,
+    "auc_pr_climatology": 0.2,
+    "auc_pr_ci90": [
+     0.6,
+     0.9
+    ]
+   },
+   {
+    "horizon": 3,
+    "brier": 0.1,
+    "bss_vs_climatology": 0.4,
+    "bss_vs_persistence": 0.2,
+    "bss_vs_enso_only": 0.2,
+    "auc_pr": 0.6,
+    "auc_pr_climatology": 0.2,
+    "auc_pr_ci90": [
+     0.5,
+     0.8
+    ]
+   },
+   {
+    "horizon": 6,
+    "brier": 0.2,
+    "bss_vs_climatology": 0.2,
+    "bss_vs_persistence": 0.1,
+    "bss_vs_enso_only": 0.1,
+    "auc_pr": 0.4,
+    "auc_pr_climatology": 0.2,
+    "auc_pr_ci90": [
+     0.4,
+     0.6
+    ]
+   }
+  ],
+  "crisis_2024": {
+   "first_warning_p_gt_0_5": "2023-08",
+   "first_danger_p_gt_0_5": "2023-10",
+   "zra_allocation_cut": "2023-12-28",
+   "load_shedding_start": "2024-03-11",
+   "lead_months_vs_load_shedding": 7,
+   "lead_months_vs_zra": 4
+  }
+ },
+ "forecast": {
+  "issued": "2026-11-15",
+  "months": [
+   {
+    "month": "2026-12",
+    "usable_p10": 25,
+    "usable_p50": 30,
+    "usable_p90": 35,
+    "p_below_warning": 0,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-01",
+    "usable_p10": 23,
+    "usable_p50": 29,
+    "usable_p90": 35,
+    "p_below_warning": 0,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-02",
+    "usable_p10": 20,
+    "usable_p50": 27,
+    "usable_p90": 34,
+    "p_below_warning": 0,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-03",
+    "usable_p10": 18,
+    "usable_p50": 26,
+    "usable_p90": 34,
+    "p_below_warning": 0.1,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-04",
+    "usable_p10": 15,
+    "usable_p50": 24,
+    "usable_p90": 33,
+    "p_below_warning": 0.3,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-05",
+    "usable_p10": 17,
+    "usable_p50": 27,
+    "usable_p90": 37,
+    "p_below_warning": 0.2,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-06",
+    "usable_p10": 14,
+    "usable_p50": 25,
+    "usable_p90": 36,
+    "p_below_warning": 0.3,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-07",
+    "usable_p10": 12,
+    "usable_p50": 24,
+    "usable_p90": 36,
+    "p_below_warning": 0.3,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-08",
+    "usable_p10": 9,
+    "usable_p50": 22,
+    "usable_p90": 35,
+    "p_below_warning": 0.4,
+    "p_below_danger": 0
+   },
+   {
+    "month": "2027-09",
+    "usable_p10": 3,
+    "usable_p50": 17,
+    "usable_p90": 31,
+    "p_below_warning": 0.6,
+    "p_below_danger": 0.3
+   },
+   {
+    "month": "2027-10",
+    "usable_p10": 0,
+    "usable_p50": 15,
+    "usable_p90": 30,
+    "p_below_warning": 0.7,
+    "p_below_danger": 0.3
+   },
+   {
+    "month": "2027-11",
+    "usable_p10": 0,
+    "usable_p50": 14,
+    "usable_p90": 30,
+    "p_below_warning": 0.7,
+    "p_below_danger": 0.4
+   },
+   {
+    "month": "2027-12",
+    "usable_p10": 0,
+    "usable_p50": 12,
+    "usable_p90": 29,
+    "p_below_warning": 0.7,
+    "p_below_danger": 0.4
+   }
+  ]
+ },
+ "zra_projection": {
+  "end_2027_usable_pct": 9,
+  "end_2027_level_m": 476.8,
+  "allocation_2027_bcm": 23,
+  "cut_pct": 36,
+  "source_url": "https://www.zambezira.org/"
+ },
+ "enso": {
+  "el_nino_years": [
+   "1994",
+   "1997",
+   "2002",
+   "2009",
+   "2015",
+   "2023"
+  ],
+  "mean_level_change_el_nino_m": -2,
+  "mean_level_change_other_m": 1,
+  "p": 0.01
+ },
+ "analogs": [
+  {
+   "date": "2023-10",
+   "similarity": 0.9,
+   "what_happened": "Sample: fell to about 3% usable by Dec 2024"
+  },
+  {
+   "date": "2015-10",
+   "similarity": 0.8,
+   "what_happened": "Sample: fell to about 12% usable by early 2016"
+  },
+  {
+   "date": "2018-10",
+   "similarity": 0.7,
+   "what_happened": "Sample: fell to about 10% usable by late 2019"
+  }
+ ],
+ "cost_of_waiting": {
+  "assumptions": {
+   "replacement_contracted_usd_per_kwh": 0.17,
+   "replacement_emergency_usd_per_kwh": 0.26,
+   "voll_usd_per_kwh": 1,
+   "source": "ZESCO ERB filing Jul 2024; VoLL literature"
+  },
+  "curve": [
+   {
+    "action_month": "2026-12",
+    "expected_cost_musd_p10": 50,
+    "expected_cost_musd_p50": 100,
+    "expected_cost_musd_p90": 200
+   },
+   {
+    "action_month": "2027-01",
+    "expected_cost_musd_p10": 100,
+    "expected_cost_musd_p50": 200,
+    "expected_cost_musd_p90": 400
+   },
+   {
+    "action_month": "2027-02",
+    "expected_cost_musd_p10": 150,
+    "expected_cost_musd_p50": 300,
+    "expected_cost_musd_p90": 600
+   },
+   {
+    "action_month": "2027-03",
+    "expected_cost_musd_p10": 200,
+    "expected_cost_musd_p50": 400,
+    "expected_cost_musd_p90": 800
+   },
+   {
+    "action_month": "2027-04",
+    "expected_cost_musd_p10": 250,
+    "expected_cost_musd_p50": 500,
+    "expected_cost_musd_p90": 1000
+   },
+   {
+    "action_month": "2027-05",
+    "expected_cost_musd_p10": 300,
+    "expected_cost_musd_p50": 600,
+    "expected_cost_musd_p90": 1200
+   },
+   {
+    "action_month": "2027-06",
+    "expected_cost_musd_p10": 350,
+    "expected_cost_musd_p50": 700,
+    "expected_cost_musd_p90": 1400
+   },
+   {
+    "action_month": "2027-07",
+    "expected_cost_musd_p10": 400,
+    "expected_cost_musd_p50": 800,
+    "expected_cost_musd_p90": 1600
+   }
+  ],
+  "headline": "Sample: waiting from December to April adds about $400 M in expected costs"
+ },
+ "other_reservoirs": [
+  {
+   "name": "Cahora Bassa",
+   "country": "MOZ",
+   "grealm_id": "sample",
+   "latest_level_m": 320,
+   "anomaly_m": -2
+  },
+  {
+   "name": "Volta (Akosombo)",
+   "country": "GHA",
+   "grealm_id": "sample",
+   "latest_level_m": 80,
+   "anomaly_m": 1
+  },
+  {
+   "name": "Guri",
+   "country": "VEN",
+   "grealm_id": "sample",
+   "latest_level_m": 260,
+   "anomaly_m": -1
+  }
+ ]
+}

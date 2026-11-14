@@ -1,0 +1,475 @@
+"""Global trend map: is water storage in the world's hydropower basins changing, and is it significant?
+
+For each HydroBASINS level-4 basin that contains WRI GPPD hydro plants:
+  1. GFZ GravIS GRACE/GRACE-FO total water storage (TWS) anomaly, area-weighted (cos lat) mean of the 1-degree cells
+     whose centres fall inside the basin (nearest land cell if none does; flagged low_resolution).
+  2. Deseasonalize (subtract each calendar month's mean). Missing months, including the 2017-18 GRACE/GRACE-FO gap,
+     stay missing; nothing is interpolated.
+  3. Mann-Kendall with Hamed-Rao autocorrelation correction (pymannkendall) for significance; Sen's slope computed on
+     the real time axis (so gaps don't compress time), in cm/decade.
+  4. Same test on NASA POWER (MERRA-2) PRECTOTCORR monthly anomalies at up to 3 points per basin, slope in % of mean
+     per decade.
+  5. Benjamini-Hochberg FDR across basins, separately for TWS and precipitation. trend_class uses TWS q < 0.05.
+
+Writes web/public/data/trends.json and web/public/data/basins.geojson.
+
+    python3 -m pipeline.trends
+"""
+from __future__ import annotations
+
+import json
+import time
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+
+import geopandas as gpd
+import numpy as np
+import pandas as pd
+import pymannkendall as mk
+import shapely
+import xarray as xr
+from shapely.geometry import Point
+
+from pipeline.basins import basin_sample_points, load_basins, load_plants
+from pipeline.paths import OUT, RAW
+from pipeline.power import monthly_point
+
+GRAVIS = RAW / "gravis_tws_grid.nc"
+START, END = "2002-04", "2026-08"
+ALPHA = 0.05
+SMALL_BASIN_KM2 = 50_000          # well below GRACE's ~300 km effective resolution
+KARIBA_BASIN = "1041438860"       # level-4 basin holding Kariba North/South and Victoria Falls (ZMB/ZWE)
+N_SERIES = 50
+MONTHS = pd.period_range(START, END, freq="M")
+
+
+# ---------------------------------------------------------------- GRACE grid
+def load_gravis() -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
+    """Return (tws[month, lat, lon] on the full monthly axis, lat, lon(-180..180), notes)."""
+    notes = []
+    ds = xr.open_dataset(GRAVIS)
+    tws = ds["tws"].values  # (time, lat, lon), cm
+    per = pd.DatetimeIndex(ds["time"].values).to_period("M")
+    lat = ds["lat"].values.astype(float)
+    lon = ds["lon"].values.astype(float)
+    lon = np.where(lon > 180, lon - 360, lon)
+    out = np.full((len(MONTHS), len(lat), len(lon)), np.nan)
+    pos = {p: i for i, p in enumerate(MONTHS)}
+    groups = defaultdict(list)
+    for i, p in enumerate(per):
+        groups[p].append(i)
+    dups = []
+    for p, idx in groups.items():
+        if p not in pos:
+            continue
+        if len(idx) > 1:
+            dups.append(str(p))
+            out[pos[p]] = np.nanmean(tws[idx], axis=0)
+        else:
+            out[pos[p]] = tws[idx[0]]
+    if dups:
+        notes.append(f"GravIS has two solutions dated in the same calendar month for {', '.join(dups)}; they are averaged.")
+    have = ~np.all(np.isnan(out.reshape(len(MONTHS), -1)), axis=1)
+    missing = [str(m) for m, h in zip(MONTHS, have) if not h]
+    notes.append(f"{len(missing)} of {len(MONTHS)} months have no GRACE/GRACE-FO solution (including the "
+                 f"2017-07..2018-05 mission gap); they are left missing, not interpolated.")
+    return out, lat, lon, notes
+
+
+def basin_cells(basins: gpd.GeoDataFrame, land: np.ndarray, lat: np.ndarray, lon: np.ndarray) -> dict:
+    """basin_id -> (lat_idx array, lon_idx array, used_nearest)."""
+    li, lj = np.nonzero(land)
+    cells = gpd.GeoDataFrame({"i": li, "j": lj}, geometry=gpd.points_from_xy(lon[lj], lat[li]), crs="EPSG:4326")
+    j = gpd.sjoin(cells, basins[["basin_id", "geometry"]], how="inner", predicate="within")
+    res = {bid: (g["i"].values, g["j"].values, False) for bid, g in j.groupby("basin_id")}
+    tree = shapely.STRtree(cells.geometry.values)
+    for r in basins.itertuples():
+        if r.basin_id in res:
+            continue
+        rp = r.geometry.representative_point()
+        k = tree.nearest(rp)
+        res[r.basin_id] = (np.array([cells["i"].iat[k]]), np.array([cells["j"].iat[k]]), True)
+    return res
+
+
+def area_mean(tws: np.ndarray, lat: np.ndarray, ii: np.ndarray, jj: np.ndarray) -> np.ndarray:
+    v = tws[:, ii, jj]  # (time, ncell)
+    w = np.cos(np.deg2rad(lat[ii]))[None, :] * ~np.isnan(v)
+    s = np.nansum(v * w, axis=1)
+    ws = w.sum(axis=1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(ws > 0, s / ws, np.nan)
+
+
+# ---------------------------------------------------------------- statistics
+def deseasonalize(x: np.ndarray) -> np.ndarray:
+    moy = np.array([m.month for m in MONTHS])
+    out = x.copy()
+    for m in range(1, 13):
+        sel = moy == m
+        mu = np.nanmean(x[sel]) if np.any(~np.isnan(x[sel])) else np.nan
+        out[sel] = x[sel] - mu
+    return out
+
+
+def sen_slope(t: np.ndarray, x: np.ndarray) -> tuple[float, float]:
+    """Sen's slope on the real time axis (units of x per unit t) and intercept (median of x - b*t)."""
+    i, j = np.triu_indices(len(t), k=1)
+    b = float(np.median((x[j] - x[i]) / (t[j] - t[i])))
+    a = float(np.median(x - b * t))
+    return b, a
+
+
+def trend_test(anom: np.ndarray) -> dict | None:
+    ok = ~np.isnan(anom)
+    if ok.sum() < 60:
+        return None
+    t = np.arange(len(anom), dtype=float)[ok]  # months since 2002-04
+    x = anom[ok]
+    r = mk.hamed_rao_modification_test(x)
+    b, a = sen_slope(t, x)
+    return {"p": float(r.p), "z": float(r.z), "tau": float(r.Tau), "slope_per_month": b, "intercept": a, "n": int(ok.sum())}
+
+
+def bh_fdr(p: list[float | None]) -> list[float | None]:
+    idx = [k for k, v in enumerate(p) if v is not None and np.isfinite(v)]
+    q = [None] * len(p)
+    if not idx:
+        return q
+    pv = np.array([p[k] for k in idx])
+    m = len(pv)
+    order = np.argsort(pv)
+    ranked = pv[order] * m / np.arange(1, m + 1)
+    ranked = np.minimum.accumulate(ranked[::-1])[::-1]
+    qv = np.empty(m)
+    qv[order] = np.minimum(ranked, 1.0)
+    for k, v in zip(idx, qv):
+        q[k] = float(v)
+    return q
+
+
+# ---------------------------------------------------------------- precipitation (NASA POWER)
+def precip_series(points: list[tuple[float, float]]) -> np.ndarray | None:
+    frames = []
+    for lon, lat in points:
+        try:
+            df = monthly_point(lon, lat, fill_recent=False)
+            frames.append(df["PRECTOTCORR"])
+        except Exception:  # noqa: BLE001
+            continue
+    if not frames:
+        return None
+    s = pd.concat(frames, axis=1).mean(axis=1)
+    s.index = pd.DatetimeIndex(s.index).to_period("M")
+    s = s[~s.index.duplicated()]
+    return s.reindex(MONTHS).to_numpy(dtype=float)
+
+
+def precip_test(pr: np.ndarray | None) -> dict | None:
+    if pr is None or np.isnan(pr).sum() > len(pr) * 0.1:
+        return None
+    mean = float(np.nanmean(pr))
+    if not mean > 0.05:  # deserts: % of ~0 is meaningless
+        return None
+    r = trend_test(deseasonalize(pr))
+    if r is None:
+        return None
+    r["slope_pct_per_decade"] = r["slope_per_month"] * 120 / mean * 100
+    r["mean_mm_day"] = mean
+    return r
+
+
+def grid_points(geom, max_points: int) -> list[tuple[float, float]]:
+    minx, miny, maxx, maxy = geom.bounds
+    pts = [(geom.representative_point().x, geom.representative_point().y)]
+    for x in np.arange(np.floor(minx) + 0.5, maxx, 1.0):
+        for y in np.arange(np.floor(miny) + 0.5, maxy, 1.0):
+            if geom.contains(Point(x, y)):
+                pts.append((float(x), float(y)))
+    if len(pts) > max_points:
+        idx = np.linspace(0, len(pts) - 1, max_points).round().astype(int)
+        pts = [pts[i] for i in sorted(set(idx))]
+    return pts
+
+
+# ---------------------------------------------------------------- helpers
+def r_(v, n=3):
+    if v is None:
+        return None
+    v = float(v)
+    return round(v, n) if np.isfinite(v) else None
+
+
+def clean_plant_name(s: str) -> str:
+    for junk in [" Hydroelectric Power Station", " Hydroelectric Power Plant", " Hydropower Station", " Hydro Power Plant",
+                 " Hydroelectric Plant", " Power Station", " Power Plant", " Hydroelectric", " Dam"]:
+        s = s.replace(junk, "")
+    s = s.strip(" ,-")
+    return s if len(s) <= 40 else s[:38].rstrip() + "…"
+
+
+def upstream_catchment(basin_id: str) -> tuple[list[str], object, float]:
+    """All level-4 basins draining into basin_id (inclusive), via HydroBASINS NEXT_DOWN."""
+    g = gpd.read_file(RAW / "hydrobasins" / f"hybas_{'af'}_lev04_v1c.shp", columns=["HYBAS_ID", "NEXT_DOWN", "SUB_AREA"])
+    up = defaultdict(list)
+    for h, n in zip(g["HYBAS_ID"].astype("int64"), g["NEXT_DOWN"].astype("int64")):
+        up[n].append(h)
+    todo, seen = [int(basin_id)], []
+    while todo:
+        h = todo.pop()
+        seen.append(h)
+        todo.extend(up.get(h, []))
+    sub = g[g["HYBAS_ID"].astype("int64").isin(seen)]
+    return [str(h) for h in seen], sub.geometry.union_all(), float(sub["SUB_AREA"].sum())
+
+
+def series_block(raw: np.ndarray, anom: np.ndarray) -> dict:
+    return {"months": [str(m) for m in MONTHS],
+            "tws_anom_cm": [r_(v, 2) for v in anom],
+            "tws_cm": [r_(v, 2) for v in raw]}
+
+
+# ---------------------------------------------------------------- main
+def main() -> None:
+    t0 = time.time()
+    notes: list[str] = []
+    basins = load_basins().sort_values("hydro_gw", ascending=False).reset_index(drop=True)
+    plants = load_plants()
+
+    tws, lat, lon, n1 = load_gravis()
+    notes += n1
+    land = ~np.all(np.isnan(tws), axis=0)
+    cells = basin_cells(basins, land, lat, lon)
+    print(f"[trends] GRACE loaded, cells assigned ({time.time() - t0:.1f}s)")
+
+    # --- TWS per basin
+    raw_series, anom_series, tws_res = {}, {}, {}
+    for r in basins.itertuples():
+        ii, jj, _ = cells[r.basin_id]
+        x = area_mean(tws, lat, ii, jj)
+        raw_series[r.basin_id] = x
+        anom_series[r.basin_id] = deseasonalize(x)
+        try:
+            tws_res[r.basin_id] = trend_test(anom_series[r.basin_id])
+        except Exception as e:  # noqa: BLE001
+            tws_res[r.basin_id] = None
+            notes.append(f"TWS trend test failed for basin {r.basin_id}: {e}")
+    print(f"[trends] TWS tests done ({time.time() - t0:.1f}s)")
+
+    # --- precipitation per basin (all basins; POWER is cached)
+    def _pr(bid):
+        try:
+            return bid, precip_test(precip_series(basin_sample_points(bid, max_points=3)))
+        except Exception:  # noqa: BLE001
+            return bid, None
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        pr_res = dict(ex.map(_pr, basins["basin_id"].tolist()))
+    n_pr_fail = sum(v is None for v in pr_res.values())
+    if n_pr_fail:
+        notes.append(f"Precipitation trend unavailable for {n_pr_fail} basins (POWER request failed, data incomplete, "
+                     f"or mean rainfall < 0.05 mm/day); their precip fields are null.")
+    print(f"[trends] precip tests done ({time.time() - t0:.1f}s)")
+
+    ids = basins["basin_id"].tolist()
+    tws_q = dict(zip(ids, bh_fdr([tws_res[b]["p"] if tws_res[b] else None for b in ids])))
+    pr_q = dict(zip(ids, bh_fdr([pr_res[b]["p"] if pr_res[b] else None for b in ids])))
+
+    # --- plants per basin
+    pl = plants.groupby(["basin_id", "name"], as_index=False)["capacity_mw"].sum()
+    top_plants = {bid: g.sort_values("capacity_mw", ascending=False).head(2) for bid, g in pl.groupby("basin_id")}
+
+    series_ids = set(ids[:N_SERIES])
+    kariba_ids = [b for b in ids if set(basins.loc[basins.basin_id == b, "countries"].iloc[0]) & {"ZMB", "ZWE"}
+                  and any("kariba" in n.lower() for n in top_plants.get(b, pd.DataFrame({"name": []}))["name"])]
+    if KARIBA_BASIN in ids and KARIBA_BASIN not in kariba_ids:
+        kariba_ids.append(KARIBA_BASIN)
+    series_ids |= set(kariba_ids)
+
+    out_basins = []
+    for r in basins.itertuples():
+        bid = r.basin_id
+        t, p = tws_res[bid], pr_res[bid]
+        q = tws_q[bid]
+        slope = t["slope_per_month"] * 120 if t else None
+        if t is None or q is None:
+            cls = None
+        elif q < ALPHA and slope < 0:
+            cls = "drying"
+        elif q < ALPHA and slope > 0:
+            cls = "wetting"
+        else:
+            cls = "no_significant_trend"
+        ctry = sorted(r.countries.items(), key=lambda kv: -kv[1])
+        tp = top_plants.get(bid)
+        major = [{"name": n, "mw": r_(mw, 1)} for n, mw in zip(tp["name"], tp["capacity_mw"])] if tp is not None else []
+        main_ctry = [c for c, gw in ctry if gw >= 0.1 * r.hydro_gw][:3] or [c for c, _ in ctry[:1]]
+        label = clean_plant_name(major[0]["name"]) if major else bid
+        precip_decline = bool(p and pr_q[bid] is not None and pr_q[bid] < ALPHA and p["slope_per_month"] < 0)
+        gw_flag = None if (cls is None or p is None) else bool(cls == "drying" and not precip_decline)
+        ii, _, nearest = cells[bid]
+        rec = {
+            "basin_id": bid,
+            "name": f"{label} basin ({'/'.join(main_ctry)})",
+            "countries": [c for c, _ in ctry],
+            "countries_gw": {c: r_(g, 3) for c, g in ctry},
+            "hydro_gw": r_(r.hydro_gw, 3),
+            "n_plants": int(r.n_plants),
+            "major_plants": major,
+            "centroid": [r_(r.centroid_lon, 3), r_(r.centroid_lat, 3)],
+            "area_km2": r_(r.area_km2, 0),
+            "grace_cells": int(0 if nearest else len(ii)),
+            "low_resolution": bool(nearest or r.area_km2 < SMALL_BASIN_KM2),
+            "tws_slope_cm_per_decade": r_(slope, 3),
+            "tws_p": r_(t["p"], 5) if t else None,
+            "tws_q": r_(q, 5),
+            "tws_n_months": t["n"] if t else None,
+            "precip_slope_pct_per_decade": r_(p["slope_pct_per_decade"], 2) if p else None,
+            "precip_p": r_(p["p"], 5) if p else None,
+            "precip_q": r_(pr_q[bid], 5),
+            "precip_mean_mm_day": r_(p["mean_mm_day"], 3) if p else None,
+            "trend_class": cls,
+            "possible_groundwater_signal": gw_flag,
+        }
+        if bid in series_ids:
+            rec["series"] = series_block(raw_series[bid], anom_series[bid])
+            if t:
+                rec["series"]["sen_intercept_cm"] = r_(t["intercept"], 3)
+                rec["series"]["sen_slope_cm_per_month"] = r_(t["slope_per_month"], 5)
+        out_basins.append(rec)
+
+    # --- Kariba / upper Zambezi
+    kariba = None
+    try:
+        kb = next(b for b in out_basins if b["basin_id"] == KARIBA_BASIN)
+        up_ids, up_geom, up_area = upstream_catchment(KARIBA_BASIN)
+        lon2, lat2 = np.meshgrid(lon, lat)
+        inside = shapely.contains_xy(up_geom, lon2, lat2) & land
+        ii, jj = np.nonzero(inside)
+        ux = area_mean(tws, lat, ii, jj)
+        ua = deseasonalize(ux)
+        ut = trend_test(ua)
+        up_pr = precip_test(precip_series(grid_points(up_geom, 6)))
+        kariba = {
+            "description": "Lake Kariba (Zambia/Zimbabwe). 'basin' is the HydroBASINS level-4 basin holding the Kariba "
+                           "and Victoria Falls plants; 'upstream_catchment' is the whole Zambezi catchment draining into "
+                           "Kariba (upper Zambezi incl. Barotse floodplain, Kwando/Chobe), traced with HydroBASINS NEXT_DOWN.",
+            "basin": {k: kb[k] for k in kb if k != "series"} | {"series": kb.get("series")},
+            "upstream_catchment": {
+                "hybas_ids": up_ids, "n_basins": len(up_ids), "area_km2": r_(up_area, 0), "grace_cells": int(len(ii)),
+                "tws_slope_cm_per_decade": r_(ut["slope_per_month"] * 120, 3) if ut else None,
+                "tws_p": r_(ut["p"], 5) if ut else None,
+                "significant": bool(ut and ut["p"] < ALPHA),
+                "precip_slope_pct_per_decade": r_(up_pr["slope_pct_per_decade"], 2) if up_pr else None,
+                "precip_p": r_(up_pr["p"], 5) if up_pr else None,
+                "series": series_block(ux, ua) | ({"sen_intercept_cm": r_(ut["intercept"], 3),
+                                                    "sen_slope_cm_per_month": r_(ut["slope_per_month"], 5)} if ut else {}),
+                "note": "Single pre-specified test, so p is not FDR-adjusted.",
+            },
+        }
+    except Exception as e:  # noqa: BLE001
+        notes.append(f"Kariba upstream catchment could not be computed: {e}")
+
+    # --- summary
+    def gw(cls):
+        return sum(b["hydro_gw"] for b in out_basins if b["trend_class"] == cls)
+    tested = [b for b in out_basins if b["trend_class"] is not None]
+    gw_total = sum(b["hydro_gw"] for b in out_basins)
+    gw_dry, gw_wet, gw_none = gw("drying"), gw("wetting"), gw("no_significant_trend")
+    n_dry = sum(b["trend_class"] == "drying" for b in out_basins)
+    n_wet = sum(b["trend_class"] == "wetting" for b in out_basins)
+    drying = sorted([b for b in out_basins if b["trend_class"] == "drying"], key=lambda b: -b["hydro_gw"])
+    gw_dry_gwsig = sum(b["hydro_gw"] for b in drying if b["possible_groundwater_signal"])
+    gw_dry_robust = sum(b["hydro_gw"] for b in drying if b["possible_groundwater_signal"] is False)
+    summary = {
+        "n_basins": len(out_basins), "n_tested": len(tested), "n_drying": n_dry, "n_wetting": n_wet,
+        "n_no_significant_trend": sum(b["trend_class"] == "no_significant_trend" for b in out_basins),
+        "gw_total": r_(gw_total, 1), "gw_drying": r_(gw_dry, 1), "gw_wetting": r_(gw_wet, 1),
+        "gw_no_significant_trend": r_(gw_none, 1),
+        "gw_drying_pct": r_(100 * gw_dry / gw_total, 1), "gw_wetting_pct": r_(100 * gw_wet / gw_total, 1),
+        "gw_drying_with_precip_decline": r_(gw_dry_robust, 1),
+        "gw_drying_possible_groundwater_signal": r_(gw_dry_gwsig, 1),
+        "n_precip_drying": sum(1 for b in out_basins if b["precip_q"] is not None and b["precip_q"] < ALPHA
+                               and b["precip_slope_pct_per_decade"] < 0),
+        "n_precip_wetting": sum(1 for b in out_basins if b["precip_q"] is not None and b["precip_q"] < ALPHA
+                                and b["precip_slope_pct_per_decade"] > 0),
+        "headline": (f"{gw_dry:.0f} GW of hydropower ({100 * gw_dry / gw_total:.0f}% of the {gw_total:.0f} GW mapped) sits in "
+                     f"{n_dry} basins with a significant drying trend in GRACE water storage since 2002; "
+                     f"{gw_wet:.0f} GW sits in {n_wet} significantly wetting basins."),
+        "top_drying": [{k: b[k] for k in ("basin_id", "name", "countries", "hydro_gw", "major_plants",
+                                          "tws_slope_cm_per_decade", "tws_q", "precip_slope_pct_per_decade",
+                                          "precip_q", "possible_groundwater_signal", "low_resolution")}
+                       for b in drying[:10]],
+    }
+
+    doc = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "sources": ["gravis", "power", "gppd", "hydrobasins"],
+        "method": ("Mann-Kendall (Hamed-Rao autocorrelation correction) + Sen slope on deseasonalized monthly GRACE/GRACE-FO "
+                   "TWS (GFZ GravIS, 1-degree), 2002-04..2026-08; Benjamini-Hochberg FDR q<0.05 across basins. Basin value = "
+                   "cos(latitude)-weighted mean of grid cells whose centres lie in the basin (nearest land cell if none). "
+                   "Deseasonalized by subtracting each calendar month's mean; missing months (incl. the 2017-18 mission gap) "
+                   "are not interpolated; Sen slope is computed on the real time axis. Precipitation: NASA POWER (MERRA-2) "
+                   "PRECTOTCORR monthly at up to 3 points per basin, same test on deseasonalized anomalies, slope as % of "
+                   "mean per decade, separate BH-FDR."),
+        "period": {"from": START, "to": END},
+        "definitions": {
+            "trend_class": "drying / wetting if TWS BH-FDR q < 0.05 with negative / positive Sen slope, else no_significant_trend",
+            "low_resolution": f"no GRACE cell centre inside the basin (nearest cell used) or basin area < {SMALL_BASIN_KM2:,} km2; "
+                              "GRACE effective resolution is ~300 km, so the value mostly reflects the surrounding region",
+            "possible_groundwater_signal": "TWS drying but precipitation shows no significant decline (precip q >= 0.05 or "
+                                           "slope >= 0); the storage loss may come from groundwater pumping, not rainfall",
+            "series.tws_anom_cm": "deseasonalized TWS anomaly (what the trend test uses); series.tws_cm keeps the seasonal cycle "
+                                  "(GravIS anomaly vs. its own reference); trend line = sen_intercept_cm + sen_slope_cm_per_month * "
+                                  "months since 2002-04",
+            "name": "derived label: largest GPPD hydro plant in the basin + main countries (>= 10% of basin GW)",
+        },
+        "summary": summary,
+        "kariba_basin": kariba,
+        "limitations": [
+            "GRACE TWS is the sum of all water: groundwater, soil moisture, snow, lakes and reservoirs. Declines in heavily "
+            "irrigated regions (e.g. north India, the North China Plain, the Middle East) can come from groundwater pumping and "
+            "need not mean less river flow for hydropower; such basins are flagged possible_groundwater_signal.",
+            "Reservoir filling itself raises TWS (e.g. new dams in China, Ethiopia), which can mask or create trends.",
+            "GRACE's effective resolution is ~300 km; level-4 basins smaller than that, or with no 1-degree cell centre inside, "
+            "carry the regional signal (low_resolution).",
+            "Trends over 2002-2026 (about 24 years) are sensitive to the start and end years and to multi-year climate "
+            "variability (e.g. ENSO); a significant trend is not proof of a permanent change.",
+            "The 2017-07..2018-05 GRACE/GRACE-FO gap and other missing months are left missing; the inter-mission bias is "
+            "handled by GFZ's processing, not by us.",
+            "Precipitation is MERRA-2 reanalysis (NASA POWER) at a few points per basin, standing in for GPM IMERG (which needs "
+            "an Earthdata login); it is less accurate than gauge-corrected products in data-sparse regions.",
+            "Basins are weighted by installed capacity in WRI GPPD v1.3 (2021); plants built since then are missing.",
+            "Glacier and ice-sheet mass loss (e.g. Alaska, Patagonia, High Mountain Asia) appears as TWS decline and may leak "
+            "into neighbouring basins at GRACE resolution.",
+        ],
+        "notes": notes,
+        "basins": out_basins,
+    }
+    tj = OUT / "trends.json"
+    tj.write_text(json.dumps(doc, separators=(",", ":"), allow_nan=False))
+
+    # --- geojson
+    cls = {b["basin_id"]: b for b in out_basins}
+    feats = []
+    for r in basins.itertuples():
+        geom = r.geometry.simplify(0.05, preserve_topology=True)
+        geom = shapely.set_precision(geom, 0.001)
+        if geom.is_empty:
+            geom = shapely.set_precision(r.geometry.simplify(0.01, preserve_topology=True), 0.001)
+        gj = json.loads(shapely.to_geojson(geom))
+        b = cls[r.basin_id]
+        feats.append({"type": "Feature", "geometry": gj, "properties": {
+            "basin_id": r.basin_id, "name": b["name"], "trend_class": b["trend_class"],
+            "tws_slope_cm_per_decade": b["tws_slope_cm_per_decade"], "tws_q": b["tws_q"], "hydro_gw": b["hydro_gw"],
+            "low_resolution": b["low_resolution"], "possible_groundwater_signal": b["possible_groundwater_signal"]}})
+    gjp = OUT / "basins.geojson"
+    gjp.write_text(json.dumps({"type": "FeatureCollection", "features": feats}, separators=(",", ":")))
+
+    print(f"[trends] {summary['headline']}")
+    print(f"[trends] wrote {tj} ({tj.stat().st_size / 1e6:.2f} MB), {gjp} ({gjp.stat().st_size / 1e6:.2f} MB) "
+          f"in {time.time() - t0:.0f}s")
+
+
+if __name__ == "__main__":
+    main()

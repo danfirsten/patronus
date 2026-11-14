@@ -1,15 +1,16 @@
 {
- "generated_at": "2026-11-14T20:00:33+00:00",
+ "generated_at": "2026-11-14T20:05:26+00:00",
  "sources": [
   "gibs_blackmarble",
   "news"
  ],
  "layer": "VIIRS_SNPP_GapFilled_BRDF_Corrected_DayNightBand_Radiance",
  "product": "NASA Black Marble VNP46A2 (Suomi NPP VIIRS Day/Night Band, BRDF/moonlight-corrected, gap-filled), display imagery via NASA GIBS",
- "method": "For each frame, up to 9 nights in the window are fetched from the GIBS WMS at about 500 m and combined with a per-pixel median. Display gray levels are mapped back to radiance bins with the layer's GIBS colormap (nW/(cm^2 sr), saturating at 38.2), summed inside fixed city boxes, and compared with the region's baseline frame. brightness_vs_baseline_pct is an approximate brightness change from display imagery, not a calibrated radiance analysis.",
+ "method": "For each frame, up to 9 nights in the window are fetched from the GIBS WMS at about 500 m and combined with a per-pixel median. Display gray levels are mapped back to radiance bins with the layer's GIBS colormap (nW/(cm^2 sr), saturating at 38.2), summed inside fixed city boxes, and compared with the region's baseline frame. Robustness checks per frame: above_background_vs_baseline_pct subtracts the frame-wide median radiance before summing; single_night_range_vs_baseline_pct gives the spread of the individual nights; gray_sum_vs_baseline_pct sums raw display gray levels (dominated by the dark background). brightness_vs_baseline_pct is an approximate brightness change from display imagery, not a calibrated radiance analysis.",
  "metric_label": "Approximate brightness change from display imagery",
  "saturation_radiance": 38.2,
  "notes": [
+  "ecuador-2024-10: night 2024-11-06 is mostly no-data on GIBS; left out of the composite.",
   "Approximate brightness change from display imagery (8-bit GIBS PNGs), not calibrated VNP46A2 radiance.",
   "Suomi NPP passes over at about 01:30 local time. Scheduled cuts that do not cover that hour cannot show up, so a small or zero dip does not mean there were no cuts.",
   "Bright city cores saturate in the display colormap, so dimming in the brightest pixels is understated.",
@@ -53,6 +54,7 @@
    "caption": "Baseline, Feb 2023: before the 2023-24 drought crisis",
    "is_baseline": true,
    "city_sum_radiance": 112283.3,
+   "background_radiance": 0.15,
    "cities": {
     "Lusaka": {
      "box": [
@@ -93,6 +95,11 @@
    },
    "baseline_id": "zambia-2023-02",
    "brightness_vs_baseline_pct": 0.0,
+   "above_background_vs_baseline_pct": 0.0,
+   "single_night_range_vs_baseline_pct": [
+    -0.8,
+    1.6
+   ],
    "gray_sum_vs_baseline_pct": 0.0,
    "notes": "Baseline frame."
   },
@@ -127,6 +134,7 @@
    "caption": "Feb 2024: drought declared a national disaster (29 Feb 2024); load-shedding growing",
    "is_baseline": false,
    "city_sum_radiance": 113235.9,
+   "background_radiance": 0.25,
    "cities": {
     "Lusaka": {
      "box": [
@@ -167,8 +175,13 @@
    },
    "baseline_id": "zambia-2023-02",
    "brightness_vs_baseline_pct": 0.8,
+   "above_background_vs_baseline_pct": -2.9,
+   "single_night_range_vs_baseline_pct": [
+    -20.7,
+    27.7
+   ],
    "gray_sum_vs_baseline_pct": 2.3,
-   "notes": "No clear change against the baseline in this display imagery. By city box: Lusaka +4%, Kabwe +10%, Copperbelt -4%."
+   "notes": "No clear change against the baseline in this display imagery. By city box: Lusaka +4%, Kabwe +10%, Copperbelt -4%. Single nights range from -21% to +28%."
   },
   {
    "id": "zambia-2024-06",
@@ -201,6 +214,7 @@
    "caption": "Jun 2024: Kariba low, long daily load-shedding",
    "is_baseline": false,
    "city_sum_radiance": 86479.6,
+   "background_radiance": 0.05,
    "cities": {
     "Lusaka": {
      "box": [
@@ -241,8 +255,13 @@
    },
    "baseline_id": "zambia-2023-02",
    "brightness_vs_baseline_pct": -23.0,
+   "above_background_vs_baseline_pct": -19.9,
+   "single_night_range_vs_baseline_pct": [
+    -41.5,
+    18.2
+   ],
    "gray_sum_vs_baseline_pct": -23.1,
-   "notes": "A dip is visible against the baseline. By city box: Lusaka -16%, Kabwe -28%, Copperbelt -32%."
+   "notes": "A dip is visible against the baseline. By city box: Lusaka -16%, Kabwe -28%, Copperbelt -32%. Single nights range from -42% to +18%."
   },
   {
    "id": "zambia-2024-10",
@@ -272,9 +291,10 @@
     30.0,
     -12.0
    ],
-   "caption": "Late Sep to early Oct 2024: peak load-shedding; Kariba North Bank generation largely halted from about 14 Sep 2024, households got about 3 h of power a day",
+   "caption": "Late Sep to early Oct 2024: peak load-shedding; Kariba hydro generation halted around 14 Sep 2024; households got about 3 h of power a day",
    "is_baseline": false,
    "city_sum_radiance": 71688.4,
+   "background_radiance": 0.25,
    "cities": {
     "Lusaka": {
      "box": [
@@ -315,8 +335,13 @@
    },
    "baseline_id": "zambia-2023-02",
    "brightness_vs_baseline_pct": -36.2,
+   "above_background_vs_baseline_pct": -43.6,
+   "single_night_range_vs_baseline_pct": [
+    -49.7,
+    5.6
+   ],
    "gray_sum_vs_baseline_pct": 1.2,
-   "notes": "A dip is visible against the baseline. By city box: Lusaka -52%, Kabwe -45%, Copperbelt -14%."
+   "notes": "A dip is visible against the baseline. By city box: Lusaka -52%, Kabwe -45%, Copperbelt -14%. Single nights range from -50% to +6%."
   },
   {
    "id": "zambia-2026-11",
@@ -349,6 +374,7 @@
    "caption": "Late Oct to early Nov 2026: now (latest nights available on GIBS)",
    "is_baseline": false,
    "city_sum_radiance": 140038.5,
+   "background_radiance": 0.15,
    "cities": {
     "Lusaka": {
      "box": [
@@ -389,8 +415,13 @@
    },
    "baseline_id": "zambia-2023-02",
    "brightness_vs_baseline_pct": 24.7,
+   "above_background_vs_baseline_pct": 27.4,
+   "single_night_range_vs_baseline_pct": [
+    -12.7,
+    44.0
+   ],
    "gray_sum_vs_baseline_pct": 14.9,
-   "notes": "Brighter than the baseline in this display imagery; no dip visible. By city box: Lusaka +20%, Kabwe +31%, Copperbelt +30%."
+   "notes": "Brighter than the baseline in this display imagery; no dip visible. By city box: Lusaka +20%, Kabwe +31%, Copperbelt +30%. Single nights range from -13% to +44%."
   },
   {
    "id": "ecuador-2024-09",
@@ -423,6 +454,7 @@
    "caption": "Baseline, early Sep 2024: before the 22-23 Sep 2024 nationwide cuts",
    "is_baseline": true,
    "city_sum_radiance": 216166.4,
+   "background_radiance": 0.25,
    "cities": {
     "Quito": {
      "box": [
@@ -463,6 +495,11 @@
    },
    "baseline_id": "ecuador-2024-09",
    "brightness_vs_baseline_pct": 0.0,
+   "above_background_vs_baseline_pct": 0.0,
+   "single_night_range_vs_baseline_pct": [
+    -5.8,
+    3.4
+   ],
    "gray_sum_vs_baseline_pct": 0.0,
    "notes": "Baseline frame."
   },
@@ -470,7 +507,7 @@
    "id": "ecuador-2024-10",
    "region": "ecuador",
    "place": "Quito, Guayaquil and Cuenca, Ecuador",
-   "date": "2024-11-06",
+   "date": "2024-11-08",
    "window": {
     "from": "2024-10-25",
     "to": "2024-11-15"
@@ -480,13 +517,12 @@
     "2024-10-27",
     "2024-10-29",
     "2024-11-01",
-    "2024-11-06",
     "2024-11-08",
     "2024-11-11",
     "2024-11-13",
     "2024-11-15"
    ],
-   "composite": "per-pixel median of 9 nights",
+   "composite": "per-pixel median of 8 nights",
    "src": "img/nightlights/ecuador-2024-10.png",
    "bbox": [
     -81.0,
@@ -497,6 +533,7 @@
    "caption": "Late Oct to mid Nov 2024: cuts of up to 14 h/day from 24 Oct 2024",
    "is_baseline": false,
    "city_sum_radiance": 212271.1,
+   "background_radiance": 0.25,
    "cities": {
     "Quito": {
      "box": [
@@ -537,8 +574,13 @@
    },
    "baseline_id": "ecuador-2024-09",
    "brightness_vs_baseline_pct": -1.8,
+   "above_background_vs_baseline_pct": -1.8,
+   "single_night_range_vs_baseline_pct": [
+    -19.4,
+    0.5
+   ],
    "gray_sum_vs_baseline_pct": -0.7,
-   "notes": "No clear change against the baseline in this display imagery. By city box: Quito -3%, Guayaquil -1%, Cuenca -3%."
+   "notes": "No clear change against the baseline in this display imagery. By city box: Quito -3%, Guayaquil -1%, Cuenca -3%. Up to 36% of pixels in a city box are saturated in the display colormap, which hides dimming in the brightest areas. Single nights range from -19% to +0%."
   },
   {
    "id": "ecuador-2025-02",
@@ -568,9 +610,10 @@
     -77.5,
     0.5
    ],
-   "caption": "Feb 2025: after the cuts ended (Dec 2024)",
+   "caption": "Feb 2025: after residential cuts ended (20 Dec 2024)",
    "is_baseline": false,
    "city_sum_radiance": 213121.1,
+   "background_radiance": 0.15,
    "cities": {
     "Quito": {
      "box": [
@@ -611,8 +654,13 @@
    },
    "baseline_id": "ecuador-2024-09",
    "brightness_vs_baseline_pct": -1.4,
+   "above_background_vs_baseline_pct": -0.9,
+   "single_night_range_vs_baseline_pct": [
+    -4.1,
+    -1.4
+   ],
    "gray_sum_vs_baseline_pct": -0.8,
-   "notes": "No clear change against the baseline in this display imagery. By city box: Quito -1%, Guayaquil -2%, Cuenca -1%."
+   "notes": "No clear change against the baseline in this display imagery. By city box: Quito -1%, Guayaquil -2%, Cuenca -1%. Up to 33% of pixels in a city box are saturated in the display colormap, which hides dimming in the brightest areas. Single nights range from -4% to -1%."
   }
  ]
 }

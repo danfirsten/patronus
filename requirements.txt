@@ -12,3 +12,5 @@ pyogrio
 pymannkendall
 statsmodels
 requests
+pillow
+opentimestamps-client
