@@ -217,3 +217,52 @@ Say these out loud, word for word, until they fit the time.
 | 5 | 2027: the window is open | El Niño +2.46; allocation cut by more than a third; 4 in 11 → 2 in 11 with a 30% cut, about 1.4 TWh; the "after" line |
 | 6 | Check us | 14 of 17 (8 true early), misses named; 54 GW El Niño-exposed; 392 GW drying; timestamped forecast |
 | 7 | Who it's for, and the ask | ZESCO planners → hospitals and families; the 2027 pilot; live link; team |
+
+---
+
+## "So what? What can you do with 3 months?" (lead-time answer)
+**Short answer:** 3 months is enough to do the three things Zambia did *after* the lights went out in 2024. And every extra month of warning turns the same water saving from a shock into a trim.
+
+**1. The water you must save doesn't change. Lead time decides how painful saving it is.**
+From our simulator (`pipeline/kariba_sim.py`, El Niño analog years, 2027 allocation of 23 BCM), this is the release cut needed to bring the danger zone (below 10% at end-2027) from 4 in 11 years down to 2 in 11, by the month the cut starts:
+
+| Start the cut in | Cut needed | Hydropower given up |
+|---|---|---|
+| Dec 2026 | 22% | ~1.1 TWh |
+| Jan 2027 | 25% | ~1.1 TWh |
+| Mar 2027 | 30% | ~1.1 TWh |
+| May 2027 | 37% | ~1.1 TWh |
+| Jul 2027 | 49% | ~1.1 TWh |
+| Sep 2027 | 73% | ~1.1 TWh |
+
+- The total energy given up is about the same in every row. What changes is how hard each month is hit: a 22% trim spread over a year, or a 73% slash in the last months.
+- To keep the lake above 10% in *all* 11 El Niño years, the cut has to start by Feb 2027 at the latest (64% from Dec, 91% from Feb). After that it can't be done.
+
+**2. Three months is how long the fixes take, and in 2024 they all came too late.**
+
+| Fix | How long it takes | Zambia 2024 |
+|---|---|---|
+| Contracted imports (Eskom, Mozambique, Southern African Power Pool) | Weeks to months to negotiate | Load-shedding started 11 Mar 2024; imports from South Africa reportedly began 1 Aug 2024 at 218 MW, 5 months later. Contracted imports cost 17¢/kWh vs 26¢ for emergency diesel (ZESCO filing) |
+| Emergency rental power (barges, gensets) | Karpowership says ~28 days to arrive after signing (Senegal) and <30 days to generate; Aggreko mobilised 48 MW in <90 days | Rented after the crisis began |
+| Emergency tariff to pay for imports | Months through the regulator | ZESCO applied in Jul 2024; the narrower emergency tariff took effect 1 Nov 2024 |
+| Planned load-shedding that protects hospitals, water pumping and mines | Weeks to set up and publish | Cuts started at 8 h/day and grew to reportedly up to 21 h/day |
+
+**3. Most warnings are longer than 3 months anyway.**
+- **0–3 months:** the short-range models.
+- **5–8 months:** the Kariba El Niño model flagged 2024 in Jul 2023.
+- **Up to 12 months:** in the reservoir watch, 8 of 17 past crises were flagged before the lake was even low.
+
+So 3 months is the floor, not the typical warning.
+
+**Pitch line:**
+> "In 2024 Zambia did everything right, but late. Load-shedding started in March, imports in August, and the emergency tariff in November. Three months of warning puts all three *before* the lights go out. And the water you have to save doesn't change. Warning just lets you save it gently: a 22% trim from December, instead of a 73% slash in September."
+
+**Caveats:** the analog years are history, not a forecast of exact rain. The simulator is illustrative, not an operating plan. The imports date comes from a news report citing Reuters, so verify it before putting it on a slide.
+
+**Sources:**
+- [Zambia boosts imports (AllAfrica/Bloomberg)](https://allafrica.com/stories/202411040476.html)
+- [Zambia seeks imports for mining (Apr 2024)](https://newsletter.mw.creamermedia.com/article/zambia-seeks-power-imports-for-key-mining-sector-2024-04-23)
+- [Emergency tariff dates](https://www.we.com.na/mw-main/zambia-electricity-emergency-continues2025-02-04147242)
+- [Karpowership timelines](https://en.wikipedia.org/wiki/Karpowership)
+- [Aggreko 48 MW in <90 days](https://www.casestudies.com/company/aggreko/case-study/innovative-solution-and-virtual-pipeline-to-meet-seasonal-peak-demand)
+- ZESCO ERB filing, Jul 2024 (`docs/SOURCES.md`)
