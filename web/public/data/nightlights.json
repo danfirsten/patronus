@@ -1,0 +1,618 @@
+{
+ "generated_at": "2026-11-14T20:00:33+00:00",
+ "sources": [
+  "gibs_blackmarble",
+  "news"
+ ],
+ "layer": "VIIRS_SNPP_GapFilled_BRDF_Corrected_DayNightBand_Radiance",
+ "product": "NASA Black Marble VNP46A2 (Suomi NPP VIIRS Day/Night Band, BRDF/moonlight-corrected, gap-filled), display imagery via NASA GIBS",
+ "method": "For each frame, up to 9 nights in the window are fetched from the GIBS WMS at about 500 m and combined with a per-pixel median. Display gray levels are mapped back to radiance bins with the layer's GIBS colormap (nW/(cm^2 sr), saturating at 38.2), summed inside fixed city boxes, and compared with the region's baseline frame. brightness_vs_baseline_pct is an approximate brightness change from display imagery, not a calibrated radiance analysis.",
+ "metric_label": "Approximate brightness change from display imagery",
+ "saturation_radiance": 38.2,
+ "notes": [
+  "Approximate brightness change from display imagery (8-bit GIBS PNGs), not calibrated VNP46A2 radiance.",
+  "Suomi NPP passes over at about 01:30 local time. Scheduled cuts that do not cover that hour cannot show up, so a small or zero dip does not mean there were no cuts.",
+  "Bright city cores saturate in the display colormap, so dimming in the brightest pixels is understated.",
+  "Frames from different seasons differ for reasons other than power cuts (clouds that the gap-filling could not remove, haze, seasonal fires in Zambia from about Jun to Oct).",
+  "zambia-2024-02: +0.8% vs zambia-2023-02",
+  "zambia-2024-06: -23.0% vs zambia-2023-02",
+  "zambia-2024-10: -36.2% vs zambia-2023-02",
+  "zambia-2026-11: +24.7% vs zambia-2023-02",
+  "ecuador-2024-10: -1.8% vs ecuador-2024-09",
+  "ecuador-2025-02: -1.4% vs ecuador-2024-09"
+ ],
+ "frames": [
+  {
+   "id": "zambia-2023-02",
+   "region": "zambia",
+   "place": "Lusaka and the Copperbelt, Zambia",
+   "date": "2023-02-15",
+   "window": {
+    "from": "2023-02-08",
+    "to": "2023-02-22"
+   },
+   "nights_used": [
+    "2023-02-08",
+    "2023-02-10",
+    "2023-02-12",
+    "2023-02-13",
+    "2023-02-15",
+    "2023-02-17",
+    "2023-02-18",
+    "2023-02-20",
+    "2023-02-22"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/zambia-2023-02.png",
+   "bbox": [
+    26.0,
+    -16.5,
+    30.0,
+    -12.0
+   ],
+   "caption": "Baseline, Feb 2023: before the 2023-24 drought crisis",
+   "is_baseline": true,
+   "city_sum_radiance": 112283.3,
+   "cities": {
+    "Lusaka": {
+     "box": [
+      28.15,
+      -15.55,
+      28.45,
+      -15.3
+     ],
+     "sum_radiance": 61906.0,
+     "mean_gray": 157.39,
+     "saturated_px_pct": 9.54,
+     "vs_baseline_pct": 0.0
+    },
+    "Kabwe": {
+     "box": [
+      28.38,
+      -14.52,
+      28.52,
+      -14.38
+     ],
+     "sum_radiance": 3928.8,
+     "mean_gray": 75.46,
+     "saturated_px_pct": 0.0,
+     "vs_baseline_pct": 0.0
+    },
+    "Copperbelt (Ndola, Kitwe, Chingola, Mufulira, Luanshya)": {
+     "box": [
+      27.75,
+      -13.25,
+      28.75,
+      -12.45
+     ],
+     "sum_radiance": 46448.5,
+     "mean_gray": 30.11,
+     "saturated_px_pct": 0.14,
+     "vs_baseline_pct": 0.0
+    }
+   },
+   "baseline_id": "zambia-2023-02",
+   "brightness_vs_baseline_pct": 0.0,
+   "gray_sum_vs_baseline_pct": 0.0,
+   "notes": "Baseline frame."
+  },
+  {
+   "id": "zambia-2024-02",
+   "region": "zambia",
+   "place": "Lusaka and the Copperbelt, Zambia",
+   "date": "2024-02-15",
+   "window": {
+    "from": "2024-02-08",
+    "to": "2024-02-22"
+   },
+   "nights_used": [
+    "2024-02-08",
+    "2024-02-10",
+    "2024-02-12",
+    "2024-02-13",
+    "2024-02-15",
+    "2024-02-17",
+    "2024-02-18",
+    "2024-02-20",
+    "2024-02-22"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/zambia-2024-02.png",
+   "bbox": [
+    26.0,
+    -16.5,
+    30.0,
+    -12.0
+   ],
+   "caption": "Feb 2024: drought declared a national disaster (29 Feb 2024); load-shedding growing",
+   "is_baseline": false,
+   "city_sum_radiance": 113235.9,
+   "cities": {
+    "Lusaka": {
+     "box": [
+      28.15,
+      -15.55,
+      28.45,
+      -15.3
+     ],
+     "sum_radiance": 64272.4,
+     "mean_gray": 163.08,
+     "saturated_px_pct": 6.8,
+     "vs_baseline_pct": 3.8
+    },
+    "Kabwe": {
+     "box": [
+      28.38,
+      -14.52,
+      28.52,
+      -14.38
+     ],
+     "sum_radiance": 4308.1,
+     "mean_gray": 77.85,
+     "saturated_px_pct": 0.09,
+     "vs_baseline_pct": 9.7
+    },
+    "Copperbelt (Ndola, Kitwe, Chingola, Mufulira, Luanshya)": {
+     "box": [
+      27.75,
+      -13.25,
+      28.75,
+      -12.45
+     ],
+     "sum_radiance": 44655.4,
+     "mean_gray": 30.59,
+     "saturated_px_pct": 0.06,
+     "vs_baseline_pct": -3.9
+    }
+   },
+   "baseline_id": "zambia-2023-02",
+   "brightness_vs_baseline_pct": 0.8,
+   "gray_sum_vs_baseline_pct": 2.3,
+   "notes": "No clear change against the baseline in this display imagery. By city box: Lusaka +4%, Kabwe +10%, Copperbelt -4%."
+  },
+  {
+   "id": "zambia-2024-06",
+   "region": "zambia",
+   "place": "Lusaka and the Copperbelt, Zambia",
+   "date": "2024-06-15",
+   "window": {
+    "from": "2024-06-08",
+    "to": "2024-06-22"
+   },
+   "nights_used": [
+    "2024-06-08",
+    "2024-06-10",
+    "2024-06-12",
+    "2024-06-13",
+    "2024-06-15",
+    "2024-06-17",
+    "2024-06-18",
+    "2024-06-20",
+    "2024-06-22"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/zambia-2024-06.png",
+   "bbox": [
+    26.0,
+    -16.5,
+    30.0,
+    -12.0
+   ],
+   "caption": "Jun 2024: Kariba low, long daily load-shedding",
+   "is_baseline": false,
+   "city_sum_radiance": 86479.6,
+   "cities": {
+    "Lusaka": {
+     "box": [
+      28.15,
+      -15.55,
+      28.45,
+      -15.3
+     ],
+     "sum_radiance": 52112.5,
+     "mean_gray": 143.51,
+     "saturated_px_pct": 3.44,
+     "vs_baseline_pct": -15.8
+    },
+    "Kabwe": {
+     "box": [
+      28.38,
+      -14.52,
+      28.52,
+      -14.38
+     ],
+     "sum_radiance": 2834.1,
+     "mean_gray": 61.21,
+     "saturated_px_pct": 0.0,
+     "vs_baseline_pct": -27.9
+    },
+    "Copperbelt (Ndola, Kitwe, Chingola, Mufulira, Luanshya)": {
+     "box": [
+      27.75,
+      -13.25,
+      28.75,
+      -12.45
+     ],
+     "sum_radiance": 31533.0,
+     "mean_gray": 20.9,
+     "saturated_px_pct": 0.04,
+     "vs_baseline_pct": -32.1
+    }
+   },
+   "baseline_id": "zambia-2023-02",
+   "brightness_vs_baseline_pct": -23.0,
+   "gray_sum_vs_baseline_pct": -23.1,
+   "notes": "A dip is visible against the baseline. By city box: Lusaka -16%, Kabwe -28%, Copperbelt -32%."
+  },
+  {
+   "id": "zambia-2024-10",
+   "region": "zambia",
+   "place": "Lusaka and the Copperbelt, Zambia",
+   "date": "2024-10-01",
+   "window": {
+    "from": "2024-09-20",
+    "to": "2024-10-10"
+   },
+   "nights_used": [
+    "2024-09-20",
+    "2024-09-22",
+    "2024-09-25",
+    "2024-09-28",
+    "2024-10-01",
+    "2024-10-03",
+    "2024-10-05",
+    "2024-10-08",
+    "2024-10-10"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/zambia-2024-10.png",
+   "bbox": [
+    26.0,
+    -16.5,
+    30.0,
+    -12.0
+   ],
+   "caption": "Late Sep to early Oct 2024: peak load-shedding; Kariba North Bank generation largely halted from about 14 Sep 2024, households got about 3 h of power a day",
+   "is_baseline": false,
+   "city_sum_radiance": 71688.4,
+   "cities": {
+    "Lusaka": {
+     "box": [
+      28.15,
+      -15.55,
+      28.45,
+      -15.3
+     ],
+     "sum_radiance": 29674.8,
+     "mean_gray": 119.72,
+     "saturated_px_pct": 1.06,
+     "vs_baseline_pct": -52.1
+    },
+    "Kabwe": {
+     "box": [
+      28.38,
+      -14.52,
+      28.52,
+      -14.38
+     ],
+     "sum_radiance": 2178.5,
+     "mean_gray": 61.08,
+     "saturated_px_pct": 0.0,
+     "vs_baseline_pct": -44.6
+    },
+    "Copperbelt (Ndola, Kitwe, Chingola, Mufulira, Luanshya)": {
+     "box": [
+      27.75,
+      -13.25,
+      28.75,
+      -12.45
+     ],
+     "sum_radiance": 39835.1,
+     "mean_gray": 34.67,
+     "saturated_px_pct": 0.03,
+     "vs_baseline_pct": -14.2
+    }
+   },
+   "baseline_id": "zambia-2023-02",
+   "brightness_vs_baseline_pct": -36.2,
+   "gray_sum_vs_baseline_pct": 1.2,
+   "notes": "A dip is visible against the baseline. By city box: Lusaka -52%, Kabwe -45%, Copperbelt -14%."
+  },
+  {
+   "id": "zambia-2026-11",
+   "region": "zambia",
+   "place": "Lusaka and the Copperbelt, Zambia",
+   "date": "2026-10-28",
+   "window": {
+    "from": "2026-10-22",
+    "to": "2026-11-02"
+   },
+   "nights_used": [
+    "2026-10-22",
+    "2026-10-23",
+    "2026-10-25",
+    "2026-10-26",
+    "2026-10-28",
+    "2026-10-29",
+    "2026-10-30",
+    "2026-11-01",
+    "2026-11-02"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/zambia-2026-11.png",
+   "bbox": [
+    26.0,
+    -16.5,
+    30.0,
+    -12.0
+   ],
+   "caption": "Late Oct to early Nov 2026: now (latest nights available on GIBS)",
+   "is_baseline": false,
+   "city_sum_radiance": 140038.5,
+   "cities": {
+    "Lusaka": {
+     "box": [
+      28.15,
+      -15.55,
+      28.45,
+      -15.3
+     ],
+     "sum_radiance": 74541.4,
+     "mean_gray": 179.95,
+     "saturated_px_pct": 7.73,
+     "vs_baseline_pct": 20.4
+    },
+    "Kabwe": {
+     "box": [
+      28.38,
+      -14.52,
+      28.52,
+      -14.38
+     ],
+     "sum_radiance": 5139.2,
+     "mean_gray": 92.0,
+     "saturated_px_pct": 0.09,
+     "vs_baseline_pct": 30.8
+    },
+    "Copperbelt (Ndola, Kitwe, Chingola, Mufulira, Luanshya)": {
+     "box": [
+      27.75,
+      -13.25,
+      28.75,
+      -12.45
+     ],
+     "sum_radiance": 60357.9,
+     "mean_gray": 34.53,
+     "saturated_px_pct": 0.11,
+     "vs_baseline_pct": 29.9
+    }
+   },
+   "baseline_id": "zambia-2023-02",
+   "brightness_vs_baseline_pct": 24.7,
+   "gray_sum_vs_baseline_pct": 14.9,
+   "notes": "Brighter than the baseline in this display imagery; no dip visible. By city box: Lusaka +20%, Kabwe +31%, Copperbelt +30%."
+  },
+  {
+   "id": "ecuador-2024-09",
+   "region": "ecuador",
+   "place": "Quito, Guayaquil and Cuenca, Ecuador",
+   "date": "2024-09-12",
+   "window": {
+    "from": "2024-09-05",
+    "to": "2024-09-19"
+   },
+   "nights_used": [
+    "2024-09-05",
+    "2024-09-07",
+    "2024-09-09",
+    "2024-09-10",
+    "2024-09-12",
+    "2024-09-14",
+    "2024-09-15",
+    "2024-09-17",
+    "2024-09-19"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/ecuador-2024-09.png",
+   "bbox": [
+    -81.0,
+    -3.5,
+    -77.5,
+    0.5
+   ],
+   "caption": "Baseline, early Sep 2024: before the 22-23 Sep 2024 nationwide cuts",
+   "is_baseline": true,
+   "city_sum_radiance": 216166.4,
+   "cities": {
+    "Quito": {
+     "box": [
+      -78.6,
+      -0.4,
+      -78.35,
+      -0.05
+     ],
+     "sum_radiance": 97964.6,
+     "mean_gray": 177.81,
+     "saturated_px_pct": 30.25,
+     "vs_baseline_pct": 0.0
+    },
+    "Guayaquil": {
+     "box": [
+      -80.05,
+      -2.3,
+      -79.8,
+      -2.0
+     ],
+     "sum_radiance": 94943.7,
+     "mean_gray": 195.02,
+     "saturated_px_pct": 37.14,
+     "vs_baseline_pct": 0.0
+    },
+    "Cuenca": {
+     "box": [
+      -79.08,
+      -2.96,
+      -78.92,
+      -2.85
+     ],
+     "sum_radiance": 23258.1,
+     "mean_gray": 199.61,
+     "saturated_px_pct": 30.37,
+     "vs_baseline_pct": 0.0
+    }
+   },
+   "baseline_id": "ecuador-2024-09",
+   "brightness_vs_baseline_pct": 0.0,
+   "gray_sum_vs_baseline_pct": 0.0,
+   "notes": "Baseline frame."
+  },
+  {
+   "id": "ecuador-2024-10",
+   "region": "ecuador",
+   "place": "Quito, Guayaquil and Cuenca, Ecuador",
+   "date": "2024-11-06",
+   "window": {
+    "from": "2024-10-25",
+    "to": "2024-11-15"
+   },
+   "nights_used": [
+    "2024-10-25",
+    "2024-10-27",
+    "2024-10-29",
+    "2024-11-01",
+    "2024-11-06",
+    "2024-11-08",
+    "2024-11-11",
+    "2024-11-13",
+    "2024-11-15"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/ecuador-2024-10.png",
+   "bbox": [
+    -81.0,
+    -3.5,
+    -77.5,
+    0.5
+   ],
+   "caption": "Late Oct to mid Nov 2024: cuts of up to 14 h/day from 24 Oct 2024",
+   "is_baseline": false,
+   "city_sum_radiance": 212271.1,
+   "cities": {
+    "Quito": {
+     "box": [
+      -78.6,
+      -0.4,
+      -78.35,
+      -0.05
+     ],
+     "sum_radiance": 95375.4,
+     "mean_gray": 175.97,
+     "saturated_px_pct": 27.07,
+     "vs_baseline_pct": -2.6
+    },
+    "Guayaquil": {
+     "box": [
+      -80.05,
+      -2.3,
+      -79.8,
+      -2.0
+     ],
+     "sum_radiance": 94389.8,
+     "mean_gray": 194.64,
+     "saturated_px_pct": 36.11,
+     "vs_baseline_pct": -0.6
+    },
+    "Cuenca": {
+     "box": [
+      -79.08,
+      -2.96,
+      -78.92,
+      -2.85
+     ],
+     "sum_radiance": 22505.9,
+     "mean_gray": 196.81,
+     "saturated_px_pct": 27.96,
+     "vs_baseline_pct": -3.2
+    }
+   },
+   "baseline_id": "ecuador-2024-09",
+   "brightness_vs_baseline_pct": -1.8,
+   "gray_sum_vs_baseline_pct": -0.7,
+   "notes": "No clear change against the baseline in this display imagery. By city box: Quito -3%, Guayaquil -1%, Cuenca -3%."
+  },
+  {
+   "id": "ecuador-2025-02",
+   "region": "ecuador",
+   "place": "Quito, Guayaquil and Cuenca, Ecuador",
+   "date": "2025-02-13",
+   "window": {
+    "from": "2025-02-05",
+    "to": "2025-02-20"
+   },
+   "nights_used": [
+    "2025-02-05",
+    "2025-02-07",
+    "2025-02-09",
+    "2025-02-11",
+    "2025-02-13",
+    "2025-02-14",
+    "2025-02-16",
+    "2025-02-18",
+    "2025-02-20"
+   ],
+   "composite": "per-pixel median of 9 nights",
+   "src": "img/nightlights/ecuador-2025-02.png",
+   "bbox": [
+    -81.0,
+    -3.5,
+    -77.5,
+    0.5
+   ],
+   "caption": "Feb 2025: after the cuts ended (Dec 2024)",
+   "is_baseline": false,
+   "city_sum_radiance": 213121.1,
+   "cities": {
+    "Quito": {
+     "box": [
+      -78.6,
+      -0.4,
+      -78.35,
+      -0.05
+     ],
+     "sum_radiance": 96934.6,
+     "mean_gray": 175.54,
+     "saturated_px_pct": 28.86,
+     "vs_baseline_pct": -1.1
+    },
+    "Guayaquil": {
+     "box": [
+      -80.05,
+      -2.3,
+      -79.8,
+      -2.0
+     ],
+     "sum_radiance": 93128.4,
+     "mean_gray": 194.23,
+     "saturated_px_pct": 32.97,
+     "vs_baseline_pct": -1.9
+    },
+    "Cuenca": {
+     "box": [
+      -79.08,
+      -2.96,
+      -78.92,
+      -2.85
+     ],
+     "sum_radiance": 23058.1,
+     "mean_gray": 198.77,
+     "saturated_px_pct": 29.26,
+     "vs_baseline_pct": -0.9
+    }
+   },
+   "baseline_id": "ecuador-2024-09",
+   "brightness_vs_baseline_pct": -1.4,
+   "gray_sum_vs_baseline_pct": -0.8,
+   "notes": "No clear change against the baseline in this display imagery. By city box: Quito -1%, Guayaquil -2%, Cuenca -1%."
+  }
+ ]
+}
