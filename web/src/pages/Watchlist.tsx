@@ -8,7 +8,9 @@ import { RISK_ORDER, TIER_LABEL, TIER_SHORT, countryHref } from '../lib/risk';
 
 type Key = 'name' | 'tier' | 'risk' | 'p' | 'exposure';
 
-export default function WatchlistPage() {
+/** Six-month country watchlist. `embedded` renders it as a section inside Map (#/map/watchlist). */
+export default function WatchlistPage({ embedded = false }: { embedded?: boolean }) {
+  const H = embedded ? 'h2' : 'h1';
   const w = useData<Watchlist>('watchlist.json');
   const k = useData<any>('kariba.json');
   const kfc: any[] = k.data?.forecast?.months ?? [];
@@ -43,15 +45,15 @@ export default function WatchlistPage() {
   );
 
   return (
-    <div className="wrap page">
+    <div className={embedded ? 'embed' : 'wrap page'}>
       <p className="eyebrow">2026 watchlist</p>
-      <h1>Which hydropower grids are at risk in the next six months</h1>
+      <H className={embedded ? 'embed-title' : undefined}>Which hydropower grids are at risk in the next six months</H>
       <p className="lede">
         Each row gives the chance that hydro output falls 15% or more below normal for the time of year.
         Issued {fmtDate(w.data?.issued)}. The first forecast month is {fmtMonth(first)}.
       </p>
 
-      <p><span className="experimental">Experimental: modest skill, <a href="#/scoreboard">see Scoreboard</a></span></p>
+      <p><span className="experimental">Experimental: modest skill, <a href="#/proof/backtest">see the back-test</a></span></p>
       <p className="small muted" style={{ maxWidth: '80ch' }}>
         Monthly country forecasts from power data have little skill beyond 1 month in our backtest. Treat these as a watchlist, not a verdict.
         The strongest early warning is for reservoirs with an El Niño signal, such as <a href="#/kariba">Lake Kariba</a>.

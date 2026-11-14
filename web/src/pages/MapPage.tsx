@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FeatureCollection } from 'geojson';
 import { useData } from '../data/load';
 import type { Enso, Meta, Trends } from '../data/types';
+import WatchlistPage from './Watchlist';
 import { Figure, Loading, Stat } from '../components/common';
 import { WorldMap, type MapMode } from '../components/WorldMap';
 import { TrendSplitBlock, trendSplit } from '../components/TrendSplit';
@@ -24,14 +25,39 @@ export default function MapPage() {
 
   return (
     <div className="wrap page">
-      <p className="eyebrow">Global map</p>
-      <h1>Where hydropower is losing its water</h1>
-      <p className="lede">
-        Two slow threats. Some basins that feed hydropower dams are drying year after year.
-        And some grids lose a large share of their hydropower whenever El Niño or La Niña arrives.
-      </p>
+      <header className="map-hero">
+        <p className="eyebrow">Map · {period}</p>
+        <h1>Where hydropower is losing its water</h1>
+        <p className="lede">
+          Two slow threats and one near one. Some basins that feed hydropower dams are drying year after year.
+          Some grids lose a large share of their hydropower whenever El Niño arrives. And some are at risk in the next six months.
+        </p>
+        <ul className="map-figs" aria-label="On this page">
+          <li>
+            <button type="button" onClick={() => { setMode('trend'); document.getElementById('map-layers')?.scrollIntoView({ behavior: 'smooth' }); }}>
+              <span className="mf-v">{isNum(ts?.gw_drying) ? `${fmtNum(ts!.gw_drying, 0)} GW` : '—'}</span>
+              <span className="mf-l">of hydropower in {isNum(ts?.n_drying) ? fmtNum(ts!.n_drying) : '—'} drying basins</span>
+              <span className="mf-k">Drying trend</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" onClick={() => { setMode('enso'); document.getElementById('map-layers')?.scrollIntoView({ behavior: 'smooth' }); }}>
+              <span className="mf-v">{isNum((es as any)?.gw_robust_el_nino_losers) ? `${fmtNum((es as any).gw_robust_el_nino_losers, 0)} GW` : isNum(es?.gw_el_nino_losers) ? `${fmtNum(es!.gw_el_nino_losers, 0)} GW` : '—'}</span>
+              <span className="mf-l">in {fmtNum((es as any)?.n_robust_el_nino_losers ?? es?.n_el_nino_losers)} grids that lose under El Niño</span>
+              <span className="mf-k">El Niño exposure</span>
+            </button>
+          </li>
+          <li>
+            <a href="#/map/watchlist">
+              <span className="mf-v">6 months</span>
+              <span className="mf-l">country-by-country shortfall watchlist</span>
+              <span className="mf-k">Watchlist</span>
+            </a>
+          </li>
+        </ul>
+      </header>
 
-      <div className="toggle" role="tablist" aria-label="Map layer">
+      <div id="map-layers" className="toggle" role="tablist" aria-label="Map layer">
         <button role="tab" aria-selected={mode === 'trend'} className={mode === 'trend' ? 'on' : ''} onClick={() => setMode('trend')}>Drying trend since 2002</button>
         <button role="tab" aria-selected={mode === 'enso'} className={mode === 'enso' ? 'on' : ''} onClick={() => setMode('enso')}>El Niño / La Niña exposure</button>
       </div>
@@ -114,6 +140,10 @@ export default function MapPage() {
           )}
         </>
       )}
+
+      <section id="watchlist" className="map-watch">
+        <WatchlistPage embedded />
+      </section>
     </div>
   );
 }

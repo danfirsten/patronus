@@ -52,7 +52,7 @@ export function Hero({ kariba }: { kariba: ScoreRow | null }) {
           <p className="lede pt-lede"><span className="pt-key">Patronus</span> reads <span className="pt-key">NASA water data</span> to warn countries that run on hydropower of power shortfalls months before they hit.</p>
           <div className="pt-actions">
             <button type="button" className="button" onClick={() => scrollToId('pt-next')}>See the 2027 forecast</button>
-            <a className="pt-link" href="#/scoreboard">See every past call</a>
+            <a className="pt-link" href="#/proof/backtest">See every past call</a>
           </div>
         </div>
         <div className="pt-proof">
@@ -251,7 +251,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
               </tbody>
             </table>
           ) : loading ? <Loading what="the watchlist" /> : <Missing what="watchlist" />}
-          <p className="pt-small"><a href="#/watchlist">Full watchlist</a></p>
+          <p className="pt-small"><a href="#/map/watchlist">Full watchlist</a></p>
         </InView>
       </div>
     </Section>

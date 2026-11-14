@@ -109,7 +109,7 @@ export default function Home() {
                 ))}
               </div>
             )}
-            <p className="source-inline">Crisis dates: official announcements and news, hand-collected. Alarm months: Patronus backtest using only data available at the time. <a href="#/scoreboard">See the full scoreboard, misses and false alarms →</a></p>
+            <p className="source-inline">Crisis dates: official announcements and news, hand-collected. Alarm months: Patronus backtest using only data available at the time. <a href="#/proof/backtest">See the full scoreboard, misses and false alarms →</a></p>
           </Reveal>
         </div>
       </section>
@@ -153,7 +153,7 @@ export default function Home() {
                 {top.map((r) => {
                   const h = countryHref(r.iso3, r.tier);
                   return (
-                    <a key={r.iso3} className="mini-watch-row" href={h ?? '#/watchlist'}>
+                    <a key={r.iso3} className="mini-watch-row" href={h ?? '#/map/watchlist'}>
                       <span className="mw-name">{r.name}</span>
                       <RiskPill level={r.risk_level} />
                       <span className="mw-p">{fmtProb(r.max_p_shortfall)} <span className="muted">max chance</span></span>
@@ -164,7 +164,7 @@ export default function Home() {
                 })}
               </div>
             )}
-            <p className="source-inline">Monthly chance of a hydro shortfall (output 15% or more below normal). Issued {fmtDate(watch.data?.issued)}. Ember generation, GRACE, NASA POWER, NOAA ONI. <a href="#/watchlist">Full watchlist →</a></p>
+            <p className="source-inline">Monthly chance of a hydro shortfall (output 15% or more below normal). Issued {fmtDate(watch.data?.issued)}. Ember generation, GRACE, NASA POWER, NOAA ONI. <a href="#/map/watchlist">Full watchlist →</a></p>
           </Reveal>
         </div>
       </section>
