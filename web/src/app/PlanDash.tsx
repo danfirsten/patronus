@@ -24,6 +24,21 @@ const usd = (v: number) => `${v < 0 ? '−' : ''}$${m0(Math.abs(v))}M`;
 const SHORT: Record<ActionId, string> = { hold: 'Hold water', imports: 'Imports', rental: 'Rental thermal', demand: 'Demand cuts', solar: 'Fast solar', schedule: 'Shed schedule' };
 const START_OPTS = Array.from({ length: 13 }, (_, i) => i + 1);
 
+
+/** Big plain-language lines for the presenter screen. */
+function headline(p: Plan, g: GeoState): string[] {
+  const out: string[] = [];
+  const on = (id: ActionId) => p[id].on && p[id].possible;
+  if (on('hold')) out.push(`Hold the water: keep back ${p.hold.amount}% of Kariba's releases from ${monthName(p.hold.start)}`);
+  if (on('imports')) { const mw = SOURCES.reduce((t, s) => t + (g.sources[s.id]?.available ? g.sources[s.id].mw : 0), 0); if (mw > 0) out.push(`Import ${m0(mw)} MW from neighbours from ${monthName(p.imports.start)}`); }
+  if (on('rental')) out.push(`Rent ${p.rental.amount} MW of diesel power from ${monthName(p.rental.start)}`);
+  if (on('demand')) out.push(`Cut demand ${Math.round(demandPct(g))}% from ${monthName(p.demand.start)}`);
+  if (on('solar')) out.push(`Build ${p.solar.amount} MW of fast solar from ${monthName(p.solar.start)}`);
+  if (on('schedule')) out.push(`Publish a load-shedding schedule from ${monthName(p.schedule.start)}`);
+  if (!out.length) out.push('No action');
+  return out;
+}
+
 export function useGeo() {
   const { data } = useData<GeoData>('geo/dash_geo.json');
   return data;
@@ -148,6 +163,8 @@ export default function PlanDash() {
       const via = reply.via === 'ai' ? (mdl.startsWith('claude') ? `Claude (${mdl})` : `Workers AI (${mdl})`) : 'Rule-based parser';
       setMsgs((m) => [...m, {
         role: 'assistant',
+        head: headline(newPlan, newGeo),
+        result: [`Lake in Sep 2027: ${m1(r2.sepP50)}%`, `Extra blackout: ${m1(r2.peakShedMean)} h/day`, `Cost: ${usd(r2.actionCost.total)}`],
         text: ex.text ?? templateExplain(r2, newPlan, ap.changes, o),
         changes: ap.changes.length ? ap.changes : (o ? [] : ['No change understood. Try naming an action or a neighbour: imports from Mozambique, rental, Copperbelt mines, hold water, solar.']),
         via: `${via}${ex.text ? ' · numbers checked against the simulator' : ' · template explanation'}`,
@@ -238,6 +255,11 @@ export default function PlanDash() {
 
       <section className="dash-stage" aria-label="Globe">
         <Stage geo={geoData} scene={scene} onPick={onPick} fly={fly} />
+        <div className="stage-kpis">
+          <div><b>{m1(r.sepP50)}%</b><span>Lake, Sep 2027</span></div>
+          <div><b>{m1(r.peakShedMean)} h</b><span>Extra blackout / day</span></div>
+          <div><b>{usd(r.actionCost.total)}</b><span>Cost of plan</span></div>
+        </div>
         <div className="stage-bar">
           <button type="button" className="tb" onClick={() => { if (month >= r.months.length - 1) setMonth(0); setPlaying(!playing); }} aria-label={playing ? 'Pause' : 'Play months'}>{playing ? '❚❚' : '▶'}</button>
           <input type="range" min={0} max={r.months.length - 1} value={month} onChange={(e) => { setPlaying(false); setMonth(+e.target.value); }} aria-label="Month" />

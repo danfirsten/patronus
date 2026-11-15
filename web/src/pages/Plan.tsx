@@ -234,7 +234,7 @@ function CostTable({ r, base }: { r: Result; base: Result }) {
 
 // ---------------------------------------------------------------- chat
 
-export interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string }
+export interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string; head?: string[]; result?: string[] }
 
 export const EXAMPLES = [
   "We can't import power. What should we do?",
@@ -245,7 +245,12 @@ export const EXAMPLES = [
 export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: Msg[]; busy: boolean }) {
   const [text, setText] = useState('');
   const logRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { const el = logRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }); }, [msgs.length, busy]);
+  useEffect(() => {
+    const el = logRef.current; if (!el) return;
+    const users = el.querySelectorAll('.plan-msg-user'); const last = users[users.length - 1] as HTMLElement | undefined;
+    const top = last ? el.scrollTop + last.getBoundingClientRect().top - el.getBoundingClientRect().top - 6 : el.scrollHeight;
+    el.scrollTo({ top, behavior: 'smooth' });
+  }, [msgs.length, busy]);
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const t = text.trim();
@@ -265,10 +270,12 @@ export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: 
         )}
         {msgs.map((m, i) => (
           <div key={i} className={`plan-msg plan-msg-${m.role}`}>
-            {m.role === 'assistant' && m.changes && m.changes.length > 0 && (
+            {m.head && m.head.length > 0 && <ul className="plan-head">{m.head.map((h) => <li key={h}>{h}</li>)}</ul>}
+            {m.result && m.result.length > 0 && <div className="plan-result">{m.result.map((x) => <span key={x}>{x}</span>)}</div>}
+            {m.role === 'assistant' && !m.head && m.changes && m.changes.length > 0 && (
               <ul className="plan-changes">{m.changes.map((c) => <li key={c}>{c}</li>)}</ul>
             )}
-            <p>{m.text}</p>
+            <p className={m.head ? 'plan-detail' : undefined}>{m.text}</p>
             {m.via && <details className="plan-via"><summary aria-label="How this answer was made">i</summary><span>{m.via}{m.note ? ` · ${m.note}` : ''}</span></details>}
           </div>
         ))}
