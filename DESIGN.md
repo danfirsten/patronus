@@ -176,7 +176,7 @@ The 15% and 30% thresholds are starting points. Check them against the crises du
   - **"Patronus alarm vs. first official warning"** for each crisis.
 
 ### 11.4 Which countries
-"Hydro-dependent" means hydro is at least 30% of generation and at least 1 TWh in the latest Ember year. That gives **48 countries** (table: `data/reference/hydro_dependent_countries_ember.csv`), in three confidence tiers:
+"Hydro-dependent" means hydro is at least 30% of generation and at least 1 TWh in the latest Ember year. That gives **48 countries** (table: `data/reference/forecast/hydro_dependent_countries_ember.csv`), in three confidence tiers:
 1. **Monthly forecast:** 23 countries with Ember monthly data, plus Sichuan. Includes Brazil, Vietnam, Ecuador, Colombia, Norway, Peru, Tajikistan, Kyrgyzstan, Georgia, Sri Lanka, Costa Rica, Canada, New Zealand and others.
 2. **Reservoir forecast:** major hydro reservoirs with G-REALM levels. Kariba (Zambia/Zimbabwe) for certain. Check Cahora Bassa (Mozambique), Volta/Akosombo (Ghana), Guri (Venezuela) and others first thing.
 3. **Trend + ENSO exposure only:** the remaining countries with yearly data only, e.g. Ethiopia, Laos, Nepal, DR Congo, Uganda, Paraguay.
@@ -273,7 +273,7 @@ The official site returned errors during research, so these rules are **unconfir
 ## Changelog
 - v0 — Captured the initial brief.
 - v1 — Global story with Kariba as the close-up; trend layer; scoreboard and watchlist; cost layer; validation rules; technology options including Jev.
-- v3 — Build decisions (section 11): targets and thresholds, unit of analysis, backtest, 48 countries in 3 tiers, verified no-login data stack, cost model with sourced inputs, crisis scoreboard dates, live forecast and ledger, tech in/stretch/out, submission rules (unconfirmed). Reference data in `data/reference/`.
+- v3 — Build decisions (section 11): targets and thresholds, unit of analysis, backtest, 48 countries in 3 tiers, verified no-login data stack, cost model with sourced inputs, crisis scoreboard dates, live forecast and ledger, tech in/stretch/out, submission rules (unconfirmed). Reference data in `data/reference/` (`forecast/` and `remediation/`).
 - v2 — Problem statement with verified costs; audience changed to finance ministries, regulators and lenders; watchdog positioning after the landscape check; three time horizons with ENSO fingerprints (no in-house ENSO forecaster); shared-exposure feature from HarvestShield; Future Detector engine as recommended base; corrected Ecuador timeline.
 
 ## 12. Results (Nov 14 build) and what they mean for the pitch
