@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Tip } from './Tip';
 
 /**
@@ -47,7 +48,7 @@ export function Fn({ k }: { k: string }) {
   if (!s) return null;
   const ext = s.url.startsWith('http');
   return (
-    <sup className="pt-fn">
+    <sup className="pt-fn" data-fn={s.key}>
       <Tip label={n} className="pt-fn-btn" ariaLabel={`Source ${n}: ${s.label}`}>
         <span className="pt-pop-k">Source {n}</span>
         {s.label}
@@ -60,14 +61,30 @@ export function Fn({ k }: { k: string }) {
   );
 }
 
+/** Lists only the sources cited on the current page, keeping their global footnote numbers. */
 export function Sources() {
+  const ref = useRef<HTMLElement>(null);
+  const [used, setUsed] = useState<Set<string> | null>(null);
+  useEffect(() => {
+    const root = ref.current?.parentElement;
+    if (!root) return;
+    const scan = () => {
+      const keys = new Set([...root.querySelectorAll<HTMLElement>('[data-fn]')].map((e) => e.dataset.fn ?? ''));
+      setUsed((prev) => (prev && prev.size === keys.size && [...keys].every((k) => prev.has(k)) ? prev : keys));
+    };
+    scan();
+    const mo = new MutationObserver(scan);
+    mo.observe(root, { childList: true, subtree: true });
+    return () => mo.disconnect();
+  }, []);
+  const shown = SOURCES.map((s, i) => ({ s, n: i + 1 })).filter(({ s }) => used?.has(s.key));
   return (
-    <section className="pt-section pt-sources" aria-labelledby="pt-sources-h">
+    <section ref={ref} className="pt-section pt-sources" aria-labelledby="pt-sources-h" hidden={!shown.length}>
       <div className="wrap">
         <p className="eyebrow" id="pt-sources-h">Sources</p>
         <ol>
-          {SOURCES.map((s, i) => (
-            <li key={s.key} id={`pt-src-${i + 1}`}>
+          {shown.map(({ s, n }) => (
+            <li key={s.key} id={`pt-src-${n}`} value={n}>
               <a href={s.url} target={s.url.startsWith('http') ? '_blank' : undefined} rel="noreferrer">{s.label}</a>
             </li>
           ))}

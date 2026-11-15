@@ -20,7 +20,7 @@ function planText(r: any): string {
   if (!a) return r.error ?? 'The simulator is not ready.';
   const parts = [];
   parts.push(`By Sep 2027 the lake is most likely at ${f1(a.sep_2027_storage_pct_p50)}% usable (${f1(a.sep_2027_storage_pct_p10)}% in the driest 1 in 10 years).`);
-  parts.push(`Extra load-shedding peaks at ${f1(a.peak_shedding_h_per_day_avg)} h/day on average; actions cost about $${a.action_cost_musd}M and the expected total is $${a.total_cost_musd_voll_1}M at $1/kWh.`);
+  parts.push(`Extra load-shedding peaks at ${f1(a.peak_shedding_h_per_day_avg)} h/day on average; actions cost about $${a.action_cost_musd}M and the expected total is $${a.total_cost_musd_voll_1}M at $0.39/kWh.`);
   if (r.optimizer?.why?.length) parts.push(r.optimizer.why[0]);
   parts.push('This is a simulation over past El Niño years, not a forecast.');
   return parts.join(' ');

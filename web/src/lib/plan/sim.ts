@@ -17,7 +17,7 @@
  * Costs (USD M, ZESCO scope): imports 17 c/kWh (ZESCO ERB filing Jul 2024, Eskom contracted);
  * rental thermal $0.17M per MW-month from arrival to Dec 2027 (same filing: 300 MW = $51M/month);
  * paid demand reduction $93/MWh (Brazil 2021 bonus, playbook); solar: no case cost in the playbook,
- * priced at the 17 c import rate as a labelled placeholder; unserved energy at VoLL $0.5-1.5/kWh (Dan)
+ * priced at the 17 c import rate as a labelled placeholder; unserved energy at VoLL $0.39/kWh central, $0.14-0.76 range (measured, DESIGN 14)
  * with the macro-calibrated $0.13/kWh line (KARIBA-CF.md). Water left in the lake at end-2027
  * above the no-action path is credited at the contracted price (Dan's terminal credit).
  */
@@ -96,8 +96,8 @@ export const K = {
   SOLAR_USD_KWH: 0.17, // placeholder: no solar cost in the case evidence, priced at the import rate
   SOLAR_CF: 0.22,
   DAYLIGHT_SHARE: 10 / 24,
-  VOLL: 1.0,
-  VOLL_RANGE: [0.5, 1.5] as [number, number],
+  VOLL: 0.39,
+  VOLL_RANGE: [0.14, 0.76] as [number, number],
   VOLL_MACRO: 0.13,
 };
 

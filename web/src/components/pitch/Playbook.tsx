@@ -36,8 +36,8 @@ const EARLY_DID: Record<string, string> = {
   'URY-2023': 'Wind built after 2008 turned the drought into a cost problem, not a shortage.',
 };
 const LATE_DID: Record<string, ReactNode> = {
-  'ECU-2023': <>The operator warned in Jan 2024; no action until April. Cuts reached 14 hours a day. Cost $1.9B, about 1.4% of GDP (central bank).</>,
-  'ZMB-ZWE-2024': <>The water allocation was cut in Dec 2023, but load-shedding still reached up to 21 hours a day, per news reports.</>,
+  'ECU-2023': <>CENACE warned in Dec 2023 that blackouts would come in the 2024-25 dry seasons. Cuts reached 14 hours a day. Cost $1.9B, about 1.4% of GDP (central bank).</>,
+  'ZMB-ZWE-2024': <>The water allocation was cut in Dec 2023, but official load-shedding still reached 8, then 12 hours a day (up to 21 h reported).</>,
 };
 const DEMOS = ['ZMB', 'ECU', 'VNM'];
 const DEMO_LABEL: Record<string, string> = { ZMB: 'Kariba 2027', ECU: 'Ecuador', VNM: 'Vietnam' };

@@ -37,7 +37,7 @@ export function templateExplain(r: Result, p: Plan, changes: string[], opt: OptR
   if (changes.length) parts.push(`Changed: ${changes.join('; ')}.`);
   if (opt) parts.push(`Best plan found: ${planLine(p)}.`);
   parts.push(summaryText(r));
-  parts.push(`Actions cost about ${usd(r.actionCost.total)}; the remaining shortage costs ${usd(r.shortageCost.voll)} at $1/kWh (${usd(r.shortageCost.low)} to ${usd(r.shortageCost.high)} across $0.5–1.5/kWh, ${usd(r.shortageCost.macro)} at $0.13/kWh). Simulation over past El Niño years, not a forecast.`);
+  parts.push(`Actions cost about ${usd(r.actionCost.total)}; the remaining shortage costs ${usd(r.shortageCost.voll)} at $0.39/kWh (${usd(r.shortageCost.low)} to ${usd(r.shortageCost.high)} across $0.14–0.76/kWh, ${usd(r.shortageCost.macro)} at $0.13/kWh). Simulation over past El Niño years, not a forecast.`);
   return parts.join(' ');
 }
 
@@ -205,12 +205,12 @@ function CostTable({ r, base }: { r: Result; base: Result }) {
     ['Solar', (x) => x.actionCost.solar],
     ['Cost of actions', (x) => x.actionCost.total, 'row-strong'],
     ['Water left in the lake (credit)', (x) => -x.credit],
-    ['Shortage at VoLL $0.5/kWh', (x) => x.shortageCost.low],
-    ['Shortage at VoLL $1.0/kWh (central)', (x) => x.shortageCost.voll],
-    ['Shortage at VoLL $1.5/kWh', (x) => x.shortageCost.high],
+    ['Shortage at VoLL $0.14/kWh', (x) => x.shortageCost.low],
+    ['Shortage at VoLL $0.39/kWh (central)', (x) => x.shortageCost.voll],
+    ['Shortage at VoLL $0.76/kWh', (x) => x.shortageCost.high],
     ['Shortage at $0.13/kWh (macro-calibrated)', (x) => x.shortageCost.macro],
     ['Total, central VoLL', (x) => x.total.voll, 'row-strong'],
-    ['Total, VoLL $0.5–1.5', (x) => x.total.low, 'range'],
+    ['Total, VoLL $0.14–0.76', (x) => x.total.low, 'range'],
     ['Total, $0.13/kWh', (x) => x.total.macro, 'row-strong'],
   ];
   return (
@@ -332,7 +332,7 @@ export default function PlanPage() {
               <div><span className="plan-stat-v">{m1(r.sepP50)}%</span><span className="plan-stat-l">Lake, Sep 2027 (median)</span></div>
               <div><span className="plan-stat-v">{m1(r.peakShedMean)} h</span><span className="plan-stat-l">Peak extra shedding per day</span></div>
               <div><span className="plan-stat-v">{m0(r.unservedGwhMean)} GWh</span><span className="plan-stat-l">Unserved energy (mean)</span></div>
-              <div><span className="plan-stat-v">{usd(r.total.voll)}</span><span className="plan-stat-l">Expected total cost (VoLL $1)</span></div>
+              <div><span className="plan-stat-v">{usd(r.total.voll)}</span><span className="plan-stat-l">Expected total cost (VoLL $0.39)</span></div>
             </div>
           </section>
 
@@ -361,7 +361,7 @@ export default function PlanPage() {
                 onChange={(e) => setLimits({ ...limits, maxShedH: e.target.value === '' ? null : Math.max(0, +e.target.value) })} />
             </div>
             <div className="toggle small" role="group" aria-label="Value of lost load used by the optimizer">
-              <button type="button" className={limits.voll === 'central' ? 'on' : ''} aria-pressed={limits.voll === 'central'} onClick={() => setLimits({ ...limits, voll: 'central' })}>Shortage at $1/kWh</button>
+              <button type="button" className={limits.voll === 'central' ? 'on' : ''} aria-pressed={limits.voll === 'central'} onClick={() => setLimits({ ...limits, voll: 'central' })}>Shortage at $0.39/kWh</button>
               <button type="button" className={limits.voll === 'macro' ? 'on' : ''} aria-pressed={limits.voll === 'macro'} onClick={() => setLimits({ ...limits, voll: 'macro' })}>At $0.13/kWh (macro)</button>
             </div>
             <div><button type="button" className="button" onClick={clickOpt} disabled={optBusy}>{optBusy ? 'Searching…' : 'Find the best plan'}</button></div>
@@ -380,7 +380,7 @@ export default function PlanPage() {
           <section className="panel">
             <h2 className="plan-h">What it costs</h2>
             <CostTable r={r} base={base} />
-            <p className="small muted">Value of lost load (VoLL) is shown as a range, $0.5–1.5/kWh, because it dominates the totals. The $0.13/kWh line is calibrated on the IMF growth cut for 2024; at that value early action roughly breaks even.</p>
+            <p className="small muted">Value of lost load (VoLL) is shown as a range, $0.14–0.76/kWh (central $0.39), because it dominates the totals. The $0.13/kWh line is calibrated on the IMF growth cut for 2024; at that value early action roughly breaks even.</p>
           </section>
         </div>
       </div>

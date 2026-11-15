@@ -28,7 +28,7 @@ const ROWS: Row[] = [
   },
   {
     k: '1 month ahead',
-    today: { v: '56% right · 45% caught', d: '×1.55 better ranking than chance. Base rate 29%: a shortfall in 29% of months.' },
+    today: { v: '56% right · 45% caught', d: 'Independent 67-grid back-test. ×1.55 better ranking than chance. Base rate 29%: a shortfall in 29% of months.' },
     live: { v: '67% right · 65% caught', d: '×2.06, same 29% base rate' },
     proj: { v: '65% right · 62% caught', d: '×4.6 (base rate 14%)' },
   },
@@ -48,7 +48,7 @@ const ROWS: Row[] = [
 
 const HAVE: [string, string][] = [
   ['67 grids, 53 countries', 'Hydropower output for 53 countries, 4 Brazil subsystems and 10 US states, tested on 2021–2025, years the models never saw.'],
-  ['×1.55 at 1 month', 'With today’s real publication delays, 56% of 1-month warnings are right against a 29% base rate, and 45% of shortfalls are caught.'],
+  ['×1.55 at 1 month', 'Independent 67-grid back-test: with today’s real publication delays, 56% of 1-month warnings are right against a 29% base rate, and 45% of shortfalls are caught.'],
   ['5 months on Kariba', 'Storage plus the El Niño signal gave a first alarm in Jul 2023, 5 months before the authority cut water and 8 before load-shedding. Across El Niño seasons since 1995: 3 hits, 2 misses, 2 false alarms.'],
   ['×1.21 from measured storage', 'In Brazil, adding operator storage and inflow (ONS) to the same model ranks shortfalls ×1.21 better at 3 months and ×1.20 at 6.'],
   ['9 months vs 3', 'Where operators publish reservoir storage (Colombia, Switzerland, Norway), the water-balance model beats persistence out to about 9 months, against 3 with satellite inputs. Brazil’s operator data did the same at 4–10 months.'],
