@@ -75,29 +75,40 @@ export function collectNums(o, set = new Set()) {
   return set;
 }
 
-/** Numbers the answer may use: everything in tool results and the user's own messages. */
+/**
+ * Numbers the answer may use: only numbers from SUCCESSFUL tool results (not marked is_error, no
+ * top-level "error"). No seeded constants and nothing from the user's own text: a number the user
+ * typed is not evidence, so repeating it back must not earn the "checked against the data" label.
+ */
 export function allowedNumbers(messages) {
-  const set = new Set([0, 1, 2, 10, 100]);
+  const set = new Set();
+  const take = (raw) => {
+    let v = raw;
+    if (typeof raw === 'string') { try { v = JSON.parse(raw); } catch { v = raw; } }
+    if (v && typeof v === 'object' && !Array.isArray(v) && 'error' in v) return; // failed tool
+    collectNums(v, set);
+  };
   for (const m of messages) {
-    if (m.role !== 'user') continue;
-    if (typeof m.content === 'string') { collectNums(m.content, set); continue; }
+    if (m.role !== 'user' || typeof m.content === 'string') continue;
     for (const b of m.content || []) {
-      if (b.type === 'text') collectNums(b.text, set);
-      if (b.type === 'tool_result') {
-        const c = b.content;
-        if (typeof c === 'string') { try { collectNums(JSON.parse(c), set); } catch { collectNums(c, set); } }
-        else if (Array.isArray(c)) c.forEach((x) => x.type === 'text' && (() => { try { collectNums(JSON.parse(x.text), set); } catch { collectNums(x.text, set); } })());
-      }
+      if (b.type !== 'tool_result' || b.is_error) continue;
+      if (typeof b.content === 'string') take(b.content);
+      else if (Array.isArray(b.content)) b.content.forEach((x) => x.type === 'text' && take(x.text));
     }
   }
   return set;
+}
+
+/** Remove structural list numbering ("1. ", "2) " at the start of a line); it is not a claim. */
+export function stripListNumbering(text) {
+  return String(text).replace(/^(\s*)\d{1,2}[.)](?=\s)/gm, '$1');
 }
 
 function decimals(s) { const i = s.indexOf('.'); return i < 0 ? 0 : s.length - i - 1; }
 
 /** Every number in text must match an allowed number, allowing rounding and 0.36 -> 36%. */
 export function checkNumbers(text, allowed) {
-  const tokens = (text.replace(/(\d),(\d{3})/g, '$1$2').match(/\d+(?:\.\d+)?/g) || []);
+  const tokens = (stripListNumbering(text).replace(/(\d),(\d{3})/g, '$1$2').match(/\d+(?:\.\d+)?/g) || []);
   const vals = [...allowed];
   const bad = [];
   for (const tok of tokens) {

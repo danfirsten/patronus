@@ -182,3 +182,93 @@ describe('conversation loop', () => {
     expect(out[0]).toEqual({ role: 'user', content: 'q7' });
   });
 });
+
+// ---- review fixes
+const FIX = resolve(__dirname, '../../src/fixtures');
+/** Real pipeline files, except `fixtureFiles`, which come from src/fixtures with source 'fixture' (the loader's fallback). */
+const loadWithFixtures = (fixtureFiles: string[]): Loader => async (f) =>
+  fixtureFiles.includes(f) ? { data: JSON.parse(readFileSync(resolve(FIX, f), 'utf8')), source: 'fixture' } : load(f);
+
+const paired = (api: any[]) => {
+  // every assistant tool_use must be answered by tool_results in the very next message
+  api.forEach((m, i) => {
+    const uses = Array.isArray(m.content) ? m.content.filter((b: any) => b.type === 'tool_use').map((b: any) => b.id) : [];
+    if (!uses.length) return;
+    const next = api[i + 1];
+    expect(next?.role).toBe('user');
+    const ids = (Array.isArray(next.content) ? next.content : []).filter((b: any) => b.type === 'tool_result').map((b: any) => b.tool_use_id);
+    expect(ids.sort()).toEqual(uses.sort());
+  });
+};
+
+describe('F-2: rate limit after tool execution', () => {
+  beforeEach(() => resetChat());
+  it('rolls back the whole turn; the next question is sent with valid, paired history', async () => {
+    const t1: Transport = async (body: any) => {
+      const last = body.messages[body.messages.length - 1];
+      if (typeof last.content === 'string') return { status: 200, json: { type: 'tool_use', model: 'm', content: [{ type: 'tool_use', id: 't1', name: 'get_overview', input: {} }] } };
+      return { status: 429, json: { error: 'rate_limited' } };
+    };
+    await ask('How is everything looking?', 'map', { transport: t1, load });
+    const s = getChatState();
+    expect(s.api).toEqual([]); // nothing from the abandoned turn
+    expect(s.ui[1].via).toBe('Rate limit');
+    let sent: any;
+    await ask('Try again', 'map', { transport: async (b: any) => { sent = b; return { status: 200, json: { type: 'answer', text: 'ok', content: [{ type: 'text', text: 'ok' }], verified: true, unverified: [] } }; }, load });
+    expect(sent.messages).toEqual([{ role: 'user', content: 'Try again' }]);
+    paired(getChatState().api);
+  });
+
+  it('keeps earlier completed turns when a later turn is rate-limited', async () => {
+    const ok: Transport = async () => ({ status: 200, json: { type: 'answer', text: 'first', content: [{ type: 'text', text: 'first' }], verified: true, unverified: [] } });
+    await ask('first question', 'map', { transport: ok, load });
+    const before = getChatState().api;
+    let n = 0;
+    await ask('second', 'map', { transport: async () => (n++ === 0 ? { status: 200, json: { type: 'tool_use', model: 'm', content: [{ type: 'tool_use', id: 'x', name: 'get_watchlist', input: {} }] } } : { status: 429, json: {} }), load });
+    expect(getChatState().api).toEqual(before);
+    paired(getChatState().api);
+  });
+});
+
+describe('F-3: sample-data provenance', () => {
+  beforeEach(() => resetChat());
+  it('offline Kariba answer from the fixture carries and shows the sample warning', async () => {
+    const lf = loadWithFixtures(['kariba.json']);
+    const a = await offlineAnswer('How low could Kariba get?', { page: 'map', load: lf });
+    expect(a.sample).toMatch(/kariba\.json/);
+    expect(a.sample).toMatch(/sample numbers/i);
+    await ask('How low could Kariba get?', 'map', { transport: async () => ({ status: 503, json: { error: 'offline' } }), load: lf });
+    expect(getChatState().ui[1].warn).toMatch(/Sample fixtures.*kariba\.json/);
+  });
+
+  it('every offline branch carries the warning when its file is a fixture', async () => {
+    const cases: [string, string][] = [
+      ["What's the risk for Ecuador?", 'watchlist.json'],
+      ['Is El Niño a risk?', 'enso.json'],
+      ['What did Patronus catch and miss?', 'scoreboard.json'],
+      ['Which countries are on alarm?', 'watchlist.json'],
+      ['Which basins are drying?', 'trends.json'],
+      ['How is everything looking?', 'kariba.json'],
+      ["What's the risk for Ecuador?", 'countries.json'],
+    ];
+    for (const [q, f] of cases) {
+      const a = await offlineAnswer(q, { page: 'map', load: loadWithFixtures([f]) });
+      expect(a.sample, `${q} / ${f}`).toMatch(new RegExp(f.replace('.', '\\.')));
+    }
+  });
+
+  it('real data: no sample warning', async () => {
+    const a = await offlineAnswer('How is everything looking?', { page: 'map', load });
+    expect(a.sample).toBeUndefined();
+  });
+
+  it('AI path shows the warning when a tool result came from fixtures', async () => {
+    const t: Transport = async (body: any) => {
+      const last = body.messages[body.messages.length - 1];
+      if (typeof last.content === 'string') return { status: 200, json: { type: 'tool_use', model: 'm', content: [{ type: 'tool_use', id: 'k', name: 'get_kariba_forecast', input: {} }] } };
+      return { status: 200, json: { type: 'answer', model: 'm', text: 'Kariba is low.', content: [{ type: 'text', text: 'Kariba is low.' }], verified: true, unverified: [] } };
+    };
+    await ask('kariba?', 'map', { transport: t, load: loadWithFixtures(['kariba.json']) });
+    expect(getChatState().ui[1].warn).toMatch(/kariba\.json/);
+  });
+});

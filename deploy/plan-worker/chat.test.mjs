@@ -91,3 +91,38 @@ test('numbers in tool field names count (e.g. 6-month from *_6m_pct)', () => {
   const allowed = allowedNumbers([{ role: 'user', content: [{ type: 'tool_result', tool_use_id: 't', content: JSON.stringify({ chance_any_shortfall_6m_pct: 41 }) }] }]);
   assert.ok(checkNumbers('a 41% chance over the next 6 months', allowed).ok);
 });
+
+// ---- F-1 (review): verification requires tool evidence
+const answer = (text) => async () => ({ stop_reason: 'end_turn', model: 'm', content: [{ type: 'text', text }] });
+
+test('F-1: a number the user typed is not evidence (no tools called)', async () => {
+  const r = await read(await handleChat(req({ messages: [{ role: 'user', content: 'Is the chance of failure 73%?' }] }), {}, { claude: answer('The chance of failure is 73%.') }));
+  assert.equal(r.json.verified, false);
+  assert.deepEqual(r.json.unverified, ['73']);
+});
+
+test('F-1: no seeded constants (100, 10, 2, 1, 0) without tool evidence', async () => {
+  for (const n of ['100', '10', '2', '1', '0']) {
+    const r = await read(await handleChat(req({ messages: [{ role: 'user', content: 'how sure are you?' }] }), {}, { claude: answer(`It is ${n}% certain.`) }));
+    assert.equal(r.json.verified, false, n);
+    assert.deepEqual(r.json.unverified, [n]);
+  }
+});
+
+test('F-1: numbers in failed tool results (is_error or {error}) do not count', () => {
+  const allowed = allowedNumbers([
+    { role: 'user', content: 'q 55' },
+    { role: 'user', content: [
+      { type: 'tool_result', tool_use_id: 'a', is_error: true, content: JSON.stringify({ x: 41 }) },
+      { type: 'tool_result', tool_use_id: 'b', content: JSON.stringify({ error: 'We do not track 99 countries' }) },
+    ] },
+  ]);
+  assert.equal(allowed.size, 0);
+  assert.deepEqual(checkNumbers('41, 55 or 99', allowed).bad, ['41', '55', '99']);
+});
+
+test('F-1: list numbering is structural, not a claim; inline numbers still checked', () => {
+  const allowed = allowedNumbers([{ role: 'user', content: [{ type: 'tool_result', tool_use_id: 't', content: JSON.stringify({ p50: 31.2 }) }] }]);
+  assert.ok(checkNumbers('1. Lake at 31.2%\n2) Probabilities, not certainties', allowed).ok);
+  assert.deepEqual(checkNumbers('Lake at 31.2%, about 3. Risky', allowed).bad, ['3']);
+});

@@ -77,16 +77,20 @@ export async function ask(text: string, page: string, deps: { transport?: Transp
   const q = text.trim().slice(0, 600);
   if (!q || state.busy) return;
   const transport = deps.transport ?? httpTransport;
+  // history before this question: restored if the turn has to be abandoned, so a tool_use is never
+  // left without its tool_result (F-2)
+  const prior = state.api;
   let api: ApiMsg[] = trimHistory([...state.api, { role: 'user', content: q }]);
   set({ ui: [...state.ui, { id: nextId++, role: 'user', text: q }], api, busy: true, status: 'Thinking…' });
   const sources = new Set<string>();
   const changes: string[] = [];
+  const samples = new Set<string>();
   const finish = (msg: Omit<UiMsg, 'id' | 'role'>, apiOut: ApiMsg[]) =>
     set({ ui: [...state.ui, { id: nextId++, role: 'assistant', ...msg }], api: apiOut, busy: false, status: null });
 
   const offline = async (why: string) => {
     const a = await offlineAnswer(q, { page, load: deps.load });
-    finish({ text: a.text, sources: a.sources, changes: a.changes, via: `Offline answer from the data files (${why})` }, [...api, { role: 'assistant', content: a.text }]);
+    finish({ text: a.text, sources: a.sources, changes: a.changes, warn: a.sample, via: `Offline answer from the data files (${why})` }, [...api, { role: 'assistant', content: a.text }]);
   };
 
   try {
@@ -98,7 +102,7 @@ export async function ask(text: string, page: string, deps: { transport?: Transp
         return await offline('assistant unreachable');
       }
       if (r.status === 413 && round === 0) { api = trimHistory(api, 12, 16_000); continue; }
-      if (r.status === 429) return finish({ text: 'Too many questions right now. Please try again in a minute.', via: 'Rate limit' }, api.slice(0, -1));
+      if (r.status === 429) return finish({ text: 'Too many questions right now. Please try again in a minute.', via: 'Rate limit' }, prior);
       if (r.status === 503 || r.status === 404 || r.status === 405 || !r.json) return await offline(r.status === 503 ? 'AI assistant not configured' : 'AI assistant not available on this host');
       if (r.status >= 400 || r.json.error) return await offline(`assistant error: ${r.json?.error ?? r.status}`);
       const j = r.json;
@@ -111,6 +115,7 @@ export async function ask(text: string, page: string, deps: { transport?: Transp
           const s = sourceLabel(out);
           if (s) s.split(', ').forEach((x) => sources.add(x));
           if (Array.isArray(out.changes)) changes.push(...(out.changes as string[]));
+          if (typeof out.sample_data_warning === 'string') samples.add(out.sample_data_warning);
           results.push({ type: 'tool_result', tool_use_id: b.id, content: JSON.stringify(out), ...(out.error ? { is_error: true } : {}) });
         }
         api = [...api, { role: 'user', content: results }];
@@ -122,11 +127,11 @@ export async function ask(text: string, page: string, deps: { transport?: Transp
         text: j.text || 'No answer came back.',
         sources: [...sources], changes,
         via: `${modelLabel(j.model)}${j.verified ? ' · numbers checked against the data' : ''}`,
-        warn: j.verified ? undefined : `Could not match these numbers to the data: ${(j.unverified ?? []).join(', ')}. Treat them with care.`,
+        warn: [...samples, ...(j.verified ? [] : [`Could not match these numbers to the data: ${(j.unverified ?? []).join(', ')}. Treat them with care.`])].join(' ') || undefined,
       }, [...api, { role: 'assistant', content }]);
     }
     return finish({ text: 'That took too many steps. Try a narrower question.', sources: [...sources], changes }, [...api, { role: 'assistant', content: 'That took too many steps.' }]);
   } catch (e) {
-    return finish({ text: `Something went wrong: ${String(e).slice(0, 100)}`, via: 'Error' }, state.api);
+    return finish({ text: `Something went wrong: ${String(e).slice(0, 100)}`, via: 'Error' }, prior);
   }
 }

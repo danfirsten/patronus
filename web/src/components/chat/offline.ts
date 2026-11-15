@@ -13,7 +13,7 @@ const f1 = (v: any) => (typeof v === 'number' ? (Math.round(v * 10) / 10).toStri
 const MN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const mon = (m: string) => (m && /^\d{4}-\d{2}/.test(m) ? `${MN[+m.slice(5, 7) - 1]} ${m.slice(0, 4)}` : m);
 
-export interface OfflineAnswer { text: string; sources: string[]; changes?: string[] }
+export interface OfflineAnswer { text: string; sources: string[]; changes?: string[]; /** set when any file used came from sample fixtures (F-3) */ sample?: string }
 
 function planText(r: any): string {
   const a = r.results_after ?? r.results;
@@ -41,6 +41,18 @@ function countryText(c: any): string {
 }
 
 export async function offlineAnswer(text: string, opts: { page: string; load?: Loader } = { page: '' }): Promise<OfflineAnswer> {
+  const warnings = new Set<string>();
+  const a = await answer(text, opts, async (name, args, load) => {
+    const out = await runTool(name, args, load);
+    if (typeof out.sample_data_warning === 'string') warnings.add(out.sample_data_warning);
+    return out;
+  }, (w) => warnings.add(w));
+  return warnings.size ? { ...a, sample: [...warnings].join(' ').replace('Tell the user these are sample numbers.', 'These are sample numbers, not real results.') } : a;
+}
+
+type Run = (name: string, args: Record<string, any>, load: Loader) => Promise<Record<string, any>>;
+
+async function answer(text: string, opts: { page: string; load?: Loader }, runTool: Run, warn: (w: string) => void): Promise<OfflineAnswer> {
   const t = text.toLowerCase();
   const load = opts.load ?? ((f: string) => loadData<any>(f));
   const bridge = getPlanBridge();
@@ -54,7 +66,10 @@ export async function offlineAnswer(text: string, opts: { page: string; load?: L
       return { text: planText(bridge.snapshot()), sources: ['Plan simulator (kariba_sim.json)'] };
     }
   }
-  const countries = (await load('countries.json')).data;
+  // country lookup reads the file directly, so record its provenance here
+  const cl = await load('countries.json');
+  if (cl.source === 'fixture') warn('Sample fixtures, not pipeline output: countries.json.');
+  const countries = cl.data;
   const found = findCountriesInText(text, countries);
   if (found.length && !/kariba/.test(t)) {
     const c = await runTool('get_country', { country: found[0].iso3 }, load);

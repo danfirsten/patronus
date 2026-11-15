@@ -4,7 +4,7 @@ Owner: team arvin. Ask team arvin before editing `web/src/components/chat/**` or
 
 The data chat is one assistant for every page that shows data. It answers questions such as "how is everything looking?" or "what's the risk for Zambia?" from the pipeline's JSON files, and on the Plan page it changes the Kariba 2027 simulator ("we can do A and B but not C, what now?"), re-runs it or the optimizer, and explains the result.
 
-**Rule it keeps:** the model never makes up numbers. Every number in an answer comes from a tool result (the data files or the simulator). The server checks this before it returns an answer. An answer with numbers that can't be matched gets one automatic rewrite. If numbers still can't be matched, the answer is shown with a warning that names them.
+**Rule it keeps:** the model never makes up numbers. Every number in an answer comes from a tool result (the data files or the simulator). Only successful tool results count as evidence: numbers the user typed, failed tool results and list numbering ("1.", "2)") do not. The server checks this before it returns an answer. An answer with numbers that can't be matched gets one automatic rewrite. If numbers still can't be matched, the answer is shown with a warning that names them.
 
 ## Where it appears
 
@@ -51,7 +51,7 @@ Tool names and schemas are defined on the server (`deploy/plan-worker/chat.js`) 
 | `get_sources` | meta.json | |
 | `get_plan`, `set_action`, `disable_action`, `enable_action`, `set_limit`, `set_budget`, `run_optimizer` | plan bridge | only when a bridge is registered; uses `applyTools` from `lib/plan/chat.ts` and `optimize` from `lib/plan/sim.ts` |
 
-Results are compact summaries (each under 9 KB). Probabilities are given as percentages in fields ending `_pct`. If a file fell back to sample fixtures, the result says so and the model is told to say so.
+Results are compact summaries (each under 9 KB). Probabilities are given as percentages in fields ending `_pct`. If a file fell back to sample fixtures, the result says so, the model is told to say so, and the chat shows a sample-data warning under the answer (online and offline).
 
 ## Server endpoint
 
