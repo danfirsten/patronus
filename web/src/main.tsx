@@ -6,9 +6,11 @@ import '@fontsource/martian-mono/500.css';
 import './theme.css';
 import './app.css';
 import App from './App';
+import ChatMount from './components/chat/ChatMount';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
+    <ChatMount />
   </StrictMode>,
 );

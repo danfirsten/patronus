@@ -1,0 +1,466 @@
+{
+ "generated_from": "data/reference/remediation/crisis_actions.csv",
+ "note": "What governments and utilities did in past hydropower crises. Built by web/scripts/make-chat-data.mjs; do not hand-edit.",
+ "crises": {
+  "kariba-2024": [
+   {
+    "date": "2023-12-27",
+    "stage": "warning",
+    "type": "state",
+    "actor": "ZRA",
+    "text": "Lake Kariba at 477.12 m, 7.25 BCM usable",
+    "value": 11.19,
+    "unit": "% usable",
+    "source": "https://www.zambezira.org/sites/default/files/Press%20Statement%20-%20Water%20allocation%20at%20Kariba%20Dam_28%20December%202023_Final.pdf"
+   },
+   {
+    "date": "2023-12-28",
+    "stage": "warning",
+    "type": "action",
+    "actor": "ZRA",
+    "text": "ZRA allocates 16 BCM for 2024 (8 BCM each to ZESCO and KHPC) and advises utilities to consider alternative sources of power",
+    "value": 16,
+    "unit": "BCM/yr",
+    "source": "https://www.zambezira.org/sites/default/files/Press%20Statement%20-%20Water%20allocation%20at%20Kariba%20Dam_28%20December%202023_Final.pdf"
+   },
+   {
+    "date": "2024-02-29",
+    "stage": "onset",
+    "type": "action",
+    "actor": "Government of Zambia",
+    "text": "President declares the drought a national disaster; energy deficit expected near 450 MW or above 500 MW",
+    "source": "https://www.aljazeera.com/news/2024/2/29/zambia-declares-national-disaster-after-drought-devastates-agriculture"
+   },
+   {
+    "date": "2024-03-06",
+    "stage": "onset",
+    "type": "action",
+    "actor": "ZRA",
+    "text": "ZRA keeps the 16 BCM allocation: 214 MW average per utility (428 MW combined) to end of March 2024 pending the Q1 review",
+    "value": 214,
+    "unit": "MW average per utility",
+    "source": "https://www.zambezira.org/sites/default/files/Press%20Statement%20-%20Hydrological%20Situation%20at%20Kariba%20Dam_6%20March%202024.pdf"
+   },
+   {
+    "date": "2024-03-11",
+    "stage": "onset",
+    "type": "action",
+    "actor": "ZESCO",
+    "text": "Load-shedding of 8 hours a day begins",
+    "value": 8,
+    "unit": "h/day",
+    "source": "https://en.wikipedia.org/wiki/2024_Zambian_drought"
+   },
+   {
+    "date": "2024-05-20",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "Ministry of Energy",
+    "text": "Load-shedding raised from 8 to 12 hours a day (approval announced 24 May, effective 20 May)",
+    "value": 12,
+    "unit": "h/day",
+    "source": "https://diggers.news/business/2024/05/24/govt-finally-announces-12-hour-load-shedding-schedule/"
+   },
+   {
+    "date": "2024-05-24",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "Ministry of Energy",
+    "text": "Kariba North Bank producing 166 MW of 1,080 MW installed",
+    "value": 166,
+    "unit": "MW",
+    "source": "https://diggers.news/business/2024/05/24/govt-finally-announces-12-hour-load-shedding-schedule/"
+   },
+   {
+    "date": "2024-07-01",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "ZESCO",
+    "text": "Replacement power costs in ZESCO's filing: Eskom 17, Mozambique/Karpowership 22, diesel 26 US c/kWh; about $51M/month for 300 MW",
+    "value": 51,
+    "unit": "MUSD/month",
+    "source": "https://www.erb.org.zm/wp-content/uploads/files/ZESCO-Tarrif-Application-Submission.pdf"
+   },
+   {
+    "date": "2024-08-01",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "ZESCO",
+    "text": "Imports of 218 MW from Eskom and Zimbabwe Power Company negotiated, on top of 409 MW already imported; to be injected during August",
+    "value": 218,
+    "unit": "MW",
+    "source": "https://thestar.com.my/news/world/2024/08/02/zambia-to-import-more-electricity-from-south-africa-zimbabwe"
+   },
+   {
+    "date": "2024-08-16",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "Ministry of Energy",
+    "text": "Available generation 890 MW vs 2,400 MW peak demand (3,777 MW installed); deficit 1,510 MW",
+    "value": 1510,
+    "unit": "MW deficit",
+    "source": "https://diggers.news/local/2024/08/17/govt-announces-17-hour-load-shedding-moves-to-hike-tariffs/"
+   },
+   {
+    "date": "2024-08-16",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "Government of Zambia",
+    "text": "ZESCO imports 496 MW from neighbouring countries",
+    "value": 496,
+    "unit": "MW",
+    "source": "https://www.pdu.gov.zm/blog/government-to-create-cheaper-tariffs-for-low-energy-users"
+   },
+   {
+    "date": "2024-08-16",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "Government of Zambia",
+    "text": "ZESCO buys power for as much as 12.6 US c/kWh and sells at the standard 4.1 US c/kWh",
+    "value": 12.6,
+    "unit": "US c/kWh (max)",
+    "source": "https://www.pdu.gov.zm/blog/government-to-create-cheaper-tariffs-for-low-energy-users"
+   },
+   {
+    "date": "2024-08-24",
+    "stage": "escalation",
+    "type": "outcome",
+    "actor": "ERB",
+    "text": "ERB declines ZESCO's first emergency tariff application",
+    "source": "https://www.zesco.co.zm/media_releases?tag=ERB"
+   },
+   {
+    "date": "2024-08-27",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "ZRA",
+    "text": "Lake Kariba at 476.75 m",
+    "value": 8.64,
+    "unit": "% usable",
+    "source": "https://www.zambezira.org/sites/default/files/Press%20Statement%20-%20Hydrological%20Situation%20at%20Kariba%20Dam_%2027%20August%202024_0.pdf"
+   },
+   {
+    "date": "2024-09-01",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "Government of Zambia",
+    "text": "Load-shedding raised to 17 hours a day",
+    "value": 17,
+    "unit": "h/day",
+    "source": "https://diggers.news/local/2024/08/17/govt-announces-17-hour-load-shedding-moves-to-hike-tariffs/"
+   },
+   {
+    "date": "2024-09-10",
+    "stage": "peak",
+    "type": "warning",
+    "actor": "ZESCO",
+    "text": "ZESCO warns it may shut Kariba North Bank by 14 Sep; usable storage 7.68%",
+    "value": 7.68,
+    "unit": "% usable",
+    "source": "https://www.zambiandigest.net/2024/09/10/kariba-power-generating-capacity-down-to-7/"
+   },
+   {
+    "date": "2024-09-27",
+    "stage": "peak",
+    "type": "action",
+    "actor": "ZRA",
+    "text": "ZRA sets 2025 allocation at 27 BCM (13.5 BCM each), to be reviewed end Q1 2025; lake 476.48 m, 6.79%",
+    "value": 27,
+    "unit": "BCM/yr",
+    "source": "https://www.zambezira.org/sites/default/files/Press%20Statement%20-%20Hydrological%20Situation%20at%20Kariba%20Dam_27%20September%202024_FINAL.pdf"
+   },
+   {
+    "date": "2024-10-10",
+    "stage": "peak",
+    "type": "action",
+    "actor": "ERB",
+    "text": "ERB approves emergency tariff (about $15M/month toward importing 788 MW); supply then about 3 h/day, to improve to 7 h/day",
+    "value": 15,
+    "unit": "MUSD/month",
+    "source": "https://thestar.com.my/news/world/2024/10/11/zambian-energy-regulator-approves-emergency-electricity-tariff-hike"
+   },
+   {
+    "date": "2024-11-01",
+    "stage": "peak",
+    "type": "action",
+    "actor": "ZESCO",
+    "text": "Emergency tariff takes effect",
+    "source": "https://www.zesco.co.zm/media_releases?tag=ERB"
+   },
+   {
+    "date": "2025-01-13",
+    "stage": "recovery",
+    "type": "state",
+    "actor": "ZRA",
+    "text": "Lake Kariba low point in ZRA statements found: 475.94 m",
+    "value": 3.09,
+    "unit": "% usable",
+    "source": "https://www.zambezira.org/sites/default/files/DOC-20250203-WA0040..pdf"
+   }
+  ],
+  "brazil-2021": [
+   {
+    "date": "2021-06-15",
+    "stage": "onset",
+    "type": "warning",
+    "actor": "ANEEL",
+    "text": "ANEEL director-general: thermal dispatch adds almost R$9 billion Jan-Nov 2021, to be passed to consumers in 2022",
+    "value": 9,
+    "unit": "BRL bn (forecast)",
+    "source": "https://canalsolar.com.br/en/custo-do-despacho-das-termeletricas-sera-repassado-ao-consumidor-em-2022"
+   },
+   {
+    "date": "2021-06-28",
+    "stage": "onset",
+    "type": "action",
+    "actor": "Federal government",
+    "text": "MP 1.055 creates CREG, the emergency chamber for hydro-energy management",
+    "source": "https://www2.camara.leg.br/legin/fed/medpro/2021/medidaprovisoria-1055-28-junho-2021-791524-publicacaooriginal-163110-pe.html"
+   },
+   {
+    "date": "2021-08-31",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "CREG",
+    "text": "Voluntary demand-reduction programme: bill credit of R$50 per 100 kWh for average cuts of 10-20% vs Sep-Dec 2020, four billing cycles from 1 Sep 2021",
+    "value": 0.5,
+    "unit": "BRL/kWh",
+    "source": "https://www.gov.br/mme/pt-br/assuntos/conselhos-e-comites/creg/resolucoes-da-creg/resolucao-no-2-de-31-de-agosto-de-2021-resolucao-no-2-de-31-de-agosto-de-2021-dou-imprensa-nacional.pdf"
+   },
+   {
+    "date": "2021-10-06",
+    "stage": "peak",
+    "type": "state",
+    "actor": "ONS",
+    "text": "Southeast/Centre-West stored energy at its 2021 minimum",
+    "value": 16.51,
+    "unit": "% of max stored energy",
+    "source": "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/ear_subsistema_di/EAR_DIARIO_SUBSISTEMA_2021.csv"
+   },
+   {
+    "date": "2021-10-25",
+    "stage": "peak",
+    "type": "action",
+    "actor": "MME/ANEEL",
+    "text": "Emergency simplified auction (PCS 01/2021) contracts 1,221 MW installed / 775.8 MW average of gas plants, supply May 2022-Dec 2025; availability product avg R$1,599.57/MWh",
+    "value": 1221,
+    "unit": "MW installed",
+    "source": "https://www.noticiasagricolas.com.br/noticias/politica-economia/300837-leilao-de-energia-de-reserva-contrata-1-2-gw-com-dominio-de-termicas-a-gasq.html"
+   },
+   {
+    "date": "2022-01-21",
+    "stage": "recovery",
+    "type": "outcome",
+    "actor": "MME",
+    "text": "Demand-reduction programme saved 5.6 million MWh (Sep-Dec 2021)",
+    "value": 5.6,
+    "unit": "TWh",
+    "source": "https://canalsolar.com.br/en/consumidores-terao-bonus-de-r-24-bi-na-conta-de-luz-em-janeiro"
+   },
+   {
+    "date": "2022-01-21",
+    "stage": "recovery",
+    "type": "outcome",
+    "actor": "MME",
+    "text": "Programme paid about R$2.4 billion in bonuses on January 2022 bills",
+    "value": 2.4,
+    "unit": "BRL bn",
+    "source": "https://www.gov.br/mme/pt-br/centrais-de-conteudo/publicacoes/informativo-mme-em-pauta/MMEemPautajaneirocompactado.pdf"
+   },
+   {
+    "date": "2022-01-21",
+    "stage": "recovery",
+    "type": "outcome",
+    "actor": "MME",
+    "text": "MME estimate: replacing the same energy with thermal (UTE Araucaria, R$2,533/MWh) would have cost R$9.6 billion",
+    "value": 9.6,
+    "unit": "BRL bn",
+    "source": "https://canalsolar.com.br/en/consumidores-terao-bonus-de-r-24-bi-na-conta-de-luz-em-janeiro"
+   },
+   {
+    "date": "2022-11-09",
+    "stage": "recovery",
+    "type": "outcome",
+    "actor": "ONS",
+    "text": "Relaxing hydraulic restrictions and transmission limits saved R$26.9 billion in operating cost over 2020-2021",
+    "value": 26.9,
+    "unit": "BRL bn",
+    "source": "https://canalsolar.com.br/en/ons-records-savings-of-R-269-billion-with-measures-adopted-in-the-water-crisis/"
+   }
+  ],
+  "ecuador-2023-24": [
+   {
+    "date": "2022-12-01",
+    "stage": "warning",
+    "type": "warning",
+    "actor": "CENACE",
+    "text": "CENACE report warns the critical drought could last to 2024",
+    "source": "https://www.primicias.ec/economia/cenace-sequia-crisis-electrica-cortes-luz-informes-81910"
+   },
+   {
+    "date": "2024-04-15",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "Government",
+    "text": "Second wave of cuts, 15-30 April 2024",
+    "source": "https://primicias.ec/economia/crisis-electricidad-cortes-luz-resumen2024-86508"
+   },
+   {
+    "date": "2024-08-01",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "CELEC",
+    "text": "Contract with Karpowership: 100 MW power barge, USD 114.39 M, 540 days",
+    "value": 114.39,
+    "unit": "MUSD",
+    "source": "https://primicias.ec/economia/barcaza-turca-karpowership-contrato-celec-75812"
+   },
+   {
+    "date": "2024-09-10",
+    "stage": "escalation",
+    "type": "state",
+    "actor": "CENACE",
+    "text": "Ecuador needs 1,080 MW more firm power",
+    "value": 1080,
+    "unit": "MW",
+    "source": "https://www.primicias.ec/economia/gobierno-barcazas-plan-crisis-electrica-corte-luz-78517"
+   },
+   {
+    "date": "2024-09-16",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "CELEC",
+    "text": "First power barge (100 MW) starts operating",
+    "value": 100,
+    "unit": "MW",
+    "source": "https://primicias.ec/economia/crisis-electricidad-cortes-luz-resumen2024-86508"
+   },
+   {
+    "date": "2024-09-23",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "Government",
+    "text": "Third wave of cuts starts, 4 to 12 h/day",
+    "value": 12,
+    "unit": "h/day (max)",
+    "source": "https://primicias.ec/economia/daniel-noboa-incumple-promesa-cortes-luz-82021"
+   },
+   {
+    "date": "2024-09-30",
+    "stage": "escalation",
+    "type": "outcome",
+    "actor": "Colombia",
+    "text": "Colombia suspends electricity sales to Ecuador (resumed with 417 MW on 17 Nov 2024)",
+    "source": "https://primicias.ec/economia/crisis-electricidad-cortes-luz-resumen2024-86508"
+   },
+   {
+    "date": "2024-10-05",
+    "stage": "escalation",
+    "type": "action",
+    "actor": "CENACE",
+    "text": "CENACE orders up to 100% cuts for industry 08:00-18:00 for at least 15 days",
+    "value": 100,
+    "unit": "% (max, industry)",
+    "source": "https://primicias.ec/economia/camara-racionamiento-energia-sector-industrial-80565"
+   },
+   {
+    "date": "2024-10-25",
+    "stage": "peak",
+    "type": "action",
+    "actor": "Government",
+    "text": "Cuts raised to 14 h/day (announced 24 Oct; 10 h/day until 17 Oct)",
+    "value": 14,
+    "unit": "h/day",
+    "source": "https://primicias.ec/economia/daniel-noboa-incumple-promesa-cortes-luz-82021"
+   },
+   {
+    "date": "2024-12-20",
+    "stage": "recovery",
+    "type": "outcome",
+    "actor": "Government",
+    "text": "Household cuts end; industrial cuts continue ~15 days",
+    "source": "https://www.primicias.ec/economia/horarios-cortes-luz-guayaquil-ultimo-dia-apagones-cnel-19diciembre-85796"
+   },
+   {
+    "date": "2024-12-30",
+    "stage": "recovery",
+    "type": "state",
+    "actor": "CELEC",
+    "text": "Mazar reservoir at 2,124.48 masl, about 14 m above its 2,110 m critical level",
+    "value": 2124.48,
+    "unit": "masl",
+    "source": "https://primicias.ec/economia/crisis-electricidad-cortes-luz-resumen2024-86508"
+   }
+  ],
+  "vietnam-2023": [
+   {
+    "date": "2023-06-06",
+    "stage": "peak",
+    "type": "state",
+    "actor": "MOIT/EVN",
+    "text": "Most large northern reservoirs at dead water level; Lai Chau and Son La below it",
+    "source": "https://en.evn.com.vn/d6/news/Ministry-of-Industry-and-Trade-informs-about-power-supply-situation-in-hot-season-66-163-3527.aspx"
+   },
+   {
+    "date": "2023-06-08",
+    "stage": "peak",
+    "type": "action",
+    "actor": "Government",
+    "text": "Directive 20/CT-TTg on saving electricity, target 2% of output a year 2023-2025",
+    "value": 2,
+    "unit": "%/yr",
+    "source": "https://en.baochinhphu.vn/directive-on-electricity-saving-issued-11123060915043799.htm"
+   },
+   {
+    "date": "2023-06-08",
+    "stage": "peak",
+    "type": "state",
+    "actor": "EVN",
+    "text": "Imports about 4 GWh/day from China and 7 GWh/day from Laos (~1.3% of daily output)",
+    "value": 11,
+    "unit": "GWh/day",
+    "source": "https://www.thestar.com.my/aseanplus/aseanplus-news/2023/06/08/vietnam039s-electricity-imports-increase-but-remain-low-for-demand"
+   },
+   {
+    "date": "2023-06-19",
+    "stage": "peak",
+    "type": "action",
+    "actor": "EVN/China Southern Grid",
+    "text": "China resumes exports via 110 kV Dongxing-Mong Cai line, about 30 GWh/month",
+    "value": 30,
+    "unit": "GWh/month",
+    "source": "https://globaltimes.cn/page/202306/1292852.shtml"
+   }
+  ],
+  "sichuan-2022": [
+   {
+    "date": "2022-08-21",
+    "stage": "peak",
+    "type": "action",
+    "actor": "Sichuan government",
+    "text": "Sichuan's first-ever Level-1 energy-supply emergency response",
+    "source": "https://www.chinanews.com.cn/sh/2022/08-21/9833235.shtml"
+   },
+   {
+    "date": "2022-08-24",
+    "stage": "peak",
+    "type": "state",
+    "actor": "State Grid",
+    "text": "Hydro from natural inflow fell from ~0.9 to ~0.44 TWh/day (>51%); 132 GWh/day sent in over 8 State Grid lines",
+    "value": 132,
+    "unit": "GWh/day imported",
+    "source": "https://www.sfccn.com/2022/8-24/3MMDE0MDdfMTc1NTQ3MA.html"
+   },
+   {
+    "date": "2022-08-30",
+    "stage": "recovery",
+    "type": "outcome",
+    "actor": "State Grid Sichuan",
+    "text": "Normal supply restored to all large-industry and commercial users; hydro capability back to 0.52 TWh/day",
+    "value": 520,
+    "unit": "GWh/day hydro",
+    "source": "https://cbgc.scol.com.cn/news/3693126"
+   }
+  ]
+ }
+}
