@@ -1,6 +1,6 @@
 # Data chat: interface
 
-Owner: team arvin (board hand-off: "Plan dashboard CHAT now owned by team arvin"). Ask on the board before editing `web/src/components/chat/**` or `deploy/plan-worker/chat.js`.
+Owner: team arvin. Ask team arvin before editing `web/src/components/chat/**` or `deploy/plan-worker/chat.js`.
 
 The data chat is one assistant for every page that shows data. It answers questions such as "how is everything looking?" or "what's the risk for Zambia?" from the pipeline's JSON files, and on the Plan page it changes the Kariba 2027 simulator ("we can do A and B but not C, what now?"), re-runs it or the optimizer, and explains the result.
 
@@ -79,4 +79,4 @@ node --test deploy/plan-worker/chat.test.mjs        # server: validation, caps, 
 cd web && npx -y vitest@2.1.9 run tests/chat         # client: tools on real data, plan bridge, offline, loop
 ```
 
-Vitest is not in `package.json` (that file is claimed on the board), so run it with `npx`.
+Vitest is not in `package.json` (Sean's dashboard work is also changing that file), so run it with `npx`.
