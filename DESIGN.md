@@ -282,12 +282,12 @@ All numbers come from `web/public/data/*.json` and were produced by `pipeline/`.
 **Global trend map (GRACE/GRACE-FO 2002-04..2026-08; GPCP rain trend 2002-2019 because GPCP drifts after 2019)**
 - 392 GW of hydropower (37% of 1,053 GW mapped) sits in 221 basins with significantly declining water storage; 343 GW in 108 wetting basins.
 - **Lead with the split:** only **19 GW** of the drying total also saw significantly less rain (2002-2019). The other **373 GW** lost water storage without a rain decline, which points to groundwater pumping, glacier/snow loss or reservoir operations. The story is "the water stored in hydro basins is draining, mostly not because of less rain".
-- **GPCP drift (confirmed):** the median basin GPCP/MERRA-2 ratio steps down to about 0.95 after 2020 (Africa 0.90, Kariba basin 0.65). Independent check: G-REALM shows Kariba rising about 6 m in 2020-21 while GPCP reads those years as dry.
+- **GPCP drift (confirmed):** the median basin GPCP/MERRA-2 ratio steps down to about 0.95 after 2020 (Africa 0.90, Kariba basin 0.65). Independent check: Kariba rose about 3.2 m in the 2020/21 rainy season (enso.json; G-REALM shows a rise of roughly 6 m from the early-2020 low to mid-2021) while GPCP reads those years as dry.
 - **Kariba basin:** no significant long-term rain trend. The storage loss is mostly reservoir drawdown; the risk is year-to-year El Nino swings.
 
 **ENSO fingerprints (GPCP 1981–2025, permutation tests)**
 - **Robust headline: 54 GW of hydropower sits in 9 grids that lose under El Niño in both the full record and a 1981-2019 check that excludes the suspect GPCP years:** Zambia, Zimbabwe, Vietnam, Laos, Nepal, Bhutan, Peru, Honduras, Myanmar. Full record: 58 GW in 12 grids (adds Mozambique, Malawi, Guatemala, which are not robust). Chance alone would give about 2.4 grids.
-- 7 GW sits in 2 La Niña losers (Tajikistan, Guinea). That is not above chance.
+- La Niña: full record 5.8 GW in 1 grid (Tajikistan), which is not above chance. The 1981-2019 check gives 6.7 GW in 2 grids (adds Guinea).
 - The known regional patterns come out as expected: Zambezi dry, southern Brazil wet and Southeast Asia dry under El Niño. Colombia has the right sign but is not significant.
 - **Kariba:** the lake rises 2.1 m less from October to June in El Niño years (p = 0.01, 11 years).
 
@@ -295,7 +295,7 @@ All numbers come from `web/public/data/*.json` and were produced by `pipeline/`.
 - **"Now" ML model:** beats climatology, persistence and ENSO-only at 1–12 months, with Brier skill 0.84 at 1 month, 0.46 at 6 months and 0.03 at 12 months. It **missed 2024**: its first alarm came in Mar 2024, because it expected the usual rainy-season recovery.
 - **"Next" El Niño water-balance ensemble:** first alarm **Jul 2023**, 5 months before ZRA's cut and 8 months before load-shedding. It gave P(below 20%) = 0.8 in Oct–Dec 2023. Its record across El Niño seasons since 1995 is 3 hits, 2 misses and 2 false alarms.
 - **Live forecast** (blend): Dec 2027 median 31% usable, **P(below 10%) = 0.36, P(below 20%) = 0.45**. ZRA's 9% is a plausible dry-side outcome.
-- **Cost of waiting:** illustrative only. Its sign is usually "act early", but its size ranges from $8M to $144M depending on the assumed release rate.
+- **Cost of waiting:** illustrative only. Its sign is usually "act early", but its size ranges from $8M to $145M (kariba.json) depending on the assumed release rate.
 
 **Country monthly model (23 grids + Sichuan, Ember 2015/2019–2026)**
 - **Weak.** Brier skill is 0.03–0.07, small but positive against all baselines. AUC-PR beats climatology only at 1 month. No single NASA input adds significant ranking skill, and GRACE slightly hurts at the country-month level.
@@ -373,3 +373,8 @@ Source: `web/public/data/reservoirs.json` and `docs/RESERVOIRS.md`.
 - **Realistic imports:** about 90 MW in Nov 2023 (Eskom was load-shedding too), rising to about 300 MW by Apr 2024. Holding water is the earliest lever.
 - **IMF:** Zambia's 2024 growth *outturn* was about 4.0%. The 1.2% was the IMF's *forecast* cut, so always say "forecast".
 - **Cutting power:** "8, then 12 hours a day" is robust; "21 hours a day" is news-reported only.
+
+**Kariba El Niño effect: three windows, one message.** "About 2 m less rise in El Niño years, p ≈ 0.01."
+- −2.07 m, p = 0.012: kariba.json, Oct to Jun.
+- −2.24 m, p = 0.008: enso.json and Trend Detective, rainy-season window.
+- −1.7 m, p = 0.02: reservoir watch, its own wet-season window.
