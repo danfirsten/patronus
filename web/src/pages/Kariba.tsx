@@ -1,3 +1,4 @@
+import { Playbook } from '../components/pitch/Playbook';
 import { useEffect, useState } from 'react';
 import { useData, loadText } from '../data/load';
 import type { Kariba, KaribaForecastMonth, Nightlights, NightFrame, SkillRow } from '../data/types';
@@ -357,6 +358,7 @@ export default function KaribaPage() {
       {brief && <BriefPanel text={brief} />}
       </details>
     </div>
+    <div id="what-to-do"><Playbook /></div>
     </>
   );
 }

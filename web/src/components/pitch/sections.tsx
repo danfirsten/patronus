@@ -215,7 +215,7 @@ export interface EnsoCpc { issued_date: string; status: string; synopsis: string
 export interface WatchRow { iso3: string; name: string; risk_level: string | null; p_any_shortfall_6m: number | null; max_p_shortfall: number | null; alarm: boolean }
 export interface Exposure { n: number; gw: number; zmbEffect: number | null }
 
-export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: KaribaLite | null; cpc: EnsoCpc | null; watch: WatchRow[] | null; exposure: Exposure | null; loading: boolean }) {
+export function Next({ kariba, cpc, watch, exposure, loading, teaser = false }: { kariba: KaribaLite | null; cpc: EnsoCpc | null; watch: WatchRow[] | null; exposure: Exposure | null; loading: boolean; teaser?: boolean }) {
   const months = kariba?.forecast?.months ?? [];
   const dec = months.find((m) => m.month === '2027-12');
   const danger = kariba?.thresholds?.danger_usable_pct ?? 10;
@@ -224,7 +224,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
   const hist = (kariba?.history_monthly ?? []).filter((h) => h.month >= '2024-12' && isNum(h.usable_pct));
   const pct = (v: number) => `${fmtNum(v, 0)}%`;
   return (
-    <Section id="pt-next" eyebrow="What is next" title="Lake Kariba, December 2027">
+    <Section id="pt-next" eyebrow="What is next" title={teaser && dec ? <>Kariba 2027: {fmtProb(dec.p_below_danger)} chance of danger</> : "Lake Kariba, December 2027"}>
       {loading ? <Loading what="the Kariba forecast" /> : !dec ? <Missing what="Kariba forecast" /> : (
         <div className="pt-next-grid">
           <InView className="pt-big">
@@ -258,7 +258,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
           </InView>
         </div>
       )}
-
+      {teaser ? <p style={{ marginTop: 24 }}><a className="button" href="#/kariba">See the 2027 forecast</a></p> : <>
       <div className="pt-two">
         <InView>
           <h3 className="pt-h3"><ElNino zmbEffect={exposure?.zmbEffect} /> is here</h3>
@@ -292,6 +292,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
           <p className="pt-small"><a href="#/map/watchlist">Full watchlist</a></p>
         </InView>
       </div>
+      </>}
     </Section>
   );
 }
@@ -374,5 +375,19 @@ export function Audience() {
         <a className="button" href="#/kariba">Open the Kariba forecast</a>
       </InView>
     </Section>
+  );
+}
+
+/** Short close for the landing page: one line, two next steps. */
+export function Close() {
+  return (
+    <section className="pt-section" id="pt-close" aria-label="Next steps">
+      <div className="wrap">
+        <InView className="pt-close">
+          <p className="pt-close-t">The warning existed. <span className="pt-key">Patronus</span> makes it public.</p>
+          <p style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}><a className="button" href="#/app/plan">Open the Plan dashboard</a><a className="button button-ghost" href="#/proof">See the proof</a></p>
+        </InView>
+      </div>
+    </section>
   );
 }

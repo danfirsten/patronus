@@ -1,3 +1,4 @@
+import { Roadmap } from '../components/pitch/Roadmap';
 import ScoreboardPage from './Scoreboard';
 import ModelHow from '../components/proof/ModelHow';
 import { useEffect, useState } from 'react';
@@ -96,6 +97,7 @@ export default function ProofPage() {
   const openModel = useRoute()[1] === 'model';
 
   return (
+    <>
     <div className="wrap page">
       <header className="proof-hero">
         <div>
@@ -244,5 +246,7 @@ export default function ProofPage() {
         <ModelHow />
       </details>
     </div>
+    <Roadmap />
+    </>
   );
 }
