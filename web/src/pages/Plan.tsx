@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, type FormEvent } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { area, line, curveMonotoneX } from 'd3-shape';
 import { useData } from '../data/load';

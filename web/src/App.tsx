@@ -19,7 +19,8 @@ const NAV = [
   ['', 'Overview'],
   ['kariba', 'Kariba 2027'],
   ['map', 'Map'],
-  ['plan', 'Plan'],
+  // Plan dashboard (PR #6 merged; PR #9 carries the newer #/app shell). Until #/app lands here, 'app' aliases to the Plan page.
+  ['app/plan', 'Plan'],
   ['explore', 'Trend Detective'],
   ['app/plan', 'Dashboard'],
   ['proof', 'Proof'],
@@ -29,9 +30,10 @@ const NAV = [
 const ALIAS: Record<string, [string, string]> = {
   scoreboard: ['proof', 'backtest'],
   watchlist: ['map', 'watchlist'],
+  app: ['plan', ''],
 };
 /** Which nav item a page belongs to. */
-const SECTION_OF: Record<string, string> = { story: '', country: 'map' };
+const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'app/plan' };
 
 /** Scroll to an in-page section once it has rendered (data loads async, so retry briefly). */
 function useScrollToSection(id: string | undefined, key: string) {
@@ -138,7 +140,7 @@ export default function App() {
           </button>
         </div>
       </header>
-      <main id="main" tabIndex={-1} ref={mainRef}>
+      <main id="main" tabIndex={-1} ref={mainRef} className={page === undefined ? 'is-landing' : 'is-sub'}>
         <PageShell key={shellKey}>{body}</PageShell>
       </main>
       <footer className="site-footer">

@@ -1,4 +1,5 @@
 import ScoreboardPage from './Scoreboard';
+import ModelHow from '../components/proof/ModelHow';
 import { useEffect, useState } from 'react';
 import { useData, loadData } from '../data/load';
 import type { Ledger, Meta, Source } from '../data/types';
@@ -77,6 +78,7 @@ function VerifyButton({ file, expected }: { file: string; expected?: string }) {
 }
 
 const PROOF_INDEX: [string, string, string][] = [
+  ['model', 'How the model works', 'Data, lags, models, validation design, results and limits.'],
   ['backtest', 'Back-test', 'Five past crises, replayed with only the data available at the time. Hits, misses and false alarms.'],
   ['ledger', 'Forecast ledger', 'Every forecast hashed and time-stamped before the outcome.'],
   ['limits', 'Limits', 'What Patronus cannot do.'],
@@ -115,8 +117,10 @@ export default function ProofPage() {
         </ol>
       </header>
 
+      <ModelHow />
+
       <section id="backtest" className="proof-backtest">
-        <p className="eyebrow">01 · Back-test</p>
+        <p className="eyebrow">02 · Back-test</p>
         <ScoreboardPage embedded />
       </section>
 

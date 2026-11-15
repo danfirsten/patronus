@@ -7,8 +7,9 @@ import { DataSources, type MetaSource } from '../components/pitch/DataSources';
 import { Roadmap } from '../components/pitch/Roadmap';
 import { Person } from '../components/pitch/Person';
 import { Playbook } from '../components/pitch/Playbook';
+import { HeroStory } from '../components/pitch/HeroStory';
 import {
-  Audience, CalledIt, Cost, Hero, Next, Proof,
+  Audience, CalledIt, Cost, Next, Proof,
   type Crisis, type ReservoirSummary, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
 } from '../components/pitch/sections';
 
@@ -27,7 +28,6 @@ export default function Pitch() {
     ? { n: rs.n_reservoirs, scored: rs.n_crises_scored, caught: rs.n_crises_caught, forecast: rs.n_crises_caught_by_forecast } : null;
 
   const rows: ScoreRow[] | null = score.data?.rows ?? null;
-  const karibaRow = rows?.find((r) => r.id === 'kariba-2024') ?? null;
 
   const skill: Skill | null = useMemo(() => {
     const bh: any[] = kariba.data?.backtest?.by_horizon ?? [];
@@ -68,7 +68,7 @@ export default function Pitch() {
 
   return (
     <div className="pt">
-      <Hero kariba={karibaRow} />
+      <HeroStory history={kariba.data?.history ?? null} />
       <Person />
       <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} res={res} />
       <Cost />

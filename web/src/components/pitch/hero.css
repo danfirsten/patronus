@@ -1,0 +1,63 @@
+/*
+ * Pitch hero (HeroStory.tsx). Full-bleed white band, full desktop width (up to 1440 px),
+ * copy left and the Kariba line right; stacked copy-first on phones. Drawdown tokens only;
+ * no gradients, glows or shadows. Motion: opacity, transform and stroke-dashoffset only,
+ * on --dur-* / --ease-* tokens (0 under prefers-reduced-motion via theme.css; the component
+ * also starts at its final stage).
+ */
+.ph { background: var(--bg-elev); border-bottom: 1px solid var(--border-strong); padding: clamp(40px, 6vw, 88px) 0 clamp(40px, 5vw, 72px); overflow: hidden; }
+.ph-wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px); display: grid; gap: clamp(28px, 4vw, 48px); }
+@media (min-width: 1024px) {
+  .ph-wrap { grid-template-columns: minmax(0, 11fr) minmax(0, 13fr); gap: clamp(40px, 5vw, 88px); align-items: center; }
+}
+.ph-copy { min-width: 0; }
+.ph-copy .eyebrow { margin-bottom: 20px; }
+
+/* Headline: three numbered beats; the number matches the chart marker */
+.ph-h1 { margin: 0 0 28px; font-size: clamp(1.75rem, 1rem + 2vw, 2.875rem); line-height: 1.08; letter-spacing: var(--tracking-head); font-weight: 800; color: var(--text); max-width: 24ch; }
+.ph-beat { display: grid; grid-template-columns: 1.15em minmax(0, 1fr); align-items: baseline; opacity: 0; transform: translateY(14px); transition: opacity 360ms var(--ease-expo), transform 360ms var(--ease-expo); }
+.ph-beat + .ph-beat { margin-top: 0.42em; }
+.ph-beat.is-on { opacity: 1; transform: none; }
+.ph-beat-n { font-family: var(--font-mono); font-size: 0.32em; font-weight: 500; letter-spacing: 0; color: var(--water); transform: translateY(-0.6em); display: inline-grid; place-items: center; width: 2.1em; height: 2.1em; border: 1.5px solid currentColor; border-radius: var(--radius-pill); }
+.ph-beat:last-child .ph-beat-t { color: var(--water); }
+
+.ph-after { opacity: 0; transform: translateY(10px); transition: opacity 380ms var(--ease-expo) 120ms, transform 380ms var(--ease-expo) 120ms; }
+.ph-after.is-on { opacity: 1; transform: none; }
+.ph-lede { margin: 0 0 28px; max-width: 46ch; font-size: var(--fs-lg); color: var(--text-muted); }
+.ph-lede strong { color: var(--text); font-weight: 700; }
+
+/* Chart */
+.ph-fig { margin: 0; min-width: 0; }
+.ph-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ph-svg-empty { aspect-ratio: 640 / 400; background: var(--bg-elev-2); border-radius: var(--radius-md); }
+.ph-grid { stroke: var(--border); stroke-width: 1; }
+.ph-axis { font-family: var(--font-mono); font-size: 11px; fill: var(--text-faint); }
+.ph-area { fill: var(--fog); opacity: 0; transition: opacity var(--dur-3) var(--ease-out); }
+.ph-area.is-on { opacity: 1; }
+.ph-line { fill: none; stroke: var(--water); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 700ms var(--ease-inout); }
+.ph-line.is-on { stroke-dashoffset: 0; }
+.ph-line.ph-tail { stroke: var(--shallow); }
+
+.ph-mk { opacity: 0.0; transition: opacity 320ms var(--ease-expo); }
+.ph-mk.is-on { opacity: 1; }
+.ph-mk-rule { stroke: var(--text); stroke-width: 1; stroke-dasharray: 2 3; }
+.ph-mk-dot { fill: var(--bg-elev); stroke: var(--text); stroke-width: 2; transform-box: fill-box; transform-origin: center; transform: scale(0.4); transition: transform 360ms var(--ease-spring), fill var(--dur-2) var(--ease-out); }
+.ph-mk.is-on .ph-mk-dot { transform: scale(1.5); fill: var(--text); }
+.ph-mk-n { font-family: var(--font-mono); font-size: 9px; font-weight: 600; fill: var(--bg-elev); pointer-events: none; }
+.ph-mk-when { font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--tracking-label); text-transform: uppercase; fill: var(--text-muted); }
+.ph-mk-what { font-family: var(--font-sans); font-size: 15px; font-weight: 700; fill: var(--text); }
+.ph-key { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-sm); color: var(--text); }
+.ph-key li { display: flex; align-items: baseline; gap: 8px; opacity: 0.25; transition: opacity 320ms var(--ease-expo); }
+.ph-key li.is-on { opacity: 1; }
+.ph-key-n { flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: var(--radius-pill); background: var(--text); color: var(--bg-elev); font-family: var(--font-mono); font-size: 10px; }
+.ph-key-when { font-family: var(--font-mono); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-muted); min-width: 10.5ch; }
+.ph-cap { margin-top: 12px; font-size: var(--fs-sm); color: var(--text-muted); max-width: 60ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-beat, .ph-after, .ph-key li, .ph-area, .ph-line, .ph-mk, .ph-mk-dot { transition: none; }
+}
+/* Sync: a segment draws for 700 ms, then its marker lights and its beat rises */
+.ph-beat.is-on, .ph-mk.is-on, .ph-mk.is-on .ph-mk-dot, .ph-key li.is-on { transition-delay: 600ms; }
+@media (prefers-reduced-motion: reduce) {
+  .ph-beat.is-on, .ph-mk.is-on, .ph-mk.is-on .ph-mk-dot, .ph-key li.is-on { transition-delay: 0ms; }
+}
