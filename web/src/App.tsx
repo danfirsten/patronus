@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useRoute } from './lib/router';
 import { ReportContext, type DataSource } from './data/load';
 import { SampleBanner, SampleContext } from './components/sample';
@@ -12,6 +12,7 @@ import KaribaPage from './pages/Kariba';
 import ProofPage from './pages/Proof';
 import Explore from './pages/Explore';
 import PlanPage from './pages/Plan';
+const AppShell = lazy(() => import('./app/Shell'));
 
 /** Four top-level destinations. Old routes stay reachable (see ALIAS). */
 const NAV = [
@@ -20,6 +21,7 @@ const NAV = [
   ['map', 'Map'],
   ['plan', 'Plan'],
   ['explore', 'Trend Detective'],
+  ['app/plan', 'Dashboard'],
   ['proof', 'Proof'],
 ] as const;
 
@@ -98,6 +100,7 @@ export default function App() {
     case 'proof': body = <ProofPage />; break;
     case 'explore': body = <Explore />; break;
     case 'plan': body = <PlanPage />; break;
+    case 'app': body = null; break;
     default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the overview</a></p></div>;
   }
   const active = SECTION_OF[page ?? ''] ?? page ?? '';
@@ -106,6 +109,13 @@ export default function App() {
   useAutoReveal(mainRef);
   const [level, setLevel] = useState<number | null>(null);
   const waterline = useMemo(() => ({ level, setLevel }), [level]);
+  if (page === 'app') {
+    return (
+      <PageShell key="app">
+        <Suspense fallback={null}><AppShell view={arg ?? 'plan'} /></Suspense>
+      </PageShell>
+    );
+  }
   return (
     <WaterlineContext.Provider value={waterline}>
       <a className="skip" href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>Skip to content</a>

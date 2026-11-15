@@ -24,7 +24,7 @@ export function summaryText(r: Result) {
   return `By Sep 2027 the lake is most likely at ${m1(r.sepP50)}% usable (${m1(r.sepP10)}% in the driest 1 in 10 years); ${shed}, and up to ${m1(r.peakShedP90)} h/day in the driest years. ${r.nHitFloor} of ${r.years.length} El Niño years hit the minimum operating level.`;
 }
 
-function planLine(p: Plan) {
+export function planLine(p: Plan) {
   const on = ACTIONS.filter((a) => p[a.id].on && p[a.id].possible).map((a) => {
     const s = p[a.id];
     return a.unit ? `${a.title.split(':')[0].split(' (')[0].toLowerCase()} ${s.amount}${a.unit === '%' ? '%' : ' MW'} from ${monthName(s.start)}` : `${a.title.toLowerCase()} from ${monthName(s.start)}`;
@@ -32,12 +32,21 @@ function planLine(p: Plan) {
   return on.length ? on.join('; ') : 'no action';
 }
 
+export function templateExplain(r: Result, p: Plan, changes: string[], opt: OptResult | null) {
+  const parts: string[] = [];
+  if (changes.length) parts.push(`Changed: ${changes.join('; ')}.`);
+  if (opt) parts.push(`Best plan found: ${planLine(p)}.`);
+  parts.push(summaryText(r));
+  parts.push(`Actions cost about ${usd(r.actionCost.total)}; the remaining shortage costs ${usd(r.shortageCost.voll)} at $1/kWh (${usd(r.shortageCost.low)} to ${usd(r.shortageCost.high)} across $0.5–1.5/kWh, ${usd(r.shortageCost.macro)} at $0.13/kWh). Simulation over past El Niño years, not a forecast.`);
+  return parts.join(' ');
+}
+
 // ---------------------------------------------------------------- charts
 
-function FanChart({ r, base, inp }: { r: Result; base: Result; inp: SimInput }) {
+export function FanChart({ r, base, inp, h = 280, mark }: { r: Result; base: Result; inp: SimInput; h?: number; mark?: number }) {
   const [ref, width] = useWidth<HTMLDivElement>(640);
   const [hover, setHover] = useState<number | null>(null);
-  const h = 280, m = { t: 16, r: 16, b: 30, l: 40 };
+  const m = { t: 16, r: 16, b: 30, l: 40 };
   const months = r.months;
   const x = scaleBand<string>().domain(months).range([m.l, width - m.r]).padding(0);
   const cx = (k: number) => (x(months[k]) ?? 0) + x.bandwidth() / 2;
@@ -66,6 +75,7 @@ function FanChart({ r, base, inp }: { r: Result; base: Result; inp: SimInput }) 
         <line x1={m.l} x2={width - m.r} y1={y(danger)} y2={y(danger)} className="plan-th plan-th-danger" />
         <text x={width - m.r - 4} y={y(warn) - 5} textAnchor="end" className="hline-label">{warn}% warning</text>
         <text x={width - m.r - 4} y={y(danger) - 5} textAnchor="end" className="hline-label">{danger}% danger</text>
+        {mark !== undefined && <line x1={cx(mark)} x2={cx(mark)} y1={m.t} y2={h - m.b} className="plan-mark" />}
         {hover !== null && <line x1={cx(hover)} x2={cx(hover)} y1={m.t} y2={h - m.b} className="crosshair" />}
         {months.map((mo, k) => (
           <rect key={mo} x={x(mo)} y={m.t} width={x.bandwidth()} height={h - m.t - m.b} fill="transparent"
@@ -89,10 +99,10 @@ function FanChart({ r, base, inp }: { r: Result; base: Result; inp: SimInput }) 
   );
 }
 
-function ShedChart({ r }: { r: Result }) {
+export function ShedChart({ r, h = 200, mark }: { r: Result; h?: number; mark?: number }) {
   const [ref, width] = useWidth<HTMLDivElement>(640);
   const [hover, setHover] = useState<number | null>(null);
-  const h = 200, m = { t: 14, r: 16, b: 30, l: 40 };
+  const m = { t: 14, r: 16, b: 30, l: 40 };
   const months = r.months;
   const x = scaleBand<string>().domain(months).range([m.l, width - m.r]).padding(0.25);
   const ymax = Math.max(2, Math.ceil(Math.max(...r.shedP90) * 1.15));
@@ -108,6 +118,7 @@ function ShedChart({ r }: { r: Result }) {
             <text x={m.l - 6} y={y(v) + 3} textAnchor="end" className="tick">{v}h</text>
           </g>
         ))}
+        {mark !== undefined && <rect x={(x(months[mark]) ?? 0) - 3} y={m.t} width={x.bandwidth() + 6} height={h - m.t - m.b} className="plan-mark-bg" />}
         {months.map((mo, k) => {
           const bh = y(0) - y(r.shedMean[k]);
           return (
@@ -218,6 +229,55 @@ function CostTable({ r, base }: { r: Result; base: Result }) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------- chat
+
+export interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string }
+
+export const EXAMPLES = [
+  "I can't import power, what should I do?",
+  'We can rent 200 MW of diesel from February, budget $150 million',
+  'Mines refuse to curtail. Best plan?',
+];
+
+export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: Msg[]; busy: boolean }) {
+  const [text, setText] = useState('');
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    const t = text.trim();
+    if (!t || busy) return;
+    setText('');
+    onAsk(t);
+  };
+  return (
+    <section className="panel plan-chat-panel" aria-labelledby="chat-h">
+      <h2 id="chat-h" className="plan-h">Ask the planning assistant</h2>
+      <p className="muted small">Say what you can and cannot do. The assistant changes the simulator, re-runs it, and explains the result using only the simulator's numbers. Runs server-side: Claude when the team's key is set, otherwise Cloudflare Workers AI (Llama 3.3 70B), otherwise a simple phrase parser. No key is exposed in the page.</p>
+      <div className="plan-log" aria-live="polite">
+        {msgs.length === 0 && (
+          <div className="plan-examples">
+            {EXAMPLES.map((ex) => <button key={ex} type="button" className="plan-chip" onClick={() => onAsk(ex)} disabled={busy}>{ex}</button>)}
+          </div>
+        )}
+        {msgs.map((m, i) => (
+          <div key={i} className={`plan-msg plan-msg-${m.role}`}>
+            {m.role === 'assistant' && m.changes && m.changes.length > 0 && (
+              <ul className="plan-changes">{m.changes.map((c) => <li key={c}>{c}</li>)}</ul>
+            )}
+            <p>{m.text}</p>
+            {m.via && <p className="plan-via">{m.via}{m.note ? ` · ${m.note}` : ''}</p>}
+          </div>
+        ))}
+        {busy && <div className="plan-msg plan-msg-assistant"><p className="muted">Re-running the simulator…</p></div>}
+      </div>
+      <form className="plan-form" onSubmit={submit}>
+        <label htmlFor="plan-q" className="sr-only">Your question</label>
+        <input id="plan-q" value={text} onChange={(e) => setText(e.target.value)} placeholder="e.g. I can't import from South Africa, what now?" maxLength={300} autoComplete="off" />
+        <button className="button" type="submit" disabled={busy || !text.trim()}>Ask</button>
+      </form>
+    </section>
   );
 }
 
