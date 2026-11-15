@@ -103,7 +103,7 @@ SOURCES = [
         "provider": "Operador Nacional do Sistema Eletrico (Brazil)", "nasa": False,
         "url": "https://dados.ons.org.br",
         "coverage": "daily", "license": "CC BY (Creative Commons Atribuicao, as listed on the portal)",
-        "use": "Brazil reservoir storage and inflows, as a ground-truth check on the Brazil forecast.",
+        "use": "Tested as a Brazil-only forecast input and NOT adopted (made Brazil forecasts slightly worse under the pre-set test; generation_backtest.json brazil_ons_test). Current storage is shown on the Brazil page for context only.",
     },
     {
         "id": "zra", "name": "Zambezi River Authority: Kariba lake levels, allocations and press statements",
