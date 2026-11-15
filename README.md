@@ -1,3 +1,5 @@
+![Patronus: an early warning for hydropower blackouts. A town's lights go out while the reservoir drops; Dusk sits on the dam.](docs/assets/banner.png)
+
 # Patronus: months to darkness
 
 An independent, public early warning for drought-driven hydropower blackouts, built on NASA Earth observation data.
