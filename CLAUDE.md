@@ -22,7 +22,7 @@ Challenge: **Be An Earth System Trend Detective!** (Advanced). Full text, judgin
 | `DESIGN_SYSTEM.md` | "Drawdown" visual identity. |
 | `pipeline/` | Python pipeline. Run everything: `python3 -m pipeline.run_all`. Writes `web/public/data/*.json`. |
 | `web/` | Vite + React + TS static app. `cd web && npm install && npm run dev`. See `web/README.md`. |
-| `data/reference/` | Hand-collected reference tables (countries, crisis dates, etc.). |
+| `data/reference/` | Checked-in data. `forecast/`: inputs the pipeline reads (countries, Kariba levels, ONI, GRACE box). `remediation/`: crisis actions, costs, ZRA readings. See `docs/DATA-TREE.md`. |
 | `site/` | Team pages: concept brief and direction vote. |
 
 ## Rules

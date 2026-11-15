@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = join(here, '..', 'src', 'fixtures');
-const REF = join(here, '..', '..', 'data', 'reference', 'hydro_dependent_countries_ember.csv');
+const REF = join(here, '..', '..', 'data', 'reference', 'forecast', 'hydro_dependent_countries_ember.csv');
 mkdirSync(join(OUT, 'country'), { recursive: true });
 
 const GEN = '2026-11-15T00:00:00Z';
