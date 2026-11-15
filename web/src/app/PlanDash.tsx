@@ -224,7 +224,7 @@ export default function PlanDash() {
           <Kpi v={`${m1(r.sepP50)}%`} l="Lake, Sep 2027" sub={`P10 ${m1(r.sepP10)}% · no action ${m1(base.sepP50)}%`} />
           <Kpi v={`${m1(r.peakShedMean)} h`} l="Peak extra shedding /day" sub={`P90 ${m1(r.peakShedP90)} h`} />
           <Kpi v={`${m0(r.unservedGwhMean)}`} l="Unserved GWh (mean)" sub={`no action ${m0(base.unservedGwhMean)}`} />
-          <Kpi v={usd(r.actionCost.total)} l="Cost of plan" sub={`total at VoLL $1: ${usd(r.total.voll)}`} />
+          <Kpi v={usd(r.actionCost.total)} l="Cost of plan" sub={`total at VoLL $0.39: ${usd(r.total.voll)}`} />
         </div>
         <div className="card">
           <div className="card-h">Usable storage, P10–P50–P90 <Info label="Storage chart">Month-end usable storage over {r.years.length} El Niño years ({r.years.join(', ')}), from the latest G-REALM satellite level ({inp.start.usable_pct.toFixed(1)}% on {inp.start.date}). Dashed: no action median. Lines: 20% warning, 10% danger.</Info></div>

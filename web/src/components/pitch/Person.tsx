@@ -15,7 +15,7 @@ export function Person() {
         </div>
         <div className="pt-person-story">
           <p className="pt-person-fact">
-            Zambia’s load-shedding began on March 11, 2024,<Fn k="lusakatimes" /> and his power went out for up to 21 hours a day. With no power he could not sell cold drinks, his biggest earner, and could not charge his phone to take mobile payments. He lost about <span className="pt-num pt-person-n">30%</span> of his business.<Fn k="e360" />
+            Zambia’s load-shedding began on March 11, 2024,<Fn k="lusakatimes" /> and his power went out for 8, then 12 hours a day on the official schedule (up to 21 hours were reported). With no power he could not sell cold drinks, his biggest earner, and could not charge his phone to take mobile payments. He lost about <span className="pt-num pt-person-n">30%</span> of his business.<Fn k="e360" />
           </p>
           <blockquote className="pt-person-q">
             <p>“When the lights are off, people think that my shop is closed.”</p>
