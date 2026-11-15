@@ -70,7 +70,8 @@ export function collectNums(o, set = new Set()) {
     return set;
   }
   if (Array.isArray(o)) { o.forEach((v) => collectNums(v, set)); return set; }
-  if (o && typeof o === 'object') Object.values(o).forEach((v) => collectNums(v, set));
+  // keys count too: field names like chance_any_shortfall_6m_pct carry the units the answer may repeat
+  if (o && typeof o === 'object') Object.entries(o).forEach(([k, v]) => { collectNums(k, set); collectNums(v, set); });
   return set;
 }
 

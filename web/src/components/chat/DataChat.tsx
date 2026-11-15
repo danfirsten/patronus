@@ -16,6 +16,22 @@ function suggestions(page: string, plan: boolean): string[] {
   return ['How is everything looking?', "What's the risk for Zambia?", 'Which countries are on alarm?'];
 }
 
+/** Minimal rendering of the model's text: paragraphs, "- " bullets and **bold**. No HTML is injected. */
+function Rich({ text }: { text: string }) {
+  const inline = (t: string) => t.split(/(\*\*[^*]+\*\*)/g).map((part, i) => (part.startsWith('**') && part.endsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : part));
+  const blocks: JSX.Element[] = [];
+  let list: string[] = [];
+  const flush = () => { if (list.length) blocks.push(<ul key={blocks.length} className="chat-list">{list.map((l, i) => <li key={i}>{inline(l)}</li>)}</ul>); list = []; };
+  for (const line of text.split('\n')) {
+    const m = line.match(/^\s*[-*•]\s+(.*)$/);
+    if (m) { list.push(m[1]); continue; }
+    flush();
+    if (line.trim()) blocks.push(<p key={blocks.length} className="chat-text">{inline(line)}</p>);
+  }
+  flush();
+  return <>{blocks}</>;
+}
+
 let docks = 0;
 const dockSubs = new Set<() => void>();
 const useDockCount = () => useSyncExternalStore((f) => { dockSubs.add(f); return () => { dockSubs.delete(f); }; }, () => docks);
@@ -115,9 +131,9 @@ export default function DataChat({ mode = 'floating', page }: DataChatProps) {
           <div key={m.id} className={`chat-msg chat-${m.role}`}>
             <span className="sr-only">{m.role === 'user' ? 'You said:' : 'Assistant:'}</span>
             {m.changes && m.changes.length > 0 && <ul className="chat-changes" aria-label="Simulator changes">{m.changes.map((c, i) => <li key={i}>{c}</li>)}</ul>}
-            <p className="chat-text">{m.text}</p>
+            {m.role === 'assistant' ? <Rich text={m.text} /> : <p className="chat-text">{m.text}</p>}
             {m.warn && <p className="chat-warn">{m.warn}</p>}
-            {m.sources && m.sources.length > 0 && <p className="chat-meta">Data: {m.sources.join(', ')}</p>}
+            {m.sources && m.sources.length > 0 && !/\bSource:/.test(m.text) && <p className="chat-meta">Data: {m.sources.join(', ')}</p>}
             {m.via && <p className="chat-meta">{m.via}</p>}
           </div>
         ))}

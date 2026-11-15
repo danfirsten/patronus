@@ -179,6 +179,7 @@ export function countrySummary(ref: CountryRef, d: { countries: J; watchlist: J;
     enso: (ensoSummary(d.enso, ref.iso3) as J).country,
     trends: trendsSummary(d.trends, ref.iso3),
     has_country_page: !!c.has_country_page,
+    watchlist_horizon_months: Math.max(0, ...((d.watchlist?.countries ?? [])[0]?.months ?? []).map((m: J) => m.horizon ?? 0)) || null,
   };
   if ((ref.iso3 === 'ZMB' || ref.iso3 === 'ZWE') && d.kariba) {
     const k = karibaSummary(d.kariba);

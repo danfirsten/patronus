@@ -47,6 +47,9 @@
 .chat-user { align-self: flex-end; background: var(--accent); color: var(--accent-text); }
 .chat-assistant { align-self: flex-start; background: var(--bg); border: 1px solid var(--border); }
 .chat-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.chat-assistant .chat-text + .chat-text, .chat-list + .chat-text, .chat-text + .chat-list { margin-top: 8px; }
+.chat-list { margin: 0; padding-left: 18px; }
+.chat-list li + li { margin-top: 4px; }
 .chat-pending .chat-text { color: var(--text-muted); }
 .chat-changes { margin: 0 0 6px; padding-left: 18px; font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-muted); }
 .chat-meta { margin: 6px 0 0; font-size: var(--fs-xs); color: var(--text-faint); }

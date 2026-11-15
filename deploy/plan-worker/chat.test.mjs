@@ -86,3 +86,8 @@ test('number check: rounding, percent of probabilities, thousands separators', (
   assert.ok(checkNumbers('36% chance, 1,053 GW by Sep 2027', allowed).ok);
   assert.deepEqual(checkNumbers('40% chance', allowed).bad, ['40']);
 });
+
+test('numbers in tool field names count (e.g. 6-month from *_6m_pct)', () => {
+  const allowed = allowedNumbers([{ role: 'user', content: [{ type: 'tool_result', tool_use_id: 't', content: JSON.stringify({ chance_any_shortfall_6m_pct: 41 }) }] }]);
+  assert.ok(checkNumbers('a 41% chance over the next 6 months', allowed).ok);
+});
