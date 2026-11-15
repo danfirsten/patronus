@@ -55,7 +55,7 @@ export default function Map2D({ geo, scene, onPick, why }: { geo: GeoData; scene
           return <g key={g.id} className="m-gauge" onClick={() => onPick({ kind: 'reservoir', id: g.id })}><rect x={x - 4} y={y - 24} width={8} height={24} /><rect x={x - 4} y={y - (24 * g.value) / 100} width={8} height={(24 * g.value) / 100} className="fill" /></g>;
         })}
       </svg>
-      <span className="globe-backend">2-D map{why ? ` (${why})` : ''}</span>
+      <span className="globe-backend" data-renderer="2d"><b className="r-badge">2D</b> map{why ? ` (${why})` : ''}</span>
     </div>
   );
 }

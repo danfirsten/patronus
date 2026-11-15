@@ -58,7 +58,9 @@
 .globe, .map2d { position: absolute; inset: 0; }
 .globe-canvas { display: block; touch-action: none; }
 .globe-wait { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-on-deep-muted); font-size: 12px; }
-.globe-backend { position: absolute; left: 8px; top: 6px; font: 10px var(--font-mono); color: rgba(232, 241, 244, .6); pointer-events: none; }
+.globe-backend { position: absolute; left: 8px; top: 6px; font: 10px var(--font-mono); color: rgba(232, 241, 244, .6); pointer-events: none; display: inline-flex; align-items: center; gap: 4px; }
+.r-badge { font: 600 9.5px/1 var(--font-mono); padding: 2px 4px; border-radius: 3px; background: var(--shallow); color: var(--ink); letter-spacing: .04em; }
+[data-renderer="2d"] .r-badge { background: var(--ring); }
 .globe-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .globe-label { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 10.5px; line-height: 1; padding: 2px 4px; border-radius: 3px;
   background: rgba(11, 31, 42, .78); color: var(--text-on-deep); }
@@ -166,16 +168,28 @@
   .dash.replay .dash-chat { position: static; transform: none; width: auto; box-shadow: none; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--border); }
   .dash.replay { grid-template-rows: auto; grid-template-areas: "left stage" "chat chat"; height: auto; }
 }
-@media (max-width: 760px) {
+@media (max-width: 767.98px) {
   .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--top) auto minmax(0, 1fr); }
   .app-region { display: none; }
   .app-nav { flex-direction: row; overflow-x: auto; padding: 0; border-right: 0; border-bottom: 1px solid var(--border); }
   .app-nav a { border-left: 0; border-bottom: 2px solid transparent; padding: 8px 10px; white-space: nowrap; }
   .app-nav a.on { border-bottom-color: var(--water); }
+  .app-top { gap: 8px; }
+  .app-back { font-size: 11px; }
+  .app-nav a { padding: 6px 9px; font-size: 12px; }
+  /* phone: globe first, right under the bars; then KPIs + charts, then parameters; chat stays a drawer */
   .dash, .dash.replay { display: flex; flex-direction: column; height: auto; min-height: 0; }
-  .dash-left { overflow: visible; border-right: 0; }
-  .dash-stage { height: 62vh; min-height: 380px; }
-  .insp { top: auto; bottom: 52px; width: calc(100% - 16px); }
+  .dash-stage { order: -1; height: 58vh; height: 58svh; min-height: 320px; flex: none; }
+  .dash-left { order: 0; overflow: visible; border-right: 0; }
+  .dock { order: 1; }
+  .dash-chat { order: 2; }
+  .globe-backend { max-width: calc(100% - 60px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .insp { top: 26px; bottom: auto; width: calc(100% - 16px); max-height: 45%; overflow-y: auto; }
+  .insp:has(> .insp-empty) { display: none; }
+  .stage-bar { gap: 6px; padding: 4px 6px; }
+  .stage-bar input[type=range] { min-width: 90px; }
+  .stage-month { min-width: 0; font-size: 11px; }
+  .stage-bar a.tb { display: none; }
   .ev-feed { top: 28px; }
   .dock { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-bottom: 64px; }
   .dk:nth-child(2) { grid-column: 1 / -1; }

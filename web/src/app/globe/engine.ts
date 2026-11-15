@@ -1,8 +1,9 @@
 /**
- * Patronus globe: three.js WebGPU renderer (falls back to its WebGL2 backend) + TSL Earth shading.
- * Own implementation of the day/night + clouds + atmosphere technique from the three.js
- * webgpu_tsl_earth example (MIT). Textures: NASA Blue Marble / Black Marble derived maps shipped
- * with the three.js examples (MIT; NASA imagery public domain).
+ * Patronus globe. Two renderers share this scene code (one three.js core):
+ *  - WebGPU: WebGPURenderer + TSL Earth (earth-gpu.ts)
+ *  - WebGL:  classic WebGLRenderer + GLSL ShaderMaterial Earth (earth-gl.ts), used on Safari / iOS
+ * Textures: NASA Blue Marble / Black Marble derived maps shipped with the three.js examples
+ * (MIT; NASA imagery public domain), 2048 px on phones / WebKit, 4096 px on desktops.
  *
  * Decision layers: Lake Kariba as a height-field water surface (vertical scale exaggerated) driven
  * by simulated storage, a damped 2-D wave equation that runs when the level changes and settles,
@@ -10,9 +11,21 @@
  * (tube radius by MW) with moving pulses, province fills that darken with demand cuts, plants,
  * rental and solar markers. All numbers come from the simulator; the motion is illustrative.
  */
-import * as THREE from 'three/webgpu';
-import { normalWorld, output, texture, vec3, vec4, normalize, positionWorld, bumpMap, cameraPosition, color, uniform, mix, uv, max, step } from 'three/tsl';
+import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { texSize, type Kind } from './detect';
+
+/** Minimal renderer surface used by the engine (WebGLRenderer and WebGPURenderer both fit). */
+export interface AnyRenderer {
+  domElement: HTMLCanvasElement;
+  setPixelRatio(r: number): void; setSize(w: number, h: number, style?: boolean): void;
+  setAnimationLoop(cb: (() => void) | null): void; render(s: THREE.Scene, c: THREE.Camera): void; dispose(): void;
+}
+export interface EarthTex { day: THREE.Texture; night: THREE.Texture; brc: THREE.Texture }
+export interface EarthBuild {
+  renderer: AnyRenderer; label: string; maxTex: number;
+  earth(tex: EarthTex, sunDir: THREE.Vector3, R: number, onTex: (cb: () => void) => void): THREE.Mesh[];
+}
 
 export type LL = [number, number];
 type Poly = number[][][]; // rings of [lon, lat]
@@ -203,11 +216,11 @@ class Flow {
 }
 
 export class GlobeEngine {
-  renderer!: THREE.WebGPURenderer;
+  renderer!: AnyRenderer;
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
   controls!: OrbitControls;
-  clock = new THREE.Clock();
+  last = 0;
   el: HTMLElement; labels: HTMLDivElement;
   overlay = new THREE.Group(); dyn = new THREE.Group();
   lake: Lake | null = null;
@@ -220,7 +233,9 @@ export class GlobeEngine {
   pickables: THREE.Object3D[] = [];
   onPick: (p: Pick) => void = () => {};
   fly: { t: number; dur: number; p0: THREE.Vector3; p1: THREE.Vector3; t0: THREE.Vector3; t1: THREE.Vector3 } | null = null;
-  running = true; disposed = false; backend = 'webgpu';
+  running = true; disposed = false; backend = '';
+  onLost: (why: string) => void = () => {};
+  reduced = !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   state: SceneState | null = null;
   ro: ResizeObserver; io: IntersectionObserver; visible = true;
 
@@ -233,15 +248,18 @@ export class GlobeEngine {
     this.io = new IntersectionObserver(([e]) => { this.visible = e.isIntersecting; });
   }
 
-  async init(geo: GeoData) {
-    const renderer = new THREE.WebGPURenderer({ antialias: true });
-    await renderer.init();
-    this.backend = (renderer.backend as any)?.isWebGPUBackend ? 'WebGPU' : 'WebGL 2';
+  async init(geo: GeoData, kind: Kind) {
+    const lost = (why: string) => { if (!this.disposed) this.onLost(why); };
+    const b = kind === 'webgpu'
+      ? await (await import('./earth-gpu')).createGPU(this.el, lost)
+      : await (await import('./earth-gl')).createGL(this.el, lost);
+    if (this.disposed) { b.renderer.dispose(); b.renderer.domElement.remove(); throw new Error('disposed'); }
+    const renderer = b.renderer;
+    this.backend = b.label;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     this.renderer = renderer;
-    this.el.prepend(renderer.domElement);
     renderer.domElement.className = 'globe-canvas';
-    this.buildEarth();
+    this.buildEarth(b);
     this.buildOverlay(geo);
     this.scene.add(this.overlay, this.dyn);
     this.controls = new OrbitControls(this.camera, renderer.domElement);
@@ -259,38 +277,29 @@ export class GlobeEngine {
     renderer.setAnimationLoop(() => this.frame());
   }
 
-  buildEarth() {
-    const tl = new THREE.TextureLoader();
-    const day = tl.load('tex/earth_day_4096.jpg'); day.colorSpace = THREE.SRGBColorSpace; day.anisotropy = 8;
-    const night = tl.load('tex/earth_night_4096.jpg'); night.colorSpace = THREE.SRGBColorSpace; night.anisotropy = 8;
-    const brc = tl.load('tex/earth_bump_roughness_clouds_4096.jpg'); brc.anisotropy = 8;
+  buildEarth(b: EarthBuild) {
+    const px = b.maxTex >= 4096 ? texSize() : 2048;
+    const mgr = new THREE.LoadingManager();
+    const done: (() => void)[] = [];
+    let bad = false;
+    mgr.onError = () => { bad = true; };
+    mgr.onLoad = () => { if (!bad) done.forEach((f) => f()); };
+    const tl = new THREE.TextureLoader(mgr);
+    tl.setCrossOrigin('anonymous');
+    const ld = (n: string, srgb: boolean) => {
+      const t = tl.load(`tex/${n}_${px}.jpg`, undefined, undefined, () => console.warn(`globe texture failed: ${n}`));
+      if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 8;
+      return t;
+    };
+    const day = ld('earth_day', true), night = ld('earth_night', true), brc = ld('earth_bump_roughness_clouds', false);
     // sun from the west-north-west of southern Africa: the terminator falls over the Indian Ocean
     const sunDir = ll(-8, 10, 1).normalize();
     const sun = new THREE.DirectionalLight('#ffffff', 2.2);
     sun.position.copy(sunDir.clone().multiplyScalar(5));
     this.scene.add(sun, new THREE.AmbientLight('#ffffff', 0.25));
 
-    const dayAtmo = uniform(color('#5fa9d6')), twilight = uniform(color('#a85a2a'));
-    const view = positionWorld.sub(cameraPosition).normalize();
-    const fres = view.dot(normalWorld).abs().oneMinus().toVar();
-    const sunO = normalWorld.dot(normalize(vec3(sunDir.x, sunDir.y, sunDir.z))).toVar();
-    const atmoCol = mix(twilight, dayAtmo, sunO.smoothstep(-0.25, 0.75));
-    const mat = new THREE.MeshStandardNodeMaterial();
-    const clouds = texture(brc, uv()).b.smoothstep(0.2, 1);
-    mat.colorNode = mix(texture(day), vec3(1), clouds.mul(1.6));
-    // ocean is low roughness in the G channel: specular sun glint on water, matte land and clouds
-    mat.roughnessNode = max(texture(brc).g, step(0.01, clouds)).remap(0, 1, uniform(0.22), uniform(0.4));
-    const dayK = sunO.smoothstep(-0.25, 0.5);
-    let out = mix(texture(night).rgb, output.rgb, dayK);
-    out = mix(out, atmoCol, sunO.smoothstep(-0.5, 1).mul(fres.pow(2)).clamp(0, 1));
-    mat.outputNode = vec4(out, output.a);
-    mat.normalNode = bumpMap(max(texture(brc).r, clouds));
-    const sph = new THREE.SphereGeometry(R, 96, 96);
-    this.scene.add(new THREE.Mesh(sph, mat));
-    const atmo = new THREE.MeshBasicNodeMaterial({ side: THREE.BackSide, transparent: true, depthWrite: false });
-    atmo.outputNode = vec4(atmoCol, fres.remap(0.73, 1, 1, 0).pow(3).mul(sunO.smoothstep(-0.5, 1)));
-    const am = new THREE.Mesh(sph, atmo); am.scale.setScalar(1.035);
-    this.scene.add(am);
+    for (const m of b.earth({ day, night, brc }, sunDir, R, (cb) => done.push(cb))) this.scene.add(m);
   }
 
   lineMat(col: number, op: number) { return new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op, depthWrite: false }); }
@@ -462,6 +471,7 @@ export class GlobeEngine {
   }
 
   flyTo(at: LL, dist = 0.42, dur = 2.6, tilt = 0.75) {
+    if (this.reduced) dur = 0.01;
     const t1 = ll(at[0], at[1], R);
     const n = t1.clone().normalize();
     const south = new THREE.Vector3(0, -1, 0).projectOnPlane(n).normalize();
@@ -494,7 +504,9 @@ export class GlobeEngine {
 
   frame() {
     if (this.disposed || !this.visible || document.hidden) return;
-    const dt = Math.min(0.05, this.clock.getDelta());
+    const now = performance.now();
+    const dt = this.last ? Math.min(0.05, (now - this.last) / 1000) : 0.016;
+    this.last = now;
     if (this.fly) {
       this.fly.t += dt;
       const k = Math.min(1, this.fly.t / this.fly.dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
@@ -529,6 +541,7 @@ export class GlobeEngine {
     this.controls?.dispose();
     this.renderer?.dispose();
     this.renderer?.domElement.remove();
+    (this.renderer as any)?.forceContextLoss?.();
     this.labels.remove();
   }
 }
