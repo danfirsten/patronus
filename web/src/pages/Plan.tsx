@@ -24,7 +24,7 @@ export function summaryText(r: Result) {
   return `By Sep 2027 the lake is most likely at ${m1(r.sepP50)}% usable (${m1(r.sepP10)}% in the driest 1 in 10 years); ${shed}, and up to ${m1(r.peakShedP90)} h/day in the driest years. ${r.nHitFloor} of ${r.years.length} El Niño years hit the minimum operating level.`;
 }
 
-function planLine(p: Plan) {
+export function planLine(p: Plan) {
   const on = ACTIONS.filter((a) => p[a.id].on && p[a.id].possible).map((a) => {
     const s = p[a.id];
     return a.unit ? `${a.title.split(':')[0].split(' (')[0].toLowerCase()} ${s.amount}${a.unit === '%' ? '%' : ' MW'} from ${monthName(s.start)}` : `${a.title.toLowerCase()} from ${monthName(s.start)}`;
@@ -32,7 +32,7 @@ function planLine(p: Plan) {
   return on.length ? on.join('; ') : 'no action';
 }
 
-function templateExplain(r: Result, p: Plan, changes: string[], opt: OptResult | null) {
+export function templateExplain(r: Result, p: Plan, changes: string[], opt: OptResult | null) {
   const parts: string[] = [];
   if (changes.length) parts.push(`Changed: ${changes.join('; ')}.`);
   if (opt) parts.push(`Best plan found: ${planLine(p)}.`);
@@ -43,10 +43,10 @@ function templateExplain(r: Result, p: Plan, changes: string[], opt: OptResult |
 
 // ---------------------------------------------------------------- charts
 
-function FanChart({ r, base, inp }: { r: Result; base: Result; inp: SimInput }) {
+export function FanChart({ r, base, inp, h = 280, mark }: { r: Result; base: Result; inp: SimInput; h?: number; mark?: number }) {
   const [ref, width] = useWidth<HTMLDivElement>(640);
   const [hover, setHover] = useState<number | null>(null);
-  const h = 280, m = { t: 16, r: 16, b: 30, l: 40 };
+  const m = { t: 16, r: 16, b: 30, l: 40 };
   const months = r.months;
   const x = scaleBand<string>().domain(months).range([m.l, width - m.r]).padding(0);
   const cx = (k: number) => (x(months[k]) ?? 0) + x.bandwidth() / 2;
@@ -75,6 +75,7 @@ function FanChart({ r, base, inp }: { r: Result; base: Result; inp: SimInput }) 
         <line x1={m.l} x2={width - m.r} y1={y(danger)} y2={y(danger)} className="plan-th plan-th-danger" />
         <text x={width - m.r - 4} y={y(warn) - 5} textAnchor="end" className="hline-label">{warn}% warning</text>
         <text x={width - m.r - 4} y={y(danger) - 5} textAnchor="end" className="hline-label">{danger}% danger</text>
+        {mark !== undefined && <line x1={cx(mark)} x2={cx(mark)} y1={m.t} y2={h - m.b} className="plan-mark" />}
         {hover !== null && <line x1={cx(hover)} x2={cx(hover)} y1={m.t} y2={h - m.b} className="crosshair" />}
         {months.map((mo, k) => (
           <rect key={mo} x={x(mo)} y={m.t} width={x.bandwidth()} height={h - m.t - m.b} fill="transparent"
@@ -98,10 +99,10 @@ function FanChart({ r, base, inp }: { r: Result; base: Result; inp: SimInput }) 
   );
 }
 
-function ShedChart({ r }: { r: Result }) {
+export function ShedChart({ r, h = 200, mark }: { r: Result; h?: number; mark?: number }) {
   const [ref, width] = useWidth<HTMLDivElement>(640);
   const [hover, setHover] = useState<number | null>(null);
-  const h = 200, m = { t: 14, r: 16, b: 30, l: 40 };
+  const m = { t: 14, r: 16, b: 30, l: 40 };
   const months = r.months;
   const x = scaleBand<string>().domain(months).range([m.l, width - m.r]).padding(0.25);
   const ymax = Math.max(2, Math.ceil(Math.max(...r.shedP90) * 1.15));
@@ -117,6 +118,7 @@ function ShedChart({ r }: { r: Result }) {
             <text x={m.l - 6} y={y(v) + 3} textAnchor="end" className="tick">{v}h</text>
           </g>
         ))}
+        {mark !== undefined && <rect x={(x(months[mark]) ?? 0) - 3} y={m.t} width={x.bandwidth() + 6} height={h - m.t - m.b} className="plan-mark-bg" />}
         {months.map((mo, k) => {
           const bh = y(0) - y(r.shedMean[k]);
           return (
@@ -232,15 +234,15 @@ function CostTable({ r, base }: { r: Result; base: Result }) {
 
 // ---------------------------------------------------------------- chat
 
-interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string }
+export interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string }
 
-const EXAMPLES = [
+export const EXAMPLES = [
   "I can't import power, what should I do?",
   'We can rent 200 MW of diesel from February, budget $150 million',
   'Mines refuse to curtail. Best plan?',
 ];
 
-function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: Msg[]; busy: boolean }) {
+export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: Msg[]; busy: boolean }) {
   const [text, setText] = useState('');
   const submit = (e: FormEvent) => {
     e.preventDefault();

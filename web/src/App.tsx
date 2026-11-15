@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useRoute } from './lib/router';
 import { ReportContext, type DataSource } from './data/load';
 import { SampleBanner, SampleContext } from './components/sample';
@@ -11,14 +11,14 @@ import CountryPage from './pages/Country';
 import KaribaPage from './pages/Kariba';
 import ScoreboardPage from './pages/Scoreboard';
 import ProofPage from './pages/Proof';
-import PlanPage from './pages/Plan';
+const AppShell = lazy(() => import('./app/Shell'));
 
 const NAV = [
   ['', 'Story'],
   ['map', 'Map'],
   ['watchlist', 'Watchlist'],
   ['kariba', 'Kariba'],
-  ['plan', 'Plan'],
+  ['app/plan', 'Dashboard'],
   ['scoreboard', 'Scoreboard'],
   ['proof', 'Proof'],
 ] as const;
@@ -50,6 +50,19 @@ function PageShell({ children }: { children: ReactNode }) {
 export default function App() {
   const route = useRoute();
   const [page, arg] = route;
+  // #/plan moved into the dashboard
+  useEffect(() => { if (page === 'plan') window.location.replace('#/app/plan'); }, [page]);
+  const mainRef = useRef<HTMLElement>(null);
+  useAutoReveal(mainRef);
+  const [level, setLevel] = useState<number | null>(null);
+  const waterline = useMemo(() => ({ level, setLevel }), [level]);
+  if (page === 'app' || page === 'plan') {
+    return (
+      <PageShell key="app">
+        <Suspense fallback={null}><AppShell view={page === 'plan' ? 'plan' : arg ?? 'plan'} /></Suspense>
+      </PageShell>
+    );
+  }
   let body: ReactNode;
   switch (page) {
     case undefined: body = <Home />; break;
@@ -59,14 +72,9 @@ export default function App() {
     case 'kariba': body = <KaribaPage />; break;
     case 'scoreboard': body = <ScoreboardPage />; break;
     case 'proof': body = <ProofPage />; break;
-    case 'plan': body = <PlanPage />; break;
     default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the story</a></p></div>;
   }
   const active = page === 'country' ? 'watchlist' : page ?? '';
-  const mainRef = useRef<HTMLElement>(null);
-  useAutoReveal(mainRef);
-  const [level, setLevel] = useState<number | null>(null);
-  const waterline = useMemo(() => ({ level, setLevel }), [level]);
   return (
     <WaterlineContext.Provider value={waterline}>
       <a className="skip" href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>Skip to content</a>
