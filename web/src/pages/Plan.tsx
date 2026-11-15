@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { area, line, curveMonotoneX } from 'd3-shape';
 import { useData } from '../data/load';
@@ -237,13 +237,15 @@ function CostTable({ r, base }: { r: Result; base: Result }) {
 export interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string }
 
 export const EXAMPLES = [
-  "I can't import power, what should I do?",
+  "We can't import power. What should we do?",
   'We can rent 200 MW of diesel from February, budget $150 million',
   'Mines refuse to curtail. Best plan?',
 ];
 
 export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: Msg[]; busy: boolean }) {
   const [text, setText] = useState('');
+  const logRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { const el = logRef.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }); }, [msgs.length, busy]);
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const t = text.trim();
@@ -255,7 +257,7 @@ export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: 
     <section className="panel plan-chat-panel" aria-labelledby="chat-h">
       <h2 id="chat-h" className="plan-h">Ask the planning assistant</h2>
       <p className="muted small">Say what you can and cannot do. The assistant changes the simulator, re-runs it, and explains the result using only the simulator's numbers. Runs server-side: Claude when the team's key is set, otherwise Cloudflare Workers AI (Llama 3.3 70B), otherwise a simple phrase parser. No key is exposed in the page.</p>
-      <div className="plan-log" aria-live="polite">
+      <div className="plan-log" aria-live="polite" ref={logRef}>
         {msgs.length === 0 && (
           <div className="plan-examples">
             {EXAMPLES.map((ex) => <button key={ex} type="button" className="plan-chip" onClick={() => onAsk(ex)} disabled={busy}>{ex}</button>)}
@@ -271,6 +273,11 @@ export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: 
           </div>
         ))}
         {busy && <div className="plan-msg plan-msg-assistant"><p className="muted">Re-running the simulator…</p></div>}
+        {!busy && msgs.length > 0 && (() => {
+          const asked = new Set(msgs.filter((m) => m.role === 'user').map((m) => m.text));
+          const next = EXAMPLES.find((ex) => !asked.has(ex));
+          return next ? <div className="plan-examples plan-next"><button type="button" className="plan-chip" onClick={() => onAsk(next)}>{next}</button></div> : null;
+        })()}
       </div>
       <form className="plan-form" onSubmit={submit}>
         <label htmlFor="plan-q" className="sr-only">Your question</label>
