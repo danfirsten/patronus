@@ -35,7 +35,7 @@ The pace is about 150 words a minute. The 3-minute script is 435 words; the 2-mi
 | 4 | How it works | B | 27 | 1:26 | "Here's how. We read three NASA datasets." |
 | 5 | 2027: the window is open (+ demo) | C | 35 | 2:01 | "The earlier you start, the gentler it is." (keep 22% vs 73%) |
 | 6 | Check us | C | 21 | 2:22 | "And every forecast is hashed and timestamped…" |
-| 7 | Who it's for, and the ask | C | 31 | 2:53 | The 26¢ vs 17¢ sentence |
+| 7 | Who it's for, and the ask | C | 31 | 2:53 | "Today they find out when the lake is already low." (keep the $150–300M line) |
 | | Buffer | | 7 | 3:00 | |
 
 **Checkpoints:** slide 2 done by **0:45**, slide 4 by **1:30**, slide 7 starts by **2:25**.
@@ -73,7 +73,7 @@ The pace is about 150 words a minute. The 3-minute script is 435 words; the 2-mi
 
 **6 · C.** Don't just trust us. Check us. We ran the same method, unchanged, on 31 reservoirs on 4 continents. It flagged 14 of 17 past power crises; 8 of them came while the lake still looked fine. We show the 3 we missed. And every forecast is hashed and timestamped before the outcome.
 
-**7 · C.** Our customer is the power planner at ZESCO, Zambia's utility. Today they find out when the lake is already low, and buy emergency power at 26 cents a kilowatt-hour instead of contracted imports at 17. With Patronus they know how much time they have, and what acting now buys them. Hospitals, factories and families get a schedule instead of a surprise. Our ask: help us run a 2027 pilot alongside the river authority and ZESCO. Patronus. Months of warning, not minutes.
+**7 · C.** Our customer is the power planner at ZESCO, Zambia's utility. Today they find out when the lake is already low. In 2024, acting when our alarm fired could have saved on the order of 150 to 300 million dollars. With Patronus they know how much time they have, and what acting now buys them. Hospitals, factories and families get a schedule instead of a surprise. Our ask: help us run a 2027 pilot alongside the river authority and ZESCO. Patronus. Months of warning, not minutes.
 
 ### 2-minute script
 1. **A:** We're Patronus. We give countries that run on hydropower months of warning before the lights go out.
@@ -91,7 +91,7 @@ The pace is about 150 words a minute. The 3-minute script is 435 words; the 2-mi
 4. **B:** GRACE-FO, altimetry, MERRA-2 → Sen's slope + Mann-Kendall → replay El Niño years. Trend Detective.
 5. **C:** El Niño now; allocation cut by more than a third → about 1 in 3 → 30% cut from Jan → 2 in 11. 22% from Dec vs 73% from Sep.
 6. **C:** 31 lakes, 4 continents, 14 of 17, 8 truly early. Misses shown. Timestamped.
-7. **C:** ZESCO planner. "How much time I have, and what acting now buys me." Pilot 2027. Months of warning, not minutes.
+7. **C:** ZESCO planner. Acting at the alarm: ~$150–300M saved (range). "How much time I have, and what acting now buys me." Pilot 2027. Months of warning, not minutes. (The 2-minute version skips the dollar line.)
 
 ### Say / never say
 | Say | Never say |
@@ -107,10 +107,10 @@ The pace is about 150 words a minute. The 3-minute script is 435 words; the 2-mi
 | Ecuador = "it keeps happening" | "we'd have caught Ecuador" |
 | "our hypothesis is…" for customers and payment | "ZESCO wants this" |
 
-## 4. Q&A drill (15 s each, then bridge back to Kariba)
+## 4. Q&A drill: the 16 hardest questions (15 s each, then bridge back to Kariba)
 | # | Question | Who | Answer | Bridge |
 |---|---|---|---|---|
-| 1 | **Who pays?** | C | Hypothesis: the public warning stays free; a utility or a development lender pays for a version run on its own data. One month of 300 MW of emergency power cost Zambia about $51M. We haven't talked to a customer yet; the pilot is how we find out. | "That $51M a month is the price of finding out late." |
+| 1 | **Who pays?** | C | Hypothesis: the public warning stays free; a utility or a development lender pays for a version run on its own data. Acting on our July 2023 alarm could have saved Zambia on the order of $150–300M in 2024 (Sean's counterfactual). We haven't talked to a customer yet; the pilot is how we find out. | "That $150–300M is the price of finding out late." |
 | 2 | **Why not ZRA's projection?** | C | ZRA gives one number: 9% at end-2027. We give the odds around it (median 31%, about 1 in 3 below 10%), and their 9% sits inside our range. We also show what a cut buys. ZRA is our decision partner. | "A single number can't tell a planner how much time they have. Odds can." |
 | 3 | **Moat?** | C | The data is open, so the moat isn't data. It's a method fixed before scoring and tested on 31 lakes, plus a public, timestamped track record that compounds, and the decision layer on top. | "2027 is our first live test, already timestamped." |
 | 4 | **How accurate?** | B | Kariba alarm in Jul 2023, 5 months early. Since 1995: 3 hits, 2 misses, 2 false alarms. 31 reservoirs: 14 of 17 flagged, 8 truly early. Brier skill 0.38 vs climatology at 3 months. | "The misses are on the page next to the hits." |
@@ -120,10 +120,11 @@ The pace is about 150 words a minute. The 3-minute script is 435 words; the 2-mi
 | 8 | **6 of 14 already low?** | B | Right. A "lake already low" rule gets 12 of 17. Ours adds Ghana 2006 and Venezuela 2009 and warns earlier on six more. The honest claim is 8 of 17 truly early. | "Kariba 2024 is the clean case: July 2023." |
 | 9 | **Why trust a hackathon tool?** | A | It shouldn't, blindly. Hashed, timestamped forecasts; misses on the page; open code and data. 2027 is a public test. | "Check us in December 2027." |
 | 10 | **Weak country model?** | B | Labelled experimental, on purpose. The claims rest on the reservoir models, which beat climatology and persistence on unseen data. | "The Kariba claim stands on the reservoir model." |
-| 11 | **Is the cost real?** | C | Prices are real (ZESCO filing: 17¢ vs 26¢). Sean's counterfactual says acting in Jul 2023 saves about $150–300M in the central case, about break-even at the low assumption. | "What we're sure of is the timing: a 22% trim from December, or a 73% slash from September." |
+| 11 | **Is the $150–300M real? / Is the cost model real?** | C | It's a counterfactual from Sean's analysis: acting in Jul 2023 instead of what happened, with realistic import availability and a measured value of lost load (central $0.39/kWh; range $0.14–0.76). At $0.14/kWh it's roughly break-even to a small cost (−$0.03 to −0.19bn). The simulator's 2027 dollar figures are illustrative. So it's a range, and we lead with time and water. | "What we're sure of is the timing: a 22% trim from December, or a 73% slash from September." |
 | 12 | **Talked to ZESCO/ZRA?** | A | Not yet; it's a weekend build. The first step is one conversation with ZESCO planning and a 2027 pilot next to their own numbers. | "The forecast is public, so they can check it first." |
 | 13 | **How is this the challenge?** | B | Trend Detective: 9 NASA variables × 107 regions, seasonal cycle removed, Sen's slope with a 95% interval, Mann-Kendall, FDR on the map. Three guided demos. 392 GW of hydro sits in significantly drying basins. | "For Kariba the threat isn't a steady slide. It's El Niño." |
 | 14 | **6 more months / scale?** | C | Add SWOT for lakes we can't see (Ecuador, Vietnam), pilot with one utility, backtest with archived El Niño forecasts, work on the Kariba 2015/2019 misses. Already runs on 31 reservoirs, no logins. | "First stop is still Kariba 2027." |
+| 16 | **Could Zambia even have bought power in 2023?** | C | Only a little at first. Realistic regional imports were about 90 MW in Nov 2023, because Eskom was load-shedding too, rising to about 300 MW by Apr 2024. That's why the earliest lever is holding water in the lake, which costs nothing to start. | "A 22% trim from December beats a 73% slash in September." |
 | 15 | **AI use?** | A | Yes, for research, critique and coding. The concept, choices and checks are ours; AI-written material is labelled. | "Every number traces to a source on the Proof page." |
 
 **Drill these first:** #1, #2, #4, #5 and #12.
@@ -197,7 +198,7 @@ Feature freeze is at 3 PM. **Submit by 9 PM** (the deadline is 11:59 PM local).
 
 ## 7. Weak points and fixes
 1. **"Months to darkness" with no months number.** The Kariba page's first month with a ≥1-in-3 chance below 10% is about Oct 2027, roughly 11 months away. Optional slide-5 line: "On today's numbers, Zambia has about 11 months." Check it on screen first.
-2. **The customer is unvalidated** and "who pays" is a hypothesis. Say so first; the ask is a pilot.
+2. **The customer is unvalidated** and "who pays" is a hypothesis. Say so first; the ask is a pilot. Anchor "who pays" on the $150–300M range (central case), with the low-case caveat ready.
 3. **Simulator traps** (the 1.5 TWh sentence; the cost tile rising with the cut). Stop the demo on "4 in 11 → 2 in 11".
 4. **The Overview page says "up to 21 hours a day"** (news only). Have the prepared answer ready.
 5. **NOAA odds:** use "above 79%" (12 Nov CPC). DESIGN §8 is now aligned.

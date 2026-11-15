@@ -366,3 +366,10 @@ Source: `web/public/data/reservoirs.json` and `docs/RESERVOIRS.md`.
   - Leads are capped at 12 months by the scoring window. Over all seasons there are 219 hit episodes, 26 missed and 64 false-alarm runs.
 - **Honest wording:** "Applied unchanged to 31 reservoirs, the method flagged 14 of 17 past hydro crises on 4 continents before they began. In 8 of them the alarm came before the lake had dropped below its warning level." Do not present the reservoir-watch Kariba 2024 catch as the same result as the Jul 2023 El Niño alarm: by percentile, Kariba was already low from 2022.
 - **Live (issued 2026-11-15):** already below warning are Cahora Bassa (12th percentile), Kainji, La Vueltosa and Srisailam. Next most at risk: Toktogul (0.69), Three Gorges (0.67, only 3 analogs), São Simão (0.57) and Xiaowan (0.50). Kariba is 0.45 under El Niño analogs.
+
+**Kariba 2024 counterfactual and value of lost load (Sean's `docs/VOLL.md`, Future Detector repo; Nov 15)**
+- **Counterfactual:** acting when the Patronus alarm fired (Jul 2023), instead of what actually happened, would have saved about **$150–300M** in the central case. The low case (VoLL $0.14/kWh) is roughly break-even to a small cost (−$0.03 to −0.19bn). Pitch it as a range, credited to the counterfactual; time and power stay the lead.
+- **Measured value of lost load:** $0.14 / $0.39 / $0.76 per kWh (low / central / high). Our simulator's illustrative cost line still uses $1.00/kWh and should be aligned.
+- **Realistic imports:** about 90 MW in Nov 2023 (Eskom was load-shedding too), rising to about 300 MW by Apr 2024. Holding water is the earliest lever.
+- **IMF:** Zambia's 2024 growth *outturn* was about 4.0%. The 1.2% was the IMF's *forecast* cut, so always say "forecast".
+- **Cutting power:** "8, then 12 hours a day" is robust; "21 hours a day" is news-reported only.
