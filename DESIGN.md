@@ -104,7 +104,7 @@ Backbone: Google Earth Engine, with `earthaccess` as a fallback.
   - Cuts rose to 14 h/day on Oct 24, 2024.
   - **Do not say** "warned in January, nothing until April." That claim is unconfirmed.
 - **Kariba:** the 2027 power allocation was cut 36% (36 → 23 BCM). Usable storage was 36.7% on 14 Oct 2026. ZRA projects 9% at the end of 2027 if the full allocation is used.
-- **ENSO:** NOAA (Oct 2026) puts the odds above 83% of a strong-to-very-strong El Niño through Jan–Mar 2027. SARCOF expects below-normal rain over most of central and southern SADC, Zambia and Zimbabwe included, in Jan–Mar 2027.
+- **ENSO:** NOAA puts the odds of a strong-to-very-strong El Niño through Jan–Mar 2027 above 79% (CPC discussion of 12 Nov 2026; the Oct issue said above 83%). Use "above 79%" on slides. SARCOF expects below-normal rain over most of central and southern SADC, Zambia and Zimbabwe included, in Jan–Mar 2027.
 - **Projections:** extreme El Niños roughly double, from about once every 20 years to about once a decade (Cai et al. 2014), and keep rising after warming stabilizes (Wang et al. 2017, Nature Climate Change).
 - **Corrections (Nov 14):** Brazil 2021 had no rationing, and its "50%" was the tariff surcharge, not bills. Ecuador's late-2024 drought was ENSO-neutral. Zambia's "21 h/day" is news-only. See section 11.7 for the checked versions.
 
