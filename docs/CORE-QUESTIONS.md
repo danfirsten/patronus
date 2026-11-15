@@ -1,5 +1,7 @@
 # Patronus: core questions
 
+> **Update (Nov 15, from Dan):** no single named customer and no sales ask. Patronus is pitched as a free, open hackathon tool that *could be used by* utilities, river authorities and energy ministries in hydro-dependent countries. ZESCO is fine as one concrete example. The pitch wording in `docs/PITCH-PREP.md` overrides the customer and "ask" wording below.
+
 This is the one story for the whole team: rehearse from it. Every number has its source in brackets. Nov 14, 2026. Built by the core-questions sub-thread and checked by MAIN.
 
 **The story in one breath:** In 2024 Lake Kariba ran almost dry and Zambia's lights went out. NASA satellites saw it coming. Patronus turns that NASA water data into a warning that tells a power utility how much time it has and what acting now buys it. A very strong El Niño is under way right now, and the 2027 warning is live.

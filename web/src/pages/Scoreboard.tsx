@@ -37,7 +37,10 @@ function AlarmCell({ v, onset }: { v: unknown; onset?: string | null }) {
 const nowOf = (r: any) => r.now_alarm !== undefined ? r.now_alarm : r.patronus_alarm;
 const nextOf = (r: any) => r.next_alarm;
 
-export default function ScoreboardPage() {
+/** Back-test of past crises. `embedded` renders it as a section inside Proof (#/proof/backtest). */
+export default function ScoreboardPage({ embedded = false }: { embedded?: boolean }) {
+  const H = embedded ? 'h2' : 'h1';
+  const H2 = embedded ? 'h3' : 'h2';
   const s = useData<Scoreboard>('scoreboard.json');
   const cr = useData<Crises>('crises.json');
   const gb = useData<GenBacktest>('generation_backtest.json');
@@ -56,9 +59,9 @@ export default function ScoreboardPage() {
   const sSum: any = (s.data as any)?.summary;
 
   return (
-    <div className="wrap page">
-      <p className="eyebrow">Crisis scoreboard</p>
-      <h1>Would Patronus have seen them coming?</h1>
+    <div className={embedded ? 'embed' : 'wrap page'}>
+      {!embedded && <p className="eyebrow">Crisis scoreboard</p>}
+      <H className={embedded ? 'embed-title' : undefined}>Would Patronus have seen them coming?</H>
       <p className="lede">
         We re-ran the pipeline on five past crises as if we were living through them, using only data that had been published by each date.
         We report misses and false alarms next to hits. The five crises are illustrations; the main test runs on thousands of country-months.
@@ -162,7 +165,7 @@ export default function ScoreboardPage() {
         </>
       )}
 
-      <h2 className="section-title">Skill across all countries and months</h2>
+      <H2 className="section-title">Skill across all countries and months</H2>
       {gb.loading ? <Loading /> : !gb.data ? <Empty>Backtest summary not available yet.</Empty> : <BacktestBlock g={gb.data} />}
     </div>
   );
