@@ -81,3 +81,6 @@
   .plan-msg { max-width: 100%; }
   .plan-table td, .plan-table th { font-size: var(--fs-xs); }
 }
+.plan-next { margin-top: 10px; }
+.plan-next .plan-chip { border-color: var(--water); border-width: 2px; }
+.app-plan .dash-chat .plan-chip { font-size: 15px; }
