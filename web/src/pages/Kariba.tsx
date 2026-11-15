@@ -81,13 +81,12 @@ export default function KaribaPage() {
       <div className="wrap k-hero-grid">
       <div>
       <p className="eyebrow">Kariba 2027 · Zambia and Zimbabwe</p>
-      <h1>Lake Kariba: 2024 replay and 2027 forecast</h1>
+      <h1>Will Zambia's lights stay on in 2027?</h1>
       <p className="lede">
-        Kariba is the largest man-made reservoir in the world. Its two power stations supply much of the electricity in Zambia and Zimbabwe.
-        In 2024 an El Niño drought drained it to 2.89% usable storage. Zambia cut power for 8, then 12 hours a day.
-        A very strong El Niño is back for 2027, and the Zambezi River Authority (ZRA) has already cut the 2027 power allocation by {zra?.cut_pct ?? 36}%.
+        Lake Kariba powers much of Zambia and Zimbabwe. In 2024 a drought drained it to 2.89% and Zambia cut power for up to 12 hours a day.
+        A strong El Niño is back for 2027, and the dam authority has already cut next year's water for power by {zra?.cut_pct ?? 36}%.
       </p>
-      <p style={{ margin: '20px 0 0' }}><a className="button" href="#/app/plan">Open the dashboard</a></p>
+      <p style={{ margin: '20px 0 0', display: 'flex', gap: 12, flexWrap: 'wrap' }}><a className="button" href="#/app/plan">Open the dashboard</a><a className="button button-ghost" href="#forecast" onClick={(e) => { e.preventDefault(); document.getElementById('forecast')?.scrollIntoView({ behavior: 'smooth' }); }}>See the 2027 forecast</a></p>
 
       </div>
       <figure className="k-level" aria-label={`Usable storage ${fmtNum(d.latest?.usable_pct, 1)} percent on ${fmtDate(d.latest?.date)}`}>
@@ -111,84 +110,11 @@ export default function KaribaPage() {
     </header>
     <div className="wrap page k-body">
 
-      <div className="grid-2">
-        <div className="panel">
-          <Gauge months={mtd} max={12} label="Months to darkness" beyond={fc.length ? `${fc.length}+` : 'n/a'}
-            sub={mtd === null
-              ? `No forecast month reaches a 1-in-3 chance of falling below ${dang}% usable.`
-              : `Months from ${fmtMonth(issued)} until the first month with at least a 1-in-3 chance of falling below ${dang}% usable storage (${fmtMonth(firstDanger?.month)}: ${fmtProb(firstDanger?.p_below_danger)}). Below ${dang}%, the allocation can no longer be met.`} />
-          <SourceNote files={['kariba.json']}>Patronus blended Kariba forecast issued {fmtDate(issued)}.</SourceNote>
-        </div>
-        <div className="panel">
-          <h3>Two models, one forecast</h3>
-          <dl className="kv stack">
-            <div><dt>Now · 0–6 months</dt><dd>{F.now_model?.name ?? 'Machine-learning model'}. Skilful for the next few months from stored water, rain and soil, but it learned from few strong El Niños and cannot see one coming.</dd></div>
-            <div><dt>Next · 6–18 months</dt><dd>{F.next_model?.name ?? 'El Niño-conditioned water-balance ensemble'}. It replays inflows from past years in the same El Niño phase ({(F.next_model?.analog_years ?? []).length || '—'} years) against the announced releases.</dd></div>
-          </dl>
-          {F.blend_rule && <p className="small"><b>How they are blended:</b> {F.blend_rule}</p>}
-          {F.skill_caveat && <p className="small muted">{F.skill_caveat}</p>}
-        </div>
-      </div>
-
-      <Figure
-        title="Usable storage since 1992"
-        sub={`Lake level converted to % of usable storage. Dashed lines: ${warn}% warning and ${dang}% danger.`}
-        source={<>G-REALM satellite lake levels (NASA/USDA), {histPeriod}; storage curve: {d.storage_curve?.method ?? '—'}</>}
-        files={['kariba.json']}
-      >
-        <TimeChart
-          ariaLabel="Lake Kariba usable storage history"
-          height={280}
-          y={{ domain: [0, 100], fmt: pct, label: 'Usable storage (%)' }}
-          layers={[
-            { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}% warning` },
-            { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}% danger` },
-            { kind: 'line', data: hist.map((h) => ({ x: h.date, y: h.usable_pct })), color: 'var(--series-1)', width: 1.5, label: 'Usable storage', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
-          ]}
-        />
-      </Figure>
-      {interp && (
-        <div className="callout">
-          <h3>Is the Kariba basin drying?</h3>
-          <p className="small">{interp}</p>
-          <SourceNote files={['trends.json']}>GRACE/GRACE-FO (GFZ GravIS), G-REALM, GPCP and MERRA-2 rainfall, 2002–2026.</SourceNote>
-        </div>
-      )}
-
       <h2 className="section-title">The 2024 crisis, and when Patronus would have warned</h2>
       <p className="headline">
         In a fair backtest, Patronus' El Niño model first gave a better-than-even chance of the lake falling below {warn}% in <b>{fmtMonth(c24.first_warning_p_gt_0_5)}</b>:{' '}
         <b>{lead(c24.lead_months_vs_zra)}</b> ZRA's water cut and <b>{lead(c24.lead_months_vs_load_shedding)}</b> load-shedding began.
       </p>
-      <Figure
-        title="2023–2025: the lake falls, the officials act, the alarms fire"
-        sub="Solid line: usable storage. Dashed line: what the El Niño model said at the time (chance of falling below 20% during Apr–Dec 2024). Vertical lines: first alarms of each model and the official decisions."
-        source={<>G-REALM lake levels (NASA/USDA), Jan 2023 – Mar 2025; ZRA and news for official dates. Backtest issued monthly with only the data then available.</>}
-        files={['kariba.json']}
-      >
-        <TimeChart
-          ariaLabel="Lake Kariba 2023 to 2025 with alarm and decision dates"
-          height={320}
-          xDomain={['2023-01-01', '2025-03-01']}
-          y={{ domain: [0, 40], fmt: pct, label: 'Usable storage (%)' }}
-          y2={c24Series.length ? { domain: [0, 1], fmt: (v) => fmtProb(v), label: 'Alarm probability (dashed)' } : undefined}
-          legend={<><LegendItem color="var(--series-1)" label="Usable storage" />{c24Series.length > 0 && <><LegendItem kind="dash" color="var(--series-2)" label={`El Niño model: chance of < ${warn}%`} /><LegendItem kind="dash" color="var(--series-3)" label={`El Niño model: chance of < ${dang}%`} /></>}</>}
-          layers={[
-            { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}%` },
-            { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}%` },
-            { kind: 'line', data: crisisWin.map((h) => ({ x: h.date, y: h.usable_pct })), color: 'var(--series-1)', label: 'Usable storage', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
-            ...(c24.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24.first_warning_p_gt_0_5, color: 'var(--series-2)', label: 'El Niño model: warning', row: 0 }] : []),
-            ...(c24.zra_allocation_cut ? [{ kind: 'vline' as const, x: c24.zra_allocation_cut, color: 'var(--text-muted)', label: 'ZRA cuts allocation', row: 1 }] : []),
-            ...(c24Now?.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24Now.first_warning_p_gt_0_5, color: 'var(--series-4)', label: 'ML model: warning', row: 2 }] : []),
-            { kind: 'vline', x: c24.load_shedding_start ?? '2024-03-11', color: 'var(--threshold-danger)', label: 'Load-shedding starts', row: 3 },
-            { kind: 'points', data: [{ x: LOWEST_2024.date, y: LOWEST_2024.usable_pct, label: '2.89% (11 Dec 2024)' }], color: 'var(--threshold-danger)', r: 5 },
-            ...(c24Series.length ? [
-              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_warning })), color: 'var(--series-2)', dash: '4 3', width: 1.8, label: `El Niño model: chance of < ${warn}%`, fmt: fmtProb, curve: false },
-              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_danger })), color: 'var(--series-3)', dash: '4 3', width: 1.5, label: `El Niño model: chance of < ${dang}%`, fmt: fmtProb, curve: false },
-            ] : []),
-          ]}
-        />
-      </Figure>
       <ol className="timeline">
         {c24.first_warning_p_gt_0_5 && <li className="tl-p"><span className="tl-date">{fmtMonth(c24.first_warning_p_gt_0_5)}</span><span>El Niño model: chance of falling below {warn}% passes 50%. This first alarm came from low storage while the El Niño index was still neutral.</span></li>}
         {c24.first_danger_p_gt_0_5 && <li className="tl-p"><span className="tl-date">{fmtMonth(c24.first_danger_p_gt_0_5)}</span><span>El Niño model: chance of falling below {dang}% passes 50%. From now on it uses El Niño analog years.</span></li>}
@@ -198,27 +124,6 @@ export default function KaribaPage() {
         <li><span className="tl-date">~14 Sep 2024</span><span>Kariba North power station stops.</span></li>
         <li><span className="tl-date">11 Dec 2024</span><span>Lake at 475.91 m: 2.89% usable, the lowest point.</span></li>
       </ol>
-      {c24Now && (
-        <p className="small"><b>The honest part:</b> the machine-learning model missed the early signal. Issued in Oct–Dec 2023, its median expected the lake to recover; it fired only in {fmtMonth(c24Now.first_warning_p_gt_0_5)}. The early warning came from the El Niño water-balance model.</p>
-      )}
-      {c24.definition && <p className="muted small">How the alarm is defined: {c24.definition}</p>}
-
-      {nm?.score && (
-        <div className="panel">
-          <h3>Not cherry-picked: every season since 1995</h3>
-          <p className="muted">
-            The El Niño model was re-run each Oct, Nov and Dec from 1995 to 2025, using only what was known then. An alarm is any of the three with a chance above 50%.
-            The event is the lake falling below {warn}% at any time in Apr–Dec of the next year.
-          </p>
-          {elnScore && (
-            <p className="headline">In El Niño seasons: {elnScore.hit} hits, {elnScore.miss} misses and {elnScore.false_alarm} false alarms ({elnScore.correct_quiet} correctly quiet).</p>
-          )}
-          <ScoreTable score={nm.score} warn={warn} dang={dang} />
-          <SeasonStrip seasons={nm.seasons ?? []} />
-          <SourceNote files={['kariba.json']}>Patronus Kariba backtest, seasons 1996–2026; G-REALM levels, NOAA ONI.</SourceNote>
-        </div>
-      )}
-
       <h2 className="section-title" id="forecast">2027: the forecast</h2>
       <Figure
         title={`Forecast usable storage, ${fmtMonth(fc[0]?.month)} – ${fmtMonth(last?.month)}, against ZRA's projection`}
@@ -261,12 +166,100 @@ export default function KaribaPage() {
         </div>
         {zra?.comparison && <p className="small" style={{ marginTop: 12 }}>{zra.comparison}</p>}
       </Figure>
-
+      <p style={{ margin: '8px 0 40px' }}><a className="button" href="#/app/plan">See the plan</a></p>
+      <details className="k-advanced">
+        <summary>Advanced: models, methods, backtest and tables</summary>
+      <div className="grid-2">
+        <div className="panel">
+          <Gauge months={mtd} max={12} label="Months to darkness" beyond={fc.length ? `${fc.length}+` : 'n/a'}
+            sub={mtd === null
+              ? `No forecast month reaches a 1-in-3 chance of falling below ${dang}% usable.`
+              : `Months from ${fmtMonth(issued)} until the first month with at least a 1-in-3 chance of falling below ${dang}% usable storage (${fmtMonth(firstDanger?.month)}: ${fmtProb(firstDanger?.p_below_danger)}). Below ${dang}%, the allocation can no longer be met.`} />
+          <SourceNote files={['kariba.json']}>Patronus blended Kariba forecast issued {fmtDate(issued)}.</SourceNote>
+        </div>
+        <div className="panel">
+          <h3>Two models, one forecast</h3>
+          <dl className="kv stack">
+            <div><dt>Now · 0–6 months</dt><dd>{F.now_model?.name ?? 'Machine-learning model'}. Skilful for the next few months from stored water, rain and soil, but it learned from few strong El Niños and cannot see one coming.</dd></div>
+            <div><dt>Next · 6–18 months</dt><dd>{F.next_model?.name ?? 'El Niño-conditioned water-balance ensemble'}. It replays inflows from past years in the same El Niño phase ({(F.next_model?.analog_years ?? []).length || '—'} years) against the announced releases.</dd></div>
+          </dl>
+          {F.blend_rule && <p className="small"><b>How they are blended:</b> {F.blend_rule}</p>}
+          {F.skill_caveat && <p className="small muted">{F.skill_caveat}</p>}
+        </div>
+      </div>
+      <Figure
+        title="Usable storage since 1992"
+        sub={`Lake level converted to % of usable storage. Dashed lines: ${warn}% warning and ${dang}% danger.`}
+        source={<>G-REALM satellite lake levels (NASA/USDA), {histPeriod}; storage curve: {d.storage_curve?.method ?? '—'}</>}
+        files={['kariba.json']}
+      >
+        <TimeChart
+          ariaLabel="Lake Kariba usable storage history"
+          height={280}
+          y={{ domain: [0, 100], fmt: pct, label: 'Usable storage (%)' }}
+          layers={[
+            { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}% warning` },
+            { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}% danger` },
+            { kind: 'line', data: hist.map((h) => ({ x: h.date, y: h.usable_pct })), color: 'var(--series-1)', width: 1.5, label: 'Usable storage', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
+          ]}
+        />
+      </Figure>
+      {interp && (
+        <div className="callout">
+          <h3>Is the Kariba basin drying?</h3>
+          <p className="small">{interp}</p>
+          <SourceNote files={['trends.json']}>GRACE/GRACE-FO (GFZ GravIS), G-REALM, GPCP and MERRA-2 rainfall, 2002–2026.</SourceNote>
+        </div>
+      )}
+      <Figure
+        title="2023–2025: the lake falls, the officials act, the alarms fire"
+        sub="Solid line: usable storage. Dashed line: what the El Niño model said at the time (chance of falling below 20% during Apr–Dec 2024). Vertical lines: first alarms of each model and the official decisions."
+        source={<>G-REALM lake levels (NASA/USDA), Jan 2023 – Mar 2025; ZRA and news for official dates. Backtest issued monthly with only the data then available.</>}
+        files={['kariba.json']}
+      >
+        <TimeChart
+          ariaLabel="Lake Kariba 2023 to 2025 with alarm and decision dates"
+          height={320}
+          xDomain={['2023-01-01', '2025-03-01']}
+          y={{ domain: [0, 40], fmt: pct, label: 'Usable storage (%)' }}
+          y2={c24Series.length ? { domain: [0, 1], fmt: (v) => fmtProb(v), label: 'Alarm probability (dashed)' } : undefined}
+          legend={<><LegendItem color="var(--series-1)" label="Usable storage" />{c24Series.length > 0 && <><LegendItem kind="dash" color="var(--series-2)" label={`El Niño model: chance of < ${warn}%`} /><LegendItem kind="dash" color="var(--series-3)" label={`El Niño model: chance of < ${dang}%`} /></>}</>}
+          layers={[
+            { kind: 'hline', y: warn, color: 'var(--threshold-warning)', label: `${warn}%` },
+            { kind: 'hline', y: dang, color: 'var(--threshold-danger)', label: `${dang}%` },
+            { kind: 'line', data: crisisWin.map((h) => ({ x: h.date, y: h.usable_pct })), color: 'var(--series-1)', label: 'Usable storage', fmt: (v) => `${fmtNum(v, 1)}%`, curve: false },
+            ...(c24.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24.first_warning_p_gt_0_5, color: 'var(--series-2)', label: 'El Niño model: warning', row: 0 }] : []),
+            ...(c24.zra_allocation_cut ? [{ kind: 'vline' as const, x: c24.zra_allocation_cut, color: 'var(--text-muted)', label: 'ZRA cuts allocation', row: 1 }] : []),
+            ...(c24Now?.first_warning_p_gt_0_5 ? [{ kind: 'vline' as const, x: c24Now.first_warning_p_gt_0_5, color: 'var(--series-4)', label: 'ML model: warning', row: 2 }] : []),
+            { kind: 'vline', x: c24.load_shedding_start ?? '2024-03-11', color: 'var(--threshold-danger)', label: 'Load-shedding starts', row: 3 },
+            { kind: 'points', data: [{ x: LOWEST_2024.date, y: LOWEST_2024.usable_pct, label: '2.89% (11 Dec 2024)' }], color: 'var(--threshold-danger)', r: 5 },
+            ...(c24Series.length ? [
+              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_warning })), color: 'var(--series-2)', dash: '4 3', width: 1.8, label: `El Niño model: chance of < ${warn}%`, fmt: fmtProb, curve: false },
+              { kind: 'line' as const, axis: 'right' as const, data: c24Series.map((p) => ({ x: p.issue, y: p.p_danger })), color: 'var(--series-3)', dash: '4 3', width: 1.5, label: `El Niño model: chance of < ${dang}%`, fmt: fmtProb, curve: false },
+            ] : []),
+          ]}
+        />
+      </Figure>
+      {c24Now && (
+        <p className="small"><b>The honest part:</b> the machine-learning model missed the early signal. Issued in Oct–Dec 2023, its median expected the lake to recover; it fired only in {fmtMonth(c24Now.first_warning_p_gt_0_5)}. The early warning came from the El Niño water-balance model.</p>
+      )}
+      {c24.definition && <p className="muted small">How the alarm is defined: {c24.definition}</p>}
+      {nm?.score && (
+        <div className="panel">
+          <h3>Not cherry-picked: every season since 1995</h3>
+          <p className="muted">
+            The El Niño model was re-run each Oct, Nov and Dec from 1995 to 2025, using only what was known then. An alarm is any of the three with a chance above 50%.
+            The event is the lake falling below {warn}% at any time in Apr–Dec of the next year.
+          </p>
+          {elnScore && (
+            <p className="headline">In El Niño seasons: {elnScore.hit} hits, {elnScore.miss} misses and {elnScore.false_alarm} false alarms ({elnScore.correct_quiet} correctly quiet).</p>
+          )}
+          <ScoreTable score={nm.score} warn={warn} dang={dang} />
+          <SeasonStrip seasons={nm.seasons ?? []} />
+          <SourceNote files={['kariba.json']}>Patronus Kariba backtest, seasons 1996–2026; G-REALM levels, NOAA ONI.</SourceNote>
+        </div>
+      )}
       <KaribaSim />
-
-      <p className="callout"><b>Plan it yourself.</b> Pick the actions Zambia can actually take (hold water, imports, rentals, mine curtailment, solar, a published schedule), see the month-by-month result over the El Niño years, and ask the assistant to re-plan. </p>
-      <p style={{ margin: '0 0 32px' }}><a className="button" href="#/app/plan">Open the dashboard</a></p>
-
       <Figure
         title="The cost of waiting (illustrative)"
         sub="Expected cost of the shortfall depending on the month conservation and import contracts start, under central assumptions. Treat it as a range, not a figure: it moves a lot with the assumptions below."
@@ -362,6 +355,7 @@ export default function KaribaPage() {
       )}
 
       {brief && <BriefPanel text={brief} />}
+      </details>
     </div>
     </>
   );

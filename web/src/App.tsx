@@ -19,6 +19,7 @@ const NAV = [
   ['', 'Overview'],
   ['kariba', 'Kariba 2027'],
   ['map', 'Map'],
+  ['app/plan', 'Plan'],
   ['explore', 'Trend Detective'],
   ['proof', 'Proof'],
 ] as const;
@@ -29,7 +30,7 @@ const ALIAS: Record<string, [string, string]> = {
   watchlist: ['map', 'watchlist'],
 };
 /** Which nav item a page belongs to. */
-const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'kariba' };
+const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'app/plan' };
 
 /** Scroll to an in-page section once it has rendered (data loads async, so retry briefly). */
 function useScrollToSection(id: string | undefined, key: string) {
@@ -128,7 +129,7 @@ export default function App() {
                 <li key={k}><a href={`#/${k}`} className={active === k ? 'active' : ''} aria-current={active === k ? 'page' : undefined}>{label}</a></li>
               ))}
             </ul>
-            <a className="button nav-cta" href="#/app/plan">Open the dashboard</a>
+            <a className="button nav-cta" href="#/kariba/forecast">2027 forecast</a>
           </nav>
           <button type="button" className="menu-btn" aria-expanded={menu} aria-controls="site-nav" aria-label={menu ? 'Close menu' : 'Open menu'} onClick={() => setMenu((m) => !m)}>
             <span className="menu-icon" aria-hidden="true"><i /><i /></span>

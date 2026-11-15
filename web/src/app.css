@@ -682,3 +682,8 @@ ul.plain li { margin-bottom: 0.5em; }
 .map-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 12px; }
 .map-head .eyebrow { margin: 0; }
 .map-head h1 { margin: 0; }
+
+/* Collapsed technical detail on site pages (pre-pitch polish) */
+.k-advanced { margin: 48px 0 24px; border-top: 1px solid var(--border); padding-top: 16px; }
+.k-advanced > summary { cursor: pointer; font-weight: 600; font-size: var(--fs-md); color: var(--text-muted); padding: 8px 0; }
+.k-advanced[open] > summary { margin-bottom: 24px; }
