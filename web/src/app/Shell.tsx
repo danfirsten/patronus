@@ -47,26 +47,22 @@ export default function AppShell({ view }: { view: string }) {
     default: body = <PlanDash />;
   }
   return (
-    <div className="app">
-      <header className="app-top">
-        <a className="app-brand" href="#/app/plan">Patronus</a>
-        <label className="app-region"><span className="sr-only">Region</span>
-          <select value="kariba" onChange={(e) => { if (e.target.value === 'replay') window.location.hash = '#/app/replay'; }}>
-            <option value="kariba">Lake Kariba · Zambia / Zimbabwe</option>
-            <option value="replay">Other reservoirs (replay)…</option>
-          </select>
-        </label>
-        <span className="app-flex" />
-        <a className="app-back" href="#/">Back to site</a>
-      </header>
-      <nav className="app-nav" aria-label="Dashboard">
-        {NAV.map(([k, label]) => <a key={k} href={`#/app/${k}`} className={v === k ? 'on' : ''} aria-current={v === k ? 'page' : undefined}>{label}</a>)}
-      </nav>
-      <main className="app-main" id="main" tabIndex={-1}>
+    <div className={`app app-${v}`}>
+      <div className="wrap app-head">
+        <div className="app-title">
+          <p className="eyebrow">Lake Kariba · Zambia / Zimbabwe</p>
+          <h1>{v === 'replay' ? 'Replay: what if they had acted?' : 'Plan the 2027 dry season'}</h1>
+        </div>
+        <nav className="app-tabs" aria-label="Plan views">
+          <a href="#/app/plan" className={v !== 'replay' ? 'on' : ''} aria-current={v !== 'replay' ? 'page' : undefined}>Plan</a>
+          <a href="#/app/replay" className={v === 'replay' ? 'on' : ''} aria-current={v === 'replay' ? 'page' : undefined}>Replay</a>
+        </nav>
+      </div>
+      <div className="wrap app-body">
         <ErrorBoundary label="dashboard">
           <Suspense fallback={<div className="dash-msg">Loading…</div>}>{body}</Suspense>
         </ErrorBoundary>
-      </main>
+      </div>
     </div>
   );
 }
