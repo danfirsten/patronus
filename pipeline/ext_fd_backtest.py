@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 
 from pipeline.paths import OUT, REFERENCE
 
-SRC = REFERENCE / "fd_backtest"
+SRC = REFERENCE.parent / "fd_backtest"  # data/reference/fd_backtest (not under forecast/)
 
 # Long model names in the FD outputs -> short keys used in backtest_fd.json.
 MODELS = {

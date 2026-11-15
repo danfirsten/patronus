@@ -263,6 +263,8 @@ export default function KaribaPage() {
 
       <KaribaSim />
 
+      <p className="callout"><b>Plan it yourself.</b> Pick the actions Zambia can actually take (hold water, imports, rentals, mine curtailment, solar, a published schedule), see the month-by-month result over the El Niño years, and ask the assistant to re-plan. <a href="#/plan">Open the Plan simulator</a>.</p>
+
       <Figure
         title="The cost of waiting (illustrative)"
         sub="Expected cost of the shortfall depending on the month conservation and import contracts start, under central assumptions. Treat it as a range, not a figure: it moves a lot with the assumptions below."
