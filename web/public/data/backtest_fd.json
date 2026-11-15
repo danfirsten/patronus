@@ -1,0 +1,9106 @@
+{
+ "generated_at": "2026-11-14T20:26:10+00:00",
+ "sources": [
+  "ember_monthly",
+  "ember_yearly",
+  "ons",
+  "grealm",
+  "oni",
+  "gpcp"
+ ],
+ "sources_not_in_meta": [
+  {
+   "id": "eia_bulk",
+   "name": "EIA Electricity bulk file (ELEC.GEN.HYC-<ST>-99.M)",
+   "url": "https://www.eia.gov/opendata/bulk/ELEC.zip (no key), series ELEC.GEN.HYC-<ST>-99.M, thousand MWh"
+  },
+  {
+   "id": "gpm_imerg",
+   "name": "GPM IMERG V07 monthly (NASA)",
+   "url": "GPM_3IMERGM v07 via Earthdata OPeNDAP (/Grid/precipitation, stride 5)"
+  },
+  {
+   "id": "grace_jpl",
+   "name": "JPL GRACE/GRACE-FO RL06.3 mascons (NASA PO.DAAC)",
+   "url": "TELLUS_GRAC-GRFO_MASCON_CRI_GRID_RL06.3_V4 (PO.DAAC), lwe_thickness x scale_factor"
+  },
+  {
+   "id": "grace_csr",
+   "name": "CSR GRACE/GRACE-FO RL06.3 mascons",
+   "url": "https://download.csr.utexas.edu/outgoing/grace/RL0603_mascons/CSR_GRACE_GRACE-FO_RL0603_Mascons_all-corrections.nc"
+  },
+  {
+   "id": "grace_da",
+   "name": "GRACE-DA root zone / groundwater percentiles (NASA)",
+   "url": "GRACEDADM_CLSM025GL_7D v3.0 via Earthdata OPeNDAP (rtzsm_inst, gws_inst, stride 2)"
+  },
+  {
+   "id": "smap_l4",
+   "name": "SMAP L4 root-zone soil moisture (NASA)",
+   "url": "SPL4SMGP v008 via Earthdata OPeNDAP, sm_rootzone, 13:30 granule every 5th day, stride 4"
+  },
+  {
+   "id": "cpc_soil",
+   "name": "NOAA CPC soil moisture v2",
+   "url": "https://downloads.psl.noaa.gov/Datasets/cpcsoil/soilw.mon.mean.v2.nc (CPC soil moisture v2, 0.5 deg, 1.6 m bucket)"
+  }
+ ],
+ "origin": "Future Detector hydro back-test v2 (hydro/run_v2.py, focus_v2.py), run 2026-11-14; raw outputs copied to data/reference/fd_backtest/. Independent of the Patronus generation and Kariba models.",
+ "design": "Train on target months <= 2020, test 2021-01..2025-12 (one split, no CV). Learner picked on a 2018-2020 validation split (logistic regression won for every model). Pooled across units. Features from hand-drawn catchment boxes. No publication-lag adjustment (month t assumed known at end of t). Uncalibrated probabilities. Metrics: AUC-PR and Brier skill vs climatology; 300 block-bootstrap resamples over test months, 90% intervals. Crisis lead = longest lead with P >= 0.40.",
+ "labels": {
+  "short": "Monthly hydro value below the 20th percentile of the same calendar month over training years <= 2020 (the 'brief's label'; main view).",
+  "short_adj": "Value / median of same calendar month in the previous 5 years, shortfall when below the unit's training 20th percentile (capacity-corrected second view; absorbs multi-year droughts)."
+ },
+ "units": {
+  "n_generation_units": 67,
+  "countries": 53,
+  "brazil_subsystems": [
+   "BRA_SE",
+   "BRA_S",
+   "BRA_NE",
+   "BRA_N"
+  ],
+  "us_states": [
+   "US_WA",
+   "US_CA",
+   "US_NY",
+   "US_OR",
+   "US_AL",
+   "US_ID",
+   "US_TN",
+   "US_MT",
+   "US_SD",
+   "US_AZ"
+  ],
+  "storage_label_units": [
+   "ZMB_KAR"
+  ],
+  "kariba_label": "G-REALM 10-day altimetry, lake 000394, monthly mean level (storage, not generation)"
+ },
+ "models": {
+  "climatology": "unit x calendar-month shortfall rate in training",
+  "persistence": "shortfall last month",
+  "hydro_history": "logistic on recent hydro anomalies only",
+  "signals_v1": "GPCP rain, CPC soil, CSR GRACE, ONI (no hydro history)",
+  "signals_v2": "IMERG, JPL+CSR GRACE detrended, GRACE-DA, SMAP, reservoir storage, ONI (no hydro history)",
+  "hydro_storage": "hydro history + observed reservoir storage (ONS EAR/ENA, G-REALM levels)",
+  "full_v1": "hydro history + signals v1",
+  "full_v2": "hydro history + signals v2"
+ },
+ "headline": [
+  {
+   "id": "skill_vs_climatology",
+   "text": "Best model ranks shortfall months x2.06 better than climatology at 1 month, x1.48 at 3 and x1.25 at 6 (AUC-PR ratio; 90% block-bootstrap intervals above 1).",
+   "values": {
+    "1": {
+     "auc_pr_ratio": 2.057,
+     "ratio_ci90": [
+      1.953,
+      2.177
+     ],
+     "brier_gain_ci90": [
+      0.059,
+      0.071
+     ]
+    },
+    "3": {
+     "auc_pr_ratio": 1.48,
+     "ratio_ci90": [
+      1.391,
+      1.579
+     ],
+     "brier_gain_ci90": [
+      0.013,
+      0.024
+     ]
+    },
+    "6": {
+     "auc_pr_ratio": 1.249,
+     "ratio_ci90": [
+      1.179,
+      1.326
+     ],
+     "brier_gain_ci90": [
+      -0.003,
+      0.005
+     ]
+    }
+   }
+  },
+  {
+   "id": "skill_vs_persistence",
+   "text": "x1.14-1.26 better than persistence at 1-6 months (all 90% intervals above 1).",
+   "values": {
+    "1": {
+     "auc_pr_ratio": 1.262,
+     "ratio_ci90": [
+      1.215,
+      1.309
+     ],
+     "brier_gain_ci90": [
+      0.004,
+      0.012
+     ]
+    },
+    "3": {
+     "auc_pr_ratio": 1.227,
+     "ratio_ci90": [
+      1.19,
+      1.277
+     ],
+     "brier_gain_ci90": [
+      -0.004,
+      0.004
+     ]
+    },
+    "6": {
+     "auc_pr_ratio": 1.142,
+     "ratio_ci90": [
+      1.111,
+      1.183
+     ],
+     "brier_gain_ci90": [
+      -0.012,
+      -0.006
+     ]
+    }
+   }
+  },
+  {
+   "id": "water_signals_pooled",
+   "text": "Pooled across 67 units, water signals add nothing beyond recent generation: full v2 / hydro history x1.01 at 1 month, x0.98 at 3, x0.92 at 6.",
+   "values": {
+    "1": {
+     "auc_pr_ratio": 1.011,
+     "ratio_ci90": [
+      1.001,
+      1.021
+     ],
+     "brier_gain_ci90": [
+      0.001,
+      0.008
+     ]
+    },
+    "3": {
+     "auc_pr_ratio": 0.979,
+     "ratio_ci90": [
+      0.965,
+      0.993
+     ],
+     "brier_gain_ci90": [
+      -0.001,
+      0.003
+     ]
+    },
+    "6": {
+     "auc_pr_ratio": 0.922,
+     "ratio_ci90": [
+      0.905,
+      0.943
+     ],
+     "brier_gain_ci90": [
+      -0.007,
+      -0.004
+     ]
+    }
+   }
+  },
+  {
+   "id": "brazil_storage",
+   "text": "Where storage is observed (Brazil, ONS EAR/ENA, 5 units) it helps: x1.08-x1.29 over hydro history at 1-6 months (intervals above 1). Brief's label only; Brier skill negative from 3 months.",
+   "values": {
+    "1": {
+     "auc_pr_ratio": 1.08,
+     "ratio_ci90": [
+      1.029,
+      1.13
+     ],
+     "brier_gain_ci90": [
+      -0.004,
+      0.014
+     ]
+    },
+    "2": {
+     "auc_pr_ratio": 1.11,
+     "ratio_ci90": [
+      1.02,
+      1.223
+     ],
+     "brier_gain_ci90": [
+      -0.006,
+      0.019
+     ]
+    },
+    "3": {
+     "auc_pr_ratio": 1.206,
+     "ratio_ci90": [
+      1.026,
+      1.399
+     ],
+     "brier_gain_ci90": [
+      0.002,
+      0.026
+     ]
+    },
+    "4": {
+     "auc_pr_ratio": 1.261,
+     "ratio_ci90": [
+      1.069,
+      1.441
+     ],
+     "brier_gain_ci90": [
+      -0.001,
+      0.021
+     ]
+    },
+    "5": {
+     "auc_pr_ratio": 1.287,
+     "ratio_ci90": [
+      1.129,
+      1.471
+     ],
+     "brier_gain_ci90": [
+      -0.004,
+      0.013
+     ]
+    },
+    "6": {
+     "auc_pr_ratio": 1.2,
+     "ratio_ci90": [
+      1.036,
+      1.357
+     ],
+     "brier_gain_ci90": [
+      -0.009,
+      0.009
+     ]
+    }
+   }
+  },
+  {
+   "id": "crisis_leads",
+   "text": "Brazil SE/CO 2021 (onset 2021-07) flagged 3 months ahead by the signals-only model (P 0.62 / 0.76 / 0.84 at 3/2/1 months; climatology 0.19). Kariba April 2024 record-low level: P 0.51 / 0.58 at 4/3 months from rain/soil/GRACE/ENSO alone. Missed: Sichuan 2022, Vietnam 2023, Ecuador 2024 (full model), Brazil national.",
+   "values": {
+    "brazil_se_2021_signals_v2": {
+     "1": 0.843,
+     "2": 0.764,
+     "3": 0.624,
+     "4": 0.381,
+     "5": 0.33,
+     "6": 0.369
+    },
+    "kariba_2024_04_signals_v1_no_level": {
+     "1": 0.9,
+     "2": 0.81,
+     "3": 0.58,
+     "4": 0.51,
+     "5": 0.38,
+     "6": 0.35
+    }
+   }
+  }
+ ],
+ "by_horizon": {
+  "short": {
+   "all": [
+    {
+     "horizon": 1,
+     "n": 4020,
+     "n_shortfalls": 1171,
+     "base_rate": 0.291,
+     "n_units": 67,
+     "auc_pr": {
+      "climatology": 0.329,
+      "persistence": 0.537,
+      "hydro_history": 0.671,
+      "signals_v1": 0.475,
+      "signals_v2": 0.462,
+      "hydro_storage": 0.681,
+      "full_v1": 0.679,
+      "full_v2": 0.678
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.275,
+      "hydro_history": 0.292,
+      "signals_v1": 0.111,
+      "signals_v2": 0.081,
+      "hydro_storage": 0.313,
+      "full_v1": 0.312,
+      "full_v2": 0.313
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.262,
+       "ratio_ci90": [
+        1.215,
+        1.309
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.012
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.057,
+       "ratio_ci90": [
+        1.953,
+        2.177
+       ],
+       "brier_gain_ci90": [
+        0.059,
+        0.071
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.011,
+       "ratio_ci90": [
+        1.001,
+        1.021
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.008
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.998,
+       "ratio_ci90": [
+        0.993,
+        1.004
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.403,
+       "ratio_ci90": [
+        1.32,
+        1.484
+       ],
+       "brier_gain_ci90": [
+        0.01,
+        0.022
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.972,
+       "ratio_ci90": [
+        0.938,
+        1.003
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        -0.002
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.015,
+       "ratio_ci90": [
+        1.008,
+        1.021
+       ],
+       "brier_gain_ci90": [
+        0.003,
+        0.006
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.267,
+       "ratio_ci90": [
+        1.22,
+        1.315
+       ],
+       "brier_gain_ci90": [
+        0.005,
+        0.011
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 4020,
+     "n_shortfalls": 1171,
+     "base_rate": 0.291,
+     "n_units": 67,
+     "auc_pr": {
+      "climatology": 0.332,
+      "persistence": 0.437,
+      "hydro_history": 0.551,
+      "signals_v1": 0.442,
+      "signals_v2": 0.42,
+      "hydro_storage": 0.558,
+      "full_v1": 0.559,
+      "full_v2": 0.552
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.134,
+      "hydro_history": 0.141,
+      "signals_v1": 0.076,
+      "signals_v2": 0.047,
+      "hydro_storage": 0.159,
+      "full_v1": 0.156,
+      "full_v2": 0.155
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.264,
+       "ratio_ci90": [
+        1.224,
+        1.32
+       ],
+       "brier_gain_ci90": [
+        -0.0,
+        0.009
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.663,
+       "ratio_ci90": [
+        1.579,
+        1.758
+       ],
+       "brier_gain_ci90": [
+        0.026,
+        0.038
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.002,
+       "ratio_ci90": [
+        0.992,
+        1.015
+       ],
+       "brier_gain_ci90": [
+        0.0,
+        0.006
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.987,
+       "ratio_ci90": [
+        0.978,
+        0.996
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.266,
+       "ratio_ci90": [
+        1.196,
+        1.337
+       ],
+       "brier_gain_ci90": [
+        0.005,
+        0.014
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.951,
+       "ratio_ci90": [
+        0.928,
+        0.975
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.003
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.013,
+       "ratio_ci90": [
+        1.005,
+        1.021
+       ],
+       "brier_gain_ci90": [
+        0.002,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.278,
+       "ratio_ci90": [
+        1.234,
+        1.334
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.009
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 4020,
+     "n_shortfalls": 1171,
+     "base_rate": 0.291,
+     "n_units": 67,
+     "auc_pr": {
+      "climatology": 0.331,
+      "persistence": 0.399,
+      "hydro_history": 0.5,
+      "signals_v1": 0.41,
+      "signals_v2": 0.39,
+      "hydro_storage": 0.502,
+      "full_v1": 0.502,
+      "full_v2": 0.49
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.087,
+      "hydro_history": 0.084,
+      "signals_v1": 0.058,
+      "signals_v2": 0.035,
+      "hydro_storage": 0.099,
+      "full_v1": 0.095,
+      "full_v2": 0.09
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.227,
+       "ratio_ci90": [
+        1.19,
+        1.277
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.004
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.48,
+       "ratio_ci90": [
+        1.391,
+        1.579
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.024
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.979,
+       "ratio_ci90": [
+        0.965,
+        0.993
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.003
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.976,
+       "ratio_ci90": [
+        0.962,
+        0.989
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.178,
+       "ratio_ci90": [
+        1.111,
+        1.242
+       ],
+       "brier_gain_ci90": [
+        0.003,
+        0.011
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.951,
+       "ratio_ci90": [
+        0.921,
+        0.979
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.002
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.003,
+       "ratio_ci90": [
+        0.993,
+        1.013
+       ],
+       "brier_gain_ci90": [
+        0.002,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.257,
+       "ratio_ci90": [
+        1.219,
+        1.31
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.006
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 4020,
+     "n_shortfalls": 1171,
+     "base_rate": 0.291,
+     "n_units": 67,
+     "auc_pr": {
+      "climatology": 0.33,
+      "persistence": 0.386,
+      "hydro_history": 0.463,
+      "signals_v1": 0.391,
+      "signals_v2": 0.357,
+      "hydro_storage": 0.46,
+      "full_v1": 0.466,
+      "full_v2": 0.448
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.074,
+      "hydro_history": 0.045,
+      "signals_v1": 0.046,
+      "signals_v2": 0.017,
+      "hydro_storage": 0.051,
+      "full_v1": 0.055,
+      "full_v2": 0.046
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.159,
+       "ratio_ci90": [
+        1.116,
+        1.211
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        -0.002
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.356,
+       "ratio_ci90": [
+        1.274,
+        1.447
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.015
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.968,
+       "ratio_ci90": [
+        0.946,
+        0.989
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.003
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.962,
+       "ratio_ci90": [
+        0.95,
+        0.975
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        -0.0
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.082,
+       "ratio_ci90": [
+        1.027,
+        1.141
+       ],
+       "brier_gain_ci90": [
+        -0.0,
+        0.008
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.913,
+       "ratio_ci90": [
+        0.883,
+        0.945
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.994,
+       "ratio_ci90": [
+        0.981,
+        1.009
+       ],
+       "brier_gain_ci90": [
+        -0.0,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.19,
+       "ratio_ci90": [
+        1.149,
+        1.243
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.0
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 4020,
+     "n_shortfalls": 1171,
+     "base_rate": 0.291,
+     "n_units": 67,
+     "auc_pr": {
+      "climatology": 0.326,
+      "persistence": 0.365,
+      "hydro_history": 0.447,
+      "signals_v1": 0.365,
+      "signals_v2": 0.327,
+      "hydro_storage": 0.435,
+      "full_v1": 0.444,
+      "full_v2": 0.421
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.053,
+      "hydro_history": 0.031,
+      "signals_v1": 0.031,
+      "signals_v2": -0.005,
+      "hydro_storage": 0.024,
+      "full_v1": 0.032,
+      "full_v2": 0.016
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.151,
+       "ratio_ci90": [
+        1.114,
+        1.195
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        -0.004
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.291,
+       "ratio_ci90": [
+        1.22,
+        1.37
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.008
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.941,
+       "ratio_ci90": [
+        0.918,
+        0.962
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        -0.001
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.947,
+       "ratio_ci90": [
+        0.931,
+        0.96
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        -0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.003,
+       "ratio_ci90": [
+        0.95,
+        1.057
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.002
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.897,
+       "ratio_ci90": [
+        0.869,
+        0.924
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        -0.005
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.973,
+       "ratio_ci90": [
+        0.958,
+        0.99
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.0
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.19,
+       "ratio_ci90": [
+        1.15,
+        1.236
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        -0.002
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 4020,
+     "n_shortfalls": 1171,
+     "base_rate": 0.291,
+     "n_units": 67,
+     "auc_pr": {
+      "climatology": 0.326,
+      "persistence": 0.357,
+      "hydro_history": 0.442,
+      "signals_v1": 0.348,
+      "signals_v2": 0.315,
+      "hydro_storage": 0.428,
+      "full_v1": 0.432,
+      "full_v2": 0.407
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.045,
+      "hydro_history": 0.03,
+      "signals_v1": 0.017,
+      "signals_v2": -0.013,
+      "hydro_storage": 0.022,
+      "full_v1": 0.019,
+      "full_v2": 0.004
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.142,
+       "ratio_ci90": [
+        1.111,
+        1.183
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        -0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.249,
+       "ratio_ci90": [
+        1.179,
+        1.326
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.005
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.922,
+       "ratio_ci90": [
+        0.905,
+        0.943
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.004
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.943,
+       "ratio_ci90": [
+        0.932,
+        0.957
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        -0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.968,
+       "ratio_ci90": [
+        0.913,
+        1.02
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.001
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.906,
+       "ratio_ci90": [
+        0.879,
+        0.932
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.969,
+       "ratio_ci90": [
+        0.953,
+        0.984
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        -0.0
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.2,
+       "ratio_ci90": [
+        1.165,
+        1.244
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.002
+       ]
+      }
+     }
+    }
+   ],
+   "ge5_train_years": [
+    {
+     "horizon": 1,
+     "n": 2645,
+     "n_shortfalls": 709,
+     "base_rate": 0.268,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.282,
+      "persistence": 0.528,
+      "hydro_history": 0.706,
+      "signals_v1": 0.482,
+      "signals_v2": 0.453,
+      "hydro_storage": 0.719,
+      "full_v1": 0.721,
+      "full_v2": 0.718
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.304,
+      "hydro_history": 0.363,
+      "signals_v1": 0.146,
+      "signals_v2": 0.117,
+      "hydro_storage": 0.382,
+      "full_v1": 0.383,
+      "full_v2": 0.378
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.36,
+       "ratio_ci90": [
+        1.304,
+        1.415
+       ],
+       "brier_gain_ci90": [
+        0.01,
+        0.019
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.548,
+       "ratio_ci90": [
+        2.364,
+        2.757
+       ],
+       "brier_gain_ci90": [
+        0.069,
+        0.084
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.016,
+       "ratio_ci90": [
+        1.0,
+        1.032
+       ],
+       "brier_gain_ci90": [
+        -0.0,
+        0.007
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.995,
+       "ratio_ci90": [
+        0.985,
+        1.005
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.61,
+       "ratio_ci90": [
+        1.486,
+        1.725
+       ],
+       "brier_gain_ci90": [
+        0.016,
+        0.03
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.94,
+       "ratio_ci90": [
+        0.892,
+        0.987
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        -0.0
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.019,
+       "ratio_ci90": [
+        1.007,
+        1.03
+       ],
+       "brier_gain_ci90": [
+        0.002,
+        0.006
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.363,
+       "ratio_ci90": [
+        1.308,
+        1.417
+       ],
+       "brier_gain_ci90": [
+        0.012,
+        0.019
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 2645,
+     "n_shortfalls": 711,
+     "base_rate": 0.269,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.283,
+      "persistence": 0.422,
+      "hydro_history": 0.584,
+      "signals_v1": 0.451,
+      "signals_v2": 0.401,
+      "hydro_storage": 0.597,
+      "full_v1": 0.603,
+      "full_v2": 0.589
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.162,
+      "hydro_history": 0.217,
+      "signals_v1": 0.112,
+      "signals_v2": 0.071,
+      "hydro_storage": 0.232,
+      "full_v1": 0.236,
+      "full_v2": 0.225
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.395,
+       "ratio_ci90": [
+        1.336,
+        1.471
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.018
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.083,
+       "ratio_ci90": [
+        1.904,
+        2.257
+       ],
+       "brier_gain_ci90": [
+        0.037,
+        0.052
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.007,
+       "ratio_ci90": [
+        0.987,
+        1.029
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.005
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.976,
+       "ratio_ci90": [
+        0.961,
+        0.992
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        -0.0
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.418,
+       "ratio_ci90": [
+        1.305,
+        1.526
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.02
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.889,
+       "ratio_ci90": [
+        0.849,
+        0.931
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.021,
+       "ratio_ci90": [
+        1.006,
+        1.037
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.414,
+       "ratio_ci90": [
+        1.36,
+        1.484
+       ],
+       "brier_gain_ci90": [
+        0.01,
+        0.018
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 2645,
+     "n_shortfalls": 711,
+     "base_rate": 0.269,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.289,
+      "persistence": 0.373,
+      "hydro_history": 0.54,
+      "signals_v1": 0.409,
+      "signals_v2": 0.357,
+      "hydro_storage": 0.538,
+      "full_v1": 0.543,
+      "full_v2": 0.517
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.098,
+      "hydro_history": 0.16,
+      "signals_v1": 0.082,
+      "signals_v2": 0.039,
+      "hydro_storage": 0.168,
+      "full_v1": 0.167,
+      "full_v2": 0.15
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.386,
+       "ratio_ci90": [
+        1.33,
+        1.45
+       ],
+       "brier_gain_ci90": [
+        0.007,
+        0.013
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.789,
+       "ratio_ci90": [
+        1.624,
+        1.932
+       ],
+       "brier_gain_ci90": [
+        0.023,
+        0.035
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.957,
+       "ratio_ci90": [
+        0.927,
+        0.981
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.0
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.953,
+       "ratio_ci90": [
+        0.926,
+        0.976
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        -0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.235,
+       "ratio_ci90": [
+        1.139,
+        1.33
+       ],
+       "brier_gain_ci90": [
+        0.003,
+        0.012
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.873,
+       "ratio_ci90": [
+        0.839,
+        0.919
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.996,
+       "ratio_ci90": [
+        0.972,
+        1.016
+       ],
+       "brier_gain_ci90": [
+        -0.0,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.442,
+       "ratio_ci90": [
+        1.383,
+        1.511
+       ],
+       "brier_gain_ci90": [
+        0.011,
+        0.017
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 2645,
+     "n_shortfalls": 709,
+     "base_rate": 0.268,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.281,
+      "persistence": 0.37,
+      "hydro_history": 0.511,
+      "signals_v1": 0.385,
+      "signals_v2": 0.319,
+      "hydro_storage": 0.493,
+      "full_v1": 0.513,
+      "full_v2": 0.474
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.097,
+      "hydro_history": 0.14,
+      "signals_v1": 0.069,
+      "signals_v2": 0.016,
+      "hydro_storage": 0.131,
+      "full_v1": 0.144,
+      "full_v2": 0.116
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.282,
+       "ratio_ci90": [
+        1.229,
+        1.351
+       ],
+       "brier_gain_ci90": [
+        0.0,
+        0.007
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.684,
+       "ratio_ci90": [
+        1.533,
+        1.823
+       ],
+       "brier_gain_ci90": [
+        0.018,
+        0.028
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.927,
+       "ratio_ci90": [
+        0.891,
+        0.964
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.002
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.924,
+       "ratio_ci90": [
+        0.901,
+        0.951
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.003
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.135,
+       "ratio_ci90": [
+        1.052,
+        1.218
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.007
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.831,
+       "ratio_ci90": [
+        0.792,
+        0.879
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.007
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.963,
+       "ratio_ci90": [
+        0.936,
+        0.994
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.0
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.332,
+       "ratio_ci90": [
+        1.285,
+        1.405
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.01
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 2645,
+     "n_shortfalls": 711,
+     "base_rate": 0.269,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.281,
+      "persistence": 0.355,
+      "hydro_history": 0.483,
+      "signals_v1": 0.353,
+      "signals_v2": 0.285,
+      "hydro_storage": 0.448,
+      "full_v1": 0.475,
+      "full_v2": 0.422
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.079,
+      "hydro_history": 0.113,
+      "signals_v1": 0.049,
+      "signals_v2": -0.02,
+      "hydro_storage": 0.087,
+      "full_v1": 0.106,
+      "full_v2": 0.066
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.189,
+       "ratio_ci90": [
+        1.148,
+        1.249
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.0
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.5,
+       "ratio_ci90": [
+        1.384,
+        1.643
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.017
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.874,
+       "ratio_ci90": [
+        0.837,
+        0.91
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        -0.006
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.89,
+       "ratio_ci90": [
+        0.859,
+        0.923
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        -0.006
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.011,
+       "ratio_ci90": [
+        0.942,
+        1.081
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.001
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.806,
+       "ratio_ci90": [
+        0.769,
+        0.852
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        -0.01
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.927,
+       "ratio_ci90": [
+        0.897,
+        0.958
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.26,
+       "ratio_ci90": [
+        1.213,
+        1.327
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.004
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 2645,
+     "n_shortfalls": 711,
+     "base_rate": 0.269,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.281,
+      "persistence": 0.347,
+      "hydro_history": 0.462,
+      "signals_v1": 0.328,
+      "signals_v2": 0.269,
+      "hydro_storage": 0.423,
+      "full_v1": 0.441,
+      "full_v2": 0.39
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.068,
+      "hydro_history": 0.095,
+      "signals_v1": 0.027,
+      "signals_v2": -0.029,
+      "hydro_storage": 0.068,
+      "full_v1": 0.076,
+      "full_v2": 0.039
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.126,
+       "ratio_ci90": [
+        1.083,
+        1.179
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.003
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.388,
+       "ratio_ci90": [
+        1.273,
+        1.542
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.012
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.844,
+       "ratio_ci90": [
+        0.813,
+        0.88
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        -0.009
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.886,
+       "ratio_ci90": [
+        0.858,
+        0.916
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.005
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.957,
+       "ratio_ci90": [
+        0.885,
+        1.027
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.003
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.82,
+       "ratio_ci90": [
+        0.784,
+        0.858
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.915,
+       "ratio_ci90": [
+        0.885,
+        0.945
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.22,
+       "ratio_ci90": [
+        1.176,
+        1.283
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.003
+       ]
+      }
+     }
+    }
+   ],
+   "storage_observed": [
+    {
+     "horizon": 1,
+     "n": 480,
+     "n_shortfalls": 120,
+     "base_rate": 0.25,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.324,
+      "persistence": 0.537,
+      "hydro_history": 0.659,
+      "signals_v1": 0.504,
+      "signals_v2": 0.384,
+      "hydro_storage": 0.675,
+      "full_v1": 0.661,
+      "full_v2": 0.663
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.325,
+      "hydro_history": 0.341,
+      "signals_v1": 0.131,
+      "signals_v2": -0.038,
+      "hydro_storage": 0.346,
+      "full_v1": 0.376,
+      "full_v2": 0.337
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.235,
+       "ratio_ci90": [
+        1.135,
+        1.361
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        0.011
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.047,
+       "ratio_ci90": [
+        1.754,
+        2.479
+       ],
+       "brier_gain_ci90": [
+        0.048,
+        0.079
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.006,
+       "ratio_ci90": [
+        0.953,
+        1.062
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        0.007
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.002,
+       "ratio_ci90": [
+        0.956,
+        1.043
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        -0.0
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.186,
+       "ratio_ci90": [
+        0.962,
+        1.502
+       ],
+       "brier_gain_ci90": [
+        -0.028,
+        0.009
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.763,
+       "ratio_ci90": [
+        0.64,
+        0.884
+       ],
+       "brier_gain_ci90": [
+        -0.052,
+        -0.012
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.024,
+       "ratio_ci90": [
+        0.972,
+        1.083
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.007
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.257,
+       "ratio_ci90": [
+        1.158,
+        1.382
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.012
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 480,
+     "n_shortfalls": 120,
+     "base_rate": 0.25,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.318,
+      "persistence": 0.406,
+      "hydro_history": 0.502,
+      "signals_v1": 0.532,
+      "signals_v2": 0.353,
+      "hydro_storage": 0.529,
+      "full_v1": 0.572,
+      "full_v2": 0.524
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.155,
+      "hydro_history": 0.162,
+      "signals_v1": 0.162,
+      "signals_v2": -0.06,
+      "hydro_storage": 0.141,
+      "full_v1": 0.217,
+      "full_v2": 0.142
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.29,
+       "ratio_ci90": [
+        1.14,
+        1.472
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        0.009
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.648,
+       "ratio_ci90": [
+        1.389,
+        1.992
+       ],
+       "brier_gain_ci90": [
+        0.01,
+        0.042
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.043,
+       "ratio_ci90": [
+        0.926,
+        1.162
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        0.006
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.916,
+       "ratio_ci90": [
+        0.849,
+        0.987
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.004
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.11,
+       "ratio_ci90": [
+        0.9,
+        1.436
+       ],
+       "brier_gain_ci90": [
+        -0.03,
+        0.005
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.663,
+       "ratio_ci90": [
+        0.588,
+        0.767
+       ],
+       "brier_gain_ci90": [
+        -0.06,
+        -0.024
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.053,
+       "ratio_ci90": [
+        0.951,
+        1.144
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.302,
+       "ratio_ci90": [
+        1.158,
+        1.474
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        0.008
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 480,
+     "n_shortfalls": 120,
+     "base_rate": 0.25,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.31,
+      "persistence": 0.334,
+      "hydro_history": 0.427,
+      "signals_v1": 0.494,
+      "signals_v2": 0.297,
+      "hydro_storage": 0.404,
+      "full_v1": 0.499,
+      "full_v2": 0.405
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.062,
+      "hydro_history": 0.085,
+      "signals_v1": 0.136,
+      "signals_v2": -0.107,
+      "hydro_storage": 0.037,
+      "full_v1": 0.13,
+      "full_v2": 0.032
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.213,
+       "ratio_ci90": [
+        1.1,
+        1.412
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.307,
+       "ratio_ci90": [
+        1.085,
+        1.609
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        0.022
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.948,
+       "ratio_ci90": [
+        0.859,
+        1.073
+       ],
+       "brier_gain_ci90": [
+        -0.02,
+        -0.001
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.811,
+       "ratio_ci90": [
+        0.742,
+        0.913
+       ],
+       "brier_gain_ci90": [
+        -0.028,
+        -0.01
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.96,
+       "ratio_ci90": [
+        0.79,
+        1.203
+       ],
+       "brier_gain_ci90": [
+        -0.04,
+        -0.004
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.602,
+       "ratio_ci90": [
+        0.527,
+        0.698
+       ],
+       "brier_gain_ci90": [
+        -0.064,
+        -0.029
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.946,
+       "ratio_ci90": [
+        0.865,
+        1.046
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        -0.001
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.211,
+       "ratio_ci90": [
+        1.113,
+        1.393
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        0.006
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 480,
+     "n_shortfalls": 120,
+     "base_rate": 0.25,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.287,
+      "persistence": 0.306,
+      "hydro_history": 0.413,
+      "signals_v1": 0.457,
+      "signals_v2": 0.247,
+      "hydro_storage": 0.326,
+      "full_v1": 0.472,
+      "full_v2": 0.321
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.036,
+      "hydro_history": 0.063,
+      "signals_v1": 0.112,
+      "signals_v2": -0.17,
+      "hydro_storage": -0.053,
+      "full_v1": 0.099,
+      "full_v2": -0.059
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.048,
+       "ratio_ci90": [
+        0.971,
+        1.203
+       ],
+       "brier_gain_ci90": [
+        -0.027,
+        -0.007
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.117,
+       "ratio_ci90": [
+        0.965,
+        1.329
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        0.003
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.778,
+       "ratio_ci90": [
+        0.697,
+        0.881
+       ],
+       "brier_gain_ci90": [
+        -0.032,
+        -0.014
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.68,
+       "ratio_ci90": [
+        0.617,
+        0.764
+       ],
+       "brier_gain_ci90": [
+        -0.038,
+        -0.022
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.859,
+       "ratio_ci90": [
+        0.74,
+        1.042
+       ],
+       "brier_gain_ci90": [
+        -0.047,
+        -0.018
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.54,
+       "ratio_ci90": [
+        0.465,
+        0.629
+       ],
+       "brier_gain_ci90": [
+        -0.07,
+        -0.038
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.79,
+       "ratio_ci90": [
+        0.711,
+        0.892
+       ],
+       "brier_gain_ci90": [
+        -0.03,
+        -0.013
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.065,
+       "ratio_ci90": [
+        0.982,
+        1.205
+       ],
+       "brier_gain_ci90": [
+        -0.027,
+        -0.007
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 480,
+     "n_shortfalls": 120,
+     "base_rate": 0.25,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.274,
+      "persistence": 0.302,
+      "hydro_history": 0.398,
+      "signals_v1": 0.43,
+      "signals_v2": 0.228,
+      "hydro_storage": 0.304,
+      "full_v1": 0.459,
+      "full_v2": 0.305
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.038,
+      "hydro_history": 0.066,
+      "signals_v1": 0.104,
+      "signals_v2": -0.178,
+      "hydro_storage": -0.077,
+      "full_v1": 0.095,
+      "full_v2": -0.069
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.009,
+       "ratio_ci90": [
+        0.921,
+        1.128
+       ],
+       "brier_gain_ci90": [
+        -0.03,
+        -0.011
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.115,
+       "ratio_ci90": [
+        0.984,
+        1.351
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.001
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.766,
+       "ratio_ci90": [
+        0.698,
+        0.86
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.017
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.665,
+       "ratio_ci90": [
+        0.616,
+        0.733
+       ],
+       "brier_gain_ci90": [
+        -0.038,
+        -0.022
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.834,
+       "ratio_ci90": [
+        0.732,
+        0.959
+       ],
+       "brier_gain_ci90": [
+        -0.047,
+        -0.022
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.53,
+       "ratio_ci90": [
+        0.474,
+        0.598
+       ],
+       "brier_gain_ci90": [
+        -0.071,
+        -0.038
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.763,
+       "ratio_ci90": [
+        0.688,
+        0.855
+       ],
+       "brier_gain_ci90": [
+        -0.036,
+        -0.018
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.005,
+       "ratio_ci90": [
+        0.921,
+        1.118
+       ],
+       "brier_gain_ci90": [
+        -0.031,
+        -0.013
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 480,
+     "n_shortfalls": 120,
+     "base_rate": 0.25,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.265,
+      "persistence": 0.334,
+      "hydro_history": 0.427,
+      "signals_v1": 0.383,
+      "signals_v2": 0.232,
+      "hydro_storage": 0.327,
+      "full_v1": 0.471,
+      "full_v2": 0.322
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.075,
+      "hydro_history": 0.086,
+      "signals_v1": 0.081,
+      "signals_v2": -0.156,
+      "hydro_storage": -0.048,
+      "full_v1": 0.106,
+      "full_v2": -0.055
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 0.962,
+       "ratio_ci90": [
+        0.876,
+        1.094
+       ],
+       "brier_gain_ci90": [
+        -0.035,
+        -0.016
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.214,
+       "ratio_ci90": [
+        1.043,
+        1.473
+       ],
+       "brier_gain_ci90": [
+        -0.023,
+        0.002
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.753,
+       "ratio_ci90": [
+        0.676,
+        0.842
+       ],
+       "brier_gain_ci90": [
+        -0.035,
+        -0.018
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.682,
+       "ratio_ci90": [
+        0.63,
+        0.766
+       ],
+       "brier_gain_ci90": [
+        -0.038,
+        -0.022
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.876,
+       "ratio_ci90": [
+        0.764,
+        1.031
+       ],
+       "brier_gain_ci90": [
+        -0.044,
+        -0.017
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.606,
+       "ratio_ci90": [
+        0.551,
+        0.695
+       ],
+       "brier_gain_ci90": [
+        -0.06,
+        -0.031
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.765,
+       "ratio_ci90": [
+        0.68,
+        0.86
+       ],
+       "brier_gain_ci90": [
+        -0.035,
+        -0.017
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 0.978,
+       "ratio_ci90": [
+        0.889,
+        1.103
+       ],
+       "brier_gain_ci90": [
+        -0.034,
+        -0.015
+       ]
+      }
+     }
+    }
+   ],
+   "brazil_subsystems": [
+    {
+     "horizon": 1,
+     "n": 240,
+     "n_shortfalls": 33,
+     "base_rate": 0.138,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.136,
+      "persistence": 0.455,
+      "hydro_history": 0.645,
+      "signals_v1": 0.445,
+      "signals_v2": 0.341,
+      "hydro_storage": 0.665,
+      "full_v1": 0.698,
+      "full_v2": 0.655
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.34,
+      "hydro_history": 0.379,
+      "signals_v1": -0.107,
+      "signals_v2": -0.24,
+      "hydro_storage": 0.399,
+      "full_v1": 0.407,
+      "full_v2": 0.358
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.44,
+       "ratio_ci90": [
+        1.22,
+        1.823
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        0.011
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 4.809,
+       "ratio_ci90": [
+        3.722,
+        6.525
+       ],
+       "brier_gain_ci90": [
+        0.025,
+        0.061
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.016,
+       "ratio_ci90": [
+        0.899,
+        1.164
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.005
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.939,
+       "ratio_ci90": [
+        0.862,
+        1.014
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 2.5,
+       "ratio_ci90": [
+        1.692,
+        3.831
+       ],
+       "brier_gain_ci90": [
+        -0.05,
+        -0.01
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.766,
+       "ratio_ci90": [
+        0.564,
+        0.961
+       ],
+       "brier_gain_ci90": [
+        -0.037,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.031,
+       "ratio_ci90": [
+        0.94,
+        1.158
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.009
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.461,
+       "ratio_ci90": [
+        1.246,
+        1.841
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.017
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 240,
+     "n_shortfalls": 33,
+     "base_rate": 0.138,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.135,
+      "persistence": 0.306,
+      "hydro_history": 0.394,
+      "signals_v1": 0.504,
+      "signals_v2": 0.307,
+      "hydro_storage": 0.416,
+      "full_v1": 0.469,
+      "full_v2": 0.4
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.169,
+      "hydro_history": 0.167,
+      "signals_v1": 0.003,
+      "signals_v2": -0.251,
+      "hydro_storage": 0.132,
+      "full_v1": 0.217,
+      "full_v2": 0.129
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.309,
+       "ratio_ci90": [
+        1.025,
+        1.812
+       ],
+       "brier_gain_ci90": [
+        -0.017,
+        0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.97,
+       "ratio_ci90": [
+        2.16,
+        4.248
+       ],
+       "brier_gain_ci90": [
+        0.0,
+        0.03
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.016,
+       "ratio_ci90": [
+        0.804,
+        1.241
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        0.005
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.853,
+       "ratio_ci90": [
+        0.747,
+        0.967
+       ],
+       "brier_gain_ci90": [
+        -0.02,
+        -0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 2.275,
+       "ratio_ci90": [
+        1.512,
+        3.655
+       ],
+       "brier_gain_ci90": [
+        -0.049,
+        -0.015
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.609,
+       "ratio_ci90": [
+        0.449,
+        0.79
+       ],
+       "brier_gain_ci90": [
+        -0.051,
+        -0.011
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.055,
+       "ratio_ci90": [
+        0.881,
+        1.237
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.36,
+       "ratio_ci90": [
+        1.085,
+        1.837
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        0.005
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 240,
+     "n_shortfalls": 33,
+     "base_rate": 0.138,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.138,
+      "persistence": 0.194,
+      "hydro_history": 0.261,
+      "signals_v1": 0.383,
+      "signals_v2": 0.218,
+      "hydro_storage": 0.268,
+      "full_v1": 0.296,
+      "full_v2": 0.262
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.031,
+      "hydro_history": 0.049,
+      "signals_v1": -0.027,
+      "signals_v2": -0.283,
+      "hydro_storage": -0.005,
+      "full_v1": 0.07,
+      "full_v2": -0.013
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.354,
+       "ratio_ci90": [
+        1.059,
+        2.069
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.903,
+       "ratio_ci90": [
+        1.363,
+        3.032
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        0.012
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.006,
+       "ratio_ci90": [
+        0.801,
+        1.291
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        0.002
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.884,
+       "ratio_ci90": [
+        0.732,
+        1.059
+       ],
+       "brier_gain_ci90": [
+        -0.019,
+        -0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.581,
+       "ratio_ci90": [
+        1.062,
+        2.903
+       ],
+       "brier_gain_ci90": [
+        -0.052,
+        -0.018
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.568,
+       "ratio_ci90": [
+        0.42,
+        0.788
+       ],
+       "brier_gain_ci90": [
+        -0.05,
+        -0.012
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.029,
+       "ratio_ci90": [
+        0.849,
+        1.304
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.386,
+       "ratio_ci90": [
+        1.093,
+        2.01
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        0.007
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 240,
+     "n_shortfalls": 33,
+     "base_rate": 0.138,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.142,
+      "persistence": 0.138,
+      "hydro_history": 0.182,
+      "signals_v1": 0.318,
+      "signals_v2": 0.153,
+      "hydro_storage": 0.174,
+      "full_v1": 0.187,
+      "full_v2": 0.158
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": -0.073,
+      "hydro_history": -0.027,
+      "signals_v1": -0.034,
+      "signals_v2": -0.349,
+      "hydro_storage": -0.145,
+      "full_v1": -0.017,
+      "full_v2": -0.146
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.148,
+       "ratio_ci90": [
+        0.965,
+        1.581
+       ],
+       "brier_gain_ci90": [
+        -0.02,
+        0.003
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.111,
+       "ratio_ci90": [
+        0.917,
+        1.59
+       ],
+       "brier_gain_ci90": [
+        -0.029,
+        -0.005
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.869,
+       "ratio_ci90": [
+        0.711,
+        1.13
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.004
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.846,
+       "ratio_ci90": [
+        0.696,
+        1.062
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.007
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.078,
+       "ratio_ci90": [
+        0.791,
+        1.884
+       ],
+       "brier_gain_ci90": [
+        -0.056,
+        -0.027
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.481,
+       "ratio_ci90": [
+        0.38,
+        0.667
+       ],
+       "brier_gain_ci90": [
+        -0.053,
+        -0.021
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.959,
+       "ratio_ci90": [
+        0.795,
+        1.231
+       ],
+       "brier_gain_ci90": [
+        -0.025,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.266,
+       "ratio_ci90": [
+        1.06,
+        1.706
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        0.002
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 240,
+     "n_shortfalls": 33,
+     "base_rate": 0.138,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.147,
+      "persistence": 0.135,
+      "hydro_history": 0.171,
+      "signals_v1": 0.29,
+      "signals_v2": 0.124,
+      "hydro_storage": 0.144,
+      "full_v1": 0.194,
+      "full_v2": 0.135
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": -0.072,
+      "hydro_history": -0.027,
+      "signals_v1": 0.001,
+      "signals_v2": -0.343,
+      "hydro_storage": -0.21,
+      "full_v1": 0.007,
+      "full_v2": -0.186
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 0.997,
+       "ratio_ci90": [
+        0.885,
+        1.235
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.004
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 0.918,
+       "ratio_ci90": [
+        0.764,
+        1.176
+       ],
+       "brier_gain_ci90": [
+        -0.034,
+        -0.011
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.787,
+       "ratio_ci90": [
+        0.641,
+        0.938
+       ],
+       "brier_gain_ci90": [
+        -0.028,
+        -0.011
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.693,
+       "ratio_ci90": [
+        0.534,
+        0.838
+       ],
+       "brier_gain_ci90": [
+        -0.032,
+        -0.015
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.843,
+       "ratio_ci90": [
+        0.676,
+        1.295
+       ],
+       "brier_gain_ci90": [
+        -0.055,
+        -0.03
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.427,
+       "ratio_ci90": [
+        0.351,
+        0.561
+       ],
+       "brier_gain_ci90": [
+        -0.057,
+        -0.026
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.84,
+       "ratio_ci90": [
+        0.692,
+        1.011
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.012
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.064,
+       "ratio_ci90": [
+        0.924,
+        1.34
+       ],
+       "brier_gain_ci90": [
+        -0.029,
+        -0.005
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 240,
+     "n_shortfalls": 33,
+     "base_rate": 0.138,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.153,
+      "persistence": 0.134,
+      "hydro_history": 0.177,
+      "signals_v1": 0.228,
+      "signals_v2": 0.116,
+      "hydro_storage": 0.133,
+      "full_v1": 0.192,
+      "full_v2": 0.124
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": -0.077,
+      "hydro_history": -0.018,
+      "signals_v1": -0.026,
+      "signals_v2": -0.328,
+      "hydro_storage": -0.238,
+      "full_v1": 0.007,
+      "full_v2": -0.209
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 0.929,
+       "ratio_ci90": [
+        0.802,
+        1.164
+       ],
+       "brier_gain_ci90": [
+        -0.028,
+        -0.005
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 0.81,
+       "ratio_ci90": [
+        0.669,
+        1.053
+       ],
+       "brier_gain_ci90": [
+        -0.039,
+        -0.013
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.703,
+       "ratio_ci90": [
+        0.526,
+        0.875
+       ],
+       "brier_gain_ci90": [
+        -0.034,
+        -0.014
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.646,
+       "ratio_ci90": [
+        0.491,
+        0.796
+       ],
+       "brier_gain_ci90": [
+        -0.036,
+        -0.017
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 0.757,
+       "ratio_ci90": [
+        0.612,
+        1.096
+       ],
+       "brier_gain_ci90": [
+        -0.054,
+        -0.026
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.51,
+       "ratio_ci90": [
+        0.409,
+        0.639
+       ],
+       "brier_gain_ci90": [
+        -0.051,
+        -0.022
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.749,
+       "ratio_ci90": [
+        0.541,
+        0.94
+       ],
+       "brier_gain_ci90": [
+        -0.039,
+        -0.016
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 0.99,
+       "ratio_ci90": [
+        0.846,
+        1.259
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.007
+       ]
+      }
+     }
+    }
+   ],
+   "us_states": [
+    {
+     "horizon": 1,
+     "n": 600,
+     "n_shortfalls": 222,
+     "base_rate": 0.37,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.373,
+      "persistence": 0.592,
+      "hydro_history": 0.768,
+      "signals_v1": 0.586,
+      "signals_v2": 0.464,
+      "hydro_storage": 0.774,
+      "full_v1": 0.761,
+      "full_v2": 0.762
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.316,
+      "hydro_history": 0.394,
+      "signals_v1": 0.191,
+      "signals_v2": 0.118,
+      "hydro_storage": 0.419,
+      "full_v1": 0.409,
+      "full_v2": 0.411
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.288,
+       "ratio_ci90": [
+        1.228,
+        1.352
+       ],
+       "brier_gain_ci90": [
+        0.017,
+        0.035
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.043,
+       "ratio_ci90": [
+        1.892,
+        2.227
+       ],
+       "brier_gain_ci90": [
+        0.089,
+        0.13
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.993,
+       "ratio_ci90": [
+        0.966,
+        1.02
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.012
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.002,
+       "ratio_ci90": [
+        0.985,
+        1.022
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.005
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.242,
+       "ratio_ci90": [
+        1.161,
+        1.349
+       ],
+       "brier_gain_ci90": [
+        0.017,
+        0.047
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.791,
+       "ratio_ci90": [
+        0.724,
+        0.884
+       ],
+       "brier_gain_ci90": [
+        -0.03,
+        -0.006
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.008,
+       "ratio_ci90": [
+        0.983,
+        1.033
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.012
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.308,
+       "ratio_ci90": [
+        1.243,
+        1.368
+       ],
+       "brier_gain_ci90": [
+        0.02,
+        0.035
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 600,
+     "n_shortfalls": 222,
+     "base_rate": 0.37,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.372,
+      "persistence": 0.518,
+      "hydro_history": 0.664,
+      "signals_v1": 0.579,
+      "signals_v2": 0.46,
+      "hydro_storage": 0.675,
+      "full_v1": 0.685,
+      "full_v2": 0.669
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.201,
+      "hydro_history": 0.268,
+      "signals_v1": 0.169,
+      "signals_v2": 0.119,
+      "hydro_storage": 0.29,
+      "full_v1": 0.292,
+      "full_v2": 0.291
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.291,
+       "ratio_ci90": [
+        1.218,
+        1.372
+       ],
+       "brier_gain_ci90": [
+        0.016,
+        0.032
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.799,
+       "ratio_ci90": [
+        1.679,
+        1.935
+       ],
+       "brier_gain_ci90": [
+        0.064,
+        0.091
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.008,
+       "ratio_ci90": [
+        0.971,
+        1.05
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.011
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.976,
+       "ratio_ci90": [
+        0.953,
+        1.005
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.004
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.236,
+       "ratio_ci90": [
+        1.153,
+        1.349
+       ],
+       "brier_gain_ci90": [
+        0.018,
+        0.045
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.794,
+       "ratio_ci90": [
+        0.735,
+        0.876
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.003
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.018,
+       "ratio_ci90": [
+        0.983,
+        1.053
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.011
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.302,
+       "ratio_ci90": [
+        1.227,
+        1.383
+       ],
+       "brier_gain_ci90": [
+        0.016,
+        0.031
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 600,
+     "n_shortfalls": 222,
+     "base_rate": 0.37,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.374,
+      "persistence": 0.459,
+      "hydro_history": 0.599,
+      "signals_v1": 0.577,
+      "signals_v2": 0.434,
+      "hydro_storage": 0.601,
+      "full_v1": 0.622,
+      "full_v2": 0.592
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.117,
+      "hydro_history": 0.192,
+      "signals_v1": 0.146,
+      "signals_v2": 0.09,
+      "hydro_storage": 0.206,
+      "full_v1": 0.214,
+      "full_v2": 0.196
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.291,
+       "ratio_ci90": [
+        1.222,
+        1.384
+       ],
+       "brier_gain_ci90": [
+        0.014,
+        0.027
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.585,
+       "ratio_ci90": [
+        1.463,
+        1.723
+       ],
+       "brier_gain_ci90": [
+        0.04,
+        0.063
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.989,
+       "ratio_ci90": [
+        0.947,
+        1.026
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.006
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.952,
+       "ratio_ci90": [
+        0.92,
+        0.993
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.0
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.162,
+       "ratio_ci90": [
+        1.076,
+        1.292
+       ],
+       "brier_gain_ci90": [
+        0.014,
+        0.034
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.752,
+       "ratio_ci90": [
+        0.698,
+        0.842
+       ],
+       "brier_gain_ci90": [
+        -0.022,
+        -0.006
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.004,
+       "ratio_ci90": [
+        0.97,
+        1.037
+       ],
+       "brier_gain_ci90": [
+        -0.0,
+        0.008
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.311,
+       "ratio_ci90": [
+        1.231,
+        1.413
+       ],
+       "brier_gain_ci90": [
+        0.018,
+        0.029
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 600,
+     "n_shortfalls": 222,
+     "base_rate": 0.37,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.371,
+      "persistence": 0.455,
+      "hydro_history": 0.591,
+      "signals_v1": 0.543,
+      "signals_v2": 0.436,
+      "hydro_storage": 0.61,
+      "full_v1": 0.626,
+      "full_v2": 0.603
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.111,
+      "hydro_history": 0.183,
+      "signals_v1": 0.112,
+      "signals_v2": 0.064,
+      "hydro_storage": 0.179,
+      "full_v1": 0.197,
+      "full_v2": 0.166
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.324,
+       "ratio_ci90": [
+        1.265,
+        1.403
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.021
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.622,
+       "ratio_ci90": [
+        1.515,
+        1.734
+       ],
+       "brier_gain_ci90": [
+        0.035,
+        0.052
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.02,
+       "ratio_ci90": [
+        0.961,
+        1.066
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        0.001
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.963,
+       "ratio_ci90": [
+        0.929,
+        0.992
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        -0.004
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.175,
+       "ratio_ci90": [
+        1.081,
+        1.298
+       ],
+       "brier_gain_ci90": [
+        0.01,
+        0.024
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.804,
+       "ratio_ci90": [
+        0.738,
+        0.897
+       ],
+       "brier_gain_ci90": [
+        -0.019,
+        -0.007
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.033,
+       "ratio_ci90": [
+        0.981,
+        1.069
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.341,
+       "ratio_ci90": [
+        1.281,
+        1.412
+       ],
+       "brier_gain_ci90": [
+        0.012,
+        0.023
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 600,
+     "n_shortfalls": 222,
+     "base_rate": 0.37,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.372,
+      "persistence": 0.464,
+      "hydro_history": 0.594,
+      "signals_v1": 0.517,
+      "signals_v2": 0.415,
+      "hydro_storage": 0.59,
+      "full_v1": 0.595,
+      "full_v2": 0.57
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.117,
+      "hydro_history": 0.179,
+      "signals_v1": 0.083,
+      "signals_v2": 0.022,
+      "hydro_storage": 0.141,
+      "full_v1": 0.168,
+      "full_v2": 0.114
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.229,
+       "ratio_ci90": [
+        1.172,
+        1.304
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.004
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.532,
+       "ratio_ci90": [
+        1.423,
+        1.647
+       ],
+       "brier_gain_ci90": [
+        0.024,
+        0.037
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.959,
+       "ratio_ci90": [
+        0.902,
+        1.01
+       ],
+       "brier_gain_ci90": [
+        -0.022,
+        -0.012
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.958,
+       "ratio_ci90": [
+        0.917,
+        1.01
+       ],
+       "brier_gain_ci90": [
+        -0.019,
+        -0.01
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.114,
+       "ratio_ci90": [
+        1.031,
+        1.223
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.011
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.801,
+       "ratio_ci90": [
+        0.732,
+        0.894
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.011
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.993,
+       "ratio_ci90": [
+        0.949,
+        1.033
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.273,
+       "ratio_ci90": [
+        1.211,
+        1.36
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.011
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 600,
+     "n_shortfalls": 222,
+     "base_rate": 0.37,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.372,
+      "persistence": 0.47,
+      "hydro_history": 0.601,
+      "signals_v1": 0.501,
+      "signals_v2": 0.411,
+      "hydro_storage": 0.56,
+      "full_v1": 0.577,
+      "full_v2": 0.548
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.117,
+      "hydro_history": 0.171,
+      "signals_v1": 0.07,
+      "signals_v2": 0.02,
+      "hydro_storage": 0.127,
+      "full_v1": 0.145,
+      "full_v2": 0.098
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.166,
+       "ratio_ci90": [
+        1.099,
+        1.27
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        0.0
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.473,
+       "ratio_ci90": [
+        1.343,
+        1.63
+       ],
+       "brier_gain_ci90": [
+        0.019,
+        0.033
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.911,
+       "ratio_ci90": [
+        0.867,
+        0.953
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.015
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.95,
+       "ratio_ci90": [
+        0.912,
+        0.992
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        -0.008
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.103,
+       "ratio_ci90": [
+        1.01,
+        1.229
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.011
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.819,
+       "ratio_ci90": [
+        0.754,
+        0.906
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.93,
+       "ratio_ci90": [
+        0.891,
+        0.978
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.007
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.191,
+       "ratio_ci90": [
+        1.121,
+        1.301
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.008
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "short_adj": {
+   "all": [
+    {
+     "horizon": 1,
+     "n": 2820,
+     "n_shortfalls": 833,
+     "base_rate": 0.295,
+     "n_units": 47,
+     "auc_pr": {
+      "climatology": 0.29,
+      "persistence": 0.543,
+      "hydro_history": 0.711,
+      "signals_v1": 0.524,
+      "signals_v2": 0.494,
+      "hydro_storage": 0.716,
+      "full_v1": 0.727,
+      "full_v2": 0.715
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.326,
+      "hydro_history": 0.392,
+      "signals_v1": 0.205,
+      "signals_v2": 0.166,
+      "hydro_storage": 0.397,
+      "full_v1": 0.409,
+      "full_v2": 0.384
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.318,
+       "ratio_ci90": [
+        1.281,
+        1.358
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.017
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.464,
+       "ratio_ci90": [
+        2.318,
+        2.633
+       ],
+       "brier_gain_ci90": [
+        0.079,
+        0.097
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.006,
+       "ratio_ci90": [
+        0.988,
+        1.026
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.001
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.985,
+       "ratio_ci90": [
+        0.973,
+        0.997
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.004
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.7,
+       "ratio_ci90": [
+        1.606,
+        1.807
+       ],
+       "brier_gain_ci90": [
+        0.031,
+        0.044
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.943,
+       "ratio_ci90": [
+        0.911,
+        0.977
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        -0.005
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.007,
+       "ratio_ci90": [
+        0.994,
+        1.025
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.32,
+       "ratio_ci90": [
+        1.287,
+        1.356
+       ],
+       "brier_gain_ci90": [
+        0.012,
+        0.019
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 2820,
+     "n_shortfalls": 833,
+     "base_rate": 0.295,
+     "n_units": 47,
+     "auc_pr": {
+      "climatology": 0.291,
+      "persistence": 0.45,
+      "hydro_history": 0.58,
+      "signals_v1": 0.481,
+      "signals_v2": 0.453,
+      "hydro_storage": 0.576,
+      "full_v1": 0.595,
+      "full_v2": 0.571
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.2,
+      "hydro_history": 0.255,
+      "signals_v1": 0.162,
+      "signals_v2": 0.129,
+      "hydro_storage": 0.256,
+      "full_v1": 0.271,
+      "full_v2": 0.237
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.268,
+       "ratio_ci90": [
+        1.223,
+        1.316
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.012
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.959,
+       "ratio_ci90": [
+        1.842,
+        2.09
+       ],
+       "brier_gain_ci90": [
+        0.048,
+        0.06
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.984,
+       "ratio_ci90": [
+        0.954,
+        1.01
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.001
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.959,
+       "ratio_ci90": [
+        0.942,
+        0.979
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        -0.005
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.554,
+       "ratio_ci90": [
+        1.463,
+        1.662
+       ],
+       "brier_gain_ci90": [
+        0.024,
+        0.035
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.942,
+       "ratio_ci90": [
+        0.917,
+        0.975
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.992,
+       "ratio_ci90": [
+        0.967,
+        1.021
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.278,
+       "ratio_ci90": [
+        1.235,
+        1.331
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.016
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 2820,
+     "n_shortfalls": 833,
+     "base_rate": 0.295,
+     "n_units": 47,
+     "auc_pr": {
+      "climatology": 0.292,
+      "persistence": 0.412,
+      "hydro_history": 0.538,
+      "signals_v1": 0.456,
+      "signals_v2": 0.415,
+      "hydro_storage": 0.523,
+      "full_v1": 0.537,
+      "full_v2": 0.498
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.154,
+      "hydro_history": 0.211,
+      "signals_v1": 0.142,
+      "signals_v2": 0.096,
+      "hydro_storage": 0.207,
+      "full_v1": 0.215,
+      "full_v2": 0.167
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.207,
+       "ratio_ci90": [
+        1.16,
+        1.261
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.705,
+       "ratio_ci90": [
+        1.597,
+        1.819
+       ],
+       "brier_gain_ci90": [
+        0.033,
+        0.043
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.926,
+       "ratio_ci90": [
+        0.893,
+        0.957
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        -0.007
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.927,
+       "ratio_ci90": [
+        0.904,
+        0.953
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        -0.008
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.42,
+       "ratio_ci90": [
+        1.331,
+        1.51
+       ],
+       "brier_gain_ci90": [
+        0.017,
+        0.026
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.91,
+       "ratio_ci90": [
+        0.875,
+        0.949
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        -0.007
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.974,
+       "ratio_ci90": [
+        0.946,
+        1.009
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.002
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.269,
+       "ratio_ci90": [
+        1.226,
+        1.321
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.015
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 2820,
+     "n_shortfalls": 833,
+     "base_rate": 0.295,
+     "n_units": 47,
+     "auc_pr": {
+      "climatology": 0.29,
+      "persistence": 0.389,
+      "hydro_history": 0.511,
+      "signals_v1": 0.436,
+      "signals_v2": 0.386,
+      "hydro_storage": 0.496,
+      "full_v1": 0.5,
+      "full_v2": 0.455
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.127,
+      "hydro_history": 0.183,
+      "signals_v1": 0.128,
+      "signals_v2": 0.078,
+      "hydro_storage": 0.178,
+      "full_v1": 0.183,
+      "full_v2": 0.132
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.17,
+       "ratio_ci90": [
+        1.118,
+        1.228
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.004
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.571,
+       "ratio_ci90": [
+        1.486,
+        1.671
+       ],
+       "brier_gain_ci90": [
+        0.025,
+        0.035
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.891,
+       "ratio_ci90": [
+        0.849,
+        0.933
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.008
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.91,
+       "ratio_ci90": [
+        0.883,
+        0.942
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.009
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.333,
+       "ratio_ci90": [
+        1.258,
+        1.417
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.022
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.885,
+       "ratio_ci90": [
+        0.847,
+        0.928
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.971,
+       "ratio_ci90": [
+        0.932,
+        1.014
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.002
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.276,
+       "ratio_ci90": [
+        1.228,
+        1.325
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.015
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 2820,
+     "n_shortfalls": 833,
+     "base_rate": 0.295,
+     "n_units": 47,
+     "auc_pr": {
+      "climatology": 0.291,
+      "persistence": 0.372,
+      "hydro_history": 0.495,
+      "signals_v1": 0.408,
+      "signals_v2": 0.347,
+      "hydro_storage": 0.466,
+      "full_v1": 0.465,
+      "full_v2": 0.418
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.108,
+      "hydro_history": 0.165,
+      "signals_v1": 0.104,
+      "signals_v2": 0.039,
+      "hydro_storage": 0.149,
+      "full_v1": 0.151,
+      "full_v2": 0.091
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.126,
+       "ratio_ci90": [
+        1.072,
+        1.187
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.0
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.44,
+       "ratio_ci90": [
+        1.369,
+        1.52
+       ],
+       "brier_gain_ci90": [
+        0.017,
+        0.025
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.845,
+       "ratio_ci90": [
+        0.808,
+        0.886
+       ],
+       "brier_gain_ci90": [
+        -0.02,
+        -0.014
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.899,
+       "ratio_ci90": [
+        0.871,
+        0.935
+       ],
+       "brier_gain_ci90": [
+        -0.017,
+        -0.01
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.195,
+       "ratio_ci90": [
+        1.129,
+        1.27
+       ],
+       "brier_gain_ci90": [
+        0.005,
+        0.013
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.851,
+       "ratio_ci90": [
+        0.822,
+        0.891
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        -0.011
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.942,
+       "ratio_ci90": [
+        0.903,
+        0.984
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.001
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.255,
+       "ratio_ci90": [
+        1.204,
+        1.315
+       ],
+       "brier_gain_ci90": [
+        0.006,
+        0.013
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 2820,
+     "n_shortfalls": 833,
+     "base_rate": 0.295,
+     "n_units": 47,
+     "auc_pr": {
+      "climatology": 0.292,
+      "persistence": 0.361,
+      "hydro_history": 0.484,
+      "signals_v1": 0.387,
+      "signals_v2": 0.337,
+      "hydro_storage": 0.46,
+      "full_v1": 0.441,
+      "full_v2": 0.401
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.097,
+      "hydro_history": 0.154,
+      "signals_v1": 0.085,
+      "signals_v2": 0.027,
+      "hydro_storage": 0.142,
+      "full_v1": 0.128,
+      "full_v2": 0.074
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.111,
+       "ratio_ci90": [
+        1.065,
+        1.174
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.002
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.377,
+       "ratio_ci90": [
+        1.302,
+        1.457
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.021
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.829,
+       "ratio_ci90": [
+        0.799,
+        0.866
+       ],
+       "brier_gain_ci90": [
+        -0.022,
+        -0.014
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.91,
+       "ratio_ci90": [
+        0.882,
+        0.946
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.009
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.156,
+       "ratio_ci90": [
+        1.1,
+        1.231
+       ],
+       "brier_gain_ci90": [
+        0.002,
+        0.01
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.87,
+       "ratio_ci90": [
+        0.833,
+        0.915
+       ],
+       "brier_gain_ci90": [
+        -0.017,
+        -0.009
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.948,
+       "ratio_ci90": [
+        0.913,
+        0.989
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        -0.0
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.272,
+       "ratio_ci90": [
+        1.217,
+        1.342
+       ],
+       "brier_gain_ci90": [
+        0.007,
+        0.014
+       ]
+      }
+     }
+    }
+   ],
+   "ge5_train_years": [
+    {
+     "horizon": 1,
+     "n": 2645,
+     "n_shortfalls": 812,
+     "base_rate": 0.307,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.304,
+      "persistence": 0.552,
+      "hydro_history": 0.716,
+      "signals_v1": 0.53,
+      "signals_v2": 0.504,
+      "hydro_storage": 0.721,
+      "full_v1": 0.73,
+      "full_v2": 0.719
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.325,
+      "hydro_history": 0.389,
+      "signals_v1": 0.2,
+      "signals_v2": 0.162,
+      "hydro_storage": 0.395,
+      "full_v1": 0.405,
+      "full_v2": 0.379
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.303,
+       "ratio_ci90": [
+        1.27,
+        1.339
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.017
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.364,
+       "ratio_ci90": [
+        2.223,
+        2.525
+       ],
+       "brier_gain_ci90": [
+        0.08,
+        0.098
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.004,
+       "ratio_ci90": [
+        0.987,
+        1.025
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.001
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.984,
+       "ratio_ci90": [
+        0.973,
+        0.996
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        -0.004
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.658,
+       "ratio_ci90": [
+        1.568,
+        1.771
+       ],
+       "brier_gain_ci90": [
+        0.032,
+        0.044
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.951,
+       "ratio_ci90": [
+        0.92,
+        0.986
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.008,
+       "ratio_ci90": [
+        0.995,
+        1.026
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.307,
+       "ratio_ci90": [
+        1.275,
+        1.342
+       ],
+       "brier_gain_ci90": [
+        0.012,
+        0.02
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 2645,
+     "n_shortfalls": 812,
+     "base_rate": 0.307,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.303,
+      "persistence": 0.463,
+      "hydro_history": 0.588,
+      "signals_v1": 0.488,
+      "signals_v2": 0.463,
+      "hydro_storage": 0.584,
+      "full_v1": 0.602,
+      "full_v2": 0.577
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.202,
+      "hydro_history": 0.254,
+      "signals_v1": 0.16,
+      "signals_v2": 0.126,
+      "hydro_storage": 0.256,
+      "full_v1": 0.27,
+      "full_v2": 0.235
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.247,
+       "ratio_ci90": [
+        1.204,
+        1.295
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.012
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.904,
+       "ratio_ci90": [
+        1.787,
+        2.04
+       ],
+       "brier_gain_ci90": [
+        0.049,
+        0.061
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.982,
+       "ratio_ci90": [
+        0.954,
+        1.009
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.002
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.959,
+       "ratio_ci90": [
+        0.942,
+        0.979
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        -0.006
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.529,
+       "ratio_ci90": [
+        1.444,
+        1.644
+       ],
+       "brier_gain_ci90": [
+        0.024,
+        0.035
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.949,
+       "ratio_ci90": [
+        0.923,
+        0.982
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        -0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.994,
+       "ratio_ci90": [
+        0.97,
+        1.023
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.262,
+       "ratio_ci90": [
+        1.221,
+        1.315
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.016
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 2645,
+     "n_shortfalls": 812,
+     "base_rate": 0.307,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.304,
+      "persistence": 0.422,
+      "hydro_history": 0.543,
+      "signals_v1": 0.464,
+      "signals_v2": 0.427,
+      "hydro_storage": 0.53,
+      "full_v1": 0.543,
+      "full_v2": 0.505
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.152,
+      "hydro_history": 0.208,
+      "signals_v1": 0.14,
+      "signals_v2": 0.093,
+      "hydro_storage": 0.204,
+      "full_v1": 0.213,
+      "full_v2": 0.164
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.196,
+       "ratio_ci90": [
+        1.151,
+        1.249
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.659,
+       "ratio_ci90": [
+        1.554,
+        1.771
+       ],
+       "brier_gain_ci90": [
+        0.033,
+        0.044
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.929,
+       "ratio_ci90": [
+        0.896,
+        0.959
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        -0.007
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.929,
+       "ratio_ci90": [
+        0.906,
+        0.956
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        -0.009
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.404,
+       "ratio_ci90": [
+        1.316,
+        1.492
+       ],
+       "brier_gain_ci90": [
+        0.017,
+        0.026
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.919,
+       "ratio_ci90": [
+        0.887,
+        0.96
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.007
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.976,
+       "ratio_ci90": [
+        0.948,
+        1.011
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.002
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.257,
+       "ratio_ci90": [
+        1.215,
+        1.307
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.016
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 2645,
+     "n_shortfalls": 811,
+     "base_rate": 0.307,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.299,
+      "persistence": 0.398,
+      "hydro_history": 0.516,
+      "signals_v1": 0.445,
+      "signals_v2": 0.398,
+      "hydro_storage": 0.502,
+      "full_v1": 0.506,
+      "full_v2": 0.461
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.127,
+      "hydro_history": 0.182,
+      "signals_v1": 0.128,
+      "signals_v2": 0.078,
+      "hydro_storage": 0.176,
+      "full_v1": 0.183,
+      "full_v2": 0.13
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.157,
+       "ratio_ci90": [
+        1.107,
+        1.216
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.004
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.541,
+       "ratio_ci90": [
+        1.457,
+        1.629
+       ],
+       "brier_gain_ci90": [
+        0.026,
+        0.035
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.893,
+       "ratio_ci90": [
+        0.851,
+        0.936
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        -0.008
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.911,
+       "ratio_ci90": [
+        0.883,
+        0.942
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.009
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.331,
+       "ratio_ci90": [
+        1.257,
+        1.416
+       ],
+       "brier_gain_ci90": [
+        0.014,
+        0.022
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.893,
+       "ratio_ci90": [
+        0.855,
+        0.935
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.973,
+       "ratio_ci90": [
+        0.933,
+        1.016
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.002
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.26,
+       "ratio_ci90": [
+        1.211,
+        1.308
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.015
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 2645,
+     "n_shortfalls": 812,
+     "base_rate": 0.307,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.299,
+      "persistence": 0.38,
+      "hydro_history": 0.499,
+      "signals_v1": 0.416,
+      "signals_v2": 0.358,
+      "hydro_storage": 0.47,
+      "full_v1": 0.47,
+      "full_v2": 0.423
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.108,
+      "hydro_history": 0.163,
+      "signals_v1": 0.105,
+      "signals_v2": 0.039,
+      "hydro_storage": 0.147,
+      "full_v1": 0.15,
+      "full_v2": 0.089
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.114,
+       "ratio_ci90": [
+        1.064,
+        1.172
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        -0.001
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.417,
+       "ratio_ci90": [
+        1.346,
+        1.493
+       ],
+       "brier_gain_ci90": [
+        0.017,
+        0.025
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.848,
+       "ratio_ci90": [
+        0.811,
+        0.889
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.014
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.902,
+       "ratio_ci90": [
+        0.874,
+        0.937
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        -0.01
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.197,
+       "ratio_ci90": [
+        1.139,
+        1.269
+       ],
+       "brier_gain_ci90": [
+        0.006,
+        0.013
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.86,
+       "ratio_ci90": [
+        0.83,
+        0.9
+       ],
+       "brier_gain_ci90": [
+        -0.019,
+        -0.011
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.942,
+       "ratio_ci90": [
+        0.902,
+        0.985
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        -0.001
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.237,
+       "ratio_ci90": [
+        1.187,
+        1.298
+       ],
+       "brier_gain_ci90": [
+        0.006,
+        0.013
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 2645,
+     "n_shortfalls": 813,
+     "base_rate": 0.307,
+     "n_units": 45,
+     "auc_pr": {
+      "climatology": 0.301,
+      "persistence": 0.37,
+      "hydro_history": 0.489,
+      "signals_v1": 0.394,
+      "signals_v2": 0.349,
+      "hydro_storage": 0.464,
+      "full_v1": 0.445,
+      "full_v2": 0.408
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.097,
+      "hydro_history": 0.153,
+      "signals_v1": 0.085,
+      "signals_v2": 0.028,
+      "hydro_storage": 0.14,
+      "full_v1": 0.127,
+      "full_v2": 0.072
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.103,
+       "ratio_ci90": [
+        1.057,
+        1.164
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        -0.002
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.357,
+       "ratio_ci90": [
+        1.279,
+        1.429
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.021
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.834,
+       "ratio_ci90": [
+        0.804,
+        0.871
+       ],
+       "brier_gain_ci90": [
+        -0.023,
+        -0.015
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.916,
+       "ratio_ci90": [
+        0.888,
+        0.954
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        -0.009
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.161,
+       "ratio_ci90": [
+        1.104,
+        1.232
+       ],
+       "brier_gain_ci90": [
+        0.003,
+        0.011
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.885,
+       "ratio_ci90": [
+        0.846,
+        0.932
+       ],
+       "brier_gain_ci90": [
+        -0.017,
+        -0.01
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.947,
+       "ratio_ci90": [
+        0.912,
+        0.987
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        -0.001
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.253,
+       "ratio_ci90": [
+        1.199,
+        1.322
+       ],
+       "brier_gain_ci90": [
+        0.006,
+        0.014
+       ]
+      }
+     }
+    }
+   ],
+   "storage_observed": [
+    {
+     "horizon": 1,
+     "n": 480,
+     "n_shortfalls": 160,
+     "base_rate": 0.333,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.34,
+      "persistence": 0.597,
+      "hydro_history": 0.73,
+      "signals_v1": 0.552,
+      "signals_v2": 0.564,
+      "hydro_storage": 0.74,
+      "full_v1": 0.767,
+      "full_v2": 0.761
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.352,
+      "hydro_history": 0.414,
+      "signals_v1": 0.22,
+      "signals_v2": 0.153,
+      "hydro_storage": 0.4,
+      "full_v1": 0.445,
+      "full_v2": 0.407
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.274,
+       "ratio_ci90": [
+        1.208,
+        1.364
+       ],
+       "brier_gain_ci90": [
+        0.003,
+        0.023
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.237,
+       "ratio_ci90": [
+        2.0,
+        2.47
+       ],
+       "brier_gain_ci90": [
+        0.079,
+        0.12
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.043,
+       "ratio_ci90": [
+        1.003,
+        1.099
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        0.008
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.992,
+       "ratio_ci90": [
+        0.958,
+        1.032
+       ],
+       "brier_gain_ci90": [
+        -0.02,
+        0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.658,
+       "ratio_ci90": [
+        1.482,
+        1.892
+       ],
+       "brier_gain_ci90": [
+        0.019,
+        0.056
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.021,
+       "ratio_ci90": [
+        0.911,
+        1.153
+       ],
+       "brier_gain_ci90": [
+        -0.036,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.013,
+       "ratio_ci90": [
+        0.979,
+        1.062
+       ],
+       "brier_gain_ci90": [
+        -0.01,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.239,
+       "ratio_ci90": [
+        1.173,
+        1.321
+       ],
+       "brier_gain_ci90": [
+        0.003,
+        0.021
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 480,
+     "n_shortfalls": 160,
+     "base_rate": 0.333,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.336,
+      "persistence": 0.481,
+      "hydro_history": 0.574,
+      "signals_v1": 0.517,
+      "signals_v2": 0.52,
+      "hydro_storage": 0.561,
+      "full_v1": 0.627,
+      "full_v2": 0.596
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.188,
+      "hydro_history": 0.239,
+      "signals_v1": 0.196,
+      "signals_v2": 0.118,
+      "hydro_storage": 0.193,
+      "full_v1": 0.306,
+      "full_v2": 0.219
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.241,
+       "ratio_ci90": [
+        1.147,
+        1.358
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.018
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.776,
+       "ratio_ci90": [
+        1.584,
+        1.994
+       ],
+       "brier_gain_ci90": [
+        0.038,
+        0.068
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.038,
+       "ratio_ci90": [
+        0.957,
+        1.12
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        0.003
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.95,
+       "ratio_ci90": [
+        0.884,
+        1.027
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.009
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.549,
+       "ratio_ci90": [
+        1.38,
+        1.762
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.045
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.005,
+       "ratio_ci90": [
+        0.894,
+        1.142
+       ],
+       "brier_gain_ci90": [
+        -0.038,
+        0.0
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.977,
+       "ratio_ci90": [
+        0.911,
+        1.058
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.003
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.168,
+       "ratio_ci90": [
+        1.078,
+        1.298
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        0.013
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 480,
+     "n_shortfalls": 160,
+     "base_rate": 0.333,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.336,
+      "persistence": 0.418,
+      "hydro_history": 0.514,
+      "signals_v1": 0.517,
+      "signals_v2": 0.487,
+      "hydro_storage": 0.49,
+      "full_v1": 0.558,
+      "full_v2": 0.512
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.112,
+      "hydro_history": 0.172,
+      "signals_v1": 0.18,
+      "signals_v2": 0.069,
+      "hydro_storage": 0.094,
+      "full_v1": 0.236,
+      "full_v2": 0.111
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.223,
+       "ratio_ci90": [
+        1.134,
+        1.34
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.01
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.524,
+       "ratio_ci90": [
+        1.351,
+        1.719
+       ],
+       "brier_gain_ci90": [
+        0.011,
+        0.043
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.996,
+       "ratio_ci90": [
+        0.914,
+        1.084
+       ],
+       "brier_gain_ci90": [
+        -0.027,
+        -0.004
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.917,
+       "ratio_ci90": [
+        0.843,
+        0.999
+       ],
+       "brier_gain_ci90": [
+        -0.044,
+        -0.019
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.453,
+       "ratio_ci90": [
+        1.286,
+        1.658
+       ],
+       "brier_gain_ci90": [
+        0.001,
+        0.032
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.943,
+       "ratio_ci90": [
+        0.828,
+        1.088
+       ],
+       "brier_gain_ci90": [
+        -0.047,
+        -0.01
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.954,
+       "ratio_ci90": [
+        0.878,
+        1.045
+       ],
+       "brier_gain_ci90": [
+        -0.03,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.172,
+       "ratio_ci90": [
+        1.099,
+        1.289
+       ],
+       "brier_gain_ci90": [
+        -0.016,
+        0.008
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 480,
+     "n_shortfalls": 160,
+     "base_rate": 0.333,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.333,
+      "persistence": 0.396,
+      "hydro_history": 0.497,
+      "signals_v1": 0.513,
+      "signals_v2": 0.463,
+      "hydro_storage": 0.465,
+      "full_v1": 0.532,
+      "full_v2": 0.478
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.084,
+      "hydro_history": 0.143,
+      "signals_v1": 0.163,
+      "signals_v2": 0.045,
+      "hydro_storage": 0.06,
+      "full_v1": 0.198,
+      "full_v2": 0.068
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.207,
+       "ratio_ci90": [
+        1.11,
+        1.348
+       ],
+       "brier_gain_ci90": [
+        -0.017,
+        0.009
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.434,
+       "ratio_ci90": [
+        1.302,
+        1.608
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.03
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.962,
+       "ratio_ci90": [
+        0.87,
+        1.049
+       ],
+       "brier_gain_ci90": [
+        -0.031,
+        -0.007
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.899,
+       "ratio_ci90": [
+        0.827,
+        0.983
+       ],
+       "brier_gain_ci90": [
+        -0.047,
+        -0.019
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.389,
+       "ratio_ci90": [
+        1.239,
+        1.557
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.025
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.903,
+       "ratio_ci90": [
+        0.805,
+        1.031
+       ],
+       "brier_gain_ci90": [
+        -0.047,
+        -0.014
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.935,
+       "ratio_ci90": [
+        0.855,
+        1.035
+       ],
+       "brier_gain_ci90": [
+        -0.034,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.173,
+       "ratio_ci90": [
+        1.078,
+        1.321
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        0.008
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 480,
+     "n_shortfalls": 160,
+     "base_rate": 0.333,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.331,
+      "persistence": 0.385,
+      "hydro_history": 0.501,
+      "signals_v1": 0.476,
+      "signals_v2": 0.437,
+      "hydro_storage": 0.456,
+      "full_v1": 0.51,
+      "full_v2": 0.464
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.073,
+      "hydro_history": 0.136,
+      "signals_v1": 0.144,
+      "signals_v2": 0.021,
+      "hydro_storage": 0.058,
+      "full_v1": 0.172,
+      "full_v2": 0.049
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.203,
+       "ratio_ci90": [
+        1.103,
+        1.343
+       ],
+       "brier_gain_ci90": [
+        -0.019,
+        0.006
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.403,
+       "ratio_ci90": [
+        1.251,
+        1.555
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.024
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.926,
+       "ratio_ci90": [
+        0.825,
+        1.029
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.01
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.909,
+       "ratio_ci90": [
+        0.834,
+        0.989
+       ],
+       "brier_gain_ci90": [
+        -0.042,
+        -0.018
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.323,
+       "ratio_ci90": [
+        1.18,
+        1.488
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        0.019
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.919,
+       "ratio_ci90": [
+        0.829,
+        1.025
+       ],
+       "brier_gain_ci90": [
+        -0.045,
+        -0.015
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.911,
+       "ratio_ci90": [
+        0.818,
+        1.014
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.006
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.183,
+       "ratio_ci90": [
+        1.082,
+        1.336
+       ],
+       "brier_gain_ci90": [
+        -0.019,
+        0.011
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 480,
+     "n_shortfalls": 160,
+     "base_rate": 0.333,
+     "n_units": 8,
+     "auc_pr": {
+      "climatology": 0.33,
+      "persistence": 0.381,
+      "hydro_history": 0.5,
+      "signals_v1": 0.461,
+      "signals_v2": 0.45,
+      "hydro_storage": 0.471,
+      "full_v1": 0.489,
+      "full_v2": 0.479
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.066,
+      "hydro_history": 0.133,
+      "signals_v1": 0.119,
+      "signals_v2": 0.038,
+      "hydro_storage": 0.085,
+      "full_v1": 0.158,
+      "full_v2": 0.066
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.257,
+       "ratio_ci90": [
+        1.156,
+        1.389
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.011
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.453,
+       "ratio_ci90": [
+        1.285,
+        1.622
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.028
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.959,
+       "ratio_ci90": [
+        0.874,
+        1.05
+       ],
+       "brier_gain_ci90": [
+        -0.027,
+        -0.005
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.979,
+       "ratio_ci90": [
+        0.906,
+        1.054
+       ],
+       "brier_gain_ci90": [
+        -0.034,
+        -0.013
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.365,
+       "ratio_ci90": [
+        1.212,
+        1.517
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.021
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.976,
+       "ratio_ci90": [
+        0.88,
+        1.077
+       ],
+       "brier_gain_ci90": [
+        -0.034,
+        -0.008
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.942,
+       "ratio_ci90": [
+        0.853,
+        1.04
+       ],
+       "brier_gain_ci90": [
+        -0.025,
+        0.001
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.235,
+       "ratio_ci90": [
+        1.122,
+        1.4
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        0.018
+       ]
+      }
+     }
+    }
+   ],
+   "brazil_subsystems": [
+    {
+     "horizon": 1,
+     "n": 240,
+     "n_shortfalls": 71,
+     "base_rate": 0.296,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.316,
+      "persistence": 0.65,
+      "hydro_history": 0.798,
+      "signals_v1": 0.649,
+      "signals_v2": 0.745,
+      "hydro_storage": 0.842,
+      "full_v1": 0.851,
+      "full_v2": 0.857
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.425,
+      "hydro_history": 0.498,
+      "signals_v1": 0.301,
+      "signals_v2": 0.342,
+      "hydro_storage": 0.516,
+      "full_v1": 0.545,
+      "full_v2": 0.529
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.318,
+       "ratio_ci90": [
+        1.225,
+        1.45
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.036
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.713,
+       "ratio_ci90": [
+        2.293,
+        3.153
+       ],
+       "brier_gain_ci90": [
+        0.089,
+        0.143
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.074,
+       "ratio_ci90": [
+        1.021,
+        1.135
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.016
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.007,
+       "ratio_ci90": [
+        0.976,
+        1.045
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.006
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 2.359,
+       "ratio_ci90": [
+        1.978,
+        2.768
+       ],
+       "brier_gain_ci90": [
+        0.053,
+        0.098
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.147,
+       "ratio_ci90": [
+        0.982,
+        1.301
+       ],
+       "brier_gain_ci90": [
+        -0.013,
+        0.031
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.054,
+       "ratio_ci90": [
+        1.012,
+        1.104
+       ],
+       "brier_gain_ci90": [
+        -0.003,
+        0.011
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.294,
+       "ratio_ci90": [
+        1.197,
+        1.417
+       ],
+       "brier_gain_ci90": [
+        0.01,
+        0.031
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 240,
+     "n_shortfalls": 71,
+     "base_rate": 0.296,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.315,
+      "persistence": 0.526,
+      "hydro_history": 0.691,
+      "signals_v1": 0.62,
+      "signals_v2": 0.715,
+      "hydro_storage": 0.736,
+      "full_v1": 0.76,
+      "full_v2": 0.77
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.242,
+      "hydro_history": 0.338,
+      "signals_v1": 0.281,
+      "signals_v2": 0.302,
+      "hydro_storage": 0.337,
+      "full_v1": 0.433,
+      "full_v2": 0.39
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.464,
+       "ratio_ci90": [
+        1.325,
+        1.644
+       ],
+       "brier_gain_ci90": [
+        0.02,
+        0.046
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.445,
+       "ratio_ci90": [
+        2.071,
+        2.869
+       ],
+       "brier_gain_ci90": [
+        0.066,
+        0.105
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.115,
+       "ratio_ci90": [
+        1.047,
+        1.194
+       ],
+       "brier_gain_ci90": [
+        0.002,
+        0.022
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.014,
+       "ratio_ci90": [
+        0.963,
+        1.073
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 2.268,
+       "ratio_ci90": [
+        1.938,
+        2.687
+       ],
+       "brier_gain_ci90": [
+        0.047,
+        0.086
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.152,
+       "ratio_ci90": [
+        0.98,
+        1.302
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        0.023
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.066,
+       "ratio_ci90": [
+        1.004,
+        1.137
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        0.009
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.399,
+       "ratio_ci90": [
+        1.279,
+        1.565
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.033
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 240,
+     "n_shortfalls": 71,
+     "base_rate": 0.296,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.316,
+      "persistence": 0.466,
+      "hydro_history": 0.634,
+      "signals_v1": 0.628,
+      "signals_v2": 0.694,
+      "hydro_storage": 0.675,
+      "full_v1": 0.702,
+      "full_v2": 0.712
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.168,
+      "hydro_history": 0.266,
+      "signals_v1": 0.263,
+      "signals_v2": 0.262,
+      "hydro_storage": 0.256,
+      "full_v1": 0.366,
+      "full_v2": 0.309
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.528,
+       "ratio_ci90": [
+        1.379,
+        1.727
+       ],
+       "brier_gain_ci90": [
+        0.019,
+        0.044
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.251,
+       "ratio_ci90": [
+        1.876,
+        2.699
+       ],
+       "brier_gain_ci90": [
+        0.049,
+        0.088
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.122,
+       "ratio_ci90": [
+        1.016,
+        1.223
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.021
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.013,
+       "ratio_ci90": [
+        0.944,
+        1.079
+       ],
+       "brier_gain_ci90": [
+        -0.026,
+        -0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 2.194,
+       "ratio_ci90": [
+        1.847,
+        2.611
+       ],
+       "brier_gain_ci90": [
+        0.039,
+        0.076
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.104,
+       "ratio_ci90": [
+        0.961,
+        1.25
+       ],
+       "brier_gain_ci90": [
+        -0.018,
+        0.015
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.064,
+       "ratio_ci90": [
+        0.978,
+        1.16
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.009
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.449,
+       "ratio_ci90": [
+        1.316,
+        1.628
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.032
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 240,
+     "n_shortfalls": 71,
+     "base_rate": 0.296,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.314,
+      "persistence": 0.417,
+      "hydro_history": 0.583,
+      "signals_v1": 0.602,
+      "signals_v2": 0.632,
+      "hydro_storage": 0.63,
+      "full_v1": 0.63,
+      "full_v2": 0.64
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.11,
+      "hydro_history": 0.203,
+      "signals_v1": 0.24,
+      "signals_v2": 0.221,
+      "hydro_storage": 0.205,
+      "full_v1": 0.299,
+      "full_v2": 0.243
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.533,
+       "ratio_ci90": [
+        1.392,
+        1.733
+       ],
+       "brier_gain_ci90": [
+        0.016,
+        0.043
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 2.037,
+       "ratio_ci90": [
+        1.645,
+        2.458
+       ],
+       "brier_gain_ci90": [
+        0.035,
+        0.072
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.096,
+       "ratio_ci90": [
+        1.006,
+        1.198
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.021
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.015,
+       "ratio_ci90": [
+        0.944,
+        1.081
+       ],
+       "brier_gain_ci90": [
+        -0.025,
+        -0.001
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 2.014,
+       "ratio_ci90": [
+        1.636,
+        2.426
+       ],
+       "brier_gain_ci90": [
+        0.03,
+        0.066
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.051,
+       "ratio_ci90": [
+        0.928,
+        1.175
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        0.011
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.08,
+       "ratio_ci90": [
+        0.989,
+        1.168
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        0.012
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.51,
+       "ratio_ci90": [
+        1.359,
+        1.705
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.034
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 240,
+     "n_shortfalls": 71,
+     "base_rate": 0.296,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.316,
+      "persistence": 0.404,
+      "hydro_history": 0.578,
+      "signals_v1": 0.58,
+      "signals_v2": 0.603,
+      "hydro_storage": 0.615,
+      "full_v1": 0.625,
+      "full_v2": 0.62
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.091,
+      "hydro_history": 0.183,
+      "signals_v1": 0.23,
+      "signals_v2": 0.188,
+      "hydro_storage": 0.191,
+      "full_v1": 0.282,
+      "full_v2": 0.216
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.536,
+       "ratio_ci90": [
+        1.382,
+        1.738
+       ],
+       "brier_gain_ci90": [
+        0.015,
+        0.039
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.963,
+       "ratio_ci90": [
+        1.544,
+        2.385
+       ],
+       "brier_gain_ci90": [
+        0.029,
+        0.065
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.074,
+       "ratio_ci90": [
+        0.963,
+        1.161
+       ],
+       "brier_gain_ci90": [
+        -0.002,
+        0.018
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.992,
+       "ratio_ci90": [
+        0.923,
+        1.063
+       ],
+       "brier_gain_ci90": [
+        -0.025,
+        -0.004
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.91,
+       "ratio_ci90": [
+        1.516,
+        2.331
+       ],
+       "brier_gain_ci90": [
+        0.023,
+        0.058
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.04,
+       "ratio_ci90": [
+        0.92,
+        1.156
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        0.004
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.065,
+       "ratio_ci90": [
+        0.965,
+        1.146
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        0.012
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.524,
+       "ratio_ci90": [
+        1.356,
+        1.749
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.035
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 240,
+     "n_shortfalls": 71,
+     "base_rate": 0.296,
+     "n_units": 4,
+     "auc_pr": {
+      "climatology": 0.323,
+      "persistence": 0.381,
+      "hydro_history": 0.582,
+      "signals_v1": 0.579,
+      "signals_v2": 0.594,
+      "hydro_storage": 0.612,
+      "full_v1": 0.606,
+      "full_v2": 0.616
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.068,
+      "hydro_history": 0.168,
+      "signals_v1": 0.215,
+      "signals_v2": 0.178,
+      "hydro_storage": 0.18,
+      "full_v1": 0.268,
+      "full_v2": 0.211
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.616,
+       "ratio_ci90": [
+        1.452,
+        1.836
+       ],
+       "brier_gain_ci90": [
+        0.02,
+        0.041
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.904,
+       "ratio_ci90": [
+        1.468,
+        2.347
+       ],
+       "brier_gain_ci90": [
+        0.029,
+        0.063
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 1.059,
+       "ratio_ci90": [
+        0.972,
+        1.176
+       ],
+       "brier_gain_ci90": [
+        -0.001,
+        0.019
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 1.016,
+       "ratio_ci90": [
+        0.944,
+        1.08
+       ],
+       "brier_gain_ci90": [
+        -0.024,
+        -0.002
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.837,
+       "ratio_ci90": [
+        1.45,
+        2.259
+       ],
+       "brier_gain_ci90": [
+        0.023,
+        0.054
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 1.026,
+       "ratio_ci90": [
+        0.918,
+        1.148
+       ],
+       "brier_gain_ci90": [
+        -0.023,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.053,
+       "ratio_ci90": [
+        0.97,
+        1.153
+       ],
+       "brier_gain_ci90": [
+        -0.008,
+        0.012
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.607,
+       "ratio_ci90": [
+        1.436,
+        1.835
+       ],
+       "brier_gain_ci90": [
+        0.012,
+        0.036
+       ]
+      }
+     }
+    }
+   ],
+   "us_states": [
+    {
+     "horizon": 1,
+     "n": 600,
+     "n_shortfalls": 243,
+     "base_rate": 0.405,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.382,
+      "persistence": 0.615,
+      "hydro_history": 0.743,
+      "signals_v1": 0.483,
+      "signals_v2": 0.473,
+      "hydro_storage": 0.753,
+      "full_v1": 0.74,
+      "full_v2": 0.729
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.35,
+      "hydro_history": 0.411,
+      "signals_v1": 0.136,
+      "signals_v2": 0.099,
+      "hydro_storage": 0.409,
+      "full_v1": 0.408,
+      "full_v2": 0.36
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.186,
+       "ratio_ci90": [
+        1.134,
+        1.243
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.011
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.912,
+       "ratio_ci90": [
+        1.733,
+        2.104
+       ],
+       "brier_gain_ci90": [
+        0.086,
+        0.127
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.982,
+       "ratio_ci90": [
+        0.943,
+        1.023
+       ],
+       "brier_gain_ci90": [
+        -0.022,
+        -0.008
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.985,
+       "ratio_ci90": [
+        0.963,
+        1.013
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.008
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.241,
+       "ratio_ci90": [
+        1.142,
+        1.374
+       ],
+       "brier_gain_ci90": [
+        0.015,
+        0.044
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.981,
+       "ratio_ci90": [
+        0.92,
+        1.051
+       ],
+       "brier_gain_ci90": [
+        -0.02,
+        -0.003
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.013,
+       "ratio_ci90": [
+        0.991,
+        1.038
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.004
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.224,
+       "ratio_ci90": [
+        1.173,
+        1.275
+       ],
+       "brier_gain_ci90": [
+        0.009,
+        0.026
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 2,
+     "n": 600,
+     "n_shortfalls": 243,
+     "base_rate": 0.405,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.38,
+      "persistence": 0.512,
+      "hydro_history": 0.574,
+      "signals_v1": 0.458,
+      "signals_v2": 0.443,
+      "hydro_storage": 0.57,
+      "full_v1": 0.558,
+      "full_v2": 0.529
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.196,
+      "hydro_history": 0.239,
+      "signals_v1": 0.115,
+      "signals_v2": 0.083,
+      "hydro_storage": 0.24,
+      "full_v1": 0.238,
+      "full_v2": 0.19
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.032,
+       "ratio_ci90": [
+        0.982,
+        1.1
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        0.005
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.392,
+       "ratio_ci90": [
+        1.264,
+        1.568
+       ],
+       "brier_gain_ci90": [
+        0.039,
+        0.072
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.921,
+       "ratio_ci90": [
+        0.861,
+        0.983
+       ],
+       "brier_gain_ci90": [
+        -0.023,
+        -0.008
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.947,
+       "ratio_ci90": [
+        0.91,
+        0.986
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.008
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.166,
+       "ratio_ci90": [
+        1.082,
+        1.285
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.037
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.967,
+       "ratio_ci90": [
+        0.921,
+        1.021
+       ],
+       "brier_gain_ci90": [
+        -0.015,
+        -0.003
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.993,
+       "ratio_ci90": [
+        0.945,
+        1.038
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.006
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.113,
+       "ratio_ci90": [
+        1.052,
+        1.178
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.022
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 3,
+     "n": 600,
+     "n_shortfalls": 243,
+     "base_rate": 0.405,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.382,
+      "persistence": 0.464,
+      "hydro_history": 0.516,
+      "signals_v1": 0.444,
+      "signals_v2": 0.425,
+      "hydro_storage": 0.512,
+      "full_v1": 0.489,
+      "full_v2": 0.453
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.132,
+      "hydro_history": 0.184,
+      "signals_v1": 0.107,
+      "signals_v2": 0.053,
+      "hydro_storage": 0.191,
+      "full_v1": 0.176,
+      "full_v2": 0.105
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 0.977,
+       "ratio_ci90": [
+        0.923,
+        1.04
+       ],
+       "brier_gain_ci90": [
+        -0.017,
+        -0.001
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.185,
+       "ratio_ci90": [
+        1.06,
+        1.322
+       ],
+       "brier_gain_ci90": [
+        0.019,
+        0.045
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.879,
+       "ratio_ci90": [
+        0.811,
+        0.938
+       ],
+       "brier_gain_ci90": [
+        -0.031,
+        -0.017
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.928,
+       "ratio_ci90": [
+        0.873,
+        0.966
+       ],
+       "brier_gain_ci90": [
+        -0.028,
+        -0.014
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.111,
+       "ratio_ci90": [
+        1.021,
+        1.21
+       ],
+       "brier_gain_ci90": [
+        0.004,
+        0.027
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.957,
+       "ratio_ci90": [
+        0.898,
+        1.008
+       ],
+       "brier_gain_ci90": [
+        -0.023,
+        -0.01
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.993,
+       "ratio_ci90": [
+        0.93,
+        1.054
+       ],
+       "brier_gain_ci90": [
+        -0.006,
+        0.009
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.105,
+       "ratio_ci90": [
+        1.029,
+        1.208
+       ],
+       "brier_gain_ci90": [
+        0.007,
+        0.027
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 4,
+     "n": 600,
+     "n_shortfalls": 243,
+     "base_rate": 0.405,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.381,
+      "persistence": 0.434,
+      "hydro_history": 0.489,
+      "signals_v1": 0.455,
+      "signals_v2": 0.428,
+      "hydro_storage": 0.505,
+      "full_v1": 0.476,
+      "full_v2": 0.44
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.097,
+      "hydro_history": 0.157,
+      "signals_v1": 0.105,
+      "signals_v2": 0.05,
+      "hydro_storage": 0.169,
+      "full_v1": 0.154,
+      "full_v2": 0.088
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 1.013,
+       "ratio_ci90": [
+        0.948,
+        1.098
+       ],
+       "brier_gain_ci90": [
+        -0.011,
+        0.005
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.154,
+       "ratio_ci90": [
+        1.051,
+        1.262
+       ],
+       "brier_gain_ci90": [
+        0.014,
+        0.037
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.9,
+       "ratio_ci90": [
+        0.814,
+        0.975
+       ],
+       "brier_gain_ci90": [
+        -0.029,
+        -0.013
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.924,
+       "ratio_ci90": [
+        0.877,
+        0.965
+       ],
+       "brier_gain_ci90": [
+        -0.026,
+        -0.015
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.122,
+       "ratio_ci90": [
+        1.032,
+        1.216
+       ],
+       "brier_gain_ci90": [
+        0.006,
+        0.024
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.941,
+       "ratio_ci90": [
+        0.898,
+        0.983
+       ],
+       "brier_gain_ci90": [
+        -0.021,
+        -0.011
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.032,
+       "ratio_ci90": [
+        0.939,
+        1.116
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.011
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.161,
+       "ratio_ci90": [
+        1.08,
+        1.249
+       ],
+       "brier_gain_ci90": [
+        0.012,
+        0.03
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 5,
+     "n": 600,
+     "n_shortfalls": 243,
+     "base_rate": 0.405,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.38,
+      "persistence": 0.427,
+      "hydro_history": 0.469,
+      "signals_v1": 0.426,
+      "signals_v2": 0.383,
+      "hydro_storage": 0.463,
+      "full_v1": 0.433,
+      "full_v2": 0.403
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.086,
+      "hydro_history": 0.144,
+      "signals_v1": 0.079,
+      "signals_v2": -0.011,
+      "hydro_storage": 0.135,
+      "full_v1": 0.119,
+      "full_v2": 0.02
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 0.943,
+       "ratio_ci90": [
+        0.887,
+        1.008
+       ],
+       "brier_gain_ci90": [
+        -0.027,
+        -0.012
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.06,
+       "ratio_ci90": [
+        0.97,
+        1.158
+       ],
+       "brier_gain_ci90": [
+        -0.004,
+        0.015
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.859,
+       "ratio_ci90": [
+        0.781,
+        0.922
+       ],
+       "brier_gain_ci90": [
+        -0.045,
+        -0.029
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.93,
+       "ratio_ci90": [
+        0.88,
+        0.977
+       ],
+       "brier_gain_ci90": [
+        -0.036,
+        -0.023
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.007,
+       "ratio_ci90": [
+        0.934,
+        1.088
+       ],
+       "brier_gain_ci90": [
+        -0.012,
+        0.005
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.898,
+       "ratio_ci90": [
+        0.853,
+        0.948
+       ],
+       "brier_gain_ci90": [
+        -0.033,
+        -0.02
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 0.987,
+       "ratio_ci90": [
+        0.92,
+        1.07
+       ],
+       "brier_gain_ci90": [
+        -0.009,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.083,
+       "ratio_ci90": [
+        1.015,
+        1.175
+       ],
+       "brier_gain_ci90": [
+        0.008,
+        0.022
+       ]
+      }
+     }
+    },
+    {
+     "horizon": 6,
+     "n": 600,
+     "n_shortfalls": 243,
+     "base_rate": 0.405,
+     "n_units": 10,
+     "auc_pr": {
+      "climatology": 0.381,
+      "persistence": 0.414,
+      "hydro_history": 0.457,
+      "signals_v1": 0.402,
+      "signals_v2": 0.395,
+      "hydro_storage": 0.461,
+      "full_v1": 0.412,
+      "full_v2": 0.407
+     },
+     "brier_skill_vs_climatology": {
+      "climatology": 0.0,
+      "persistence": 0.071,
+      "hydro_history": 0.135,
+      "signals_v1": 0.061,
+      "signals_v2": -0.014,
+      "hydro_storage": 0.135,
+      "full_v1": 0.095,
+      "full_v2": 0.013
+     },
+     "bootstrap": {
+      "full_v2__vs__persistence": {
+       "auc_pr_ratio": 0.983,
+       "ratio_ci90": [
+        0.924,
+        1.066
+       ],
+       "brier_gain_ci90": [
+        -0.025,
+        -0.009
+       ]
+      },
+      "full_v2__vs__climatology": {
+       "auc_pr_ratio": 1.07,
+       "ratio_ci90": [
+        0.967,
+        1.177
+       ],
+       "brier_gain_ci90": [
+        -0.007,
+        0.012
+       ]
+      },
+      "full_v2__vs__hydro_history": {
+       "auc_pr_ratio": 0.891,
+       "ratio_ci90": [
+        0.816,
+        0.96
+       ],
+       "brier_gain_ci90": [
+        -0.045,
+        -0.028
+       ]
+      },
+      "full_v2__vs__full_v1": {
+       "auc_pr_ratio": 0.989,
+       "ratio_ci90": [
+        0.939,
+        1.035
+       ],
+       "brier_gain_ci90": [
+        -0.032,
+        -0.017
+       ]
+      },
+      "signals_v2__vs__climatology": {
+       "auc_pr_ratio": 1.039,
+       "ratio_ci90": [
+        0.951,
+        1.129
+       ],
+       "brier_gain_ci90": [
+        -0.014,
+        0.004
+       ]
+      },
+      "signals_v2__vs__signals_v1": {
+       "auc_pr_ratio": 0.984,
+       "ratio_ci90": [
+        0.938,
+        1.035
+       ],
+       "brier_gain_ci90": [
+        -0.029,
+        -0.015
+       ]
+      },
+      "hydro_storage__vs__hydro_history": {
+       "auc_pr_ratio": 1.009,
+       "ratio_ci90": [
+        0.949,
+        1.072
+       ],
+       "brier_gain_ci90": [
+        -0.005,
+        0.005
+       ]
+      },
+      "hydro_storage__vs__persistence": {
+       "auc_pr_ratio": 1.113,
+       "ratio_ci90": [
+        1.056,
+        1.207
+       ],
+       "brier_gain_ci90": [
+        0.013,
+        0.025
+       ]
+      }
+     }
+    }
+   ]
+  }
+ },
+ "brazil_storage_focus": {
+  "units": [
+   "BRA",
+   "BRA_SE",
+   "BRA_S",
+   "BRA_NE",
+   "BRA_N"
+  ],
+  "short": [
+   {
+    "horizon": 1,
+    "n": 180,
+    "n_shortfalls": 36,
+    "auc_pr": {
+     "climatology": 0.206,
+     "persistence": 0.511,
+     "hydro_history": 0.635,
+     "hydro_ear_ena": 0.686,
+     "hydro_ear_ena_grace": 0.695,
+     "ear_ena_signals_no_hydro": 0.419
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.275,
+     "hydro_history": 0.297,
+     "hydro_ear_ena": 0.327,
+     "hydro_ear_ena_grace": 0.313,
+     "ear_ena_signals_no_hydro": -0.003
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.08,
+      "ratio_ci90": [
+       1.029,
+       1.13
+      ],
+      "brier_gain_ci90": [
+       -0.004,
+       0.014
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 1.095,
+      "ratio_ci90": [
+       1.018,
+       1.167
+      ],
+      "brier_gain_ci90": [
+       -0.014,
+       0.018
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.66,
+      "ratio_ci90": [
+       0.513,
+       0.832
+      ],
+      "brier_gain_ci90": [
+       -0.085,
+       -0.013
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.342,
+      "ratio_ci90": [
+       1.195,
+       1.66
+      ],
+      "brier_gain_ci90": [
+       -0.01,
+       0.029
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 2,
+    "n": 180,
+    "n_shortfalls": 36,
+    "auc_pr": {
+     "climatology": 0.207,
+     "persistence": 0.381,
+     "hydro_history": 0.433,
+     "hydro_ear_ena": 0.48,
+     "hydro_ear_ena_grace": 0.549,
+     "ear_ena_signals_no_hydro": 0.284
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.04,
+     "hydro_history": 0.078,
+     "hydro_ear_ena": 0.116,
+     "hydro_ear_ena_grace": 0.121,
+     "ear_ena_signals_no_hydro": -0.193
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.11,
+      "ratio_ci90": [
+       1.02,
+       1.223
+      ],
+      "brier_gain_ci90": [
+       -0.006,
+       0.019
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 1.268,
+      "ratio_ci90": [
+       1.053,
+       1.474
+      ],
+      "brier_gain_ci90": [
+       -0.015,
+       0.031
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.655,
+      "ratio_ci90": [
+       0.481,
+       0.896
+      ],
+      "brier_gain_ci90": [
+       -0.081,
+       -0.006
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.261,
+      "ratio_ci90": [
+       1.104,
+       1.599
+      ],
+      "brier_gain_ci90": [
+       -0.011,
+       0.036
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 3,
+    "n": 180,
+    "n_shortfalls": 36,
+    "auc_pr": {
+     "climatology": 0.217,
+     "persistence": 0.258,
+     "hydro_history": 0.334,
+     "hydro_ear_ena": 0.403,
+     "hydro_ear_ena_grace": 0.432,
+     "ear_ena_signals_no_hydro": 0.221
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": -0.277,
+     "hydro_history": -0.14,
+     "hydro_ear_ena": -0.057,
+     "hydro_ear_ena_grace": -0.03,
+     "ear_ena_signals_no_hydro": -0.257
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.206,
+      "ratio_ci90": [
+       1.026,
+       1.399
+      ],
+      "brier_gain_ci90": [
+       0.002,
+       0.026
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 1.293,
+      "ratio_ci90": [
+       1.09,
+       1.523
+      ],
+      "brier_gain_ci90": [
+       0.001,
+       0.036
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.662,
+      "ratio_ci90": [
+       0.501,
+       0.963
+      ],
+      "brier_gain_ci90": [
+       -0.052,
+       0.016
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.559,
+      "ratio_ci90": [
+       1.344,
+       1.963
+      ],
+      "brier_gain_ci90": [
+       0.012,
+       0.059
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 4,
+    "n": 180,
+    "n_shortfalls": 36,
+    "auc_pr": {
+     "climatology": 0.23,
+     "persistence": 0.196,
+     "hydro_history": 0.223,
+     "hydro_ear_ena": 0.281,
+     "hydro_ear_ena_grace": 0.306,
+     "ear_ena_signals_no_hydro": 0.181
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": -0.521,
+     "hydro_history": -0.29,
+     "hydro_ear_ena": -0.228,
+     "hydro_ear_ena_grace": -0.196,
+     "ear_ena_signals_no_hydro": -0.311
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.261,
+      "ratio_ci90": [
+       1.069,
+       1.441
+      ],
+      "brier_gain_ci90": [
+       -0.001,
+       0.021
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 1.374,
+      "ratio_ci90": [
+       1.143,
+       1.578
+      ],
+      "brier_gain_ci90": [
+       0.002,
+       0.029
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.814,
+      "ratio_ci90": [
+       0.624,
+       1.064
+      ],
+      "brier_gain_ci90": [
+       -0.022,
+       0.015
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.432,
+      "ratio_ci90": [
+       1.202,
+       1.905
+      ],
+      "brier_gain_ci90": [
+       0.024,
+       0.071
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 5,
+    "n": 180,
+    "n_shortfalls": 36,
+    "auc_pr": {
+     "climatology": 0.231,
+     "persistence": 0.193,
+     "hydro_history": 0.198,
+     "hydro_ear_ena": 0.255,
+     "hydro_ear_ena_grace": 0.277,
+     "ear_ena_signals_no_hydro": 0.184
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": -0.596,
+     "hydro_history": -0.294,
+     "hydro_ear_ena": -0.27,
+     "hydro_ear_ena_grace": -0.229,
+     "ear_ena_signals_no_hydro": -0.303
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.287,
+      "ratio_ci90": [
+       1.129,
+       1.471
+      ],
+      "brier_gain_ci90": [
+       -0.004,
+       0.013
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 1.398,
+      "ratio_ci90": [
+       1.194,
+       1.544
+      ],
+      "brier_gain_ci90": [
+       0.0,
+       0.022
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.93,
+      "ratio_ci90": [
+       0.697,
+       1.164
+      ],
+      "brier_gain_ci90": [
+       -0.019,
+       0.015
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.32,
+      "ratio_ci90": [
+       1.102,
+       1.786
+      ],
+      "brier_gain_ci90": [
+       0.032,
+       0.076
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 6,
+    "n": 180,
+    "n_shortfalls": 36,
+    "auc_pr": {
+     "climatology": 0.227,
+     "persistence": 0.196,
+     "hydro_history": 0.197,
+     "hydro_ear_ena": 0.237,
+     "hydro_ear_ena_grace": 0.223,
+     "ear_ena_signals_no_hydro": 0.18
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": -0.584,
+     "hydro_history": -0.237,
+     "hydro_ear_ena": -0.234,
+     "hydro_ear_ena_grace": -0.241,
+     "ear_ena_signals_no_hydro": -0.296
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.2,
+      "ratio_ci90": [
+       1.036,
+       1.357
+      ],
+      "brier_gain_ci90": [
+       -0.009,
+       0.009
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 1.13,
+      "ratio_ci90": [
+       0.897,
+       1.263
+      ],
+      "brier_gain_ci90": [
+       -0.012,
+       0.01
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.913,
+      "ratio_ci90": [
+       0.72,
+       1.113
+      ],
+      "brier_gain_ci90": [
+       -0.026,
+       0.007
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.209,
+      "ratio_ci90": [
+       1.036,
+       1.703
+      ],
+      "brier_gain_ci90": [
+       0.038,
+       0.073
+      ]
+     }
+    }
+   }
+  ],
+  "short_adj": [
+   {
+    "horizon": 1,
+    "n": 180,
+    "n_shortfalls": 54,
+    "auc_pr": {
+     "climatology": 0.361,
+     "persistence": 0.672,
+     "hydro_history": 0.818,
+     "hydro_ear_ena": 0.839,
+     "hydro_ear_ena_grace": 0.81,
+     "ear_ena_signals_no_hydro": 0.692
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.473,
+     "hydro_history": 0.541,
+     "hydro_ear_ena": 0.496,
+     "hydro_ear_ena_grace": 0.42,
+     "ear_ena_signals_no_hydro": 0.226
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.025,
+      "ratio_ci90": [
+       0.984,
+       1.068
+      ],
+      "brier_gain_ci90": [
+       -0.024,
+       0.009
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 0.989,
+      "ratio_ci90": [
+       0.952,
+       1.036
+      ],
+      "brier_gain_ci90": [
+       -0.044,
+       -0.002
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.846,
+      "ratio_ci90": [
+       0.752,
+       0.949
+      ],
+      "brier_gain_ci90": [
+       -0.098,
+       -0.031
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.249,
+      "ratio_ci90": [
+       1.149,
+       1.444
+      ],
+      "brier_gain_ci90": [
+       -0.014,
+       0.027
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 2,
+    "n": 180,
+    "n_shortfalls": 54,
+    "auc_pr": {
+     "climatology": 0.36,
+     "persistence": 0.593,
+     "hydro_history": 0.738,
+     "hydro_ear_ena": 0.768,
+     "hydro_ear_ena_grace": 0.712,
+     "ear_ena_signals_no_hydro": 0.695
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.352,
+     "hydro_history": 0.404,
+     "hydro_ear_ena": 0.32,
+     "hydro_ear_ena_grace": 0.24,
+     "ear_ena_signals_no_hydro": 0.245
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.04,
+      "ratio_ci90": [
+       0.977,
+       1.121
+      ],
+      "brier_gain_ci90": [
+       -0.037,
+       0.004
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 0.964,
+      "ratio_ci90": [
+       0.91,
+       1.055
+      ],
+      "brier_gain_ci90": [
+       -0.06,
+       -0.011
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 0.942,
+      "ratio_ci90": [
+       0.835,
+       1.061
+      ],
+      "brier_gain_ci90": [
+       -0.06,
+       -0.003
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.293,
+      "ratio_ci90": [
+       1.158,
+       1.506
+      ],
+      "brier_gain_ci90": [
+       -0.029,
+       0.016
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 3,
+    "n": 180,
+    "n_shortfalls": 54,
+    "auc_pr": {
+     "climatology": 0.361,
+     "persistence": 0.512,
+     "hydro_history": 0.686,
+     "hydro_ear_ena": 0.725,
+     "hydro_ear_ena_grace": 0.675,
+     "ear_ena_signals_no_hydro": 0.693
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.23,
+     "hydro_history": 0.319,
+     "hydro_ear_ena": 0.243,
+     "hydro_ear_ena_grace": 0.174,
+     "ear_ena_signals_no_hydro": 0.25
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.057,
+      "ratio_ci90": [
+       0.974,
+       1.147
+      ],
+      "brier_gain_ci90": [
+       -0.036,
+       0.007
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 0.985,
+      "ratio_ci90": [
+       0.901,
+       1.094
+      ],
+      "brier_gain_ci90": [
+       -0.054,
+       -0.006
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 1.011,
+      "ratio_ci90": [
+       0.886,
+       1.15
+      ],
+      "brier_gain_ci90": [
+       -0.041,
+       0.014
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.416,
+      "ratio_ci90": [
+       1.256,
+       1.669
+      ],
+      "brier_gain_ci90": [
+       -0.021,
+       0.026
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 4,
+    "n": 180,
+    "n_shortfalls": 54,
+    "auc_pr": {
+     "climatology": 0.357,
+     "persistence": 0.457,
+     "hydro_history": 0.643,
+     "hydro_ear_ena": 0.668,
+     "hydro_ear_ena_grace": 0.578,
+     "ear_ena_signals_no_hydro": 0.698
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.15,
+     "hydro_history": 0.219,
+     "hydro_ear_ena": 0.172,
+     "hydro_ear_ena_grace": 0.091,
+     "ear_ena_signals_no_hydro": 0.245
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.038,
+      "ratio_ci90": [
+       0.958,
+       1.143
+      ],
+      "brier_gain_ci90": [
+       -0.03,
+       0.01
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 0.898,
+      "ratio_ci90": [
+       0.811,
+       1.028
+      ],
+      "brier_gain_ci90": [
+       -0.052,
+       -0.001
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 1.085,
+      "ratio_ci90": [
+       0.933,
+       1.231
+      ],
+      "brier_gain_ci90": [
+       -0.022,
+       0.036
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.462,
+      "ratio_ci90": [
+       1.286,
+       1.72
+      ],
+      "brier_gain_ci90": [
+       -0.018,
+       0.027
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 5,
+    "n": 180,
+    "n_shortfalls": 54,
+    "auc_pr": {
+     "climatology": 0.357,
+     "persistence": 0.437,
+     "hydro_history": 0.594,
+     "hydro_ear_ena": 0.638,
+     "hydro_ear_ena_grace": 0.519,
+     "ear_ena_signals_no_hydro": 0.682
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.123,
+     "hydro_history": 0.171,
+     "hydro_ear_ena": 0.137,
+     "hydro_ear_ena_grace": 0.035,
+     "ear_ena_signals_no_hydro": 0.214
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.073,
+      "ratio_ci90": [
+       0.962,
+       1.17
+      ],
+      "brier_gain_ci90": [
+       -0.023,
+       0.008
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 0.872,
+      "ratio_ci90": [
+       0.752,
+       0.992
+      ],
+      "brier_gain_ci90": [
+       -0.051,
+       -0.006
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 1.147,
+      "ratio_ci90": [
+       0.947,
+       1.344
+      ],
+      "brier_gain_ci90": [
+       -0.021,
+       0.045
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.458,
+      "ratio_ci90": [
+       1.285,
+       1.707
+      ],
+      "brier_gain_ci90": [
+       -0.017,
+       0.022
+      ]
+     }
+    }
+   },
+   {
+    "horizon": 6,
+    "n": 180,
+    "n_shortfalls": 54,
+    "auc_pr": {
+     "climatology": 0.355,
+     "persistence": 0.39,
+     "hydro_history": 0.588,
+     "hydro_ear_ena": 0.613,
+     "hydro_ear_ena_grace": 0.514,
+     "ear_ena_signals_no_hydro": 0.601
+    },
+    "brier_skill_vs_climatology": {
+     "climatology": 0.0,
+     "persistence": 0.052,
+     "hydro_history": 0.133,
+     "hydro_ear_ena": 0.146,
+     "hydro_ear_ena_grace": 0.03,
+     "ear_ena_signals_no_hydro": 0.124
+    },
+    "bootstrap": {
+     "hydro_ear_ena__vs__hydro_history": {
+      "auc_pr_ratio": 1.042,
+      "ratio_ci90": [
+       0.958,
+       1.173
+      ],
+      "brier_gain_ci90": [
+       -0.015,
+       0.017
+      ]
+     },
+     "hydro_ear_ena_grace__vs__hydro_history": {
+      "auc_pr_ratio": 0.874,
+      "ratio_ci90": [
+       0.768,
+       0.985
+      ],
+      "brier_gain_ci90": [
+       -0.042,
+       -0.004
+      ]
+     },
+     "ear_ena_signals_no_hydro__vs__hydro_history": {
+      "auc_pr_ratio": 1.023,
+      "ratio_ci90": [
+       0.848,
+       1.184
+      ],
+      "brier_gain_ci90": [
+       -0.028,
+       0.025
+      ]
+     },
+     "hydro_ear_ena__vs__persistence": {
+      "auc_pr_ratio": 1.572,
+      "ratio_ci90": [
+       1.349,
+       1.943
+      ],
+      "brier_gain_ci90": [
+       0.001,
+       0.039
+      ]
+     }
+    }
+   }
+  ],
+  "bra_se_2021_p_by_issue": {
+   "climatology": [
+    0.19,
+    0.19,
+    0.19,
+    0.19,
+    0.19,
+    0.19,
+    0.19
+   ],
+   "persistence": [
+    0.03,
+    0.03,
+    0.03,
+    0.87,
+    0.87,
+    0.87,
+    0.87
+   ],
+   "hydro_history": [
+    0.06,
+    0.04,
+    0.08,
+    0.86,
+    0.94,
+    0.96,
+    0.99
+   ],
+   "hydro_ear_ena": [
+    0.08,
+    0.09,
+    0.15,
+    0.91,
+    0.96,
+    0.97,
+    0.97
+   ],
+   "hydro_ear_ena_grace": [
+    0.12,
+    0.14,
+    0.24,
+    0.94,
+    0.98,
+    0.98,
+    0.98
+   ],
+   "ear_ena_signals_no_hydro": [
+    0.05,
+    0.16,
+    0.17,
+    0.65,
+    0.88,
+    0.95,
+    0.74
+   ]
+  }
+ },
+ "crises": {
+  "short": [
+   {
+    "crisis": "Brazil 2021",
+    "unit": "BRA",
+    "window": "2021-05..2021-11",
+    "onset_month": "2021-06",
+    "shortfall_months": [
+     "2021-06",
+     "2021-07",
+     "2021-08",
+     "2021-09",
+     "2021-10"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.044,
+      "2": 0.054,
+      "3": 0.048,
+      "4": 0.121,
+      "5": 0.3,
+      "6": 0.441
+     },
+     "signals_v2": {
+      "1": 0.455,
+      "2": 0.289,
+      "3": 0.164,
+      "4": 0.228,
+      "5": 0.406,
+      "6": 0.517
+     },
+     "hydro_storage": {
+      "1": 0.054,
+      "2": 0.066,
+      "3": 0.041,
+      "4": 0.168,
+      "5": 0.351,
+      "6": 0.451
+     },
+     "hydro_history": {
+      "1": 0.043,
+      "2": 0.058,
+      "3": 0.075,
+      "4": 0.129,
+      "5": 0.172,
+      "6": 0.171
+     },
+     "persistence": {
+      "1": 0.1,
+      "2": 0.123,
+      "3": 0.132,
+      "4": 0.144,
+      "5": 0.148,
+      "6": 0.152
+     },
+     "climatology": {
+      "1": 0.192,
+      "2": 0.192,
+      "3": 0.192,
+      "4": 0.192,
+      "5": 0.192,
+      "6": 0.155
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 6,
+     "signals_v2": 6,
+     "hydro_storage": 6,
+     "hydro_history": 0,
+     "persistence": 0,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "China/Sichuan 2022",
+    "unit": "CHN",
+    "window": "2022-07..2022-10",
+    "onset_month": "2022-09",
+    "shortfall_months": [
+     "2022-09",
+     "2022-10"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.144,
+      "2": 0.026,
+      "3": 0.002,
+      "4": 0.013,
+      "5": 0.036,
+      "6": 0.066
+     },
+     "signals_v2": {
+      "1": 0.584,
+      "2": 0.218,
+      "3": 0.03,
+      "4": 0.04,
+      "5": 0.082,
+      "6": 0.098
+     },
+     "hydro_storage": {
+      "1": 0.091,
+      "2": 0.017,
+      "3": 0.005,
+      "4": 0.022,
+      "5": 0.039,
+      "6": 0.072
+     },
+     "hydro_history": {
+      "1": 0.042,
+      "2": 0.009,
+      "3": 0.002,
+      "4": 0.012,
+      "5": 0.028,
+      "6": 0.057
+     },
+     "persistence": {
+      "1": 0.1,
+      "2": 0.123,
+      "3": 0.132,
+      "4": 0.144,
+      "5": 0.148,
+      "6": 0.152
+     },
+     "climatology": {
+      "1": 0.203,
+      "2": 0.203,
+      "3": 0.202,
+      "4": 0.202,
+      "5": 0.201,
+      "6": 0.201
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 0,
+     "signals_v2": 1,
+     "hydro_storage": 0,
+     "hydro_history": 0,
+     "persistence": 0,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "Vietnam 2023",
+    "unit": "VNM",
+    "window": "2023-04..2023-07",
+    "onset_month": "2023-06",
+    "shortfall_months": [
+     "2023-06"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.047,
+      "2": 0.055,
+      "3": 0.024,
+      "4": 0.015,
+      "5": 0.013,
+      "6": 0.05
+     },
+     "signals_v2": {
+      "1": 0.382,
+      "2": 0.326,
+      "3": 0.136,
+      "4": 0.088,
+      "5": 0.11,
+      "6": 0.14
+     },
+     "hydro_storage": {
+      "1": 0.058,
+      "2": 0.048,
+      "3": 0.038,
+      "4": 0.03,
+      "5": 0.018,
+      "6": 0.041
+     },
+     "hydro_history": {
+      "1": 0.085,
+      "2": 0.032,
+      "3": 0.014,
+      "4": 0.017,
+      "5": 0.007,
+      "6": 0.017
+     },
+     "persistence": {
+      "1": 0.1,
+      "2": 0.123,
+      "3": 0.132,
+      "4": 0.144,
+      "5": 0.148,
+      "6": 0.152
+     },
+     "climatology": {
+      "1": 0.355,
+      "2": 0.355,
+      "3": 0.354,
+      "4": 0.353,
+      "5": 0.353,
+      "6": 0.469
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 0,
+     "signals_v2": 0,
+     "hydro_storage": 0,
+     "hydro_history": 0,
+     "persistence": 0,
+     "climatology": 6
+    }
+   },
+   {
+    "crisis": "Ecuador 2024",
+    "unit": "ECU",
+    "window": "2024-04..2024-12",
+    "onset_month": "2024-08",
+    "shortfall_months": [
+     "2024-08",
+     "2024-09",
+     "2024-10",
+     "2024-11",
+     "2024-12"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.02,
+      "2": 0.022,
+      "3": 0.06,
+      "4": 0.084,
+      "5": 0.102,
+      "6": 0.16
+     },
+     "signals_v2": {
+      "1": 0.622,
+      "2": 0.665,
+      "3": 0.402,
+      "4": 0.388,
+      "5": 0.409,
+      "6": 0.34
+     },
+     "hydro_storage": {
+      "1": 0.008,
+      "2": 0.009,
+      "3": 0.052,
+      "4": 0.081,
+      "5": 0.073,
+      "6": 0.083
+     },
+     "hydro_history": {
+      "1": 0.007,
+      "2": 0.004,
+      "3": 0.028,
+      "4": 0.055,
+      "5": 0.049,
+      "6": 0.068
+     },
+     "persistence": {
+      "1": 0.1,
+      "2": 0.123,
+      "3": 0.132,
+      "4": 0.144,
+      "5": 0.148,
+      "6": 0.152
+     },
+     "climatology": {
+      "1": 0.355,
+      "2": 0.355,
+      "3": 0.354,
+      "4": 0.353,
+      "5": 0.353,
+      "6": 0.352
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 0,
+     "signals_v2": 5,
+     "hydro_storage": 0,
+     "hydro_history": 0,
+     "persistence": 0,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "Zambia/Zimbabwe (Kariba) 2024",
+    "unit": "ZMB_KAR",
+    "window": "2024-01..2024-12",
+    "onset_month": "2024-01",
+    "shortfall_months": [
+     "2024-01",
+     "2024-02",
+     "2024-03",
+     "2024-04",
+     "2024-05",
+     "2024-06",
+     "2024-07",
+     "2024-08",
+     "2024-09",
+     "2024-10",
+     "2024-11",
+     "2024-12"
+    ],
+    "already_short_month_before_onset": true,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.958,
+      "2": 0.84,
+      "3": 0.708,
+      "4": 0.735,
+      "5": 0.758,
+      "6": 0.667
+     },
+     "signals_v2": {
+      "1": 0.97,
+      "2": 0.763,
+      "3": 0.597,
+      "4": 0.69,
+      "5": 0.763,
+      "6": 0.632
+     },
+     "hydro_storage": {
+      "1": 0.787,
+      "2": 0.683,
+      "3": 0.551,
+      "4": 0.531,
+      "5": 0.511,
+      "6": 0.488
+     },
+     "hydro_history": {
+      "1": 0.622,
+      "2": 0.517,
+      "3": 0.501,
+      "4": 0.46,
+      "5": 0.43,
+      "6": 0.427
+     },
+     "persistence": {
+      "1": 0.621,
+      "2": 0.527,
+      "3": 0.486,
+      "4": 0.438,
+      "5": 0.416,
+      "6": 0.393
+     },
+     "climatology": {
+      "1": 0.214,
+      "2": 0.229,
+      "3": 0.187,
+      "4": 0.187,
+      "5": 0.2,
+      "6": 0.193
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 6,
+     "signals_v2": 6,
+     "hydro_storage": 6,
+     "hydro_history": 6,
+     "persistence": 5,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "Brazil 2021 (SE/CO subsystem)",
+    "unit": "BRA_SE",
+    "window": "2021-05..2021-11",
+    "onset_month": "2021-07",
+    "shortfall_months": [
+     "2021-07",
+     "2021-08",
+     "2021-09",
+     "2021-10",
+     "2021-11"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.435,
+      "2": 0.383,
+      "3": 0.358,
+      "4": 0.172,
+      "5": 0.169,
+      "6": 0.209
+     },
+     "signals_v2": {
+      "1": 0.843,
+      "2": 0.764,
+      "3": 0.624,
+      "4": 0.381,
+      "5": 0.33,
+      "6": 0.369
+     },
+     "hydro_storage": {
+      "1": 0.493,
+      "2": 0.407,
+      "3": 0.341,
+      "4": 0.167,
+      "5": 0.222,
+      "6": 0.29
+     },
+     "hydro_history": {
+      "1": 0.219,
+      "2": 0.183,
+      "3": 0.203,
+      "4": 0.147,
+      "5": 0.139,
+      "6": 0.149
+     },
+     "persistence": {
+      "1": 0.1,
+      "2": 0.123,
+      "3": 0.132,
+      "4": 0.144,
+      "5": 0.148,
+      "6": 0.152
+     },
+     "climatology": {
+      "1": 0.192,
+      "2": 0.192,
+      "3": 0.192,
+      "4": 0.192,
+      "5": 0.192,
+      "6": 0.192
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 1,
+     "signals_v2": 3,
+     "hydro_storage": 2,
+     "hydro_history": 0,
+     "persistence": 0,
+     "climatology": 0
+    }
+   }
+  ],
+  "short_adj": [
+   {
+    "crisis": "Brazil 2021",
+    "unit": "BRA",
+    "window": "2021-05..2021-11",
+    "onset_month": "2021-06",
+    "shortfall_months": [
+     "2021-06",
+     "2021-07",
+     "2021-08",
+     "2021-09",
+     "2021-10"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.435,
+      "2": 0.446,
+      "3": 0.476,
+      "4": 0.509,
+      "5": 0.656,
+      "6": 0.506
+     },
+     "signals_v2": {
+      "1": 0.787,
+      "2": 0.571,
+      "3": 0.547,
+      "4": 0.411,
+      "5": 0.528,
+      "6": 0.415
+     },
+     "hydro_storage": {
+      "1": 0.409,
+      "2": 0.477,
+      "3": 0.434,
+      "4": 0.611,
+      "5": 0.675,
+      "6": 0.578
+     },
+     "hydro_history": {
+      "1": 0.203,
+      "2": 0.284,
+      "3": 0.275,
+      "4": 0.446,
+      "5": 0.456,
+      "6": 0.316
+     },
+     "persistence": {
+      "1": 0.106,
+      "2": 0.136,
+      "3": 0.148,
+      "4": 0.37,
+      "5": 0.35,
+      "6": 0.166
+     },
+     "climatology": {
+      "1": 0.22,
+      "2": 0.22,
+      "3": 0.22,
+      "4": 0.22,
+      "5": 0.22,
+      "6": 0.232
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 6,
+     "signals_v2": 6,
+     "hydro_storage": 6,
+     "hydro_history": 5,
+     "persistence": 0,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "China/Sichuan 2022",
+    "unit": "CHN",
+    "window": "2022-07..2022-10",
+    "onset_month": "2022-08",
+    "shortfall_months": [
+     "2022-08",
+     "2022-09",
+     "2022-10"
+    ],
+    "already_short_month_before_onset": false,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.052,
+      "2": 0.004,
+      "3": 0.006,
+      "4": 0.009,
+      "5": 0.042,
+      "6": 0.037
+     },
+     "signals_v2": {
+      "1": 0.055,
+      "2": 0.007,
+      "3": 0.006,
+      "4": 0.008,
+      "5": 0.029,
+      "6": 0.022
+     },
+     "hydro_storage": {
+      "1": 0.098,
+      "2": 0.017,
+      "3": 0.036,
+      "4": 0.074,
+      "5": 0.129,
+      "6": 0.101
+     },
+     "hydro_history": {
+      "1": 0.078,
+      "2": 0.014,
+      "3": 0.038,
+      "4": 0.083,
+      "5": 0.127,
+      "6": 0.153
+     },
+     "persistence": {
+      "1": 0.106,
+      "2": 0.136,
+      "3": 0.148,
+      "4": 0.158,
+      "5": 0.162,
+      "6": 0.166
+     },
+     "climatology": {
+      "1": 0.101,
+      "2": 0.1,
+      "3": 0.101,
+      "4": 0.1,
+      "5": 0.1,
+      "6": 0.1
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 0,
+     "signals_v2": 0,
+     "hydro_storage": 0,
+     "hydro_history": 0,
+     "persistence": 0,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "Vietnam 2023",
+    "unit": "VNM",
+    "window": "2023-04..2023-07",
+    "onset_month": null,
+    "shortfall_months": [],
+    "already_short_month_before_onset": null,
+    "note": "no label in window",
+    "p_onset_by_lead": {},
+    "lead_months_p_ge_0_4": {}
+   },
+   {
+    "crisis": "Ecuador 2024",
+    "unit": "ECU",
+    "window": "2024-04..2024-12",
+    "onset_month": null,
+    "shortfall_months": [],
+    "already_short_month_before_onset": null,
+    "note": "no label in window",
+    "p_onset_by_lead": {},
+    "lead_months_p_ge_0_4": {}
+   },
+   {
+    "crisis": "Zambia/Zimbabwe (Kariba) 2024",
+    "unit": "ZMB_KAR",
+    "window": "2024-01..2024-12",
+    "onset_month": "2024-01",
+    "shortfall_months": [
+     "2024-01",
+     "2024-02",
+     "2024-03",
+     "2024-04",
+     "2024-05",
+     "2024-06",
+     "2024-07",
+     "2024-08",
+     "2024-09",
+     "2024-10",
+     "2024-11",
+     "2024-12"
+    ],
+    "already_short_month_before_onset": true,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.977,
+      "2": 0.931,
+      "3": 0.811,
+      "4": 0.831,
+      "5": 0.817,
+      "6": 0.771
+     },
+     "signals_v2": {
+      "1": 0.986,
+      "2": 0.92,
+      "3": 0.783,
+      "4": 0.818,
+      "5": 0.811,
+      "6": 0.744
+     },
+     "hydro_storage": {
+      "1": 0.872,
+      "2": 0.804,
+      "3": 0.677,
+      "4": 0.676,
+      "5": 0.618,
+      "6": 0.608
+     },
+     "hydro_history": {
+      "1": 0.662,
+      "2": 0.529,
+      "3": 0.508,
+      "4": 0.464,
+      "5": 0.438,
+      "6": 0.426
+     },
+     "persistence": {
+      "1": 0.581,
+      "2": 0.458,
+      "3": 0.414,
+      "4": 0.37,
+      "5": 0.35,
+      "6": 0.335
+     },
+     "climatology": {
+      "1": 0.213,
+      "2": 0.229,
+      "3": 0.186,
+      "4": 0.186,
+      "5": 0.2,
+      "6": 0.193
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 6,
+     "signals_v2": 6,
+     "hydro_storage": 6,
+     "hydro_history": 6,
+     "persistence": 3,
+     "climatology": 0
+    }
+   },
+   {
+    "crisis": "Brazil 2021 (SE/CO subsystem)",
+    "unit": "BRA_SE",
+    "window": "2021-05..2021-11",
+    "onset_month": "2021-05",
+    "shortfall_months": [
+     "2021-05",
+     "2021-06",
+     "2021-07",
+     "2021-08",
+     "2021-09",
+     "2021-10",
+     "2021-11"
+    ],
+    "already_short_month_before_onset": true,
+    "note": null,
+    "p_onset_by_lead": {
+     "full_v2": {
+      "1": 0.908,
+      "2": 0.822,
+      "3": 0.69,
+      "4": 0.67,
+      "5": 0.543,
+      "6": 0.414
+     },
+     "signals_v2": {
+      "1": 0.881,
+      "2": 0.767,
+      "3": 0.626,
+      "4": 0.611,
+      "5": 0.516,
+      "6": 0.469
+     },
+     "hydro_storage": {
+      "1": 0.914,
+      "2": 0.813,
+      "3": 0.739,
+      "4": 0.717,
+      "5": 0.676,
+      "6": 0.468
+     },
+     "hydro_history": {
+      "1": 0.772,
+      "2": 0.621,
+      "3": 0.492,
+      "4": 0.445,
+      "5": 0.358,
+      "6": 0.215
+     },
+     "persistence": {
+      "1": 0.581,
+      "2": 0.458,
+      "3": 0.414,
+      "4": 0.37,
+      "5": 0.35,
+      "6": 0.166
+     },
+     "climatology": {
+      "1": 0.17,
+      "2": 0.17,
+      "3": 0.17,
+      "4": 0.17,
+      "5": 0.179,
+      "6": 0.179
+     }
+    },
+    "lead_months_p_ge_0_4": {
+     "full_v2": 6,
+     "signals_v2": 6,
+     "hydro_storage": 6,
+     "hydro_history": 4,
+     "persistence": 3,
+     "climatology": 0
+    }
+   }
+  ]
+ },
+ "kariba_strict": {
+  "definition": "Signals-v1-only model (no lake-level input), P(level below calendar-month p20) by target month and lead. Record-low months = below the 1993-2020 calendar-month minimum.",
+  "start_of_last_p20_spell": "2022-03",
+  "record_low_months_2021_on": [
+   "2022-12",
+   "2023-01",
+   "2024-04",
+   "2024-05",
+   "2024-06",
+   "2024-07",
+   "2024-08",
+   "2024-09",
+   "2024-10",
+   "2024-11",
+   "2024-12",
+   "2025-01",
+   "2025-02",
+   "2025-03",
+   "2025-04",
+   "2025-05",
+   "2025-12"
+  ],
+  "p_by_target_and_lead": {
+   "2023-10": {
+    "1": 0.41,
+    "2": 0.43,
+    "3": 0.43,
+    "4": 0.51,
+    "5": 0.49,
+    "6": 0.43
+   },
+   "2023-12": {
+    "1": 0.45,
+    "2": 0.3,
+    "3": 0.4,
+    "4": 0.44,
+    "5": 0.43,
+    "6": 0.41
+   },
+   "2024-01": {
+    "1": 0.61,
+    "2": 0.42,
+    "3": 0.34,
+    "4": 0.4,
+    "5": 0.44,
+    "6": 0.38
+   },
+   "2024-02": {
+    "1": 0.62,
+    "2": 0.52,
+    "3": 0.37,
+    "4": 0.34,
+    "5": 0.38,
+    "6": 0.39
+   },
+   "2024-03": {
+    "1": 0.87,
+    "2": 0.61,
+    "3": 0.49,
+    "4": 0.41,
+    "5": 0.35,
+    "6": 0.35
+   },
+   "2024-04": {
+    "1": 0.9,
+    "2": 0.81,
+    "3": 0.58,
+    "4": 0.51,
+    "5": 0.38,
+    "6": 0.35
+   },
+   "2024-06": {
+    "1": 0.83,
+    "2": 0.77,
+    "3": 0.81,
+    "4": 0.77,
+    "5": 0.59,
+    "6": 0.48
+   },
+   "2024-09": {
+    "1": 0.76,
+    "2": 0.75,
+    "3": 0.75,
+    "4": 0.7,
+    "5": 0.68,
+    "6": 0.74
+   },
+   "2024-12": {
+    "1": 0.71,
+    "2": 0.62,
+    "3": 0.54,
+    "4": 0.59,
+    "5": 0.64,
+    "6": 0.59
+   }
+  }
+ },
+ "comparison_with_patronus": [
+  "Label: Patronus uses capacity factor >= 15% below an expanding same-month median (base rate 16%); FD uses below the training-period 20th percentile of raw generation (test base rate 29%). AUC-PR values are not comparable across the two.",
+  "Split: Patronus uses blocked leave-one-year-out CV (12-month gap) plus a forward test from 2024; FD uses one split (train <= 2020, test 2021-2025).",
+  "Units: Patronus = 23 Ember-monthly countries + Sichuan; FD = 53 countries + 4 Brazil ONS subsystems + 10 US states (EIA), with Ember data back to 2000 where available, so more training years.",
+  "Crisis rule: Patronus alarm = P(any shortfall in next 6 months) >= 0.64 (tuned to <= 1 false alarm per country per 5 years); FD lead = P(shortfall in the onset month) >= 0.40 at each lead.",
+  "Latency: Patronus applies publication lags (Ember t-2, GRACE t-3); FD does not, so FD leads are optimistic by 1-3 months.",
+  "Kariba: both use G-REALM levels. Patronus forecasts usable % (warning < 20%) with a forward rolling test; FD scores a below-p20 level label, which was already true from 2022-03, so FD's 6-month Kariba 'lead' is persistence."
+ ],
+ "limitations": [
+  "Probabilities are uncalibrated; Brier skill turns negative at 4-6 months on several subsets.",
+  "No data-latency adjustment.",
+  "22 of 67 units have < 5 training years, so thresholds are thin.",
+  "Test period is drier than training (29% vs 21% shortfalls).",
+  "Brazil storage result rests on 5 correlated units (SIN is the sum of the 4 subsystems) and several comparisons on one test period.",
+  "China provincial (Sichuan) data could not be obtained (data.stats.gov.cn HTTP 403); CHN is national.",
+  "Catchment boxes are hand-drawn."
+ ],
+ "notes": [
+  "Ratios are AUC-PR(model A) / AUC-PR(model B); ci90 from 300 block-bootstrap resamples over test months.",
+  "Keys in by_horizon.bootstrap are '<model>__vs__<model>' with short model ids from 'models'.",
+  "This file is additive; nothing else in Patronus reads it yet."
+ ]
+}
