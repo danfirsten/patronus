@@ -55,17 +55,25 @@ Patronus data
 │   ├── Crisis scoreboard
 │   └── Night-lights replay
 └── Tried, not used
-    ├── Tested and dropped
+    ├── Tested in Patronus and dropped
     │   ├── Brazil ONS reservoir storage
-    │   ├── Heatwave measures
     │   ├── GPCP rainfall after 2019
     │   ├── MERRA-2 rainfall for trends
     │   └── Two G-REALM lakes
-    └── Planned, but need a login (not used)
-        ├── SWOT lake heights
-        ├── SMAP soil moisture
-        ├── GPM IMERG rainfall
-        └── Calibrated Black Marble
+    ├── Used in Sean's separate back-tests (not in the app)
+    │   ├── GPM IMERG rainfall  [NASA]
+    │   ├── SMAP root-zone soil moisture  [NASA]
+    │   ├── JPL and CSR GRACE water storage  [NASA]
+    │   ├── GRACE-DA groundwater and root-zone  [NASA]
+    │   ├── MODIS snow cover  [NASA]
+    │   ├── NMME / CFSv2 seasonal forecasts
+    │   ├── Indian Ocean and Pacific climate indices (IOD, PDO)
+    │   ├── Heatwave measures  [NASA]
+    │   ├── NOAA CPC soil moisture
+    │   └── US state hydro output (EIA)
+    └── Checked, not used by anyone
+        ├── SWOT lake heights  [NASA]
+        └── Calibrated Black Marble  [NASA]
 ```
 
 ## 1. Water in the ground and rivers
@@ -229,17 +237,39 @@ El Niño and La Niña: ocean warming and cooling that shift rain around the worl
 
 ## 7. Tried, not used
 
+### Tested in Patronus and dropped
 | Data | What it is | Why not used |
 |---|---|---|
-| Brazil ONS reservoir storage | Brazil grid operator's daily stored water and inflow | Made Brazil's forecasts slightly worse at 5 of 6 horizons under our pre-set test (meta.json lists it as tested, not adopted) |
-| Heatwave measures | Daily hottest temperature, heatwave days and cooling demand (NASA POWER) | Added no skill; missed Sichuan 2022 because the heat and the power drop came in the same few weeks |
+| Brazil ONS reservoir storage | Brazil grid operator's daily stored water and inflow | Made Brazil's forecasts slightly worse at 5 of 6 horizons under our pre-set test. Sean's back-test found it helped Brazil a little; the two tests are set up differently. (meta.json lists it as tested, not adopted.) |
 | GPCP rainfall after 2019 | The newest years of GPCP | Reads too dry, so rain trends stop at 2019 |
-| MERRA-2 rainfall for trends | NASA POWER rain as the main trend record | False jumps in some countries, so GPCP replaced it; still used for Kariba and as a cross-check |
+| MERRA-2 rainfall for trends | NASA POWER rain as the main trend record | False jumps in some countries, so GPCP replaced it. Still used for Kariba and as a cross-check |
 | Two G-REALM lakes | Garafiri (Guinea), Nam Ngum (Laos) | Garafiri is missing wet-season months; Nam Ngum's record ends in 2016 |
-| SWOT lake heights | A new satellite mapping lake heights in detail (since 2023) | Needs a NASA Earthdata login; next step after the hackathon |
-| SMAP soil moisture | NASA soil moisture satellite | Needs a login; MERRA-2 soil stands in |
-| GPM IMERG rainfall | NASA satellite rain record | Needs a login; GPCP and MERRA-2 stand in |
-| Calibrated Black Marble | Measured night-light values | Needs a login; display pictures stand in |
+
+### Used in Sean's separate back-tests (not in the app)
+Sean ran these in his own Future Detector repo, with an Earthdata login. The results are on the unmerged branches `fd/backtest-v2`, `fd/lead-time` and `fd/heatwave` (`docs/BACKTEST-FD.md`, `LEADTIME-FD.md`, `HEATWAVE-FD.md`). Nothing in the app reads them.
+
+**Main finding:** pooled over 67 grids, these water signals add no skill beyond recent power output. Measured reservoir storage helps only in Brazil.
+
+| Data | What it is | Result |
+|---|---|---|
+| GPM IMERG rainfall [NASA] | NASA's satellite rain record (Earthdata login) | No pooled gain |
+| SMAP root-zone soil moisture [NASA] | A NASA satellite's estimate of soil moisture down to the roots (login) | No pooled gain; MERRA-2 soil stays the app's source |
+| JPL and CSR GRACE water storage [NASA] | Other teams' versions of the GRACE/GRACE-FO gravity data | Used side by side; the app uses GFZ's version, which needs no login |
+| GRACE-DA groundwater and root zone [NASA] | GRACE blended into a land model (login) | No pooled gain |
+| MODIS snow cover [NASA] | Monthly snow-covered share, from NASA's Terra satellite | Small gain at 2–4 months in snow-fed grids, gone by 6; not adopted |
+| NMME / CFSv2 seasonal forecasts | A US weather service's forecasts of rain, temperature and El Niño | No pooled gain; flagged Brazil 2021 at 3 months instead of 1 |
+| IOD and PDO climate indices | Slow ocean patterns that shift rain | No gain |
+| Heatwave measures [NASA] | Daily hottest temperature, heatwave days and cooling demand (NASA POWER) | No skill; Sichuan 2022 still missed |
+| NOAA CPC soil moisture | A US soil-moisture model record | In the first back-test version only |
+| US state hydro output (EIA) | Monthly hydropower from 10 US states | Extra test grids only |
+
+### Checked, not used by anyone
+| Data | What it is | Why not used |
+|---|---|---|
+| SWOT lake heights [NASA] | A new satellite mapping lake heights in detail | Starts in July 2023, too late to learn from past crises; a next step after the hackathon |
+| Calibrated Black Marble [NASA] | Measured night-light values | Needs a login; display pictures stand in |
+
+**Pitch note:** if Sean's branches are merged, these NASA datasets count as "tested and documented", which is worth a line under Validity. List IMERG, SMAP, the JPL mascons, GRACE-DA and MODIS snow in the References field too.
 
 ## Words used here
 - **Sen's slope:** the typical rise or fall per decade: the middle value of the slopes between every pair of points. Outliers barely move it.
