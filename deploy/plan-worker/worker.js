@@ -66,6 +66,7 @@ Months are YYYY-MM. Call as many tools as needed.`;
 
 const SYS_EXPLAIN = `You explain a drought simulation for Lake Kariba to a minister's adviser in plain English.
 Use ONLY numbers that appear in the JSON you are given, copied exactly (you may drop decimals only if the JSON value has none). No other numbers, no years other than 2026 and 2027, no percentages you computed yourself.
+Write money as $N million (values ending in _musd are USD millions), storage as N% usable, shedding as N hours per day.
 3 to 5 short sentences. Say what changed in the plan, what the lake does by Sep 2027, how much extra load-shedding is left, and the cost. Say it is a simulation based on past El Nino years, not a forecast of what will happen.
 No lists, no markdown, no greetings.`;
 
