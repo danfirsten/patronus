@@ -63,7 +63,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
   const hits = bt.filter((b) => (b.p_shortfall ?? 0) >= 0.5);
   const hitRate = hits.length ? hits.filter((b) => b.observed_shortfall).length / hits.length : null;
 
-  if (!iso3) return <div className="wrap page"><Empty>No country chosen. <a href="#/watchlist">Pick one from the watchlist.</a></Empty></div>;
+  if (!iso3) return <div className="wrap page"><Empty>No country chosen. <a href="#/map/watchlist">Pick one from the watchlist.</a></Empty></div>;
   if (c.loading) return <div className="wrap page"><Loading what={`${iso3} data`} /></div>;
   if (!d) {
     return (
@@ -73,7 +73,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
         <Empty>
           There is no country file for {iso3} yet{hasFixture(file) ? '' : ' (and no sample either)'}.
           {meta?.tier === 3 && ' This country is tier 3: we only have yearly data, so we show trend and El Niño exposure on the map, not a monthly forecast.'}
-          {' '}<a href="#/watchlist">Back to the watchlist</a>
+          {' '}<a href="#/map/watchlist">Back to the watchlist</a>
         </Empty>
       </div>
     );
@@ -90,14 +90,14 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
 
   return (
     <div className="wrap page">
-      <p className="eyebrow"><a href="#/watchlist">Watchlist</a> / {iso3}</p>
+      <p className="eyebrow"><a href="#/map/watchlist">Watchlist</a> / {iso3}</p>
       <h1>{name}</h1>
       <p className="lede">
         {TIER_LABEL[d.tier ?? meta?.tier ?? 1]}.{' '}
         {isNum(meta?.hydro_share_pct) && <>Hydropower is about {fmtNum(meta?.hydro_share_pct)}% of its electricity. </>}
         Current risk: <RiskPill level={wrow?.risk_level ?? level} />
       </p>
-      <p><span className="experimental">Experimental: modest skill, <a href="#/scoreboard">see Scoreboard</a></span></p>
+      <p><span className="experimental">Experimental: modest skill, <a href="#/proof/backtest">see Scoreboard</a></span></p>
 
       <div className="grid-2">
         <div className="panel">

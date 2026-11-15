@@ -1,3 +1,4 @@
+import ScoreboardPage from './Scoreboard';
 import { useEffect, useState } from 'react';
 import { useData, loadData } from '../data/load';
 import type { Ledger, Meta, Source } from '../data/types';
@@ -75,6 +76,14 @@ function VerifyButton({ file, expected }: { file: string; expected?: string }) {
   return <button className={`verify verify-${state}`} onClick={run} disabled={state === 'busy'}>{label}</button>;
 }
 
+const PROOF_INDEX: [string, string, string][] = [
+  ['backtest', 'Back-test', 'Five past crises, replayed with only the data available at the time. Hits, misses and false alarms.'],
+  ['ledger', 'Forecast ledger', 'Every forecast hashed and time-stamped before the outcome.'],
+  ['limits', 'Limits', 'What Patronus cannot do.'],
+  ['sources', 'Method and sources', 'Every dataset, with links.'],
+  ['ai', 'Use of AI', 'Our statement on how AI was used.'],
+];
+
 export default function ProofPage() {
   const ledger = useData<Ledger>('ledger.json');
   const meta = useData<Meta>('meta.json');
@@ -84,12 +93,32 @@ export default function ProofPage() {
 
   return (
     <div className="wrap page">
-      <p className="eyebrow">Check us</p>
-      <h1>Proof</h1>
-      <p className="lede">
-        A warning is only useful if people can trust it. So we publish every forecast before the outcome is known,
-        fingerprint it, and list what Patronus cannot do.
-      </p>
+      <header className="proof-hero">
+        <div>
+          <p className="eyebrow">Proof</p>
+          <h1>Check every number.</h1>
+          <p className="lede">
+            A warning is only useful if people can trust it. We re-ran past crises blind, publish every forecast before the
+            outcome is known, fingerprint it, and list what Patronus cannot do.
+          </p>
+        </div>
+        <ol className="proof-index" aria-label="On this page">
+          {PROOF_INDEX.map(([id, t, d], i) => (
+            <li key={id}>
+              <a href={`#/proof/${id}`}>
+                <span className="pi-n">{String(i + 1).padStart(2, '0')}</span>
+                <span className="pi-t">{t}</span>
+                <span className="pi-d">{d}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </header>
+
+      <section id="backtest" className="proof-backtest">
+        <p className="eyebrow">01 · Back-test</p>
+        <ScoreboardPage embedded />
+      </section>
 
       <h2 className="section-title" id="ledger">The forecast ledger</h2>
       <p>

@@ -76,8 +76,11 @@ export default function KaribaPage() {
   const relRange = relDec.length ? [Math.min(...relDec, ...(isNum(central.act_2026_12) ? [central.act_2026_12] : [])), Math.max(...relDec)] : null;
 
   return (
-    <div className="wrap page">
-      <p className="eyebrow">Zoom in · Zambia and Zimbabwe</p>
+    <>
+    <header className="k-hero">
+      <div className="wrap k-hero-grid">
+      <div>
+      <p className="eyebrow">Kariba 2027 · Zambia and Zimbabwe</p>
       <h1>Lake Kariba: 2024 replay and 2027 forecast</h1>
       <p className="lede">
         Kariba is the largest man-made reservoir in the world. Its two power stations supply much of the electricity in Zambia and Zimbabwe.
@@ -85,12 +88,27 @@ export default function KaribaPage() {
         A very strong El Niño is back for 2027, and the Zambezi River Authority (ZRA) has already cut the 2027 power allocation by {zra?.cut_pct ?? 36}%.
       </p>
 
+      </div>
+      <figure className="k-level" aria-label={`Usable storage ${fmtNum(d.latest?.usable_pct, 1)} percent on ${fmtDate(d.latest?.date)}`}>
+        <p className="eyebrow">Usable storage now</p>
+        <p className="k-level-n">{fmtNum(d.latest?.usable_pct, 1)}<span>%</span></p>
+        <div className="k-tank" aria-hidden="true">
+          <i className="k-fill" style={{ height: `${Math.max(0, Math.min(100, d.latest?.usable_pct ?? 0))}%` }} />
+          <i className="k-line" style={{ bottom: `${warn}%` }}><b>{warn}% warning</b></i>
+          <i className="k-line k-line-d" style={{ bottom: `${dang}%` }}><b>{dang}% danger</b></i>
+        </div>
+        <figcaption className="small">Satellite altimetry, {fmtDate(d.latest?.date)}. 2024 low: 2.89%.</figcaption>
+      </figure>
+      </div>
+      <div className="wrap">
       <div className="stat-row">
-        <Stat value={`${fmtNum(d.latest?.usable_pct, 1)}%`} label={`usable storage, ${fmtDate(d.latest?.date)} (satellite)`} tone="accent" />
         <Stat value={`−${zra?.cut_pct ?? 36}%`} label={`2027 allocation cut to ${fmtNum(zra?.allocation_2027_bcm)} BCM (ZRA)`} tone="drying" />
         <Stat value={fmtProb(last?.p_below_danger)} label={`chance of falling below ${dang}% (danger) by ${fmtMonth(last?.month)}`} tone="drying" />
         <Stat value={`${fmtNum(last?.usable_p50, 0)}%`} label={`Patronus median for ${fmtMonth(last?.month)}, vs ZRA's own ${fmtNum(zra?.end_2027_usable_pct)}%`} />
       </div>
+      </div>
+    </header>
+    <div className="wrap page k-body">
 
       <div className="grid-2">
         <div className="panel">
@@ -200,7 +218,7 @@ export default function KaribaPage() {
         </div>
       )}
 
-      <h2 className="section-title">2027: the forecast</h2>
+      <h2 className="section-title" id="forecast">2027: the forecast</h2>
       <Figure
         title={`Forecast usable storage, ${fmtMonth(fc[0]?.month)} – ${fmtMonth(last?.month)}, against ZRA's projection`}
         sub="Shaded fan: 80% of outcomes (P10–P90) of the blended forecast. Thick line: blended median. Thin lines: each model's median. Dot: ZRA's projection for end-2027 if the full allocation is used."
@@ -341,6 +359,7 @@ export default function KaribaPage() {
 
       {brief && <BriefPanel text={brief} />}
     </div>
+    </>
   );
 }
 
