@@ -74,7 +74,16 @@ const isActive = (plan: Plan, id: ActionId, k: number) => {
   return s.on && s.possible && s.start + ACTION[id].lead <= k + 1;
 };
 
+function useBigScreen() {
+  const q = '(min-width: 1100px)';
+  const get = () => (typeof window !== 'undefined' && window.matchMedia(q).matches ? window.innerHeight : 0);
+  const [vh, setVh] = useState(get);
+  useEffect(() => { const f = () => setVh(get()); window.addEventListener('resize', f); return () => window.removeEventListener('resize', f); }, []);
+  return vh;
+}
+
 export default function PlanDash() {
+  const bigVh = useBigScreen();
   const { data: inp, loading } = useData<SimInput>(FILE);
   const geoData = useGeo();
   const [plan, setPlanRaw] = useState<Plan>(defaultPlan);
@@ -244,12 +253,12 @@ export default function PlanDash() {
           <Kpi v={usd(r.actionCost.total)} l="Cost of plan" sub={`total at VoLL $0.39: ${usd(r.total.voll)}`} />
         </div>
         <div className="card">
-          <div className="card-h">Usable storage, P10–P50–P90 <Info label="Storage chart">Month-end usable storage over {r.years.length} El Niño years ({r.years.join(', ')}), from the latest G-REALM satellite level ({inp.start.usable_pct.toFixed(1)}% on {inp.start.date}). Dashed: no action median. Lines: 20% warning, 10% danger.</Info></div>
-          <FanChart r={r} base={base} inp={inp} h={200} mark={month} />
+          <div className="card-h">Lake Kariba water, % usable <Info label="Storage chart">Month-end usable storage over {r.years.length} El Niño years ({r.years.join(', ')}), from the latest G-REALM satellite level ({inp.start.usable_pct.toFixed(1)}% on {inp.start.date}). Dashed: no action median. Lines: 20% warning, 10% danger.</Info></div>
+          <FanChart r={r} base={base} inp={inp} h={bigVh ? Math.max(200, Math.round((bigVh - 260) * 0.55)) : 200} mark={month} />
         </div>
         <div className="card">
-          <div className="card-h">Extra load-shedding, h/day <Info label="Shedding chart">Unserved MW ÷ 1,520 MW sheddable load × 24 (calibrated on Zambia, 31 Jul 2024). Extra beyond what the 23 BCM allocation already implies; Zambia (ZESCO) only.</Info></div>
-          <ShedChart r={r} h={150} mark={month} />
+          <div className="card-h">Extra blackout, hours a day <Info label="Shedding chart">Unserved MW ÷ 1,520 MW sheddable load × 24 (calibrated on Zambia, 31 Jul 2024). Extra beyond what the 23 BCM allocation already implies; Zambia (ZESCO) only.</Info></div>
+          <ShedChart r={r} h={bigVh ? Math.max(150, Math.round((bigVh - 260) * 0.33)) : 150} mark={month} />
         </div>
       </section>
 
@@ -257,8 +266,8 @@ export default function PlanDash() {
         <Stage geo={geoData} scene={scene} onPick={onPick} fly={fly} />
         <div className="stage-kpis">
           <div><b>{m1(r.sepP50)}%</b><span>Lake, Sep 2027</span></div>
-          <div><b>{m1(r.peakShedMean)} h</b><span>Extra blackout / day</span></div>
-          <div><b>{usd(r.actionCost.total)}</b><span>Cost of plan</span></div>
+          <div><b>{m1(r.peakShedMean)} h</b><span>Blackout h/day</span></div>
+          <div><b>{usd(r.actionCost.total)}</b><span>Cost</span></div>
         </div>
         <div className="stage-bar">
           <button type="button" className="tb" onClick={() => { if (month >= r.months.length - 1) setMonth(0); setPlaying(!playing); }} aria-label={playing ? 'Pause' : 'Play months'}>{playing ? '❚❚' : '▶'}</button>

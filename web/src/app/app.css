@@ -205,12 +205,18 @@
   .app-plan .app-title h1 { font-size: 30px; line-height: 1.15; }
   .app-plan .app-tabs a { font-size: 16px; padding: 8px 22px; }
   .app-plan .dash { height: calc(100vh - 65px - 72px); height: calc(100dvh - 65px - 72px); min-height: 520px; gap: 16px;
-    grid-template-columns: minmax(0, 1fr) minmax(460px, 0.9fr); grid-template-rows: minmax(0, 1fr); grid-template-areas: "stage chat"; }
-  .app-plan .dash-left, .app-plan .dock, .app-plan .insp, .app-plan .stage-tools { display: none; }
+    grid-template-columns: minmax(320px, 0.75fr) minmax(0, 1fr) minmax(400px, 0.8fr); grid-template-rows: minmax(0, 1fr); grid-template-areas: "left stage chat"; }
+  .app-plan .dock, .app-plan .insp, .app-plan .stage-tools, .app-plan .dash-left .kpis { display: none; }
+  .app-plan .dash-left { overflow: hidden; gap: 12px; }
+  .app-plan .dash-left .card { padding: 12px 14px; }
+  .app-plan .dash-left .card-h { font-size: 15px; letter-spacing: .02em; }
+  .app-plan .dash-left .card svg text { font-size: 14px; }
+  .app-plan .dash-left .chart .legend { font-size: 14px; }
   .app-plan .stage-kpis { display: flex; position: absolute; top: 12px; left: 12px; right: 12px; gap: 10px; pointer-events: none; z-index: 2; }
   .app-plan .stage-kpis div { flex: 1; background: rgba(11, 31, 42, .82); color: var(--text-on-deep); border-radius: var(--radius-md); padding: 10px 14px; display: flex; flex-direction: column; }
-  .app-plan .stage-kpis b { font: 600 clamp(26px, 2.6vw, 40px)/1.1 var(--font-mono); letter-spacing: -0.02em; }
-  .app-plan .stage-kpis span { font-size: clamp(14px, 1.2vw, 18px); color: var(--text-on-deep-muted); }
+  .app-plan .stage-kpis b { font: 600 clamp(20px, 1.9vw, 38px)/1.1 var(--font-mono); letter-spacing: -0.03em; white-space: nowrap; }
+  .app-plan .stage-kpis span { font-size: clamp(12px, 1vw, 17px); color: var(--text-on-deep-muted); white-space: nowrap; }
+  .app-plan .stage-kpis div { padding: 8px 10px; min-width: 0; }
   .app-plan .stage-bar { font-size: 16px; padding: 8px 12px; gap: 12px; }
   .app-plan .stage-month { font-size: 17px; min-width: 220px; }
   .app-plan .stage-bar .tb { font-size: 15px; padding: 5px 12px; }
