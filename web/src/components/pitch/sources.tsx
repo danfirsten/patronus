@@ -30,6 +30,7 @@ export const SOURCES: Source[] = [
   { key: 'ledger', label: 'Patronus public ledger: SHA-256 of each data file, stamped with OpenTimestamps (data/ledger.json)', url: 'data/ledger.json' },
   { key: 'e360', label: 'Kennedy Phiri and Freddie Clayton, Yale Environment 360, Nov 21, 2024: As drought shrivels hydro, this African nation pivots to solar (Emmanuel Simukoko, Lusaka)', url: 'https://e360.yale.edu/features/zambia-drought-hydro-solar-power' },
   { key: 'lusakatimes', label: 'Lusaka Times, Mar 8, 2024: ZESCO announces 8-hour daily load-shedding starting March 11, 2024', url: 'https://www.lusakatimes.com/2024/03/08/zesco-announces-8-hour-daily-load-shedding-starting-march-11-2024/' },
+  { key: 'reservoirs', label: 'Patronus global reservoir watch: 31 G-REALM reservoirs, strictly forward back-test 2000-2026, 17 scored crises (data/reservoirs.json; DESIGN.md section 14)', url: 'data/reservoirs.json' },
 ];
 
 export const fnNum = (key: string) => SOURCES.findIndex((s) => s.key === key) + 1;

@@ -28,8 +28,8 @@ const ROWS: Row[] = [
   },
   {
     k: '1 month ahead',
-    today: { v: '56% right · 45% caught', d: '×1.55 better ranking than chance' },
-    live: { v: '67% right · 65% caught', d: '×2.06' },
+    today: { v: '56% right · 45% caught', d: '×1.55 better ranking than chance. Base rate 29%: a shortfall in 29% of months.' },
+    live: { v: '67% right · 65% caught', d: '×2.06, same 29% base rate' },
     proj: { v: '65% right · 62% caught', d: '×4.6 (base rate 14%)' },
   },
   {
@@ -51,14 +51,14 @@ const HAVE: [string, string][] = [
   ['×1.55 at 1 month', 'With today’s real publication delays, 56% of 1-month warnings are right against a 29% base rate, and 45% of shortfalls are caught.'],
   ['5 months on Kariba', 'Storage plus the El Niño signal gave a first alarm in Jul 2023, 5 months before the authority cut water and 8 before load-shedding. Across El Niño seasons since 1995: 3 hits, 2 misses, 2 false alarms.'],
   ['×1.21 from measured storage', 'In Brazil, adding operator storage and inflow (ONS) to the same model ranks shortfalls ×1.21 better at 3 months and ×1.20 at 6.'],
-  ['9 months vs 3', 'Where operators publish storage (Colombia, Switzerland, Norway), the water-balance model beats persistence out to 9 months, against 3 with satellite inputs.'],
+  ['9 months vs 3', 'Where operators publish reservoir storage (Colombia, Switzerland, Norway), the water-balance model beats persistence out to about 9 months, against 3 with satellite inputs. Brazil’s operator data did the same at 4–10 months.'],
   ['7 open feeds, no key', 'Brazil ONS, Colombia XM, Switzerland BFE, Norway NVE, US USGS/EIA, Finland SYKE and Canada ECCC were all pulled without a login.'],
 ];
 
 const MISSING: { n: string; k: string; v: string }[] = [
   { n: '1', k: 'Live operator generation', v: 'The biggest single gain. Making only generation live ranks ×1.30 better at 1 month and ×1.10 at 3. Brazil already publishes daily; most grids reach us 2 months late.' },
   { n: '2', k: 'Reservoir storage and inflow per dam', v: '×1.29–1.41 better than satellite inputs at 3–9 months where operators publish it. Today 8 of 67 grids have it. ENTSO-E’s weekly filling data would add about 15 European zones with one free token.' },
-  { n: '3', k: 'Faster gravity data (MAGIC)', v: 'Live GRACE alone adds only ×1.02–1.03 when pooled. Its value is a storage map for grids whose operators publish nothing (Ecuador, Sichuan, Vietnam). That is untested: in Brazil, satellite lake levels matched measured storage (×1.10–1.23 at 2–5 months).' },
+  { n: '3', k: 'Faster gravity data (MAGIC)', v: 'A MAGIC-like storage feed improves today’s warnings by only 3–5% (×1.05 at 1 month, ×1.03 at 3); live operator generation is worth about 6 times more (×1.31 at 1 month). Nothing here helps before about 2033. Its value is a storage map for grids whose operators publish nothing (Ecuador, Sichuan, Vietnam). That is untested: in Brazil, satellite lake levels matched measured storage (×1.10–1.23 at 2–5 months).' },
   { n: '4', k: 'Longer generation records', v: 'Each doubling of record length adds 0.08–0.14 to the ranking ratio, but older monthly records mostly do not exist.' },
   { n: '5', k: 'Seasonal skill per basin', v: 'Global seasonal forecasts add ×1.00: at basin scale their rain forecasts correlate 0.03–0.12 with what fell. Only a few El Niño-tied basins (Ecuador, southern Africa, southeast Brazil) are worth a basin rule.' },
 ];
@@ -80,6 +80,17 @@ const REFS: { t: string; u: string }[] = [
   { t: 'NASA GRACE-DA-DM: weekly groundwater and soil moisture, 2–9 day latency', u: 'https://registry.opendata.aws/nasa-grace-da-dm/' },
   { t: 'ONS Brazil open data: daily reservoir storage (EAR) and hydrology, CC-BY 4.0', u: 'https://registry.opendata.aws/ons-opendata-portal/' },
   { t: 'ENTSO-E Transparency Platform: weekly reservoir filling by area (16.1.D)', u: 'https://transparency.entsoe.eu/generation/r2/waterReservoirsAndHydroStoragePlants/show' },
+  { t: 'Future Detector LATENCY.md, Nov 14, 2026: today (real publication delays) vs fully live data, 67 units, test 2021-2025, base rate 29%. Team repository.', u: '#/proof' },
+  { t: 'Future Detector GROUND.md, Nov 14, 2026: operator storage in Colombia (XM), Switzerland (BFE) and Norway (NVE), useful lead 9 vs 3 months. Team repository.', u: '#/proof' },
+  { t: 'Future Detector MAGIC.md, Nov 14, 2026: MAGIC-like storage ×1.03-1.05 at 1-3 months; live operator generation ×1.31; no help before ~2033. Team repository.', u: '#/proof' },
+  { t: 'Future Detector WATCH.md, Nov 14, 2026: pre-registered WATCH / WARNING / ALARM back-test, 31 reservoirs, 21 crises, rule committed before scoring. Team repository.', u: '#/proof' },
+];
+
+/* WATCH / WARNING / ALARM (WATCH.md). The WATCH back-test is measured; showing the tiers on the site is a proposal. */
+const TIERS: { k: string; when: string; means: string; act: string }[] = [
+  { k: 'WATCH', when: '12–24 months out', means: 'Keep an eye on it, not a drought forecast. The lake is low or draining against its own history, or a strong El Niño is hitting a lake that lost water in El Niño years before.', act: 'Check contracts and budgets, list backup and import options, set dry-season release rules.' },
+  { k: 'WARNING', when: '3–6 months out', means: 'A shortfall is likely this season: more than a 50% chance the lake falls below its usual low range within 4–6 months.', act: 'Cut releases to save water, sign import and fuel contracts, warn large industrial users.' },
+  { k: 'ALARM', when: '0–3 months out', means: 'Shortfall expected: more than 50% within 1–3 months, or the lake is already there.', act: 'Start rationing schedules, protect hospitals and water pumping, tell the public.' },
 ];
 
 /* The app uses hash routing, so in-page jumps scroll instead of changing location.hash. */
@@ -138,7 +149,7 @@ export function Roadmap() {
             </tbody>
           </table>
           <p className="pt-honest">
-            Base rates differ: shortfalls happen in 29% of months across all 67 grids and in 14% in Brazil, so compare the “×” figures across columns, not the percentages. The Brazil projection rests on 5 systems and 300 test months. Patronus’s own pre-set test on Brazil’s country score did not adopt ONS storage, so this is a lead worth pursuing, not a result.<Ref i={1} />
+            Base rates differ: shortfalls happen in 29% of months across all 67 grids and in 14% in Brazil, so compare the “×” figures across columns, not the percentages.<Ref i={10} /> The Brazil projection rests on 5 systems and 300 test months. Patronus’s own pre-set test on Brazil’s country score did not adopt ONS storage, so this is a lead worth pursuing, not a result.<Ref i={1} />
           </p>
         </InView>
 
@@ -151,6 +162,7 @@ export function Roadmap() {
           </InView>
           <InView className="rm-block" i={1}>
             <h3 className="pt-h3">Missing pieces, by measured impact</h3>
+            <p className="pt-small pt-muted">All measured on held-out years.<Ref i={11} /><Ref i={12} /></p>
             <ol className="rm-list rm-ranked">
               {MISSING.map((m) => <li key={m.n}><span className="rm-k"><span className="rm-n">{m.n}</span>{m.k}</span><span className="rm-t">{m.v}</span></li>)}
             </ol>
@@ -159,6 +171,22 @@ export function Roadmap() {
             </p>
           </InView>
         </div>
+
+        <InView className="rm-tiers">
+          <h3 className="pt-h3">Three alert levels: watch, warning, alarm <span className="rm-tag rm-tag-inline">tiers proposed · watch back-test measured</span></h3>
+          <ol className="rm-tier-list">
+            {TIERS.map((t) => (
+              <li key={t.k} className={`rm-tier rm-tier-${t.k.toLowerCase()}`}>
+                <p className="rm-tier-k">{t.k}<span className="rm-tier-when">{t.when}</span></p>
+                <p className="rm-tier-m">{t.means}</p>
+                <p className="rm-tier-a"><b>Then:</b> {t.act}</p>
+              </li>
+            ))}
+          </ol>
+          <p className="rm-tier-res">
+            <span className="rm-tag">measured</span> A WATCH rule written down before any crisis was scored fired <b>12 or more months ahead for 16 of 21 crises</b> on 31 reservoirs since 2000. The price is about <b>1 false watch per lake every 9 years</b>; when a watch is on, a serious drop follows within 2 years 61% of the time, against 45% normally. It misses El Niño droughts that hit a full lake (Kariba 2015 and 2019, Tarbela 2025).<Ref i={13} />
+          </p>
+        </InView>
 
         <InView className="rm-why">
           <h3 className="pt-h3">Why more data moves it</h3>

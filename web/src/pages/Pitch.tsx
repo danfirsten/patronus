@@ -6,9 +6,10 @@ import { Sources } from '../components/pitch/sources';
 import { DataSources, type MetaSource } from '../components/pitch/DataSources';
 import { Roadmap } from '../components/pitch/Roadmap';
 import { Person } from '../components/pitch/Person';
+import { Playbook } from '../components/pitch/Playbook';
 import {
   Audience, CalledIt, Cost, Hero, Next, Proof,
-  type Crisis, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
+  type Crisis, type ReservoirSummary, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
 } from '../components/pitch/sections';
 
 /** Landing page as a pitch: hero, track record (hits first), cost, the data, 2027 forecast, proof with the full record, audience. */
@@ -20,6 +21,10 @@ export default function Pitch() {
   const watch = useData<any>('watchlist.json');
   const ledger = useData<any>('ledger.json');
   const meta = useData<any>('meta.json');
+  const resv = useData<any>('reservoirs.json');
+  const rs = resv.data?.summary;
+  const res: ReservoirSummary | null = rs && typeof rs.n_crises_caught === 'number'
+    ? { n: rs.n_reservoirs, scored: rs.n_crises_scored, caught: rs.n_crises_caught, forecast: rs.n_crises_caught_by_forecast } : null;
 
   const rows: ScoreRow[] | null = score.data?.rows ?? null;
   const karibaRow = rows?.find((r) => r.id === 'kariba-2024') ?? null;
@@ -65,10 +70,11 @@ export default function Pitch() {
     <div className="pt">
       <Hero kariba={karibaRow} />
       <Person />
-      <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} />
+      <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} res={res} />
       <Cost />
       <DataSources sources={sources} missions={meta.data?.nasa_data_summary ?? null} nCountries={enso.data?.summary?.n_countries ?? null} loading={meta.loading} />
       <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} exposure={exposure} loading={kariba.loading || enso.loading || watch.loading} />
+      <Playbook />
       <Proof skill={skill} ens={ens} ledger={led} rows={rows} />
       <Roadmap />
       <Audience />

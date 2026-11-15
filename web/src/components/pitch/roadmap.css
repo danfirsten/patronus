@@ -68,3 +68,18 @@
 @media (min-width: 900px) { .rm-refs { columns: 2; column-gap: 48px; } }
 .rm-refs li { margin-bottom: 6px; break-inside: avoid; overflow-wrap: anywhere; }
 .rm-refs li:target { color: var(--text); }
+
+/* WATCH / WARNING / ALARM tiers: three cards, the colour deepens from water to rock */
+.rm-tiers { margin-bottom: clamp(48px, 6vw, 80px); }
+.rm-tag-inline { display: inline-block; margin: 0 0 0 8px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: var(--tracking-label); font-weight: 400; vertical-align: middle; }
+.rm-tier-list { list-style: none; margin: 16px 0 20px; padding: 0; display: grid; gap: 16px; }
+@media (min-width: 900px) { .rm-tier-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
+.rm-tier { background: var(--bg-elev); border-radius: var(--radius-lg); padding: 20px; border-top: 3px solid var(--water); }
+.rm-tier-warning { border-top-color: color-mix(in srgb, var(--water) 45%, var(--rock)); }
+.rm-tier-alarm { border-top-color: var(--rock); }
+.rm-tier-k { margin: 0 0 8px; font-family: var(--font-mono); font-weight: 700; letter-spacing: var(--tracking-label); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.rm-tier-when { font-weight: 400; color: var(--text-muted); font-size: var(--fs-sm); letter-spacing: 0; }
+.rm-tier-m { margin: 0 0 8px; font-size: var(--fs-md); }
+.rm-tier-a { margin: 0; font-size: var(--fs-sm); color: var(--text-muted); }
+.rm-tier-res { margin: 0; font-size: var(--fs-md); max-width: 80ch; }
+.rm-tier-res .rm-tag { display: inline-block; margin: 0 8px 0 0; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--water); font-weight: 700; }

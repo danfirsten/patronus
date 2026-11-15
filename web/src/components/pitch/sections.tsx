@@ -48,7 +48,11 @@ export function Hero({ kariba }: { kariba: ScoreRow | null }) {
       <div className="wrap pt-hero-grid">
         <div>
           <p className="eyebrow">Hydropower early warning</p>
-          <h1 id="pt-hero-h" className="pt-h1">When drought drains the dams, the lights go out.</h1>
+          <h1 id="pt-hero-h" className="pt-h1 pt-h1-story">
+            <span>In July 2023, NASA satellites showed Lake Kariba was in trouble.</span>{' '}
+            <span>Five months later, the authorities cut its power water.</span>{' '}
+            <span>Eight months later, Zambia went dark.</span>
+          </h1>
           <p className="lede pt-lede"><span className="pt-key">Patronus</span> reads <span className="pt-key">NASA water data</span> to warn countries that run on hydropower of power shortfalls months before they hit.</p>
           <div className="pt-actions">
             <button type="button" className="button" onClick={() => scrollToId('pt-next')}>See the 2027 forecast</button>
@@ -88,7 +92,9 @@ const HIT_COPY: Record<string, { title: string; vs: string; second?: (r: ScoreRo
   },
 };
 
-export function CalledIt({ rows, crises, loading }: { rows: ScoreRow[] | null; crises: Crisis[] | null; loading: boolean }) {
+export interface ReservoirSummary { n: number; scored: number; caught: number; forecast: number }
+
+export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | null; crises: Crisis[] | null; loading: boolean; res?: ReservoirSummary | null }) {
   const byId = new Map((crises ?? []).map((c) => [c.id, c]));
   const hits = (rows ?? []).filter((r) => r.caught_by !== 'missed' && r.patronus_alarm)
     .sort((a, b) => (a.id === 'kariba-2024' ? -1 : b.id === 'kariba-2024' ? 1 : 0));
@@ -128,6 +134,14 @@ export function CalledIt({ rows, crises, loading }: { rows: ScoreRow[] | null; c
             })}
           </ol>
           <InView className="pt-legend-row"><TimelineLegend /></InView>
+          {res && (
+            <InView className="pt-res14">
+              <p className="pt-res14-n"><CountUp value={`${res.caught} of ${res.scored}`} /></p>
+              <p className="pt-res14-t">
+                <b>The same method, applied unchanged to {res.n} reservoirs</b>, flagged {res.caught} of {res.scored} past hydro crises on 4 continents before they began. In {res.forecast} of them the alarm came before the lake had dropped below its warning level; in the other {res.caught - res.forecast} it was already low.<Fn k="reservoirs" />
+              </p>
+            </InView>
+          )}
           {misses.length > 0 && (
             <p className="pt-honest">
               Not every crisis: {sichuan ? 'Sichuan 2022 was a sudden heatwave, and ' : ''}

@@ -220,3 +220,17 @@
 .pt-person-q p { margin: 0 0 8px; font-size: var(--fs-xl); font-weight: 700; letter-spacing: var(--tracking-head); line-height: 1.2; max-width: 26ch; }
 .pt-person-q footer { font-size: var(--fs-sm); color: var(--text-muted); }
 .pt-person-link { margin: 0; padding-top: 20px; border-top: 1px solid var(--border-strong); font-size: var(--fs-md); max-width: 58ch; }
+
+/* Hero headline as a three-beat story (Jul 2023 signal, Dec 2023 cut, Mar 2024 dark).
+   Smaller than the one-line display size so three sentences stay readable; each beat on its own line. */
+.pt-h1.pt-h1-story { max-width: 30ch; font-size: clamp(1.75rem, 1rem + 2.3vw, 3rem); line-height: 1.08; margin-bottom: 24px; }
+.pt-h1-story span { display: block; }
+.pt-h1-story span + span { margin-top: 0.18em; }
+.pt-h1-story span:last-child { color: var(--water); }
+
+/* Track record: the global reservoir watch result (DESIGN.md section 14 wording) */
+.pt-res14 { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border-strong); display: grid; gap: 4px 40px; align-items: baseline; }
+@media (min-width: 900px) { .pt-res14 { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); } }
+.pt-res14-n { margin: 0; font-size: var(--fs-2xl); font-weight: 800; letter-spacing: var(--tracking-display); line-height: 0.95; color: var(--water); white-space: nowrap; }
+.pt-res14-t { margin: 0; font-size: var(--fs-md); max-width: 64ch; }
+.pt-res14-t b { font-weight: 700; }
