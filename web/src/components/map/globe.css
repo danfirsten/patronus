@@ -34,3 +34,12 @@
   .g-tools { top: 10px; right: 10px; }
   .g-sep { margin-left: 0; }
 }
+
+/* pre-pitch polish: legend card on the map, verdict first, no renderer label on the face */
+.globe-backend { display: none; }
+.g-key { position: absolute; left: 12px; top: 12px; background: var(--bg-elev); color: var(--text); border-radius: var(--radius-md); padding: 10px 12px; font-size: var(--fs-xs); display: grid; gap: 4px; box-shadow: 0 1px 0 var(--border); max-width: calc(100% - 24px); }
+.g-key-h { margin: 4px 0 0; font-weight: 600; font-size: var(--fs-xs); color: var(--text-muted); }
+.g-key-h:first-child { margin-top: 0; }
+.g-verdict { margin: 0 0 6px; font-weight: 600; font-size: var(--fs-sm); }
+.g-adv { margin-top: 12px; }
+@media (max-width: 600px) { .g-key { top: auto; bottom: 12px; grid-template-columns: 1fr 1fr; column-gap: 12px; } .g-key-h { grid-column: 1 / -1; } }

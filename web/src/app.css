@@ -679,7 +679,8 @@ ul.plain li { margin-bottom: 0.5em; }
 .is-sub .k-hero .eyebrow + h1 + p.lede, .is-sub .k-hero h1 + p.lede { color: var(--text-on-deep-muted); }
 .is-sub .proof-hero { padding-bottom: 8px; }
 .is-sub .hero { padding-top: clamp(16px, 2.4vw, 28px); padding-bottom: 24px; }
-.map-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 12px; }
+.map-head { display: block; margin-bottom: 16px; }
+.map-head .eyebrow { margin: 0 0 6px !important; }
 .map-head .eyebrow { margin: 0; }
 .map-head h1 { margin: 0; }
 
