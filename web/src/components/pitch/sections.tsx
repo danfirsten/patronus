@@ -149,7 +149,7 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
           )}
           {misses.length > 0 && (
             <InView className="pt-missed">
-              <h3 className="pt-h3">Where they were first, or nobody was</h3>
+              <h3 className="pt-h3">Missed</h3>
               <ul>
                 {misses.map((m) => {
                   const c = byId.get(m.id);

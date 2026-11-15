@@ -242,7 +242,7 @@ function BacktestBlock({ g }: { g: GenBacktest }) {
           <SkillBars rows={bh} />
         </Figure>
         <Figure
-          title="Are the probabilities honest?"
+          title="Are the probabilities calibrated?"
           sub="When we say 30%, does it happen about 30% of the time? Points on the diagonal are well calibrated. Larger dots: more cases."
           source={<>Patronus generation backtest, held-out months.</>}
           files={['generation_backtest.json']}

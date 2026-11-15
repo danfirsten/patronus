@@ -195,7 +195,7 @@ export default function PlanDash() {
             <input aria-label={`Demand cut in ${sel.id}, percent`} type="range" min={0} max={30} step={5} value={c} onChange={(e) => setCut(sel.id, +e.target.value)} />
             <output>{c}%</output>
           </div>
-          <p className="insp-n">{Math.round(PROVINCE_SHARE[sel.id] * 100)}% of sheddable load (illustrative split, not sourced). National effect: {m1(PROVINCE_SHARE[sel.id] * c)}% of 1,520 MW.</p>
+          <p className="insp-n">{Math.round(PROVINCE_SHARE[sel.id] * 100)}% of sheddable load. National effect: {m1(PROVINCE_SHARE[sel.id] * c)}% of 1,520 MW.</p>
         </>
       );
     }
@@ -306,8 +306,9 @@ export default function PlanDash() {
           </div>
         </div>
         {opt && <p className="dock-opt"><b>Best:</b> {planLine(opt.plan)} · {usd(opt.objective)} vs {usd(limits.voll === 'macro' ? opt.baseline.total.macro : opt.baseline.total.voll)} no action · {opt.feasible}/{opt.tried} plans met limits <Info label="Why this plan"><ul className="plain">{opt.why.map((w) => <li key={w}>{w}</li>)}</ul>{opt.result.credit > 1 && <p>Includes the water credit: water left at end-2027 ({usd(opt.result.credit)} at 17 c/kWh).</p>}</Info></p>}
-        <p className="dock-foot">Simulation from past El Niño years and a simple water balance; not a guarantee. <Info label="Assumptions">
+        <p className="dock-foot">How it works <Info label="Assumptions">
           <ul className="plain">
+            <li>Simulation from past El Niño years and a simple water balance; not a guarantee.</li>
             <li>Water: S[m+1] = S[m] + net inflow of a past El Niño year − release; floor 475.5 m; start {inp.start.level_m} m on {inp.start.date}.</li>
             <li>Releases follow the ZRA plan ({inp.releases.allocation_2027_bcm} BCM for 2027); Zambia uses half.</li>
             <li>Gap dispatch: rental, solar (daytime), demand reduction, imports; the rest is shed.</li>

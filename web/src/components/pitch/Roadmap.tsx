@@ -148,9 +148,9 @@ export function Roadmap() {
               ))}
             </tbody>
           </table>
-          <p className="pt-honest">
+          <details className="k-advanced"><summary>Notes</summary><p className="pt-honest">
             Base rates differ: shortfalls happen in 29% of months across all 67 grids and in 14% in Brazil, so compare the “×” figures across columns, not the percentages.<Ref i={10} /> The Brazil projection rests on 5 systems and 300 test months. Patronus’s own pre-set test on Brazil’s country score did not adopt ONS storage, so this is a lead worth pursuing, not a result.<Ref i={1} />
-          </p>
+          </p></details>
         </InView>
 
         <div className="rm-grid">

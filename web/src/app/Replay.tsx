@@ -147,17 +147,17 @@ export default function Replay() {
             <div className="kpis">
               <div className="kpi"><span className="kpi-v">{level !== null ? `${level.toFixed(1)}%` : '–'}</span><span className="kpi-l">Usable, {ml(mo)} (satellite)</span></div>
               <div className="kpi"><span className="kpi-v">{cf?.hours_actual[mo] ?? '–'}{cf?.hours_actual[mo] !== undefined ? ' h' : ''}</span><span className="kpi-l">Shedding h/day (modelled)</span></div>
-              <div className="kpi is-ghost"><span className="kpi-v">{cf?.storage_act_jul_2023[mo] ? `${cf.storage_act_jul_2023[mo].cf_pct}%` : '–'}</span><span className="kpi-l">If acted Jul 2023 (model estimate)</span></div>
-              <div className="kpi is-ghost"><span className="kpi-v">{cf?.hours_act_jul_2023[mo] ?? '–'}{cf?.hours_act_jul_2023[mo] !== undefined ? ' h' : ''}</span><span className="kpi-l">Shedding if acted (model estimate)</span></div>
+              <div className="kpi is-ghost"><span className="kpi-v">{cf?.storage_act_jul_2023[mo] ? `${cf.storage_act_jul_2023[mo].cf_pct}%` : '–'}</span><span className="kpi-l">If acted Jul 2023</span></div>
+              <div className="kpi is-ghost"><span className="kpi-v">{cf?.hours_act_jul_2023[mo] ?? '–'}{cf?.hours_act_jul_2023[mo] !== undefined ? ' h' : ''}</span><span className="kpi-l">Shedding if acted</span></div>
             </div>
             <div className="card">
               <div className="card-h">Usable storage, % <Info label="Storage replay">Solid: NASA/USDA G-REALM satellite level converted with the ZRA storage curve (kariba.json). Dashed: model estimate if Zambia had acted on the Jul 2023 alarm (hold water + imports from Nov 2023), from the kariba_cf counterfactual (docs/KARIBA-CF.md). The ghost surface on the globe is the same model estimate.</Info>
                 <label className="sw rp-ghost"><input type="checkbox" checked={ghost} onChange={(e) => setGhost(e.target.checked)} />what if</label></div>
-              <Lines months={months} mark={k} unit="%" events={events} series={[{ name: 'Measured', v: actual, cls: 'ln-a' }, ...(ghost ? [{ name: 'If acted on alarm (model estimate)', v: cfS, cls: 'ln-cf' }] : [])]} />
+              <Lines months={months} mark={k} unit="%" events={events} series={[{ name: 'Measured', v: actual, cls: 'ln-a' }, ...(ghost ? [{ name: 'If acted on alarm', v: cfS, cls: 'ln-cf' }] : [])]} />
             </div>
             <div className="card">
               <div className="card-h">Load-shedding, h/day <Info label="Shedding replay">Actual hours as reported (ZESCO, ministry, World Bank) and interpolated where marked; "if acted" is the model estimate. Peak {cf?.max_h.actual} vs {cf?.max_h.act_jul_2023} h/day.{cf?.hours_actual_sources[mo] ? ` ${ml(mo)}: ${cf.hours_actual_sources[mo]}.` : ''}</Info></div>
-              <Lines months={months} mark={k} unit="h" h={130} series={[{ name: 'Reported / modelled', v: hA, cls: 'ln-a' }, ...(ghost ? [{ name: 'If acted (model estimate)', v: hC, cls: 'ln-cf' }] : [])]} />
+              <Lines months={months} mark={k} unit="h" h={130} series={[{ name: 'Reported / modelled', v: hA, cls: 'ln-a' }, ...(ghost ? [{ name: 'If acted', v: hC, cls: 'ln-cf' }] : [])]} />
             </div>
           </>
         ) : (
@@ -194,7 +194,7 @@ export default function Replay() {
             ) : <p className="insp-n">First frame: Feb 2023.</p>}
           </div>
         ) : <div className="card"><p className="insp-n">Night-light frames exist for Zambia and Ecuador only.</p></div>}
-        <p className="dock-foot">Measured data unless marked "model estimate". {cf?.label}</p>
+
       </aside>
     </div>
   );
