@@ -76,6 +76,14 @@ Patronus data
         └── Calibrated Black Marble  [NASA]
 ```
 
+## Where the files live
+Checked-in data sits under one parent, `data/reference/`, in two groups:
+
+- `data/reference/forecast/`: the small inputs the prediction pipeline reads (`REFERENCE` in `pipeline/paths.py`). `hydro_dependent_countries_ember.csv` (the 48 countries), `kariba_grealm_10day_levels.csv` (G-REALM Kariba levels), `oni.ascii.txt` (El Niño index) and `upper_zambezi_box_gravis_tws.csv` (GRACE water storage for the Upper Zambezi box). The pipeline prefers a fresh download in `data/raw/` (not checked in) and falls back to these copies.
+- `data/reference/remediation/`: the replay and plan data (`REMEDIATION` in `pipeline/paths.py`). `crisis_actions.csv` (sourced crisis stages, actions and costs) and `kariba_zra_statements.csv` (ZRA Kariba readings). See `docs/REMEDIATION-DATA.md`.
+
+Pipeline outputs are not in either folder. They are the JSON files in `web/public/data/`, which the site reads.
+
 ## 1. Water in the ground and rivers
 How much water a whole region holds, below and on the surface.
 
