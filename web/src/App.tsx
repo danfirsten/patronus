@@ -30,7 +30,7 @@ const ALIAS: Record<string, [string, string]> = {
   watchlist: ['map', 'watchlist'],
 };
 /** Which nav item a page belongs to. */
-const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'app/plan' };
+const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'app/plan', app: 'app/plan' };
 
 /** Scroll to an in-page section once it has rendered (data loads async, so retry briefly). */
 function useScrollToSection(id: string | undefined, key: string) {
@@ -99,7 +99,7 @@ export default function App() {
     case 'proof': body = <ProofPage />; break;
     case 'explore': body = <Explore />; break;
     case 'plan': body = <PlanPage />; break;
-    case 'app': body = null; break;
+    case 'app': body = <Suspense fallback={<div className="dash-msg">Loading…</div>}><AppShell view={arg ?? 'plan'} /></Suspense>; break;
     default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the overview</a></p></div>;
   }
   const active = SECTION_OF[page ?? ''] ?? page ?? '';
@@ -108,13 +108,6 @@ export default function App() {
   useAutoReveal(mainRef);
   const [level, setLevel] = useState<number | null>(null);
   const waterline = useMemo(() => ({ level, setLevel }), [level]);
-  if (page === 'app') {
-    return (
-      <PageShell key="app">
-        <Suspense fallback={null}><AppShell view={arg ?? 'plan'} /></Suspense>
-      </PageShell>
-    );
-  }
   return (
     <WaterlineContext.Provider value={waterline}>
       <a className="skip" href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>Skip to content</a>
@@ -137,7 +130,7 @@ export default function App() {
           </button>
         </div>
       </header>
-      <main id="main" tabIndex={-1} ref={mainRef} className={page === undefined ? 'is-landing' : 'is-sub'}>
+      <main id="main" tabIndex={-1} ref={mainRef} className={page === undefined ? 'is-landing' : page === 'app' ? 'is-sub is-app' : 'is-sub'}>
         <PageShell key={shellKey}>{body}</PageShell>
       </main>
       <footer className="site-footer">
