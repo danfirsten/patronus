@@ -104,8 +104,8 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
     <Section
       id="pt-called"
       eyebrow="Track record"
-      title="Patronus saw it coming"
-      intro={<>Run forward on past crises with only the data that existed at the time.<Fn k="scoreboard" /></>}
+      title="We saw it before they did"
+      intro={<>When the authorities first acted, when Patronus flagged it, and when the lights went out. Run forward on past crises with only the data that existed at the time.<Fn k="scoreboard" /></>}
     >
       {loading ? <Loading what="the crisis back-test" /> : !rows ? <Missing what="crisis back-test" /> : (
         <>
@@ -117,6 +117,11 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
               return (
                 <InView as="li" key={r.id} i={i} className="pt-hit-card">
                   <h3 className="pt-h3">{copy?.title ?? r.name}</h3>
+                  <dl className="pt-vs">
+                    <div className="pt-vs-we"><dt>We found it</dt><dd className="pt-num">{fmtMonth(r.patronus_alarm)}</dd><dd className="pt-vs-w">Patronus alarm</dd></div>
+                    <div className="pt-vs-they"><dt>They found it</dt><dd className="pt-num">{c?.official_warning ? fmtDate(c.official_warning.date) : r.official_warning ? fmtDate(r.official_warning) : '—'}</dd><dd className="pt-vs-w">{c?.official_warning?.what ?? 'First official warning'}</dd></div>
+                    <div className="pt-vs-out"><dt>Lights out</dt><dd className="pt-num">{fmtDate(r.onset)}</dd><dd className="pt-vs-w">{c?.onset?.what ?? 'Crisis starts'}</dd></div>
+                  </dl>
                   <p className="pt-hit-n"><CountUp value={`${lead} months`} /></p>
                   <p className="pt-hit-vs">{copy?.vs ?? 'before the first official warning'}{copy?.second ? <><br />{copy.second(r)}</> : null}</p>
                   <Timeline
@@ -140,6 +145,25 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
               <p className="pt-res14-t">
                 <b>The same method, applied unchanged to {res.n} reservoirs</b>, flagged {res.caught} of {res.scored} past hydro crises on 4 continents before they began. In {res.forecast} of them the alarm came before the lake had dropped below its warning level; in the other {res.caught - res.forecast} it was already low.<Fn k="reservoirs" />
               </p>
+            </InView>
+          )}
+          {misses.length > 0 && (
+            <InView className="pt-missed">
+              <h3 className="pt-h3">Where they were first, or nobody was</h3>
+              <ul>
+                {misses.map((m) => {
+                  const c = byId.get(m.id);
+                  return (
+                    <li key={m.id}>
+                      <b>{m.name}</b>
+                      <span>Authorities: {c?.official_warning ? <>{fmtDate(c.official_warning.date)}, {c.official_warning.what}</> : 'no official warning on record'}</span>
+                      <span>Patronus: no alarm</span>
+                      <span>Crisis: {fmtDate(m.onset)}{c?.onset?.what ? `, ${c.onset.what}` : ''}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <Fn k="crises" />
             </InView>
           )}
           {misses.length > 0 && (

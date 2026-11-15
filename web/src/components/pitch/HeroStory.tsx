@@ -16,7 +16,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { area as d3area, line as d3line, curveMonotoneX } from 'd3-shape';
 import { Fn } from './sources';
-import { scrollToId } from './fmt';
 import './hero.css';
 
 export interface KaribaPoint { date: string; usable_pct: number }

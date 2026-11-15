@@ -69,8 +69,8 @@ export default function Pitch() {
   return (
     <div className="pt">
       <HeroStory history={kariba.data?.history ?? null} />
-      <Person />
       <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} res={res} />
+      <Person />
       <Cost />
       <DataSources sources={sources} missions={meta.data?.nasa_data_summary ?? null} nCountries={enso.data?.summary?.n_countries ?? null} loading={meta.loading} />
       <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} exposure={exposure} loading={kariba.loading || enso.loading || watch.loading} />

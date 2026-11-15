@@ -234,3 +234,19 @@
 .pt-res14-n { margin: 0; font-size: var(--fs-2xl); font-weight: 800; letter-spacing: var(--tracking-display); line-height: 0.95; color: var(--water); white-space: nowrap; }
 .pt-res14-t { margin: 0; font-size: var(--fs-md); max-width: 64ch; }
 .pt-res14-t b { font-weight: 700; }
+
+/* They found it / We found it (pre-pitch polish) */
+.pt-vs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; }
+.pt-vs > div { border-top: 3px solid var(--border-strong); padding-top: 8px; min-width: 0; }
+.pt-vs dt { font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.pt-vs dd { margin: 2px 0 0; }
+.pt-vs .pt-num { font-size: var(--fs-lg); font-weight: 700; }
+.pt-vs-w { font-size: var(--fs-xs, 0.75rem); color: var(--text-muted); line-height: 1.35; }
+.pt-vs-we { border-top-color: var(--water) !important; }
+.pt-vs-we .pt-num { color: var(--water); }
+@media (max-width: 520px) { .pt-vs { grid-template-columns: 1fr; } .pt-vs > div { display: grid; grid-template-columns: 7.5rem 1fr; column-gap: 8px; } .pt-vs-w { grid-column: 2; } }
+.pt-missed { margin-top: 28px; font-size: var(--fs-sm); color: var(--text-muted); }
+.pt-missed .pt-h3 { font-size: var(--fs-md); color: var(--text); margin-bottom: 8px; }
+.pt-missed ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pt-missed li { display: grid; grid-template-columns: 11rem 1fr 7rem 1fr; gap: 4px 12px; padding: 8px 0; border-top: 1px solid var(--border); }
+@media (max-width: 900px) { .pt-missed li { grid-template-columns: 1fr; } }
