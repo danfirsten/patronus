@@ -665,3 +665,18 @@ ul.plain li { margin-bottom: 0.5em; }
 .ex-defs > div { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
 .ex-defs dt { font-weight: 700; }
 .ex-defs dd { margin: 2px 0 0; max-width: 80ch; }
+
+/* Compact page headers (Sean, v8): only the landing page keeps a big title. Every other page gets a
+   small label + one short title line, so the content (map, charts) starts above the fold. */
+.is-sub .page { padding-top: clamp(16px, 2.4vw, 28px); }
+.is-sub h1 { font-size: clamp(1.25rem, 1.7vw, 1.625rem); line-height: 1.2; letter-spacing: var(--tracking-head); max-width: none; margin-bottom: 0.35em; }
+.is-sub .hero h1 { max-width: none; }
+.is-sub .eyebrow { margin-bottom: 0.4em; }
+.is-sub h1 + .lede, .is-sub .eyebrow + h1 + p.lede { font-size: var(--fs-md); line-height: 1.5; max-width: 90ch; color: var(--text-muted); }
+.is-sub .k-hero { padding-top: clamp(16px, 2.4vw, 28px); }
+.is-sub .k-hero .eyebrow + h1 + p.lede, .is-sub .k-hero h1 + p.lede { color: var(--text-on-deep-muted); }
+.is-sub .proof-hero { padding-bottom: 8px; }
+.is-sub .hero { padding-top: clamp(16px, 2.4vw, 28px); padding-bottom: 24px; }
+.map-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 12px; }
+.map-head .eyebrow { margin: 0; }
+.map-head h1 { margin: 0; }

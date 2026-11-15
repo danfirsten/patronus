@@ -1,0 +1,24 @@
+.model-how { margin: 24px 0 56px; }
+.model-how .eyebrow { margin-bottom: 0.4em; }
+.mh-title { font-size: var(--fs-xl); letter-spacing: var(--tracking-head); line-height: 1.15; margin: 0 0 4px; max-width: none; }
+.mh-flow { margin: 0; font: var(--fs-sm) var(--font-mono); color: var(--text-muted); }
+.mh-steps { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 0; counter-reset: none; }
+.mh-steps > li { display: block; padding: 20px 0; border-top: 1px solid var(--border-strong); max-width: 980px; }
+.mh-steps h3 { display: flex; align-items: baseline; gap: 12px; font-size: var(--fs-lg); margin: 0 0 10px; }
+.mh-n { font: var(--fs-sm) var(--font-mono); color: var(--water); }
+.mh-steps ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.mh-term b { font-weight: 650; }
+.mh-plain { color: var(--text-muted); font-style: italic; }
+.mh-plain::before { content: ' ('; font-style: normal; }
+.mh-plain::after { content: ')'; font-style: normal; }
+.mh-models { display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 12px 24px; margin: 0; }
+.mh-models dt { font-weight: 700; }
+.mh-models dd { margin: 0; }
+.mh-models code, .model-how td code { font: 0.92em var(--font-mono); background: var(--bg-elev); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
+.mh-table { margin: 8px 0; font-size: var(--fs-sm); }
+.mh-table td { vertical-align: top; }
+@media (max-width: 720px) {
+  .mh-models { grid-template-columns: 1fr; gap: 4px; }
+  .mh-models dd { margin-bottom: 12px; }
+  .mh-models code { white-space: normal; }
+}

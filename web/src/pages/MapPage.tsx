@@ -3,6 +3,7 @@ import type { FeatureCollection } from 'geojson';
 import { useData } from '../data/load';
 import type { Enso, Meta, Trends } from '../data/types';
 import WatchlistPage from './Watchlist';
+import MapGlobe from '../components/map/MapGlobe';
 import { Figure, Loading, Stat } from '../components/common';
 import { WorldMap, type MapMode } from '../components/WorldMap';
 import { TrendSplitBlock, trendSplit } from '../components/TrendSplit';
@@ -25,9 +26,12 @@ export default function MapPage() {
 
   return (
     <div className="wrap page">
-      <header className="map-hero">
+      <header className="map-head">
         <p className="eyebrow">Map · {period}</p>
         <h1>Where hydropower is losing its water</h1>
+      </header>
+      <MapGlobe />
+      <section className="map-hero">
         <p className="lede">
           Two slow threats and one near one. Some basins that feed hydropower dams are drying year after year.
           Some grids lose a large share of their hydropower whenever El Niño arrives. And some are at risk in the next six months.
@@ -55,7 +59,7 @@ export default function MapPage() {
             </a>
           </li>
         </ul>
-      </header>
+      </section>
 
       <div id="map-layers" className="toggle" role="tablist" aria-label="Map layer">
         <button role="tab" aria-selected={mode === 'trend'} className={mode === 'trend' ? 'on' : ''} onClick={() => setMode('trend')}>Drying trend since 2002</button>
