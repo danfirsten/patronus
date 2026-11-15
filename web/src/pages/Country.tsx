@@ -33,20 +33,27 @@ const nextMonth = (m: string) => {
   return mo === 12 ? `${y + 1}-01` : `${y}-${String(mo + 1).padStart(2, '0')}`;
 };
 
+/** Country briefs that exist in public/data/briefs. */
+const BRIEFS = new Set(['ECU', 'PER', 'VNM']);
+
 export default function CountryPage({ iso3 }: { iso3: string }) {
+  const countries = useData<Countries>('countries.json');
+  const meta = countries.data?.countries.find((x) => x.iso3 === iso3);
+  // Only fetch files that exist: countries without a page file would log 404s.
+  const hasFile = !!iso3 && !!countries.data && meta?.has_country_page !== false;
   const file = `country/${iso3}.json`;
-  const c = useData<CP>(iso3 ? file : null);
+  const c = useData<CP>(hasFile ? file : null);
   const enso = useData<Enso>('enso.json');
   const trends = useData<Trends>('trends.json');
   const watch = useData<Watchlist>('watchlist.json');
-  const countries = useData<Countries>('countries.json');
   const [brief, setBrief] = useState<string | null>(null);
   const [horizon, setHorizon] = useState<number | null>(null);
 
-  useEffect(() => { loadText(`briefs/${iso3}.md`).then(setBrief); }, [iso3]);
+  useEffect(() => {
+    if (BRIEFS.has(iso3)) loadText(`briefs/${iso3}.md`).then(setBrief); else setBrief(null);
+  }, [iso3]);
 
   const d = c.data;
-  const meta = countries.data?.countries.find((x) => x.iso3 === iso3);
   const name = d?.name ?? meta?.name ?? iso3;
   const ec = enso.data?.countries.find((x) => x.iso3 === iso3);
   const wrow = watch.data?.countries.find((x) => x.iso3 === iso3);
@@ -64,7 +71,7 @@ export default function CountryPage({ iso3 }: { iso3: string }) {
   const hitRate = hits.length ? hits.filter((b) => b.observed_shortfall).length / hits.length : null;
 
   if (!iso3) return <div className="wrap page"><Empty>No country chosen. <a href="#/map/watchlist">Pick one from the watchlist.</a></Empty></div>;
-  if (c.loading) return <div className="wrap page"><Loading what={`${iso3} data`} /></div>;
+  if (countries.loading || (hasFile && c.loading)) return <div className="wrap page"><Loading what={`${iso3} data`} /></div>;
   if (!d) {
     return (
       <div className="wrap page">
