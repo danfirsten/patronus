@@ -1,0 +1,22 @@
+{
+ "ember_monthly": "https://files.ember-energy.org/public-downloads/generation/outputs/release_generation_monthly_global.csv",
+ "ember_yearly": "https://files.ember-energy.org/public-downloads/generation/outputs/release_generation_yearly_global.csv",
+ "ons_brazil": "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/balanco_energia_subsistema_ho/BALANCO_ENERGIA_SUBSISTEMA_{yyyy}.parquet (SIN, val_gerhidraulica)",
+ "gpcp": "https://downloads.psl.noaa.gov/Datasets/gpcp/precip.mon.mean.nc (GPCP v2.3 monthly, 2.5 deg)",
+ "cpc_soil": "https://downloads.psl.noaa.gov/Datasets/cpcsoil/soilw.mon.mean.v2.nc (CPC soil moisture v2, 0.5 deg, 1.6 m bucket)",
+ "grace": "https://download.csr.utexas.edu/outgoing/grace/RL0603_mascons/CSR_GRACE_GRACE-FO_RL0603_Mascons_all-corrections.nc",
+ "oni": "https://psl.noaa.gov/data/correlation/oni.data",
+ "fetched": "2026-11-14",
+ "ons_subsystems": "same ONS balanco_energia_subsistema files, id_subsistema SE/S/NE/N",
+ "ons_ear": "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/ear_subsistema_di/EAR_DIARIO_SUBSISTEMA_{yyyy}.parquet",
+ "ons_ena": "https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/ena_subsistema_di/ENA_DIARIO_SUBSISTEMA_{yyyy}.parquet",
+ "eia": "https://www.eia.gov/opendata/bulk/ELEC.zip (no key), series ELEC.GEN.HYC-<ST>-99.M, thousand MWh",
+ "grealm": "https://earth.gsfc.nasa.gov/gwm/zip/lake.10.tar.gz (G-REALM 10-day altimetry; Kariba 000394, Three Gorges 001619, FD Roosevelt 001493)",
+ "imerg": "GPM_3IMERGM v07 via Earthdata OPeNDAP (/Grid/precipitation, stride 5)",
+ "jpl_mascons": "TELLUS_GRAC-GRFO_MASCON_CRI_GRID_RL06.3_V4 (PO.DAAC), lwe_thickness x scale_factor",
+ "grace_da": "GRACEDADM_CLSM025GL_7D v3.0 via Earthdata OPeNDAP (rtzsm_inst, gws_inst, stride 2)",
+ "smap": "SPL4SMGP v008 via Earthdata OPeNDAP, sm_rootzone, 13:30 granule every 5th day, stride 4",
+ "china_provincial": "not obtained: data.stats.gov.cn easyquery HTTP 403; no other open monthly provincial hydro series found",
+ "eia_api_v2": "needs an API key -> used the keyless bulk file instead",
+ "fetched_v2": "2026-11-14"
+}

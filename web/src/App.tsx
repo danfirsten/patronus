@@ -10,12 +10,16 @@ import MapPage from './pages/MapPage';
 import CountryPage from './pages/Country';
 import KaribaPage from './pages/Kariba';
 import ProofPage from './pages/Proof';
+import Explore from './pages/Explore';
+import PlanPage from './pages/Plan';
 
 /** Four top-level destinations. Old routes stay reachable (see ALIAS). */
 const NAV = [
   ['', 'Overview'],
   ['kariba', 'Kariba 2027'],
   ['map', 'Map'],
+  ['plan', 'Plan'],
+  ['explore', 'Trend Detective'],
   ['proof', 'Proof'],
 ] as const;
 
@@ -92,6 +96,8 @@ export default function App() {
     case 'country': body = <CountryPage iso3={(arg ?? '').toUpperCase()} />; break;
     case 'kariba': body = <KaribaPage />; break;
     case 'proof': body = <ProofPage />; break;
+    case 'explore': body = <Explore />; break;
+    case 'plan': body = <PlanPage />; break;
     default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the overview</a></p></div>;
   }
   const active = SECTION_OF[page ?? ''] ?? page ?? '';

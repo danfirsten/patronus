@@ -104,7 +104,7 @@ Backbone: Google Earth Engine, with `earthaccess` as a fallback.
   - Cuts rose to 14 h/day on Oct 24, 2024.
   - **Do not say** "warned in January, nothing until April." That claim is unconfirmed.
 - **Kariba:** the 2027 power allocation was cut 36% (36 → 23 BCM). Usable storage was 36.7% on 14 Oct 2026. ZRA projects 9% at the end of 2027 if the full allocation is used.
-- **ENSO:** NOAA (Oct 2026) puts the odds above 83% of a strong-to-very-strong El Niño through Jan–Mar 2027. SARCOF expects below-normal rain over most of central and southern SADC, Zambia and Zimbabwe included, in Jan–Mar 2027.
+- **ENSO:** NOAA puts the odds of a strong-to-very-strong El Niño through Jan–Mar 2027 above 79% (CPC discussion of 12 Nov 2026; the Oct issue said above 83%). Use "above 79%" on slides. SARCOF expects below-normal rain over most of central and southern SADC, Zambia and Zimbabwe included, in Jan–Mar 2027.
 - **Projections:** extreme El Niños roughly double, from about once every 20 years to about once a decade (Cai et al. 2014), and keep rising after warming stabilizes (Wang et al. 2017, Nature Climate Change).
 - **Corrections (Nov 14):** Brazil 2021 had no rationing, and its "50%" was the tariff surcharge, not bills. Ecuador's late-2024 drought was ENSO-neutral. Zambia's "21 h/day" is news-only. See section 11.7 for the checked versions.
 
@@ -332,7 +332,7 @@ All numbers come from `web/public/data/*.json` and were produced by `pipeline/`.
 
 **Our response**
 - **The one story is Zambia and Lake Kariba.** Ecuador ($ cost) and Vietnam ($1.4B) get one line, as proof that this keeps happening.
-- **Customer (hypothesis):** the people who decide how much water to release from Kariba and how to plan power for 2027. That means Zambia's and Zimbabwe's energy ministries and utilities (ZESCO, ZPC) and the Zambezi River Authority. Beneficiaries: hospitals, factories and households that lost up to 21 hours of power a day in 2024 (news reports).
+- **Customer:** superseded on Nov 15. There is no single named customer and no sales ask; slide 7 says who *could* use it (utilities, river authorities, energy ministries; ZESCO as an example). Previous hypothesis: the people who decide how much water to release from Kariba and how to plan power for 2027. That means Zambia's and Zimbabwe's energy ministries and utilities (ZESCO, ZPC) and the Zambezi River Authority. Beneficiaries: hospitals, factories and households that lost up to 21 hours of power a day in 2024 (news reports).
 - **The feeling:** *"I know how much time I have, and what acting now buys me."* The product turns dread into a decision window. The Kariba page and the pitch should say it in one line, from the simulator: **a 30% release cut from Jan 2027 lowers the chance of the danger zone from 4 in 11 to 2 in 11 El Niño years, at a cost of about 1.4 TWh of hydropower (net, kariba_sim.json; 1.5 TWh is held back by choice).**
 - **The NASA data to name:** GRACE/GRACE-FO (water stored in the basin), G-REALM satellite altimetry (TOPEX/Jason/Sentinel-6, with partner agencies), MERRA-2 and GPCP (rain and soil), GEOS-S2S (seasonal outlook) and Black Marble (night lights).
 - **The challenge answer, said explicitly:** "We pick the variable (water storage, lake level) and the region (each hydropower basin), plot it since 2002, and measure the trend (Sen's slope) and its significance (Mann-Kendall with FDR). The Trend Detective page lets anyone do the same."
@@ -366,3 +366,10 @@ Source: `web/public/data/reservoirs.json` and `docs/RESERVOIRS.md`.
   - Leads are capped at 12 months by the scoring window. Over all seasons there are 219 hit episodes, 26 missed and 64 false-alarm runs.
 - **Honest wording:** "Applied unchanged to 31 reservoirs, the method flagged 14 of 17 past hydro crises on 4 continents before they began. In 8 of them the alarm came before the lake had dropped below its warning level." Do not present the reservoir-watch Kariba 2024 catch as the same result as the Jul 2023 El Niño alarm: by percentile, Kariba was already low from 2022.
 - **Live (issued 2026-11-15):** already below warning are Cahora Bassa (12th percentile), Kainji, La Vueltosa and Srisailam. Next most at risk: Toktogul (0.69), Three Gorges (0.67, only 3 analogs), São Simão (0.57) and Xiaowan (0.50). Kariba is 0.45 under El Niño analogs.
+
+**Kariba 2024 counterfactual and value of lost load (Sean's `docs/VOLL.md`, Future Detector repo; Nov 15)**
+- **Counterfactual:** acting when the Patronus alarm fired (Jul 2023), instead of what actually happened, would have saved about **$150–300M** in the central case. The low case (VoLL $0.14/kWh) is roughly break-even to a small cost (−$0.03 to −0.19bn). Pitch it as a range, credited to the counterfactual; time and power stay the lead.
+- **Measured value of lost load:** $0.14 / $0.39 / $0.76 per kWh (low / central / high). Our simulator's illustrative cost line still uses $1.00/kWh and should be aligned.
+- **Realistic imports:** about 90 MW in Nov 2023 (Eskom was load-shedding too), rising to about 300 MW by Apr 2024. Holding water is the earliest lever.
+- **IMF:** Zambia's 2024 growth *outturn* was about 4.0%. The 1.2% was the IMF's *forecast* cut, so always say "forecast".
+- **Cutting power:** "8, then 12 hours a day" is robust; "21 hours a day" is news-reported only.
