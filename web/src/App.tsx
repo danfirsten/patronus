@@ -19,10 +19,8 @@ const NAV = [
   ['', 'Overview'],
   ['kariba', 'Kariba 2027'],
   ['map', 'Map'],
-  // Plan dashboard (PR #6 merged; PR #9 carries the newer #/app shell). Until #/app lands here, 'app' aliases to the Plan page.
   ['app/plan', 'Plan'],
   ['explore', 'Trend Detective'],
-  ['app/plan', 'Dashboard'],
   ['proof', 'Proof'],
 ] as const;
 
@@ -30,7 +28,6 @@ const NAV = [
 const ALIAS: Record<string, [string, string]> = {
   scoreboard: ['proof', 'backtest'],
   watchlist: ['map', 'watchlist'],
-  app: ['plan', ''],
 };
 /** Which nav item a page belongs to. */
 const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'app/plan' };

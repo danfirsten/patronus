@@ -104,8 +104,8 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
     <Section
       id="pt-called"
       eyebrow="Track record"
-      title="Patronus saw it coming"
-      intro={<>Run forward on past crises with only the data that existed at the time.<Fn k="scoreboard" /></>}
+      title="We saw it before they did"
+      intro={<>When the authorities first acted, when Patronus flagged it, and when the lights went out. Run forward on past crises with only the data that existed at the time.<Fn k="scoreboard" /></>}
     >
       {loading ? <Loading what="the crisis back-test" /> : !rows ? <Missing what="crisis back-test" /> : (
         <>
@@ -117,6 +117,11 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
               return (
                 <InView as="li" key={r.id} i={i} className="pt-hit-card">
                   <h3 className="pt-h3">{copy?.title ?? r.name}</h3>
+                  <dl className="pt-vs">
+                    <div className="pt-vs-we"><dt>We found it</dt><dd className="pt-num">{fmtMonth(r.patronus_alarm)}</dd><dd className="pt-vs-w">Patronus alarm</dd></div>
+                    <div className="pt-vs-they"><dt>They found it</dt><dd className="pt-num">{c?.official_warning ? fmtDate(c.official_warning.date) : r.official_warning ? fmtDate(r.official_warning) : '—'}</dd><dd className="pt-vs-w">{c?.official_warning?.what ?? 'First official warning'}</dd></div>
+                    <div className="pt-vs-out"><dt>Lights out</dt><dd className="pt-num">{fmtDate(r.onset)}</dd><dd className="pt-vs-w">{c?.onset?.what ?? 'Crisis starts'}</dd></div>
+                  </dl>
                   <p className="pt-hit-n"><CountUp value={`${lead} months`} /></p>
                   <p className="pt-hit-vs">{copy?.vs ?? 'before the first official warning'}{copy?.second ? <><br />{copy.second(r)}</> : null}</p>
                   <Timeline
@@ -143,6 +148,25 @@ export function CalledIt({ rows, crises, loading, res }: { rows: ScoreRow[] | nu
             </InView>
           )}
           {misses.length > 0 && (
+            <InView className="pt-missed">
+              <h3 className="pt-h3">Missed</h3>
+              <ul>
+                {misses.map((m) => {
+                  const c = byId.get(m.id);
+                  return (
+                    <li key={m.id}>
+                      <b>{m.name}</b>
+                      <span>Authorities: {c?.official_warning ? <>{fmtDate(c.official_warning.date)}, {c.official_warning.what}</> : 'no official warning on record'}</span>
+                      <span>Patronus: no alarm</span>
+                      <span>Crisis: {fmtDate(m.onset)}{c?.onset?.what ? `, ${c.onset.what}` : ''}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <Fn k="crises" />
+            </InView>
+          )}
+          {misses.length > 0 && (
             <p className="pt-honest">
               Not every crisis: {sichuan ? 'Sichuan 2022 was a sudden heatwave, and ' : ''}
               {misses.filter((m) => m.id !== 'sichuan-2022').map((m) => m.name).join(' and ')} came without an alarm.{' '}
@@ -160,7 +184,7 @@ const COSTS: { name: string; value: string; detail: ReactNode }[] = [
   { name: 'Ecuador 2024', value: '$1.9B', detail: <>About 1.4% of GDP.<Fn k="bce" /> Blackouts of up to 14 hours a day.<Fn k="rnz" /></> },
   { name: 'Northern Vietnam 2023', value: '$1.4B', detail: <>About 0.3% of GDP in May and June, preliminary estimate.<Fn k="wb" /></> },
   { name: 'Brazil 2021', value: 'R$13.8B', detail: <>Estimated crisis cost.<Fn k="agbr" /> Average power bill up about 6.8%.<Fn k="mme" /></> },
-  { name: 'Zambia 2024', value: '4.7% → 1.2%', detail: <>IMF cut to 2024 growth, citing power shortfalls.<Fn k="imf" /> Cuts of up to 21 hours a day, per news reports.<Fn k="crisis24" /></> },
+  { name: 'Zambia 2024', value: '~$130M', detail: <>About 0.5% of GDP. Electricity shortages took 0.5 points off Zambia's 2024 growth (IMF).<Fn k="imfcr25" /> Official cuts 8, then 12 h/day; up to 21 h reported.<Fn k="crisis24" /></> },
   { name: 'Sichuan 2022', value: 'Hydro halved', detail: <>Hydro output more than halved and factories in 19 of 21 cities stopped. No official cost estimate found.<Fn k="yicai" /></> },
 ];
 
@@ -191,7 +215,7 @@ export interface EnsoCpc { issued_date: string; status: string; synopsis: string
 export interface WatchRow { iso3: string; name: string; risk_level: string | null; p_any_shortfall_6m: number | null; max_p_shortfall: number | null; alarm: boolean }
 export interface Exposure { n: number; gw: number; zmbEffect: number | null }
 
-export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: KaribaLite | null; cpc: EnsoCpc | null; watch: WatchRow[] | null; exposure: Exposure | null; loading: boolean }) {
+export function Next({ kariba, cpc, watch, exposure, loading, teaser = false }: { kariba: KaribaLite | null; cpc: EnsoCpc | null; watch: WatchRow[] | null; exposure: Exposure | null; loading: boolean; teaser?: boolean }) {
   const months = kariba?.forecast?.months ?? [];
   const dec = months.find((m) => m.month === '2027-12');
   const danger = kariba?.thresholds?.danger_usable_pct ?? 10;
@@ -200,7 +224,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
   const hist = (kariba?.history_monthly ?? []).filter((h) => h.month >= '2024-12' && isNum(h.usable_pct));
   const pct = (v: number) => `${fmtNum(v, 0)}%`;
   return (
-    <Section id="pt-next" eyebrow="What is next" title="Lake Kariba, December 2027">
+    <Section id="pt-next" eyebrow="What is next" title={teaser && dec ? <>Kariba 2027: {fmtProb(dec.p_below_danger)} chance of danger</> : "Lake Kariba, December 2027"}>
       {loading ? <Loading what="the Kariba forecast" /> : !dec ? <Missing what="Kariba forecast" /> : (
         <div className="pt-next-grid">
           <InView className="pt-big">
@@ -234,7 +258,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
           </InView>
         </div>
       )}
-
+      {teaser ? <p style={{ marginTop: 24 }}><a className="button" href="#/kariba">See the 2027 forecast</a></p> : <>
       <div className="pt-two">
         <InView>
           <h3 className="pt-h3"><ElNino zmbEffect={exposure?.zmbEffect} /> is here</h3>
@@ -268,6 +292,7 @@ export function Next({ kariba, cpc, watch, exposure, loading }: { kariba: Kariba
           <p className="pt-small"><a href="#/map/watchlist">Full watchlist</a></p>
         </InView>
       </div>
+      </>}
     </Section>
   );
 }
@@ -350,5 +375,19 @@ export function Audience() {
         <a className="button" href="#/kariba">Open the Kariba forecast</a>
       </InView>
     </Section>
+  );
+}
+
+/** Short close for the landing page: one line, two next steps. */
+export function Close() {
+  return (
+    <section className="pt-section" id="pt-close" aria-label="Next steps">
+      <div className="wrap">
+        <InView className="pt-close">
+          <p className="pt-close-t">The warning existed. <span className="pt-key">Patronus</span> makes it public.</p>
+          <p style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}><a className="button" href="#/app/plan">Open the Plan dashboard</a><a className="button button-ghost" href="#/proof">See the proof</a></p>
+        </InView>
+      </div>
+    </section>
   );
 }

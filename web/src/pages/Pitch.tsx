@@ -4,12 +4,10 @@ import { RISK_ORDER } from '../lib/risk';
 import '../components/pitch/pitch.css';
 import { Sources } from '../components/pitch/sources';
 import { DataSources, type MetaSource } from '../components/pitch/DataSources';
-import { Roadmap } from '../components/pitch/Roadmap';
 import { Person } from '../components/pitch/Person';
-import { Playbook } from '../components/pitch/Playbook';
 import { HeroStory } from '../components/pitch/HeroStory';
 import {
-  Audience, CalledIt, Cost, Next, Proof,
+  CalledIt, Close, Cost, Next,
   type Crisis, type ReservoirSummary, type EnsembleScore, type EnsoCpc, type Exposure, type KaribaLite, type LedgerLite, type ScoreRow, type Skill, type WatchRow,
 } from '../components/pitch/sections';
 
@@ -65,6 +63,7 @@ export default function Pitch() {
   const sources: MetaSource[] | null = meta.data?.sources ?? null;
 
   const cpc: EnsoCpc | null = enso.data?.outlook?.cpc ?? null;
+  void [skill, ens, led]; // kept for the Proof page sections removed from the landing (pre-pitch trim)
 
   return (
     <div className="pt">
@@ -73,11 +72,8 @@ export default function Pitch() {
       <CalledIt rows={rows} crises={(crises.data?.crises as Crisis[]) ?? null} loading={score.loading} res={res} />
       <Cost />
       <DataSources sources={sources} missions={meta.data?.nasa_data_summary ?? null} nCountries={enso.data?.summary?.n_countries ?? null} loading={meta.loading} />
-      <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} exposure={exposure} loading={kariba.loading || enso.loading || watch.loading} />
-      <Playbook />
-      <Proof skill={skill} ens={ens} ledger={led} rows={rows} />
-      <Roadmap />
-      <Audience />
+      <Next kariba={(kariba.data as KaribaLite) ?? null} cpc={cpc} watch={top} exposure={exposure} loading={kariba.loading || enso.loading || watch.loading} teaser />
+      <Close />
       <Sources />
     </div>
   );

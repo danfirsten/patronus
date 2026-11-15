@@ -154,6 +154,8 @@ main:focus { outline: none; }
   transition: background-color var(--dur-2) var(--ease-out), transform var(--dur-1) var(--ease-out);
 }
 .button:hover { background: var(--deep); text-decoration: none; }
+.button.button-ghost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.button.button-ghost:hover { background: var(--accent); color: var(--accent-text); }
 
 .crisis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 20px 0; }
 .crisis-card { background: var(--bg-elev); border-radius: var(--radius-lg); padding: 20px; font-size: var(--fs-sm); }
@@ -677,6 +679,17 @@ ul.plain li { margin-bottom: 0.5em; }
 .is-sub .k-hero .eyebrow + h1 + p.lede, .is-sub .k-hero h1 + p.lede { color: var(--text-on-deep-muted); }
 .is-sub .proof-hero { padding-bottom: 8px; }
 .is-sub .hero { padding-top: clamp(16px, 2.4vw, 28px); padding-bottom: 24px; }
-.map-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 12px; }
+.map-head { display: block; margin-bottom: 16px; }
+.map-head .eyebrow { margin: 0 0 6px !important; }
 .map-head .eyebrow { margin: 0; }
 .map-head h1 { margin: 0; }
+
+/* Collapsed technical detail on site pages (pre-pitch polish) */
+.k-advanced { margin: 48px 0 24px; border-top: 1px solid var(--border); padding-top: 16px; }
+.k-advanced > summary { cursor: pointer; font-weight: 600; font-size: var(--fs-md); color: var(--text-muted); padding: 8px 0; }
+.k-advanced[open] > summary { margin-bottom: 24px; }
+.k-hero .button.button-ghost { color: #fff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .7); }
+.k-hero .button.button-ghost:hover { background: #fff; color: var(--ink, #0B1F2A); }
+/* Header wordmark: keep the waterline idea but read as a word, not a strike-through */
+.brand .wordmark { color: #8FB0BF; padding-top: 2px; }
+.brand .wm-line { height: 1px; opacity: .45; }

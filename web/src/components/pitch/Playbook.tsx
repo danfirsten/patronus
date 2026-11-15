@@ -138,7 +138,7 @@ export function Playbook() {
             </ul>
           </InView>
         </div>
-        <p className="pt-honest pb-lead-note">Lead times are estimated from news and agency dates (first public warning sign to the worst month). Uruguay had no dated warning; its protection was the wind it built years earlier.</p>
+        <details className="k-advanced"><summary>Notes</summary><p className="pt-honest pb-lead-note">Lead times are estimated from news and agency dates (first public warning sign to the worst month). Uruguay had no dated warning; its protection was the wind it built years earlier.</p></details>
 
         {/* 2. Four windows */}
         <InView className="pb-sub"><h3 className="pt-h3">What you can still do, by months of warning</h3>

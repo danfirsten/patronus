@@ -1,6 +1,8 @@
+import { Roadmap } from '../components/pitch/Roadmap';
 import ScoreboardPage from './Scoreboard';
 import ModelHow from '../components/proof/ModelHow';
 import { useEffect, useState } from 'react';
+import { useRoute } from '../lib/router';
 import { useData, loadData } from '../data/load';
 import type { Ledger, Meta, Source } from '../data/types';
 import { Loading, Empty, SourceNote } from '../components/common';
@@ -78,12 +80,12 @@ function VerifyButton({ file, expected }: { file: string; expected?: string }) {
 }
 
 const PROOF_INDEX: [string, string, string][] = [
-  ['model', 'How the model works', 'Data, lags, models, validation design, results and limits.'],
   ['backtest', 'Back-test', 'Five past crises, replayed with only the data available at the time. Hits, misses and false alarms.'],
   ['ledger', 'Forecast ledger', 'Every forecast hashed and time-stamped before the outcome.'],
   ['limits', 'Limits', 'What Patronus cannot do.'],
   ['sources', 'Method and sources', 'Every dataset, with links.'],
   ['ai', 'Use of AI', 'Our statement on how AI was used.'],
+  ['model', 'Advanced: how the model works', 'Data, lags, models, validation design, results and limits.'],
 ];
 
 export default function ProofPage() {
@@ -92,8 +94,10 @@ export default function ProofPage() {
   const limits = useLimitations();
   const sources: Source[] = Array.isArray(meta.data?.sources) ? meta.data!.sources : [];
   const ledgerReal = ledger.source === 'real';
+  const openModel = useRoute()[1] === 'model';
 
   return (
+    <>
     <div className="wrap page">
       <header className="proof-hero">
         <div>
@@ -103,6 +107,7 @@ export default function ProofPage() {
             A warning is only useful if people can trust it. We re-ran past crises blind, publish every forecast before the
             outcome is known, fingerprint it, and list what Patronus cannot do.
           </p>
+          <p style={{ margin: '20px 0 0' }}><a className="button" href="#/kariba">See the Kariba 2027 forecast</a></p>
         </div>
         <ol className="proof-index" aria-label="On this page">
           {PROOF_INDEX.map(([id, t, d], i) => (
@@ -116,8 +121,6 @@ export default function ProofPage() {
           ))}
         </ol>
       </header>
-
-      <ModelHow />
 
       <section id="backtest" className="proof-backtest">
         <p className="eyebrow">02 · Back-test</p>
@@ -238,6 +241,12 @@ export default function ProofPage() {
         {meta.data?.ai_disclosure && <p className="muted">{meta.data.ai_disclosure}</p>}
         <p className="muted small">Patronus is a NASA Space Apps 2026 project. It is not affiliated with or endorsed by NASA, and it is unrelated to any company of the same name.</p>
       </div>
+      <details className="k-advanced" open={openModel}>
+        <summary>Advanced: how the model works (data, lags, models, validation)</summary>
+        <ModelHow />
+      </details>
     </div>
+    <Roadmap />
+    </>
   );
 }
