@@ -184,7 +184,7 @@ const COSTS: { name: string; value: string; detail: ReactNode }[] = [
   { name: 'Ecuador 2024', value: '$1.9B', detail: <>About 1.4% of GDP.<Fn k="bce" /> Blackouts of up to 14 hours a day.<Fn k="rnz" /></> },
   { name: 'Northern Vietnam 2023', value: '$1.4B', detail: <>About 0.3% of GDP in May and June, preliminary estimate.<Fn k="wb" /></> },
   { name: 'Brazil 2021', value: 'R$13.8B', detail: <>Estimated crisis cost.<Fn k="agbr" /> Average power bill up about 6.8%.<Fn k="mme" /></> },
-  { name: 'Zambia 2024', value: '~$130M · 0.5% of GDP', detail: <>Electricity shortages took 0.5 points off Zambia's 2024 growth (IMF).<Fn k="imfcr25" /> Official cuts 8, then 12 h/day; up to 21 h reported.<Fn k="crisis24" /></> },
+  { name: 'Zambia 2024', value: '~$130M', detail: <>About 0.5% of GDP. Electricity shortages took 0.5 points off Zambia's 2024 growth (IMF).<Fn k="imfcr25" /> Official cuts 8, then 12 h/day; up to 21 h reported.<Fn k="crisis24" /></> },
   { name: 'Sichuan 2022', value: 'Hydro halved', detail: <>Hydro output more than halved and factories in 19 of 21 cities stopped. No official cost estimate found.<Fn k="yicai" /></> },
 ];
 
