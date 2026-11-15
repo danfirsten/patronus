@@ -11,12 +11,14 @@ import CountryPage from './pages/Country';
 import KaribaPage from './pages/Kariba';
 import ScoreboardPage from './pages/Scoreboard';
 import ProofPage from './pages/Proof';
+import PlanPage from './pages/Plan';
 
 const NAV = [
   ['', 'Story'],
   ['map', 'Map'],
   ['watchlist', 'Watchlist'],
   ['kariba', 'Kariba'],
+  ['plan', 'Plan'],
   ['scoreboard', 'Scoreboard'],
   ['proof', 'Proof'],
 ] as const;
@@ -57,6 +59,7 @@ export default function App() {
     case 'kariba': body = <KaribaPage />; break;
     case 'scoreboard': body = <ScoreboardPage />; break;
     case 'proof': body = <ProofPage />; break;
+    case 'plan': body = <PlanPage />; break;
     default: body = <div className="wrap page"><h1>Page not found</h1><p><a href="#/">Back to the story</a></p></div>;
   }
   const active = page === 'country' ? 'watchlist' : page ?? '';
