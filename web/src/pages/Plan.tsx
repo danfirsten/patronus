@@ -1,14 +1,14 @@
-import { useMemo, useRef, useState, type FormEvent } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { area, line, curveMonotoneX } from 'd3-shape';
 import { useData } from '../data/load';
 import { Loading, SourceNote, useWidth } from '../components/common';
 import {
-  ACTIONS, ACTION, K, defaultPlan, simulatePlan, optimize, digest, planDigest, monthName, monthLabel,
+  ACTIONS, ACTION, K, defaultPlan, simulatePlan, optimize, monthName, monthLabel,
   type ActionId, type Constraints, type OptResult, type Plan, type Result, type SimInput,
 } from '../lib/plan/sim';
-import { applyTools, askExplain, askPlan, type ToolCall } from '../lib/plan/chat';
 import '../components/plan/plan.css';
+import { usePlanBridge } from '../components/chat/planBridge';
 
 const FILE = 'kariba_sim.json';
 const START_OPTS = Array.from({ length: 13 }, (_, i) => i + 1);
@@ -30,15 +30,6 @@ function planLine(p: Plan) {
     return a.unit ? `${a.title.split(':')[0].split(' (')[0].toLowerCase()} ${s.amount}${a.unit === '%' ? '%' : ' MW'} from ${monthName(s.start)}` : `${a.title.toLowerCase()} from ${monthName(s.start)}`;
   });
   return on.length ? on.join('; ') : 'no action';
-}
-
-function templateExplain(r: Result, p: Plan, changes: string[], opt: OptResult | null) {
-  const parts: string[] = [];
-  if (changes.length) parts.push(`Changed: ${changes.join('; ')}.`);
-  if (opt) parts.push(`Best plan found: ${planLine(p)}.`);
-  parts.push(summaryText(r));
-  parts.push(`Actions cost about ${usd(r.actionCost.total)}; the remaining shortage costs ${usd(r.shortageCost.voll)} at $1/kWh (${usd(r.shortageCost.low)} to ${usd(r.shortageCost.high)} across $0.5–1.5/kWh, ${usd(r.shortageCost.macro)} at $0.13/kWh). Simulation over past El Niño years, not a forecast.`);
-  return parts.join(' ');
 }
 
 // ---------------------------------------------------------------- charts
@@ -230,55 +221,6 @@ function CostTable({ r, base }: { r: Result; base: Result }) {
   );
 }
 
-// ---------------------------------------------------------------- chat
-
-interface Msg { role: 'user' | 'assistant'; text: string; changes?: string[]; via?: string; note?: string }
-
-const EXAMPLES = [
-  "I can't import power, what should I do?",
-  'We can rent 200 MW of diesel from February, budget $150 million',
-  'Mines refuse to curtail. Best plan?',
-];
-
-function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: Msg[]; busy: boolean }) {
-  const [text, setText] = useState('');
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const t = text.trim();
-    if (!t || busy) return;
-    setText('');
-    onAsk(t);
-  };
-  return (
-    <section className="panel plan-chat-panel" aria-labelledby="chat-h">
-      <h2 id="chat-h" className="plan-h">Ask the planning assistant</h2>
-      <p className="muted small">Say what you can and cannot do. The assistant changes the simulator, re-runs it, and explains the result using only the simulator's numbers. Runs server-side: Claude when the team's key is set, otherwise Cloudflare Workers AI (Llama 3.3 70B), otherwise a simple phrase parser. No key is exposed in the page.</p>
-      <div className="plan-log" aria-live="polite">
-        {msgs.length === 0 && (
-          <div className="plan-examples">
-            {EXAMPLES.map((ex) => <button key={ex} type="button" className="plan-chip" onClick={() => onAsk(ex)} disabled={busy}>{ex}</button>)}
-          </div>
-        )}
-        {msgs.map((m, i) => (
-          <div key={i} className={`plan-msg plan-msg-${m.role}`}>
-            {m.role === 'assistant' && m.changes && m.changes.length > 0 && (
-              <ul className="plan-changes">{m.changes.map((c) => <li key={c}>{c}</li>)}</ul>
-            )}
-            <p>{m.text}</p>
-            {m.via && <p className="plan-via">{m.via}{m.note ? ` · ${m.note}` : ''}</p>}
-          </div>
-        ))}
-        {busy && <div className="plan-msg plan-msg-assistant"><p className="muted">Re-running the simulator…</p></div>}
-      </div>
-      <form className="plan-form" onSubmit={submit}>
-        <label htmlFor="plan-q" className="sr-only">Your question</label>
-        <input id="plan-q" value={text} onChange={(e) => setText(e.target.value)} placeholder="e.g. I can't import from South Africa, what now?" maxLength={300} autoComplete="off" />
-        <button className="button" type="submit" disabled={busy || !text.trim()}>Ask</button>
-      </form>
-    </section>
-  );
-}
-
 // ---------------------------------------------------------------- page
 
 export default function PlanPage() {
@@ -287,9 +229,8 @@ export default function PlanPage() {
   const [limits, setLimits] = useState<Constraints>({ budgetMusd: null, maxShedH: null, voll: 'central' });
   const [opt, setOpt] = useState<OptResult | null>(null);
   const [optBusy, setOptBusy] = useState(false);
-  const [msgs, setMsgs] = useState<Msg[]>([]);
-  const [busy, setBusy] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
+  usePlanBridge({ inp, plan, setPlan, limits, setLimits, setOpt });
 
   const base = useMemo(() => (inp ? simulatePlan(inp, { ...defaultPlan() }) : null), [inp]);
   const r = useMemo(() => (inp ? simulatePlan(inp, plan) : null), [inp, plan]);
@@ -305,41 +246,6 @@ export default function PlanPage() {
   const clickOpt = () => {
     setOptBusy(true);
     setTimeout(() => { runOpt(); setOptBusy(false); }, 20);
-  };
-
-  const ask = async (text: string) => {
-    setMsgs((m) => [...m, { role: 'user', text }]);
-    setBusy(true);
-    try {
-      const before = digest(r);
-      const reply = await askPlan(text, planDigest(plan), limits);
-      const ap = applyTools(plan, limits, reply.calls as ToolCall[]);
-      let newPlan = ap.plan;
-      let o: OptResult | null = null;
-      if (ap.runOptimizer) {
-        o = optimize(inp, ap.plan, ap.limits);
-        newPlan = o.plan;
-        setOpt(o);
-      }
-      const r2 = simulatePlan(inp, newPlan);
-      setPlan(newPlan);
-      setLimits(ap.limits);
-      const ex = await askExplain({
-        message: text, plan: planDigest(newPlan), limits: ap.limits, results: digest(r2), before,
-        optimizer: o ? { why: o.why, plans_tried: o.tried } : null,
-      });
-      const mdl = (reply.model ?? '').split('/').pop() ?? '';
-      const via = reply.via === 'ai' ? (mdl.startsWith('claude') ? `Claude (${mdl})` : `Workers AI (${mdl})`) : 'Rule-based parser';
-      setMsgs((m) => [...m, {
-        role: 'assistant',
-        text: ex.text ?? templateExplain(r2, newPlan, ap.changes, o),
-        changes: ap.changes.length ? ap.changes : (o ? [] : ['No change understood. Try naming an action: imports, rental, mines, hold water, solar, schedule.']),
-        via: `${via}${ex.text ? ' · explanation by the model, numbers checked against the simulator' : ' · explanation from a template'}`,
-        note: reply.note,
-      }]);
-    } finally {
-      setBusy(false);
-    }
   };
 
   const applyOpt = () => { if (opt) { setPlan(opt.plan); resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); } };
@@ -382,7 +288,6 @@ export default function PlanPage() {
             <SourceNote>Calibration and method: Patronus 2024 counterfactual (kariba_cf), ZESCO/ministry statements 2024.</SourceNote>
           </figure>
 
-          <Chat onAsk={ask} msgs={msgs} busy={busy} />
 
           <section className="panel plan-opt" aria-labelledby="opt-h">
             <h2 id="opt-h" className="plan-h">Best plan</h2>
