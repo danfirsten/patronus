@@ -33,7 +33,7 @@ The pipeline expects the large raw files in `data/raw/` (gitignored). Each modul
 | `pipeline/` | Python data pipeline: `trends`, `enso`, `kariba*`, `generation`/`gen_*`, `nightlights`, `crises`, `scoreboard`, `ledger`, `meta`, `run_all` |
 | `web/` | React + TypeScript app (Vite). Theme tokens are in `web/src/theme.css`; the design system is in `DESIGN_SYSTEM.md` |
 | `web/public/data/` | Pipeline outputs (JSON contracts in [docs/CONTRACTS.md](docs/CONTRACTS.md)) |
-| `data/reference/` | Small checked-in reference tables |
+| `data/reference/` | Checked-in data: `forecast/` (pipeline inputs) and `remediation/` (crisis actions, costs, ZRA readings) |
 | `docs/` | Contracts, verification guide, sources |
 
 ## Team, credits and AI use
