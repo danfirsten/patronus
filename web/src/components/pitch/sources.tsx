@@ -17,6 +17,7 @@ export const SOURCES: Source[] = [
   { key: 'agbr', label: 'Agência Brasil, Aug 2021: crisis cost estimate and new tariff flag', url: 'https://agenciabrasil.ebc.com.br/economia/noticia/2021-08/aneel-cria-nova-bandeira-tarifaria-e-conta-de-luz-fica-mais-cara' },
   { key: 'mme', label: 'Brazil Ministry of Mines and Energy / CREG release, Aug 31, 2021', url: 'https://www.gov.br/mme/pt-br/assuntos/noticias/anexo-1-release-5a-reuniao-da-creg_31-08-2021.pdf' },
   { key: 'imf', label: 'IMF press release 24/413, Nov 11, 2024 (Zambia)', url: 'https://www.imf.org/en/news/articles/2024/11/11/pr-24413-zambia-imf-reaches-agreement-on-4th-review-of-ecf' },
+  { key: 'imfcr25', label: 'IMF Country Report 2025, Zambia 5th ECF review: 2024 growth estimated at 4%, electricity shortages took about 0.5 pp; World Bank 2024 GDP $25.3bn', url: 'https://www.imf.org/-/media/files/publications/cr/2025/english/1zmbea2025001-source-pdf.pdf' },
   { key: 'crisis24', label: 'Crisis24 (GardaWorld), Oct 2024: Zambia rolling power cuts (news report)', url: 'https://crisis24.garda.com/alerts/2024/10/zambia-utility-likely-to-maintain-prolonged-rolling-power-cuts-through-late-november-update-8' },
   { key: 'yicai', label: 'Yicai Global, Aug 2022: Sichuan rations power as drought halves hydropower output', url: 'https://www.yicaiglobal.com/news/china-sichuan-province-rations-power-as-record-heat-drought-halves-hydropower-output' },
   { key: 'kariba', label: 'Patronus Kariba forecast and lake history (data/kariba.json)', url: 'data/kariba.json' },
