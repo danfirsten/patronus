@@ -114,7 +114,8 @@ export function HeroStory({ history }: { history: KaribaPoint[] | null }) {
           <div className={`ph-after${stage > 0 ? ' is-on' : ''}`}>
             <p className="ph-lede"><strong>Patronus</strong> reads <strong>NASA water data</strong> to warn countries that run on hydropower of power shortfalls months before they hit.</p>
             <div className="pt-actions">
-              <button type="button" className="button" onClick={() => scrollToId('pt-next')}>See the 2027 forecast</button>
+              <a className="button" href="#/kariba">See Kariba 2027</a>
+              <a className="button button-ghost" href="#/app/plan">Open the dashboard</a>
               <a className="pt-link" href="#/proof/backtest">See every past call</a>
             </div>
           </div>

@@ -19,10 +19,7 @@ const NAV = [
   ['', 'Overview'],
   ['kariba', 'Kariba 2027'],
   ['map', 'Map'],
-  // Plan dashboard (PR #6 merged; PR #9 carries the newer #/app shell). Until #/app lands here, 'app' aliases to the Plan page.
-  ['app/plan', 'Plan'],
   ['explore', 'Trend Detective'],
-  ['app/plan', 'Dashboard'],
   ['proof', 'Proof'],
 ] as const;
 
@@ -30,10 +27,9 @@ const NAV = [
 const ALIAS: Record<string, [string, string]> = {
   scoreboard: ['proof', 'backtest'],
   watchlist: ['map', 'watchlist'],
-  app: ['plan', ''],
 };
 /** Which nav item a page belongs to. */
-const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'app/plan' };
+const SECTION_OF: Record<string, string> = { story: '', country: 'map', plan: 'kariba' };
 
 /** Scroll to an in-page section once it has rendered (data loads async, so retry briefly). */
 function useScrollToSection(id: string | undefined, key: string) {
@@ -132,7 +128,7 @@ export default function App() {
                 <li key={k}><a href={`#/${k}`} className={active === k ? 'active' : ''} aria-current={active === k ? 'page' : undefined}>{label}</a></li>
               ))}
             </ul>
-            <a className="button nav-cta" href="#/kariba/forecast">2027 forecast</a>
+            <a className="button nav-cta" href="#/app/plan">Open the dashboard</a>
           </nav>
           <button type="button" className="menu-btn" aria-expanded={menu} aria-controls="site-nav" aria-label={menu ? 'Close menu' : 'Open menu'} onClick={() => setMenu((m) => !m)}>
             <span className="menu-icon" aria-hidden="true"><i /><i /></span>

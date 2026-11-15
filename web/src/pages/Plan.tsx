@@ -267,7 +267,7 @@ export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: 
               <ul className="plan-changes">{m.changes.map((c) => <li key={c}>{c}</li>)}</ul>
             )}
             <p>{m.text}</p>
-            {m.via && <p className="plan-via">{m.via}{m.note ? ` · ${m.note}` : ''}</p>}
+            {m.via && <details className="plan-via"><summary aria-label="How this answer was made">i</summary><span>{m.via}{m.note ? ` · ${m.note}` : ''}</span></details>}
           </div>
         ))}
         {busy && <div className="plan-msg plan-msg-assistant"><p className="muted">Re-running the simulator…</p></div>}

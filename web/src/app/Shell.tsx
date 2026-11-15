@@ -36,7 +36,7 @@ const NAV: [string, string][] = [
 
 export default function AppShell({ view }: { view: string }) {
   const v = NAV.some(([k]) => k === view) ? view : 'plan';
-  useEffect(() => { document.title = `Patronus · ${NAV.find(([k]) => k === v)?.[1]}`; }, [v]);
+  useEffect(() => { document.title = 'Patronus: early warning for hydropower blackouts'; }, [v]);
   let body: ReactNode;
   switch (v) {
     case 'replay': body = <Replay />; break;

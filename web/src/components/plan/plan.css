@@ -50,7 +50,10 @@
 .plan-msg-user { align-self: flex-end; background: var(--water); color: var(--accent-text); }
 .plan-msg-assistant { align-self: flex-start; background: var(--bg); }
 .plan-changes { margin: 0 0 6px; padding-left: 1.1em; font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted); }
-.plan-via { margin-top: 6px !important; font-family: var(--font-mono); font-size: 0.5625rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
+.plan-via { margin-top: 6px; font-size: 0.75rem; color: var(--text-faint); }
+.plan-via > summary { list-style: none; display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border-strong); font: 600 10px/1 var(--font-mono); color: var(--text-muted); cursor: pointer; }
+.plan-via > summary::-webkit-details-marker { display: none; }
+.plan-via[open] > span { display: block; margin-top: 4px; }
 .plan-examples { display: flex; flex-wrap: wrap; gap: 8px; }
 .plan-chip { background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 8px 14px; min-height: 40px; font: inherit; font-size: var(--fs-sm); color: var(--text); cursor: pointer; text-align: left; }
 .plan-chip:hover { border-color: var(--water); }

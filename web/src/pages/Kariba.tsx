@@ -87,6 +87,7 @@ export default function KaribaPage() {
         In 2024 an El Niño drought drained it to 2.89% usable storage. Zambia cut power for 8, then 12 hours a day.
         A very strong El Niño is back for 2027, and the Zambezi River Authority (ZRA) has already cut the 2027 power allocation by {zra?.cut_pct ?? 36}%.
       </p>
+      <p style={{ margin: '20px 0 0' }}><a className="button" href="#/app/plan">Open the dashboard</a></p>
 
       </div>
       <figure className="k-level" aria-label={`Usable storage ${fmtNum(d.latest?.usable_pct, 1)} percent on ${fmtDate(d.latest?.date)}`}>
@@ -263,7 +264,8 @@ export default function KaribaPage() {
 
       <KaribaSim />
 
-      <p className="callout"><b>Plan it yourself.</b> Pick the actions Zambia can actually take (hold water, imports, rentals, mine curtailment, solar, a published schedule), see the month-by-month result over the El Niño years, and ask the assistant to re-plan. <a href="#/plan">Open the Plan simulator</a>.</p>
+      <p className="callout"><b>Plan it yourself.</b> Pick the actions Zambia can actually take (hold water, imports, rentals, mine curtailment, solar, a published schedule), see the month-by-month result over the El Niño years, and ask the assistant to re-plan. </p>
+      <p style={{ margin: '0 0 32px' }}><a className="button" href="#/app/plan">Open the dashboard</a></p>
 
       <Figure
         title="The cost of waiting (illustrative)"
