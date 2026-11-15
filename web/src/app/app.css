@@ -191,3 +191,26 @@
 
 /* pre-pitch polish */
 .app .globe-backend { display: none; }
+
+/* presentation layout (desktop): one screen, no page scroll; big globe + big chat, everything else in the left column */
+@media (min-width: 1100px) {
+  body:has(.app-plan) .site-footer { display: none; }
+  html:has(.app-plan), body:has(.app-plan) { overflow: hidden; }
+  main.is-app:has(.app-plan) { padding: 0; margin: 0; }
+  .app-plan { padding-bottom: 0; }
+  .app-plan .wrap { max-width: none; padding: 0 14px; }
+  .app-plan .app-head { padding-top: 8px; padding-bottom: 8px; align-items: center; }
+  .app-plan .app-title .eyebrow { display: none; }
+  .app-plan .app-title h1 { font-size: 22px; line-height: 1.2; }
+  .app-plan .dash { height: calc(100vh - 65px - 62px); height: calc(100dvh - 65px - 62px); min-height: 520px;
+    grid-template-columns: 300px minmax(0, 1fr) clamp(380px, 30vw, 520px);
+    grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "left stage chat" "dock stage chat"; }
+  .app-plan .dash-left { overflow: visible; gap: 8px; }
+  .app-plan .dash-left .card:last-child { display: none; }
+  .app-plan .dock { grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; overflow-y: auto; min-height: 0; padding: 8px; }
+  .app-plan .dock .dk:nth-child(2), .app-plan .dock .dk-best { grid-column: 1 / -1; }
+  .app-plan .dash-chat .plan-chat-panel { padding: 14px 16px; }
+  .app-plan .dash-chat .plan-chat-panel > h2 { font-size: 13px; }
+  .app-plan .dash-chat .plan-log, .app-plan .dash-chat .plan-msg p, .app-plan .dash-chat .plan-msg li { font-size: 15px; line-height: 1.5; }
+  .app-plan .dash-chat .plan-form input { font-size: 15px; padding: 10px 12px; }
+}
