@@ -1,3 +1,4 @@
+// SI-assisted: written with AI coding tools (Claude Code / Codex), reviewed by the team
 // Worker entry for patronus-plan: adds POST /api/chat (the data chat, chat.js) in front of the
 // existing worker (worker.js: static site + /api/plan-chat), without editing worker.js.
 // Deploy with `main` pointing at this file; see README.md.

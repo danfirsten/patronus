@@ -2,6 +2,8 @@
   "name": "patronus-web",
   "private": true,
   "version": "0.1.0",
+  "description": "Patronus web app (NASA Space Apps 2026). SI-assisted: most code written with AI coding tools (Claude Code, OpenAI Codex) under the team's direction and reviewed by the team.",
+  "si_assisted": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
