@@ -260,7 +260,7 @@ export function Chat({ onAsk, msgs, busy }: { onAsk: (t: string) => void; msgs: 
   };
   return (
     <section className="panel plan-chat-panel" aria-labelledby="chat-h">
-      <h2 id="chat-h" className="plan-h">Ask the planning assistant</h2>
+      <h2 id="chat-h" className="plan-h">Ask the planning assistant <span className="si-label">AI assistant (SI)</span></h2>
       <p className="muted small">Say what you can and cannot do. The assistant changes the simulator, re-runs it, and explains the result using only the simulator's numbers. Runs server-side: Claude when the team's key is set, otherwise Cloudflare Workers AI (Llama 3.3 70B), otherwise a simple phrase parser. No key is exposed in the page.</p>
       <div className="plan-log" aria-live="polite" ref={logRef}>
         {msgs.length === 0 && (

@@ -147,3 +147,6 @@
     --stagger: 0ms; --rise: 0px; --dur: 0ms;
   }
 }
+
+/* SI (AI tool) disclosure label, required by the Space Apps rules */
+.si-label { display: inline-block; margin-left: .5em; padding: .05em .45em; border: 1px solid currentColor; border-radius: 4px; font-size: .62rem; font-weight: 600; letter-spacing: .04em; text-transform: none; vertical-align: middle; opacity: .75; white-space: nowrap; }

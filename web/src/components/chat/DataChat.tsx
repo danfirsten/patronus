@@ -105,7 +105,7 @@ export default function DataChat({ mode = 'floating', page }: DataChatProps) {
       onKeyDown={(e) => { if (e.key === 'Escape' && mode === 'floating') setOpen(false); }}>
       <header className="chat-head">
         <div>
-          <h2 id="chat-title" className="chat-title">Ask the data</h2>
+          <h2 id="chat-title" className="chat-title">Ask the data <span className="si-label">AI assistant (SI)</span></h2>
           <p className="chat-sub">{plan ? 'Connected to the plan simulator' : 'Answers use only Patronus data files'}</p>
         </div>
         <div className="chat-head-actions">

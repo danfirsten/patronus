@@ -96,5 +96,7 @@
  "notes": [
   "ILLUSTRATIVE SAMPLE DATA from web/src/fixtures. Not pipeline output. Do not cite."
  ],
- "issue_date": "2026-11-15"
+ "issue_date": "2026-11-15",
+ "si_assisted": true,
+ "si_note": "SI-assisted: most code, the web app and the slides/pitch video were made with AI tools (Claude Code, OpenAI Codex, Claude) under the team's direction and reviewed by the team. Data values come from the pipeline and cited sources, not from an AI model. See SI.md."
 }

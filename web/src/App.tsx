@@ -1,3 +1,4 @@
+// SI-assisted: written with AI coding tools (Claude Code / Codex), reviewed by the team
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useRoute } from './lib/router';
 import { ReportContext, type DataSource } from './data/load';
@@ -138,6 +139,7 @@ export default function App() {
           <Wordmark className="on-deep" />
           <p><strong>Patronus</strong> is an independent, public early warning for hydropower shortfalls. NASA Space Apps 2026 project. Not affiliated with or endorsed by NASA.</p>
           <p className="muted">Built with NASA Earth observation data (GRACE/GRACE-FO, POWER, G-REALM, GEOS-S2S, Black Marble, GPCP) and other open sources. See <a href="#/proof">Proof</a> for methods, sources, limits and our AI-use statement.</p>
+          <p className="muted si-footer">Built with SI tools (Claude, Codex); data from NASA and partners.</p>
         </div>
       </footer>
     </WaterlineContext.Provider>

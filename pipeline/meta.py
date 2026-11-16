@@ -138,6 +138,7 @@ SOURCES = [
     },
 ]
 
+SI_NOTE = ("SI-assisted: most code, the web app and the slides/pitch video were made with AI tools (Claude Code, OpenAI Codex, Claude) under the team's direction and reviewed by the team. Data values come from the pipeline and cited sources, not from an AI model. See SI.md.")
 AI_DISCLOSURE = ("AI tools (Claude) were used for research, critique, coding, and drafting the written briefs. "
                  "The project concept came from the team. All numbers come from the data pipeline and cited sources.")
 
@@ -220,6 +221,8 @@ def main() -> None:
         "sources": sources,
         "nasa_data_summary": NASA_DATA_SUMMARY,
         "ai_disclosure": AI_DISCLOSURE,
+        "si_assisted": True,
+        "si_note": SI_NOTE,
         "notes": [
             "Licences are as stated by each provider at the time of download; check the provider page before reuse.",
             "The IMF site returns HTTP 403 to automated requests, so its URL could not be re-checked by the pipeline.",

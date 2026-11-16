@@ -1,3 +1,4 @@
+# SI-assisted: written with AI coding tools (Claude Code / Codex), reviewed by the team
 """Run the whole Patronus pipeline in order: `python3 -m pipeline.run_all`.
 
 Order matters: basins -> (trends, enso, generation, kariba) -> crises -> scoreboard -> nightlights -> meta -> ledger (last).

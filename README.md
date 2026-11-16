@@ -41,6 +41,14 @@ The pipeline expects the large raw files in `data/raw/` (gitignored). Each modul
 ## Team, credits and AI use
 Built by Dan, Sean and Arvin for NASA Space Apps 2026. Independent back-tests (Future Detector) by Sean's team are in `docs/BACKTEST-FD.md` and `docs/HEATWAVE-FD.md`, where merged.
 
-AI tools ("Super Intelligence") were used for research, critique, coding and drafting the written briefs. The project concept came from the team. Every number comes from the data pipeline and cited sources. AI-written briefs are labelled in the app.
+## Use of SI (AI tools)
+The Space Apps rules ask every team to say where and how SI (AI) tools were used. Short version here; details in [`SI.md`](SI.md).
+
+- **Code and site (AI-assisted):** most of the pipeline code, the web app/dashboard and the Cloudflare worker were written with AI coding tools (Claude Code by Anthropic, OpenAI Codex) under the team's direction. The team reviewed, ran and tested the code.
+- **Slides and pitch video (AI-assisted):** drafted and built with AI tools; the team chose the story, checked the wording and presents it.
+- **At runtime:** the planning and data assistants in the app call an AI model (Claude when the team's key is set, otherwise Cloudflare Workers AI Llama 3.3 70B). They are labelled "AI assistant (SI)" in the app and may only use Patronus data and simulator numbers.
+- **By the team:** the idea and problem framing, the choice of data and methods, the validation rules, review of every result, and the pitch.
+- **Numbers:** every number comes from the data pipeline (`web/public/data/*.json`) or a cited source, not from an AI model.
+- **Metadata:** `web/package.json` (`si_assisted`), `web/public/data/meta.json` (`si_assisted`, `si_note`, `ai_disclosure`) and a one-line header in the main entry files.
 
 "Patronus" is used here only as a word. No affiliation with any other product of that name.
